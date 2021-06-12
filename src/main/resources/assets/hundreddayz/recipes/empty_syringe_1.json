@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "hundreddays:empty_syringe",
+	"pattern" : [
+		"GGI"
+	],
+    "key" : {
+		"G" : {
+            "item": "minecraft:glass_pane",
+			"data": 0
+        },
+		"I" : {
+            "item": "minecraft:iron_nugget",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "hundreddays:syringe",
+        "count": 1,
+        "data": 0
+    }
+}

@@ -1,0 +1,7 @@
+{
+	"parent": "hundreddayz:block/barbed_wire",
+	"textures": {
+		"texture": "hundreddayz:blocks/gold_barbed_wire",
+		"particle": "hundreddayz:blocks/gold_barbed_wire"
+	}
+}
