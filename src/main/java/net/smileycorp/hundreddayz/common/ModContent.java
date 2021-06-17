@@ -31,6 +31,7 @@ import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
 import net.smileycorp.hundreddayz.common.entity.PotionBleeding;
 import net.smileycorp.hundreddayz.common.item.ItemBarbedWire;
 import net.smileycorp.hundreddayz.common.item.ItemClothingFabric;
+import net.smileycorp.hundreddayz.common.item.ItemGasFilter;
 import net.smileycorp.hundreddayz.common.item.ItemGasMask;
 import net.smileycorp.hundreddayz.common.item.ItemSpawner;
 import net.smileycorp.hundreddayz.common.item.ItemSyringe;
@@ -53,6 +54,7 @@ public class ModContent {
 	public static Item SPAWNER = new ItemSpawner();
 	public static Item CLOTH_FABRIC = new ItemClothingFabric();
 	public static Item SYRINGE = new ItemSyringe();
+	public static Item GAS_FILTER = new ItemGasFilter();
 	public static Item GAS_MASK = new ItemGasMask();
 	
 	public static Block BARBED_WIRE = new BlockBarbedWire();
@@ -62,7 +64,7 @@ public class ModContent {
 	public static DamageSourceBleed BLEED_DAMAGE = new DamageSourceBleed();
 	public static DamageSourceToxicGas TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	
-	public static Item[] items = {SPAWNER, CLOTH_FABRIC, SYRINGE, GAS_MASK};
+	public static Item[] items = {SPAWNER, CLOTH_FABRIC, SYRINGE, GAS_FILTER, GAS_MASK};
 	public static Block[] blocks = {BARBED_WIRE, HORDE_SPAWNER};
 	
 	@SubscribeEvent
@@ -103,6 +105,10 @@ public class ModContent {
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		Item ITEM_BARBED_WIRE = Item.getItemFromBlock(BARBED_WIRE);
+		//ore dictionary
+		OreDictionary.registerOre("fabric", CLOTH_FABRIC);
+		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
+		//syringes
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("syringe_1"), ModDefinitions.getResource("syringe"), new ItemStack(SYRINGE, 1, 0), "GGI", 'G', 
 				new ItemStack(Blocks.GLASS_PANE), 'I', new ItemStack(Items.IRON_NUGGET));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("syringe_2"), ModDefinitions.getResource("syringe"), new ItemStack(SYRINGE, 1, 0), "G", "G", "I", 'G', 
@@ -110,8 +116,12 @@ public class ModContent {
 		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("string"), ModDefinitions.getResource("string"), new ItemStack(Items.STRING, 3), Ingredient.fromItem(CLOTH_FABRIC));
 		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("syringe_cure"), ModDefinitions.getResource("syringe_cure"), new ItemStack(SYRINGE, 1, 2), 
 				Ingredient.fromStacks(new ItemStack(SYRINGE, 1, 1)), Ingredient.fromItem(FirstAidItems.MORPHINE));
-		OreDictionary.registerOre("fabric", CLOTH_FABRIC);
-		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);	
+		//gas mask
+		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("gas_filter"), ModDefinitions.getResource("gas_filter"), new ItemStack(GAS_FILTER, 1), 
+				Ingredient.fromStacks(new ItemStack(Items.COAL, 1, 1)), new OreIngredient("fabric"), Ingredient.fromStacks(new ItemStack(Items.PAPER)), Ingredient.fromStacks(new ItemStack(Items.IRON_INGOT)));
+		GameRegistry.addShapedRecipe(ModDefinitions.getResource("gas_mask"), ModDefinitions.getResource("gas_mask"), new ItemStack(GAS_MASK), "GCG", "ICI", "FCF", 
+				'G', new ItemStack(Blocks.GLASS_PANE), 'I', new ItemStack(Items.IRON_INGOT), 'F', new ItemStack(GAS_FILTER), 'C', new OreIngredient("fabric"));	
+		//bandages
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("bandage_1"), ModDefinitions.getResource("bandage"), new ItemStack(FirstAidItems.BANDAGE, 1, 0), "CC", "CC", "CC",
 				'C', new OreIngredient("fabric"));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("bandage_2"), ModDefinitions.getResource("bandage"), new ItemStack(FirstAidItems.BANDAGE, 1, 0), "CCC", "CCC",

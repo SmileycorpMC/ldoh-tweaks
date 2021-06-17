@@ -1,6 +1,10 @@
 package net.smileycorp.hundreddayz.common.item;
 
 import net.minecraft.block.BlockDispenser;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -14,6 +18,8 @@ import net.minecraft.world.World;
 import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
 
+import org.lwjgl.opengl.GL11;
+
 public class ItemGasMask extends Item {
 	
 	public ItemGasMask() {
@@ -22,7 +28,7 @@ public class ItemGasMask extends Item {
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setMaxStackSize(1);
-		setMaxDamage(500);
+		setMaxDamage(210);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
 	}
 	
@@ -47,5 +53,22 @@ public class ItemGasMask extends Item {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
         }
     }
-
+	
+	@Override
+    public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks){
+		Minecraft mc = Minecraft.getMinecraft();
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(false);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        mc.getTextureManager().bindTexture(ModDefinitions.getResource("textures/misc/gas_mask.png"));
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(2, 2, 2);
+		Gui.drawModalRectWithCustomSizedTexture(-8, -30, 0, 0, mc.displayWidth, mc.displayHeight, 256, 192);
+		GlStateManager.popMatrix();
+		GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+		mc.getTextureManager().bindTexture(Gui.ICONS);
+	}
 }

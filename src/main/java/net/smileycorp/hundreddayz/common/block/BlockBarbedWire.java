@@ -92,7 +92,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase player, EnumHand hand) {
-		EnumBarbedWireAxis axis = EnumBarbedWireAxis.fromVector(player.getForward());
+		EnumBarbedWireAxis axis = EnumBarbedWireAxis.fromVector(player.getLookVec());
 		return getStateFromMeta(player.getHeldItem(hand).getMetadata()).withProperty(AXIS, axis);
 	}
 	

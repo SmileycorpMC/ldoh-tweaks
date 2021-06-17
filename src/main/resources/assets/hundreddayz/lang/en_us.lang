@@ -18,6 +18,7 @@ item.hundreddayz.SyringeBlood.name=Blood Filled Syringe
 item.hundreddayz.SyringeCure.name=Enriched Antibody Serum
 item.hundreddayz.SyringeContaminated.name=Contaminated Syringe
 item.hundreddayz.MobSpawner.name=Spawn
+item.hundreddayz.GasFilter.name=Gas Filter
 item.hundreddayz.GasMask.name=Gas Mask
 tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire

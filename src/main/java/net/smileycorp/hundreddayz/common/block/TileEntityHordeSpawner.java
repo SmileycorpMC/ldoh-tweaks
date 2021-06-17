@@ -2,7 +2,6 @@ package net.smileycorp.hundreddayz.common.block;
 
 import java.util.Random;
 
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.tileentity.TileEntity;
@@ -11,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.hordeevent.HordeSpawnProvider;
-import biomesoplenty.api.biome.BOPBiomes;
 
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 
@@ -23,7 +21,6 @@ public class TileEntityHordeSpawner extends TileEntity implements ITickable {
 	public void update() {
 		if (!world.isRemote) {
 			Random rand = world.rand;
-	    	double speed = world.getBiome(pos) == BOPBiomes.wasteland.get() ? 0.5D : 0.23D;
 	    	int day = Math.round(world.getWorldTime()/24000);
 	    	if (world.getSpawnPoint().getDistance(pos.getX(), pos.getY(), pos.getZ()) > 50) {
 		    	for (int i = 0; i < getRandomSize(rand); i++) {
@@ -34,7 +31,6 @@ public class TileEntityHordeSpawner extends TileEntity implements ITickable {
 		    		entity.onAddedToWorld();
 					entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
 					world.spawnEntity(entity);
-					entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
 					entity.getCapability(HordeSpawnProvider.HORDESPAWN, null).setPlayerUUID(TAG_UUID);
 					entity.enablePersistence();
 		    	}
@@ -45,7 +41,7 @@ public class TileEntityHordeSpawner extends TileEntity implements ITickable {
 
 	private int getRandomSize(Random rand) {
 		if (rand.nextInt(2) == 0) return rand.nextInt(5) + 15;
-		return rand.nextInt(10) + 35;
+		return rand.nextInt(8) + 40;
 	}
 
 }

@@ -67,6 +67,7 @@ import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import biomesoplenty.api.biome.BOPBiomes;
 
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
@@ -139,25 +140,6 @@ public class EventListener {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
-			if (entity instanceof EntityZombie) {
-				//adds additional targeting to zombies to make them attack other mobs
-				EntityZombie zombie = (EntityZombie) entity;
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, IAnimaniaAnimal.class, false));
-				//sets the time capability on world join
-				if (zombie.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
-					int time = (int) world.getWorldTime()%24000;
-					ITimeDetector cap = zombie.getCapability(TimeProvider.TIME_DETECTOR, null);
-					if (time < 12000 && world.getWorldTime() <= 239999) {
-						cap.setTime(EnumTime.DAY);
-						IAttributeInstance speed = ((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-						speed.setBaseValue(speed.getBaseValue()*EnumTime.DAY.getMultiplier());
-					} else {
-						cap.setTime(EnumTime.NIGHT);
-					}
-				}
-			}
 			//replacing zombies with rare spawns
 			if (entity.getClass() == EntityZombie.class) {
 				if (entity.hasCapability(SpawnProvider.SPAWN_TRACKER, null)) {
@@ -204,10 +186,42 @@ public class EventListener {
 							if (!doesDespawn && newentity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
 								newentity.getCapability(HordeSpawnProvider.HORDESPAWN, null).setPlayerUUID(TileEntityHordeSpawner.TAG_UUID);
 							}
+							Biome biome = world.getBiome(entity.getPosition());
+							if (biome == BOPBiomes.wasteland.get()) {
+								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4);
+							} else {
+								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
+							}
 						} else {
+							Biome biome = world.getBiome(entity.getPosition());
+							if (biome == BOPBiomes.wasteland.get()) {
+								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4);
+							} else {
+								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
+							}
+							
 							//set capability flag so this event doesn't retrigger for the zombie
 							entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).setSpawned(true);
 						}
+					}
+				}
+			}
+			if (entity instanceof EntityZombie) {
+				//adds additional targeting to zombies to make them attack other mobs
+				EntityZombie zombie = (EntityZombie) entity;
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, IAnimaniaAnimal.class, false));
+				//sets the time capability on world join
+				if (zombie.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
+					int time = (int) world.getWorldTime()%24000;
+					ITimeDetector cap = zombie.getCapability(TimeProvider.TIME_DETECTOR, null);
+					if (time < 12000 && world.getWorldTime() <= 239999) {
+						cap.setTime(EnumTime.DAY);
+						IAttributeInstance speed = ((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+						speed.setBaseValue(speed.getBaseValue()*EnumTime.DAY.getMultiplier());
+					} else {
+						cap.setTime(EnumTime.NIGHT);
 					}
 				}
 			}
@@ -405,24 +419,24 @@ public class EventListener {
 				}
 				//unburied
 				int y = (int) Math.floor(player.getPosition().getY());
-				if (y < world.getHeight((int)player.posX, (int)player.posZ)-5 && player.ticksExisted%60==0 && rand.nextInt(y) <= 25) {
-					for (int i = 0; i < rand.nextInt(3)+1; i++) {
-						Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
-						BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
-						if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
-							for (int j = -5; j <6; j++) {
-								if (world.isAirBlock(pos.up(j)) && world.isAirBlock(pos.up(j+1))) {
-									pos = pos.up(j);
-									break;
-								}
+				if (y < world.getHeight((int)player.posX, (int)player.posZ)-8 &! world.canBlockSeeSky(player.getPosition()) && player.ticksExisted%60==0 && rand.nextInt(y) <= 15) {
+					Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+					BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
+					if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down()) 
+							&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
+						for (int j = -5; j <6; j++) {
+							if (world.isAirBlock(pos.up(j)) && world.isAirBlock(pos.up(j+1)) && world.isBlockFullCube(pos.up(j-1))) {
+								pos = pos.up(j);
+								break;
 							}
 						}
-						if (world.isAirBlock(pos) && world.isAirBlock(pos.up())&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0)) {
-							EntityUnburied entity = new EntityUnburied(world);
-							entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
-							entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
-							world.spawnEntity(entity);
-						}
+					}
+					if (world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down()) 
+							&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0) &! world.canBlockSeeSky(pos)) {
+						EntityUnburied entity = new EntityUnburied(world);
+						entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+						entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
+						world.spawnEntity(entity);
 					}
 				}
 				//lava bucket burning
