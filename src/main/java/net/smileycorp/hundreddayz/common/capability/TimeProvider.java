@@ -34,8 +34,8 @@ public class TimeProvider implements ICapabilitySerializable<NBTBase> {
 	}
 	
 	public static enum EnumTime {
-		DAY(0.25d),
-		NIGHT(4d);
+		DAY(0.5d),
+		NIGHT(2d);
 		
 		private double mutliplier;
 		

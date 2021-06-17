@@ -1,7 +1,10 @@
 package net.smileycorp.hundreddayz.common.block;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -9,15 +12,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class TileEntityBarbedWire extends TileEntity {
 	
 	protected int durability;
-	protected float damage;
 	protected int cooldown=0;
+	protected EnumBarbedWireMat mat;
 	
 	public TileEntityBarbedWire() {
 		this(EnumBarbedWireMat.IRON);
 	}
 
 	public TileEntityBarbedWire(EnumBarbedWireMat material) {
-		damage = material.getDamage();
+		mat = material;
 		durability = material.getDurability();
 	}
 	
@@ -28,20 +31,33 @@ public class TileEntityBarbedWire extends TileEntity {
 	public void causeDamage() {
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
 		for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, bb)) {
-			if (damage>0) {
-				entity.attackEntityFrom(DamageSource.CACTUS, damage);
+			if (mat.getDamage()>0) {
+				entity.attackEntityFrom(DamageSource.CACTUS, mat.getDamage());
 			}
 			durability--;
 			cooldown = 5;
+			sendUpdate();
 		}
 	}
 	
+	private void sendUpdate() {
+		IBlockState state = world.getBlockState(pos);
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		world.notifyBlockUpdate(pos, state, state, 3);
+		world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
+		markDirty();
+	}
+
 	public int getDurability() {
 		return durability;
 	}
 	
 	public float getDamage() {
-		return damage;
+		return mat.getDamage();
+	}
+	
+	public EnumBarbedWireMat getMaterial() {
+		return mat;
 	}
 	
 	@Override
@@ -63,15 +79,29 @@ public class TileEntityBarbedWire extends TileEntity {
     }
     
     @Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
+	}
+    
+    @Override
+	public void onDataPacket(NetworkManager network, SPacketUpdateTileEntity packet) {
+		super.onDataPacket(network, packet);
+		handleUpdateTag(packet.getNbtCompound());
+	}
+    
+    @Override
    	public NBTTagCompound getUpdateTag() {
    		NBTTagCompound tag = super.getUpdateTag();
-   		return writeToNBT(tag);
+   		tag.setInteger("durability", durability);
+   		return tag;
    	}
    	
    	@Override
    	public void handleUpdateTag(NBTTagCompound tag) {
+   		if (tag.hasKey("durability")) {
+			durability = tag.getInteger("durability");
+		}
    		super.handleUpdateTag(tag);
-   		readFromNBT(tag);
    	}
 
 }

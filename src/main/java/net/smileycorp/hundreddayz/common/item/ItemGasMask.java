@@ -2,7 +2,6 @@ package net.smileycorp.hundreddayz.common.item;
 
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -23,6 +22,7 @@ public class ItemGasMask extends Item {
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setMaxStackSize(1);
+		setMaxDamage(500);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
 	}
 	
@@ -35,7 +35,7 @@ public class ItemGasMask extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemstack);
+        EntityEquipmentSlot entityequipmentslot = EntityEquipmentSlot.HEAD;
         ItemStack itemstack1 = player.getItemStackFromSlot(entityequipmentslot);
 
         if (itemstack1.isEmpty()) {

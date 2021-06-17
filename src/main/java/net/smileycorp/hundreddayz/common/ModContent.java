@@ -28,7 +28,6 @@ import net.smileycorp.hundreddayz.common.block.TileEntityHordeSpawner;
 import net.smileycorp.hundreddayz.common.entity.DamageSourceBleed;
 import net.smileycorp.hundreddayz.common.entity.DamageSourceToxicGas;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
-import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import net.smileycorp.hundreddayz.common.entity.PotionBleeding;
 import net.smileycorp.hundreddayz.common.item.ItemBarbedWire;
 import net.smileycorp.hundreddayz.common.item.ItemClothingFabric;
@@ -88,17 +87,17 @@ public class ModContent {
 	
 	@SubscribeEvent
 	public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
-		GameRegistry.registerWorldGenerator(new WorldGenHorde(), 0);
+		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		int ID = 201;
 		IForgeRegistry<EntityEntry> registry = event.getRegistry();
 		EntityEntry TF_ZOMBIE = EntityEntryBuilder.create().entity(EntityTFZombie.class)
 				.id(ModDefinitions.getResource("tf_zombie"), ID++)
 				.name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build();
 		registry.register(TF_ZOMBIE);
-		EntityEntry NURSE_ZOMBIE = EntityEntryBuilder.create().entity(EntityZombieNurse.class)
+		/*EntityEntry NURSE_ZOMBIE = EntityEntryBuilder.create().entity(EntityZombieNurse.class)
 				.id(ModDefinitions.getResource("nurse_zombie"), ID++)
 				.name(ModDefinitions.getName("NurseZombie")).tracker(80, 3, true).build();
-		registry.register(NURSE_ZOMBIE);
+		registry.register(NURSE_ZOMBIE);*/
 	}
 	
 	@SubscribeEvent

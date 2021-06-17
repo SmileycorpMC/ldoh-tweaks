@@ -20,7 +20,6 @@ import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
 import net.smileycorp.hundreddayz.common.ModMobEntry;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
-import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import net.smileycorp.hundreddayz.common.entity.EnumTFClass;
 
 public class ItemSpawner extends Item implements IMetaItem {
@@ -90,7 +89,7 @@ public class ItemSpawner extends Item implements IMetaItem {
     		entries.add(new ModMobEntry(tfclass, 0x436C34, 0xEF0000, "RED"));
     		entries.add(new ModMobEntry(tfclass, 0x436C34, 0x0000E2, "BLU"));
     	}
-    	entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.hundreddayz.NurseZombie.name" , 0x436C34, 0xB5ABB4));
+    	//entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.hundreddayz.NurseZombie.name" , 0x436C34, 0xB5ABB4));
     }
 
 	public static ItemStack getEggFor(EntityLiving entity) {

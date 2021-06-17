@@ -1,5 +1,8 @@
 package net.smileycorp.hundreddayz.common.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -7,14 +10,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
 import net.smileycorp.hundreddayz.common.item.ItemSpawner;
 
 import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
 
 public class EntityZombieNurse extends EntityZombie {
+	
+	private Set<EntityZombie> healTargets = new HashSet<EntityZombie>();
 	
 	public EntityZombieNurse(World world) {
 		super(world);
@@ -39,23 +46,31 @@ public class EntityZombieNurse extends EntityZombie {
 	
 	@Override
 	public void onLivingUpdate() {
-		 if (!world.isRemote && world.getWorldTime()%20==0){
-			 boolean healed = false;
+		 if (world.getWorldTime()%20==0){
 			 for (EntityZombie entity : world.getEntitiesWithinAABB(EntityZombie.class, getEntityBoundingBox().grow(5))) {
-				 entity.heal(1f);
-				 healed = true;
+				 if (entity.getHealth() < entity.getMaxHealth()) {
+					 if (world.isRemote) {
+						 if (!healTargets.contains(entity)) healTargets.add(entity);
+						 if (entity.getHealth() >= entity.getMaxHealth()) {
+							 healTargets.remove(entity);
+						 }
+						 for (int i = 0; i < 6; ++i) {
+							 world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, entity.posX + (rand.nextDouble() - 0.5D) * entity.width,
+								entity.posY + rand.nextDouble() * entity.height, entity.posZ + (rand.nextDouble() - 0.5D) * entity.width, 0.0D, 0.3D, 0.0D);
+				         }
+					 } else {
+						 entity.heal(1f); 
+					 }
+				 }
 			 }
-			 if (healed) {
-				 for (int i = 1; i<=8; i++) {
-					int a = Math.round(45*i);
-					double rad = Math.toRadians(a);
-					double xoff = Math.cos(rad);
-					double x = posX + xoff;
-					double y = posY;
-					double zoff = Math.sin(rad);
-					double z = posZ +zoff;
-					world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x, y, z, xoff, 0, zoff);
-				}
+		 } if (world.isRemote) {
+			 for (EntityZombie entity : healTargets) {
+				 Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
+				 System.out.println(dir);
+				 world.spawnParticle(EnumParticleTypes.END_ROD, posX, posY+0.8d, posZ, dir.x, dir.y, dir.z);
+				 if (entity.getHealth() >= entity.getMaxHealth()) {
+					 healTargets.remove(entity);
+				 }
 			 }
 		 }
 		 super.onLivingUpdate();

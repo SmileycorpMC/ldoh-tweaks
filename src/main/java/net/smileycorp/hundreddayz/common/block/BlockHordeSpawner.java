@@ -18,17 +18,11 @@ public class BlockHordeSpawner extends Block implements ITileEntityProvider {
 		String name = "Horde_Spawner";
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
-		setTickRandomly(true);
 	}
 	
     @Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
-    }
-    
-    @Override
-	public int tickRate(World world) {
-        return 1;
     }
     
 	@Override

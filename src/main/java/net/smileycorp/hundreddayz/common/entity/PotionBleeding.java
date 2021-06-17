@@ -36,12 +36,10 @@ public class PotionBleeding extends Potion {
     
     @Override
 	public void performEffect(EntityLivingBase entity, int amp) {
-    	if (!entity.world.isRemote) {
-    		int t = 20/(amp + 1);
-    		if (entity.ticksExisted%t==0) {
-    			entity.attackEntityFrom(ModContent.BLEED_DAMAGE, 0.5f);
-    		}
-    	}
+		int t = Math.round(20/(amp + 1));
+		if (entity.ticksExisted%t==0) {
+			entity.attackEntityFrom(ModContent.BLEED_DAMAGE, 1f);
+		}
     }
 
 }

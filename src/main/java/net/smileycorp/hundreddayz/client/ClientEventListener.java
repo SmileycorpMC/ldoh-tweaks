@@ -1,13 +1,24 @@
 package net.smileycorp.hundreddayz.client;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
+import net.smileycorp.hundreddayz.common.block.BlockBarbedWire;
+import net.smileycorp.hundreddayz.common.block.TileEntityBarbedWire;
 
 @EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
 public class ClientEventListener {
@@ -19,7 +30,7 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		ITextComponent message = new TextComponentTranslation(text, new Object[]{100-day});
 		message.setStyle(new Style().setBold(true).setColor(TextFormatting.DARK_RED));
-		mc.ingameGUI.displayTitle(message.getFormattedText(), null, 10, 20, 10);;
+		mc.ingameGUI.displayTitle(message.getFormattedText(), null, 10, 20, 10);
 	}
 	
 	public static void displayActionBar(String text) {
@@ -35,30 +46,38 @@ public class ClientEventListener {
 	}*/
 
 	/*@SubscribeEvent
-	public void drawTitle(RenderGameOverlayEvent.Text event) {
+	public void drawTitle(RenderFogEvent event) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if (starttime > 0) {
-			ScaledResolution resoloution = event.getResolution();
-			int width = resoloution.getScaledWidth();
-			int height = resoloution.getScaledHeight();
-			mc.fontRenderer.drawSplitString(title, width/2, height/2, width/2, 0x440002);
-			starttime--;
+		EntityPlayerSP player = mc.player;
+		EntityRenderer render = event.getRenderer();
+		if (player.posY < 30) {
+			if (!render.isShaderActive()) {
+				render.loadShader(ModDefinitions.getResource("shaders/post/gas.json"));
+			}
+		} else if (render.isShaderActive()) {
+			render.stopUseShader();
 		}
 	}*/
 	
-	/*@SubscribeEvent
-	public void drawParticle(PlayerTickEvent event) {
+	@SubscribeEvent
+	public void playerTick(PlayerTickEvent event) {
 		EntityPlayer player = event.player;
 		World world = player.world;
-		if (player.posY < 50 && player.posY >= 30) {
-			for (int i = -8; i<9; i++) {
-				for (int j = -8; j<9; j++) {
-					world.spawnParticle(EnumParticleTypes.CLOUD, player.posX+i, 30, player.posX+j, 0f, 1f, 0f);
+		if (world.isRemote) {
+			RayTraceResult ray = player.rayTrace(5, 20);
+			if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
+				BlockPos pos = ray.getBlockPos();
+				IBlockState state = world.getBlockState(pos);
+				if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileEntityBarbedWire) {
+					TileEntityBarbedWire tile = (TileEntityBarbedWire) world.getTileEntity(pos);
+					int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
+					int cur = tile.getDurability();
+					Minecraft mc = Minecraft.getMinecraft();
+					ITextComponent message = new TextComponentString(cur + "/" + max);
+					mc.ingameGUI.setOverlayMessage(message, false);
 				}
 			}
-		} else if (player.posY < 30) {
-			world.spawnParticle(EnumParticleTypes.CLOUD, player.posX, player.posY+1, player.posX, 0f, 1f, 0f);
 		}
-	}*/
+	}
 	
 }

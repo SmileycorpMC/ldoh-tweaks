@@ -20,6 +20,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
@@ -38,9 +39,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.terraingen.OreGenEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -51,12 +51,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.atlas.api.util.DataUtils;
+import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.common.hordeevent.HordeSpawnProvider;
 import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.hundreddayz.common.block.BlockHordeSpawner;
 import net.smileycorp.hundreddayz.common.block.TileEntityHordeSpawner;
 import net.smileycorp.hundreddayz.common.capability.ITimeDetector;
 import net.smileycorp.hundreddayz.common.capability.SpawnProvider;
@@ -64,11 +64,13 @@ import net.smileycorp.hundreddayz.common.capability.TimeProvider;
 import net.smileycorp.hundreddayz.common.capability.TimeProvider.EnumTime;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
 import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
+import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import com.animania.api.interfaces.IAnimaniaAnimal;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityTInfected;
@@ -147,8 +149,10 @@ public class EventListener {
 				if (zombie.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
 					int time = (int) world.getWorldTime()%24000;
 					ITimeDetector cap = zombie.getCapability(TimeProvider.TIME_DETECTOR, null);
-					if (time < 12000) {
+					if (time < 12000 && world.getWorldTime() <= 239999) {
 						cap.setTime(EnumTime.DAY);
+						IAttributeInstance speed = ((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+						speed.setBaseValue(speed.getBaseValue()*EnumTime.DAY.getMultiplier());
 					} else {
 						cap.setTime(EnumTime.NIGHT);
 					}
@@ -182,11 +186,11 @@ public class EventListener {
 						//turns zombies into a random variant based on rng
 						} else {
 							Random rand = world.rand;
-							int randInt = rand.nextInt(200);
+							int randInt = rand.nextInt(100);
 							if (randInt < 4) {
 								newentity = new EntityTFZombie(world);
 							} else if (randInt == 4) {
-								newentity = new EntityZombieNurse(world);
+								//newentity = new EntityZombieNurse(world);
 							} 
 						}
 						//sets up new entity
@@ -243,7 +247,7 @@ public class EventListener {
 				//turns zombies into a random variant based on rng
 				} else {
 					Random rand = world.rand;
-					int randInt = rand.nextInt(200);
+					int randInt = rand.nextInt(100);
 					if (randInt < 4) {
 						event.entity = new EntityTFZombie(world);
 					} else if (randInt == 4) {
@@ -261,8 +265,8 @@ public class EventListener {
 			World world = event.world;
 			if (!world.isRemote) {
 				int time = (int) world.getWorldTime()%24000;
-				EnumTime tenum = time == 0 ? EnumTime.DAY : time == 12000 ? EnumTime.NIGHT : null;
-				if (tenum!=null) {
+				if (world.getWorldTime() <= 239999) {
+					EnumTime tenum = time < 12000 ? EnumTime.DAY : EnumTime.NIGHT;
 					for (EntityZombie entity : world.getEntities(EntityZombie.class, EntitySelectors.IS_ALIVE)) {
 						if (entity.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
 							ITimeDetector cap = entity.getCapability(TimeProvider.TIME_DETECTOR, null);
@@ -279,8 +283,8 @@ public class EventListener {
 	}
 	
 	//disables parasite spawns before set days
-	@SubscribeEvent
-	public void onSpawn(CheckSpawn event) {
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
 		World world = event.getWorld();
 		EntityLivingBase entity = event.getEntityLiving();
 		if (!world.isRemote) {
@@ -321,11 +325,11 @@ public class EventListener {
 			}
 			//adds 1/10 chance for bleed effect to husk
 			if (attacker instanceof EntityHusk && world.rand.nextInt(10)==0) {
-				entity.addPotionEffect(new PotionEffect(ModContent.BLEED, 70, 0));
+				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70, 0));
 			}
 			//adds 1/5 chance for bleed effect to nurse
 			if (attacker instanceof EntityZombieNurse && world.rand.nextInt(5)==0) {
-				entity.addPotionEffect(new PotionEffect(ModContent.BLEED, 30, 1));
+				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 30, 1));
 			}
 		}
 	}
@@ -383,13 +387,42 @@ public class EventListener {
 		if (event.phase == Phase.END) {
 			EntityPlayer player = event.player;
 			World world = player.world;
+			Random rand = world.rand;
 			if (!world.isRemote) {
 				//toxic gas
-				if (player.getPosition().getY()<30 && player.ticksExisted%40==0 && !player.isCreative() && 
-						player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != ModContent.GAS_MASK) {
-					player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
-					if (player instanceof EntityPlayerMP) {
-						CommonPacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
+				if (player.getPosition().getY()<30) {
+					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+					if (player.ticksExisted%35==0 && !player.isCreative()) {
+						if (helm.getItem() == ModContent.GAS_MASK) {
+							helm.damageItem(1, player);
+						} else {
+							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
+							if (player instanceof EntityPlayerMP) {
+								CommonPacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
+							}
+						}
+					}
+				}
+				//unburied
+				int y = (int) Math.floor(player.getPosition().getY());
+				if (y < world.getHeight((int)player.posX, (int)player.posZ)-5 && player.ticksExisted%60==0 && rand.nextInt(y) <= 25) {
+					for (int i = 0; i < rand.nextInt(3)+1; i++) {
+						Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+						BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
+						if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
+							for (int j = -5; j <6; j++) {
+								if (world.isAirBlock(pos.up(j)) && world.isAirBlock(pos.up(j+1))) {
+									pos = pos.up(j);
+									break;
+								}
+							}
+						}
+						if (world.isAirBlock(pos) && world.isAirBlock(pos.up())&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0)) {
+							EntityUnburied entity = new EntityUnburied(world);
+							entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+							entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
+							world.spawnEntity(entity);
+						}
 					}
 				}
 				//lava bucket burning
@@ -429,42 +462,32 @@ public class EventListener {
 			BlockPos spawn = new BlockPos(x, y, z);
 			world.getWorldInfo().setSpawn(spawn);
             event.setCanceled(true);
-            //remove nearby horde spawns
-            for (int i = -32; i<=32; i++) {
-            	for (int k = -32; k<=32; k++) {
-            		BlockPos pos = world.getTopSolidOrLiquidBlock(spawn.south(i).east(k).down());
-                	if (world.getBlockState(pos).getBlock() == ModContent.HORDE_SPAWNER) {
-                		BlockHordeSpawner.breakBlock(world, pos);
-                	}
-                }
-            }
 		}
 	}
 	
 	//stops natural hordes despawning
-	@SubscribeEvent(priority=EventPriority.LOWEST)
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void tryDespawn(LivingSpawnEvent.AllowDespawn event) {
-		World world = event.getWorld();
 		EntityLivingBase entity = event.getEntityLiving();
-		if (!world.isRemote) {
-			if (entity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
-				IHordeSpawn cap = entity.getCapability(HordeSpawnProvider.HORDESPAWN, null);
-				if (cap.isHordeSpawned()) {
-					if (cap.getPlayerUUID().equals(TileEntityHordeSpawner.TAG_UUID)) {
-						event.setResult(Result.DENY);
-					}
+		if (entity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
+			IHordeSpawn cap = entity.getCapability(HordeSpawnProvider.HORDESPAWN, null);
+			if (cap.isHordeSpawned()) {
+				if (cap.getPlayerUUID().equals(TileEntityHordeSpawner.TAG_UUID)) {
+					event.setResult(Result.DENY);
 				}
 			}
 		}
 	}
 	
-	//disables ores above y 30
-	@SubscribeEvent(priority=EventPriority.LOWEST)
-	public void generateOres(OreGenEvent.GenerateMinable event) {
+	//modify biome decorators
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void createDecorator(GenerateMinable event) {
 		World world = event.getWorld();
 		BlockPos pos = event.getPos();
-		if (!world.isRemote) {
-			if (pos.getY() >= 30 && world.getBiome(pos) != WastelandWorld.apocalypse_desert) {
+		Biome biome = world.getBiome(pos);
+		if (biome != WastelandWorld.apocalypse_desert) {
+			GenerateMinable.EventType type = event.getType();
+			if (type == GenerateMinable.EventType.COAL || type == GenerateMinable.EventType.IRON || type == GenerateMinable.EventType.GOLD) {
 				event.setResult(Result.DENY);
 			}
 		}
