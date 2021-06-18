@@ -2,6 +2,19 @@ package net.smileycorp.hundreddayz.common;
 
 import java.util.Random;
 
+import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import com.animania.api.interfaces.IAnimaniaAnimal;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityTInfected;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.legacy.wasteland.world.WastelandWorld;
+
+import biomesoplenty.api.biome.BOPBiomes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -67,19 +80,6 @@ import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-import biomesoplenty.api.biome.BOPBiomes;
-
-import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
-import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
-import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityTInfected;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.legacy.wasteland.world.WastelandWorld;
 
 @EventBusSubscriber(modid=ModDefinitions.modid)
 public class EventListener {
@@ -188,14 +188,14 @@ public class EventListener {
 							}
 							Biome biome = world.getBiome(entity.getPosition());
 							if (biome == BOPBiomes.wasteland.get()) {
-								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4);
+								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41);
 							} else {
 								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
 							}
 						} else {
 							Biome biome = world.getBiome(entity.getPosition());
 							if (biome == BOPBiomes.wasteland.get()) {
-								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4);
+								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41);
 							} else {
 								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
 							}
