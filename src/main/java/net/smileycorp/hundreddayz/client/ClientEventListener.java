@@ -65,16 +65,18 @@ public class ClientEventListener {
 		World world = player.world;
 		if (world.isRemote) {
 			RayTraceResult ray = player.rayTrace(5, 20);
-			if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
-				BlockPos pos = ray.getBlockPos();
-				IBlockState state = world.getBlockState(pos);
-				if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileEntityBarbedWire) {
-					TileEntityBarbedWire tile = (TileEntityBarbedWire) world.getTileEntity(pos);
-					int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
-					int cur = tile.getDurability();
-					Minecraft mc = Minecraft.getMinecraft();
-					ITextComponent message = new TextComponentString(cur + "/" + max);
-					mc.ingameGUI.setOverlayMessage(message, false);
+			if (ray != null) {
+				if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
+					BlockPos pos = ray.getBlockPos();
+					IBlockState state = world.getBlockState(pos);
+					if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileEntityBarbedWire) {
+						TileEntityBarbedWire tile = (TileEntityBarbedWire) world.getTileEntity(pos);
+						int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
+						int cur = tile.getDurability();
+						Minecraft mc = Minecraft.getMinecraft();
+						ITextComponent message = new TextComponentString(cur + "/" + max);
+						mc.ingameGUI.setOverlayMessage(message, false);
+					}
 				}
 			}
 		}
