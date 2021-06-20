@@ -63,7 +63,7 @@ public class ClientEventListener {
 	public void playerTick(PlayerTickEvent event) {
 		EntityPlayer player = event.player;
 		World world = player.world;
-		if (world.isRemote) {
+		if (world.isRemote &!(player == null)) {
 			RayTraceResult ray = player.rayTrace(5, 20);
 			if (ray != null) {
 				if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
