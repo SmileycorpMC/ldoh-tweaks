@@ -13,7 +13,6 @@ import net.smileycorp.hundreddayz.common.apocalypse.ApocalypseEventListener;
 import net.smileycorp.hundreddayz.common.apocalypse.ApocalypseSpawnTable;
 import net.smileycorp.hundreddayz.common.apocalypse.CommandBossEvent;
 import net.smileycorp.hundreddayz.common.capability.ISpawnTracker;
-import net.smileycorp.hundreddayz.common.capability.ITimeDetector;
 
 public class CommonProxy {
 	
@@ -30,7 +29,6 @@ public class CommonProxy {
 		GameRegistry.addSmelting(new ItemStack(ModContent.SYRINGE, 1, 3), new ItemStack(ModContent.SYRINGE, 1, 0), 0.1f);
 		//AddonHelper.registerAddon(ModDefinitions.modid, new HundredDayzAddon());
 		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), new ISpawnTracker.Factory());
-		CapabilityManager.INSTANCE.register(ITimeDetector.class, new ITimeDetector.Storage(), new ITimeDetector.Factory());
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {

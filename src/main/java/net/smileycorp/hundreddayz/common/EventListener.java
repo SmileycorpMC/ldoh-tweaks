@@ -30,7 +30,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -61,7 +60,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.atlas.api.util.DirectionUtils;
@@ -71,10 +69,7 @@ import net.smileycorp.hordes.common.hordeevent.HordeSpawnProvider;
 import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hundreddayz.common.block.TileEntityHordeSpawner;
-import net.smileycorp.hundreddayz.common.capability.ITimeDetector;
 import net.smileycorp.hundreddayz.common.capability.SpawnProvider;
-import net.smileycorp.hundreddayz.common.capability.TimeProvider;
-import net.smileycorp.hundreddayz.common.capability.TimeProvider.EnumTime;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
 import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import rafradek.TF2weapons.TF2weapons;
@@ -186,20 +181,9 @@ public class EventListener {
 							if (!doesDespawn && newentity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
 								newentity.getCapability(HordeSpawnProvider.HORDESPAWN, null).setPlayerUUID(TileEntityHordeSpawner.TAG_UUID);
 							}
-							Biome biome = world.getBiome(entity.getPosition());
-							if (biome == BOPBiomes.wasteland.get()) {
-								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41);
-							} else {
-								((EntityMob) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
-							}
+							setEntitySpeed((EntityMob) entity);
 						} else {
-							Biome biome = world.getBiome(entity.getPosition());
-							if (biome == BOPBiomes.wasteland.get()) {
-								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41);
-							} else {
-								((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
-							}
-							
+							setEntitySpeed((EntityMob) entity);
 							//set capability flag so this event doesn't retrigger for the zombie
 							entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).setSpawned(true);
 						}
@@ -212,18 +196,6 @@ public class EventListener {
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, IAnimaniaAnimal.class, false));
-				//sets the time capability on world join
-				if (zombie.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
-					int time = (int) world.getWorldTime()%24000;
-					ITimeDetector cap = zombie.getCapability(TimeProvider.TIME_DETECTOR, null);
-					if (time < 12000 && world.getWorldTime() <= 239999) {
-						cap.setTime(EnumTime.DAY);
-						IAttributeInstance speed = ((EntityZombie) entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-						speed.setBaseValue(speed.getBaseValue()*EnumTime.DAY.getMultiplier());
-					} else {
-						cap.setTime(EnumTime.NIGHT);
-					}
-				}
 			}
 			//kills xp orbs as they spawn because we dont need them
 			if (entity instanceof EntityXPOrb) {
@@ -245,6 +217,18 @@ public class EventListener {
 		}
 	}
 	
+	private void setEntitySpeed(EntityMob entity) {
+		World world = entity.world;
+		Biome biome = world.getBiome(entity.getPosition());
+		IAttributeInstance speed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+		if (biome == BOPBiomes.wasteland.get()) {
+			speed.setBaseValue(0.41);
+		} else {
+			speed.setBaseValue(0.23);
+		}
+		speed.applyModifier(new DayTimeSpeedModifier(world));;
+	}
+
 	@SubscribeEvent
 	public void hordeSpawn(HordeSpawnEntityEvent event) {
 		Entity entity = event.entity;
@@ -266,30 +250,6 @@ public class EventListener {
 						event.entity = new EntityTFZombie(world);
 					} else if (randInt == 4) {
 						event.entity = new EntityZombieNurse(world);
-					}
-				}
-			}
-		}
-	}
-	
-	//modifies zombie speeds at sunrise/sunset to make zombies less aggressive during the day
-	@SubscribeEvent
-	public void worldTick(WorldTickEvent event) {
-		if (event.phase == Phase.END) {
-			World world = event.world;
-			if (!world.isRemote) {
-				int time = (int) world.getWorldTime()%24000;
-				if (world.getWorldTime() <= 239999) {
-					EnumTime tenum = time < 12000 ? EnumTime.DAY : EnumTime.NIGHT;
-					for (EntityZombie entity : world.getEntities(EntityZombie.class, EntitySelectors.IS_ALIVE)) {
-						if (entity.hasCapability(TimeProvider.TIME_DETECTOR, null)) {
-							ITimeDetector cap = entity.getCapability(TimeProvider.TIME_DETECTOR, null);
-							if (cap.getTime() != tenum) {
-								IAttributeInstance speed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-								speed.setBaseValue(speed.getBaseValue()*tenum.getMultiplier());
-								cap.setTime(tenum);
-							}
-						}
 					}
 				}
 			}
@@ -376,9 +336,6 @@ public class EventListener {
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
-		if (!entity.hasCapability(TimeProvider.TIME_DETECTOR, null) && entity instanceof EntityZombie) {
-			event.addCapability(ModDefinitions.getResource("TimeDetector"), new TimeProvider());
-		}
 		if (!entity.hasCapability(SpawnProvider.SPAWN_TRACKER, null) && entity.getClass() == EntityZombie.class) {
 			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new SpawnProvider());
 		}
