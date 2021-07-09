@@ -2,24 +2,12 @@ package net.smileycorp.hundreddayz.common;
 
 import java.util.Random;
 
-import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
-import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
-import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityTInfected;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.legacy.wasteland.world.WastelandWorld;
-
-import biomesoplenty.api.biome.BOPBiomes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMob;
@@ -36,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -52,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -60,6 +50,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.items.ItemStackHandler;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.atlas.api.util.DirectionUtils;
@@ -68,13 +59,28 @@ import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.common.hordeevent.HordeSpawnProvider;
 import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.hundreddayz.common.block.TileEntityHordeSpawner;
 import net.smileycorp.hundreddayz.common.capability.SpawnProvider;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
 import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
+import net.smileycorp.hundreddayz.common.world.WorldDataSpawnBase;
+import net.smileycorp.hundreddayz.common.world.WorldGenSpawnBase;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.item.ItemAmmo;
+import biomesoplenty.api.biome.BOPBiomes;
+
+import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import com.animania.api.interfaces.IAnimaniaAnimal;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityTInfected;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.legacy.wasteland.world.WastelandWorld;
 
 @EventBusSubscriber(modid=ModDefinitions.modid)
 public class EventListener {
@@ -87,8 +93,8 @@ public class EventListener {
 		Entity target = event.getTarget();
 		ItemStack stack = event.getItemStack();
 		//adds player to npc team
-		if (target instanceof EntityTF2Character && stack.isEmpty() && !world.isRemote) {
-			if (player.getTeam() == null) {
+		if (target instanceof EntityTF2Character && !world.isRemote) {
+			if (stack.isEmpty() && player.getTeam() == null) {
 				ModDefinitions.addPlayerToTeam(player, target.getTeam().getName());
 			}
 		}
@@ -138,7 +144,6 @@ public class EventListener {
 			//replacing zombies with rare spawns
 			if (entity.getClass() == EntityZombie.class) {
 				if (entity.hasCapability(SpawnProvider.SPAWN_TRACKER, null)) {
-					boolean doesDespawn = true;
 					if(!entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).isSpawned()) {
 						if (entity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
 							IHordeSpawn cap = entity.getCapability(HordeSpawnProvider.HORDESPAWN, null);
@@ -147,7 +152,6 @@ public class EventListener {
 									entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).setSpawned(true);
 									return;
 								}
-								doesDespawn = false;
 							}
 						}
 						int day = Math.round(world.getWorldTime()/24000);
@@ -175,12 +179,10 @@ public class EventListener {
 							newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 							newentity.renderYawOffset=zombie.renderYawOffset;
 							newentity.setPosition(entity.posX, entity.posY, entity.posZ);
+							if (zombie.isNoDespawnRequired()) newentity.enablePersistence();
 							entity.setDead();
 							world.spawnEntity(newentity);
 							event.setCanceled(true);
-							if (!doesDespawn && newentity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
-								newentity.getCapability(HordeSpawnProvider.HORDESPAWN, null).setPlayerUUID(TileEntityHordeSpawner.TAG_UUID);
-							}
 							setEntitySpeed((EntityMob) entity);
 						} else {
 							setEntitySpeed((EntityMob) entity);
@@ -226,7 +228,7 @@ public class EventListener {
 		} else {
 			speed.setBaseValue(0.23);
 		}
-		speed.applyModifier(new DayTimeSpeedModifier(world));;
+		//speed.applyModifier(new DayTimeSpeedModifier(world));;
 	}
 
 	@SubscribeEvent
@@ -249,7 +251,7 @@ public class EventListener {
 					if (randInt < 4) {
 						event.entity = new EntityTFZombie(world);
 					} else if (randInt == 4) {
-						event.entity = new EntityZombieNurse(world);
+						//event.entity = new EntityZombieNurse(world);
 					}
 				}
 			}
@@ -341,7 +343,7 @@ public class EventListener {
 		}
 	}
 	
-	//adds clothing to zombie loot table
+	//adds items to zombie loot table
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		ResourceLocation loc = event.getName();
@@ -349,10 +351,15 @@ public class EventListener {
 			LootEntryItem clothLoot = new LootEntryItem(ModContent.CLOTH_FABRIC, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(0, 2))}, new LootCondition[0], "cloth_fabric");
 			event.getTable().addPool(new LootPool(new LootEntryItem[]{clothLoot}, new LootCondition[]{new KilledByPlayer(false),
                     new RandomChanceWithLooting(1f, 0.5f)}, new RandomValueRange(1), new RandomValueRange(0), "cloth_fabric"));
+			
+			LootEntryItem gunpowder = new LootEntryItem(Items.GUNPOWDER, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "gunpowder");
+			event.getTable().addPool(new LootPool(new LootEntryItem[]{gunpowder}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "gunpowder"));
+			LootEntryItem eye = new LootEntryItem(Items.FERMENTED_SPIDER_EYE, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "spider_eye");
+			event.getTable().addPool(new LootPool(new LootEntryItem[]{eye}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "spider_eye"));
 		}
 	}
 	
-	//Toxic Gas & Lava Bucket burning
+	//Player ticks
 	@SubscribeEvent
 	public void playerTick(PlayerTickEvent event) {
 		if (event.phase == Phase.END) {
@@ -364,7 +371,7 @@ public class EventListener {
 				if (player.getPosition().getY()<30) {
 					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 					if (player.ticksExisted%35==0 && !player.isCreative()) {
-						if (helm.getItem() == ModContent.GAS_MASK) {
+						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() > 0) {
 							helm.damageItem(1, player);
 						} else {
 							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
@@ -376,7 +383,8 @@ public class EventListener {
 				}
 				//unburied
 				int y = (int) Math.floor(player.getPosition().getY());
-				if (y < world.getHeight((int)player.posX, (int)player.posZ)-8 &! world.canBlockSeeSky(player.getPosition()) && player.ticksExisted%60==0 && rand.nextInt(y) <= 15) {
+				Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
+				if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && player.ticksExisted%60==0 && rand.nextInt(Math.max(y, 1)) <= 15) {
 					Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 					BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
 					if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down()) 
@@ -402,6 +410,31 @@ public class EventListener {
 						player.setFire(5);
 					}
 				}
+				for(EntityTF2Character entity : world.getEntitiesWithinAABB(EntityTF2Character.class, player.getEntityBoundingBox().grow(5))) {
+					for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, entity.getEntityBoundingBox())) {
+						ItemStack stack = item.getItem();
+						if (stack.getItem() instanceof ItemAmmo) {
+							ItemStackHandler ammo = entity.refill;
+							if (ammo != null) {
+								ItemStack ammostack = ammo.getStackInSlot(0);
+								if (ammostack==null || ammostack.isEmpty()) {
+									ammo.setStackInSlot(0, stack);
+									item.setDead();
+								} else if (ammostack.getItem() == stack.getItem()) {
+									int count = ammostack.getCount() + stack.getCount();
+									if (count > 64) {
+										ammostack.setCount(64);
+										stack.setCount(count - 64);
+										if (stack.getCount() == 0) item.setDead();
+									}
+									else {
+										ammostack.setCount(count);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -419,10 +452,16 @@ public class EventListener {
 			int y = provider.getAverageGroundLevel();
 			int z = 0;
 			int tries = 0;
-			while (biome!=WastelandWorld.apocalypse) {
-				x += rand.nextInt(64) - rand.nextInt(64);
-                z += rand.nextInt(64) - rand.nextInt(64);
-                biome = world.getBiome(new BlockPos(x, y, z));
+			while (biome!=WastelandWorld.apocalypse || y <= 60) {
+				if (biome== WastelandWorld.apocalypse) {
+					x += rand.nextInt(32) - rand.nextInt(32);
+	                z += rand.nextInt(32) - rand.nextInt(32);
+				} else {
+					x += rand.nextInt(64) - rand.nextInt(64);
+	                z += rand.nextInt(64) - rand.nextInt(64);
+				}
+                y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
+                biome = world.getBiomeProvider().getBiome(new BlockPos(x, y, z));
                 tries++;
               
                 //cancel after 100 tries to not lock the game in an infinite loop
@@ -432,20 +471,21 @@ public class EventListener {
 			}
 			BlockPos spawn = new BlockPos(x, y, z);
 			world.getWorldInfo().setSpawn(spawn);
+			//spawn structure
             event.setCanceled(true);
 		}
 	}
-	
-	//stops natural hordes despawning
+
+	//Spawn in World
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
-	public void tryDespawn(LivingSpawnEvent.AllowDespawn event) {
-		EntityLivingBase entity = event.getEntityLiving();
-		if (entity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
-			IHordeSpawn cap = entity.getCapability(HordeSpawnProvider.HORDESPAWN, null);
-			if (cap.isHordeSpawned()) {
-				if (cap.getPlayerUUID().equals(TileEntityHordeSpawner.TAG_UUID)) {
-					event.setResult(Result.DENY);
-				}
+	public void setWorldSpawn(DecorateBiomeEvent.Pre event) {
+		World world = event.getWorld();
+		if (!world.isRemote) {
+			WorldDataSpawnBase data = WorldDataSpawnBase.get(world);
+			if (!data.isGenerated()) {
+				WorldGenSpawnBase spawnbase = new WorldGenSpawnBase();
+				spawnbase.generate(world, world.rand, world.getSpawnPoint().down());
+				data.setGenerated();
 			}
 		}
 	}

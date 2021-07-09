@@ -1,6 +1,7 @@
 package net.smileycorp.hundreddayz.common;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,6 +23,8 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EventListener());
 		MinecraftForge.ORE_GEN_BUS.register(new EventListener());
 		MinecraftForge.EVENT_BUS.register(new ApocalypseEventListener());
+		LootTableList.register(ModDefinitions.SPAWN_CHEST);
+		LootTableList.register(ModDefinitions.SPAWN_CABINET);
 		CommonPacketHandler.initPackets();
 	}
 	

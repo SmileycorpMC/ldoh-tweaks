@@ -18,7 +18,7 @@ public class DayTimeSpeedModifier extends AttributeModifier {
 	@Override
 	public double getAmount() {
 		long time  = world.getTotalWorldTime() % 24000;
-        return world.getWorldTime() < 239999 && time < 12000 ? 0.5 : 1;
+        return world.getWorldTime() < 239999 && time < 12000 ? -0.5 : 0;
     }
 
 }

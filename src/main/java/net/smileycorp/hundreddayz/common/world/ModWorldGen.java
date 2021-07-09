@@ -1,4 +1,4 @@
-package net.smileycorp.hundreddayz.common;
+package net.smileycorp.hundreddayz.common.world;
 
 import java.util.Random;
 
@@ -13,6 +13,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
+import net.smileycorp.hundreddayz.common.ModContent;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
@@ -22,9 +23,9 @@ public class ModWorldGen implements IWorldGenerator {
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 		int x = chunkX * 16 +rand.nextInt(16);
 		int z = chunkZ * 16 + rand.nextInt(16);
-		if (rand.nextInt(15)==0) {
+		if (rand.nextInt(16)==0) {
 			BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
-			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState());
+			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 		}
 		BlockPos chunkpos = new BlockPos(x, 0 , z);
 		Biome biome = world.getBiome(chunkpos);

@@ -11,6 +11,7 @@ public class ItemGasFilter extends Item {
 		this.setCreativeTab(ModContent.CREATIVE_TAB);
 		this.setUnlocalizedName(ModDefinitions.getName(name));
 		this.setRegistryName(ModDefinitions.getResource(name));
+		this.setMaxStackSize(8);
 	}
 
 }

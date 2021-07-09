@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -40,30 +39,12 @@ public class ClientEventListener {
 		mc.ingameGUI.setOverlayMessage(message, true);
 	}
 	
-	/*@SubscribeEvent
-	public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-		starttime=0;
-	}*/
-
-	/*@SubscribeEvent
-	public void drawTitle(RenderFogEvent event) {
-		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayerSP player = mc.player;
-		EntityRenderer render = event.getRenderer();
-		if (player.posY < 30) {
-			if (!render.isShaderActive()) {
-				render.loadShader(ModDefinitions.getResource("shaders/post/gas.json"));
-			}
-		} else if (render.isShaderActive()) {
-			render.stopUseShader();
-		}
-	}*/
-	
 	@SubscribeEvent
 	public void playerTick(PlayerTickEvent event) {
 		EntityPlayer player = event.player;
 		World world = player.world;
-		if (world.isRemote &!(player == null)) {
+		if (world.isRemote && player!=null) {
+			Minecraft mc = Minecraft.getMinecraft();
 			RayTraceResult ray = player.rayTrace(5, 20);
 			if (ray != null) {
 				if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -73,9 +54,7 @@ public class ClientEventListener {
 						TileEntityBarbedWire tile = (TileEntityBarbedWire) world.getTileEntity(pos);
 						int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
 						int cur = tile.getDurability();
-						Minecraft mc = Minecraft.getMinecraft();
-						ITextComponent message = new TextComponentString(cur + "/" + max);
-						mc.ingameGUI.setOverlayMessage(message, false);
+						mc.ingameGUI.setOverlayMessage(cur + "/" + max, false);
 					}
 				}
 			}

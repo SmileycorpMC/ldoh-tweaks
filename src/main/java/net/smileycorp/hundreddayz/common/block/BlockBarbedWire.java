@@ -52,7 +52,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumBarbedWireAxis.X));
-		setHarvestLevel("pickaxe", 0);
+		setHarvestLevel("pickaxe", 2);
 	}
 	
 	@Override

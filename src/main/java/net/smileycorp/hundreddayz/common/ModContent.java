@@ -35,6 +35,7 @@ import net.smileycorp.hundreddayz.common.item.ItemGasFilter;
 import net.smileycorp.hundreddayz.common.item.ItemGasMask;
 import net.smileycorp.hundreddayz.common.item.ItemSpawner;
 import net.smileycorp.hundreddayz.common.item.ItemSyringe;
+import net.smileycorp.hundreddayz.common.world.ModWorldGen;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -121,11 +122,15 @@ public class ModContent {
 				Ingredient.fromStacks(new ItemStack(Items.COAL, 1, 1)), new OreIngredient("fabric"), Ingredient.fromStacks(new ItemStack(Items.PAPER)), Ingredient.fromStacks(new ItemStack(Items.IRON_INGOT)));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("gas_mask"), ModDefinitions.getResource("gas_mask"), new ItemStack(GAS_MASK), "GCG", "ICI", "FCF", 
 				'G', new ItemStack(Blocks.GLASS_PANE), 'I', new ItemStack(Items.IRON_INGOT), 'F', new ItemStack(GAS_FILTER), 'C', new OreIngredient("fabric"));	
+		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("gas_mask_repair"), ModDefinitions.getResource("gas_mask"), new ItemStack(GAS_MASK, 1), 
+				Ingredient.fromItem(GAS_MASK), Ingredient.fromItem(GAS_FILTER), Ingredient.fromItem(GAS_FILTER));
 		//bandages
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("bandage_1"), ModDefinitions.getResource("bandage"), new ItemStack(FirstAidItems.BANDAGE, 1, 0), "CC", "CC", "CC",
 				'C', new OreIngredient("fabric"));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("bandage_2"), ModDefinitions.getResource("bandage"), new ItemStack(FirstAidItems.BANDAGE, 1, 0), "CCC", "CCC",
 				'C', new OreIngredient("fabric"));
+		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("plaster"), ModDefinitions.getResource("plaster"), new ItemStack(FirstAidItems.PLASTER, 3, 0), new OreIngredient("fabric"), 
+				Ingredient.fromItem(Items.SLIME_BALL));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("iron_barbed_wire"), ModDefinitions.getResource("iron_barbed_wire"), new ItemStack(ITEM_BARBED_WIRE, 4, 0), " M ", "M M", " M ",
 				'M', new ItemStack(Items.IRON_INGOT));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("gold_barbed_wire"), ModDefinitions.getResource("gold_barbed_wire"), new ItemStack(ITEM_BARBED_WIRE, 4, 1), " M ", "M M", " M ",

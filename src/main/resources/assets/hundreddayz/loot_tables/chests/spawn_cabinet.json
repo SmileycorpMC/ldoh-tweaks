@@ -1,0 +1,53 @@
+{
+    "pools": [
+        {
+			"name": "hundreddayz:spawn_cabinet",
+            "rolls": {
+                "min": 4,
+                "max": 6
+            },
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:paper",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 2,
+                                "max": 7
+                            }
+                        }
+                    ],
+                    "weight": 15
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:map",
+                    "weight": 10
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:compass",
+                    "weight": 5
+                },
+                {
+                    "type": "item",
+                    "name": "hundreddayz:syringe",
+					"functions": [
+                        {
+                            "function": "set_data",
+                            "data": 2
+                        }
+                    ],
+                    "weight": 5
+                },
+				{
+                    "type": "item",
+                    "name": "cgm:basic_ammo",
+                    "weight": 10
+                }
+            ]
+        }
+    ]
+}
