@@ -3,8 +3,8 @@
         {
 			"name": "hundreddayz:spawn_chest",
             "rolls": {
-                "min": 13,
-                "max": 19
+                "min": 8,
+                "max": 17
             },
             "entries": [
 				{
@@ -161,7 +161,7 @@
                             "data": 2
                         }
                     ],
-                    "weight": 5
+                    "weight": 3
                 },
 				{
                     "type": "item",

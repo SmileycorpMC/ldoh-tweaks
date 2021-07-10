@@ -12,10 +12,10 @@ public class ModDefinitions {
 	
 	public static final String modid = "hundreddayz";
 	public static final String name = "Last Days of Humanity Tweaks";
-	public static final String version = "alpha 1.1.2e";
+	public static final String version = "alpha 1.1.2f";
 	public static final String dependencies = "required-after:atlaslib;required-after:rafradek_tf2_weapons;required-after:hordes;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:mobends;required-after:wastelands;required-after:biomesoplenty;"
-			+ "required-after:cgm;required-after:cfm;required-after:realistic_torches;required-after:xlfoodmod;after:biometweaker";
+			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;after:biometweaker";
 	public static final String location = "net.smileycorp." + modid + ".";
 	public static final String client = location + "client.ClientProxy";
 	public static final String common = location + "common.CommonProxy";
