@@ -371,7 +371,7 @@ public class EventListener {
 				if (player.getPosition().getY()<30) {
 					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 					if (player.ticksExisted%35==0 && !player.isCreative()) {
-						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() > 0) {
+						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < ModContent.GAS_MASK.getMaxDamage()) {
 							helm.damageItem(1, player);
 						} else {
 							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);

@@ -9,6 +9,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
+import net.smileycorp.hundreddayz.common.tile.TileHordeSpawner;
 
 public class BlockHordeSpawner extends Block implements ITileEntityProvider {
 
@@ -37,7 +38,7 @@ public class BlockHordeSpawner extends Block implements ITileEntityProvider {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEntityHordeSpawner();
+		return new TileHordeSpawner();
 	}
 
 	public static void breakBlock(World world, BlockPos pos) {

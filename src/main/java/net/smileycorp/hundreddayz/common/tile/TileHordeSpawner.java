@@ -1,4 +1,4 @@
-package net.smileycorp.hundreddayz.common.block;
+package net.smileycorp.hundreddayz.common.tile;
 
 import java.util.Random;
 
@@ -9,10 +9,11 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.hundreddayz.common.block.BlockHordeSpawner;
 
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 
-public class TileEntityHordeSpawner extends TileEntity implements ITickable {
+public class TileHordeSpawner extends TileEntity implements ITickable {
 
 	@Override
 	public void update() {

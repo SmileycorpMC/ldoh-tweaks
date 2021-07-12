@@ -1,19 +1,24 @@
 package net.smileycorp.hundreddayz.common.block;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
+import net.smileycorp.hundreddayz.common.ModContent;
 
 public enum EnumBarbedWireMat implements IStringSerializable {
 	
-	IRON("Iron", 0.5f, 300), GOLD("Gold", 2f, 100), DIAMOND("Diamond", 1f, 900);
+	IRON("Iron", 0.5f, 300, Items.IRON_NUGGET), GOLD("Gold", 2f, 100, Items.GOLD_NUGGET), DIAMOND("Diamond", 1f, 900, ModContent.DIAMOND_NUGGET);
 	
 	final String name;
 	final float damage;
 	final int durability;
+	final Item drop;
 	
-	EnumBarbedWireMat(String name, float damage, int durability) {
+	EnumBarbedWireMat(String name, float damage, int durability, Item drop) {
 		this.name=name;
 		this.damage=damage;
 		this.durability=durability;
+		this.drop=drop;
 	}
 
 	@Override
@@ -37,6 +42,10 @@ public enum EnumBarbedWireMat implements IStringSerializable {
 	
 	public int getDurability() {
 		return durability;
+	}
+	
+	public Item getDrop() {
+		return drop;
 	}
 	
 }

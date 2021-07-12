@@ -9,7 +9,7 @@ public class WorldDataSpawnBase extends WorldSavedData {
 
 	public static final String DATA = ModDefinitions.modid + "_SpawnBase";
 	
-	protected Boolean isGenerated;
+	protected Boolean isGenerated = false;
 	
 	public WorldDataSpawnBase() {
 		this(DATA);
@@ -17,7 +17,6 @@ public class WorldDataSpawnBase extends WorldSavedData {
 	
 	public WorldDataSpawnBase(String data) {
 		super(data);
-		isGenerated = false;
 	}
 
 	@Override

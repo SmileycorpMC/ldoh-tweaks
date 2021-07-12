@@ -23,18 +23,17 @@ import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.hundreddayz.common.block.BlockBarbedWire;
 import net.smileycorp.hundreddayz.common.block.BlockHordeSpawner;
-import net.smileycorp.hundreddayz.common.block.TileEntityBarbedWire;
-import net.smileycorp.hundreddayz.common.block.TileEntityHordeSpawner;
 import net.smileycorp.hundreddayz.common.entity.DamageSourceBleed;
 import net.smileycorp.hundreddayz.common.entity.DamageSourceToxicGas;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
 import net.smileycorp.hundreddayz.common.entity.PotionBleeding;
 import net.smileycorp.hundreddayz.common.item.ItemBarbedWire;
-import net.smileycorp.hundreddayz.common.item.ItemClothingFabric;
-import net.smileycorp.hundreddayz.common.item.ItemGasFilter;
+import net.smileycorp.hundreddayz.common.item.ItemBase;
 import net.smileycorp.hundreddayz.common.item.ItemGasMask;
 import net.smileycorp.hundreddayz.common.item.ItemSpawner;
 import net.smileycorp.hundreddayz.common.item.ItemSyringe;
+import net.smileycorp.hundreddayz.common.tile.TileBarbedWire;
+import net.smileycorp.hundreddayz.common.tile.TileHordeSpawner;
 import net.smileycorp.hundreddayz.common.world.ModWorldGen;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -53,10 +52,11 @@ public class ModContent {
 	 };
 	
 	public static Item SPAWNER = new ItemSpawner();
-	public static Item CLOTH_FABRIC = new ItemClothingFabric();
+	public static Item CLOTH_FABRIC = new ItemBase("Clothing_Fabric");
 	public static Item SYRINGE = new ItemSyringe();
-	public static Item GAS_FILTER = new ItemGasFilter();
+	public static Item GAS_FILTER = new ItemBase("Gas_Filter");
 	public static Item GAS_MASK = new ItemGasMask();
+	public static Item DIAMOND_NUGGET = new ItemBase("Diamond_Nugget");
 	
 	public static Block BARBED_WIRE = new BlockBarbedWire();
 	public static Block HORDE_SPAWNER = new BlockHordeSpawner();
@@ -65,19 +65,20 @@ public class ModContent {
 	public static DamageSourceBleed BLEED_DAMAGE = new DamageSourceBleed();
 	public static DamageSourceToxicGas TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	
-	public static Item[] items = {SPAWNER, CLOTH_FABRIC, SYRINGE, GAS_FILTER, GAS_MASK};
+	public static Item[] items = {SPAWNER, CLOTH_FABRIC, SYRINGE, GAS_FILTER, GAS_MASK, DIAMOND_NUGGET};
 	public static Block[] blocks = {BARBED_WIRE, HORDE_SPAWNER};
 	
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		IForgeRegistry<Block> registry = event.getRegistry();
 		registry.registerAll(blocks);
-		GameRegistry.registerTileEntity(TileEntityBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
-		GameRegistry.registerTileEntity(TileEntityHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
+		GameRegistry.registerTileEntity(TileBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
+		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 	}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
+		GAS_FILTER.setMaxStackSize(1);
 		IForgeRegistry<Item> registry = event.getRegistry();
 		items = ArrayUtils.add(items, new ItemBarbedWire());
 		registry.registerAll(items);
@@ -85,7 +86,7 @@ public class ModContent {
 	
 	@SubscribeEvent
     public static void registerPotions(RegistryEvent.Register<Potion> event) {
-        event.getRegistry().register(BLEED);
+        //event.getRegistry().register(BLEED);
     }
 	
 	@SubscribeEvent
@@ -137,5 +138,9 @@ public class ModContent {
 				'M', new ItemStack(Items.GOLD_INGOT));
 		GameRegistry.addShapedRecipe(ModDefinitions.getResource("diamond_barbed_wire"), ModDefinitions.getResource("diamond_barbed_wire"), new ItemStack(ITEM_BARBED_WIRE, 4, 2), " M ", "M M", " M ",
 				'M', new ItemStack(Items.DIAMOND));
+		GameRegistry.addShapedRecipe(ModDefinitions.getResource("diamond"), ModDefinitions.getResource("diamond"), new ItemStack(Items.DIAMOND), "MMM", "MMM", "MMM",
+				'M', new ItemStack(DIAMOND_NUGGET));
+		GameRegistry.addShapelessRecipe(ModDefinitions.getResource("diamond_nugget"), ModDefinitions.getResource("diamond_nugget"), new ItemStack(DIAMOND_NUGGET, 9), 
+				Ingredient.fromItem(Items.DIAMOND));
 	}
 }

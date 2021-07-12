@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
 import net.smileycorp.hundreddayz.common.block.BlockBarbedWire;
-import net.smileycorp.hundreddayz.common.block.TileEntityBarbedWire;
+import net.smileycorp.hundreddayz.common.tile.TileBarbedWire;
 
 @EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
 public class ClientEventListener {
@@ -50,8 +50,8 @@ public class ClientEventListener {
 				if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
 					BlockPos pos = ray.getBlockPos();
 					IBlockState state = world.getBlockState(pos);
-					if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileEntityBarbedWire) {
-						TileEntityBarbedWire tile = (TileEntityBarbedWire) world.getTileEntity(pos);
+					if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileBarbedWire) {
+						TileBarbedWire tile = (TileBarbedWire) world.getTileEntity(pos);
 						int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
 						int cur = tile.getDurability();
 						mc.ingameGUI.setOverlayMessage(cur + "/" + max, false);

@@ -13,16 +13,12 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -35,10 +31,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
+import net.smileycorp.hundreddayz.common.tile.TileBarbedWire;
 
 public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
 
@@ -53,6 +49,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		setRegistryName(ModDefinitions.getResource(name));
 		setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumBarbedWireAxis.X));
 		setHarvestLevel("pickaxe", 2);
+		setHardness(0.3F);
 	}
 	
 	@Override
@@ -67,15 +64,14 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEntityBarbedWire(EnumBarbedWireMat.byMeta(meta%3));
+		return new TileBarbedWire(EnumBarbedWireMat.byMeta(meta%3));
 	}
 	
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-		if (entity instanceof EntityItem) entity.setDead();
         entity.setInWeb();
-        if (world.getTileEntity(pos) instanceof TileEntityBarbedWire &! world.isRemote) {
-        	TileEntityBarbedWire te = (TileEntityBarbedWire) world.getTileEntity(pos);
+        if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
+        	TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
         	if (te.getOrUpdateCooldown() == 0) {
         		te.causeDamage();
         	}
@@ -125,6 +121,17 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	}
 	
 	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		if (world.getTileEntity(pos) instanceof TileBarbedWire) {
+			TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
+			EnumBarbedWireMat mat = state.getValue(MATERIAL);
+			Item item = mat.getDrop();
+			int count = (int) Math.floor((te.getDurability() / mat.getDurability()) * 9);
+			drops.add(new ItemStack(item, count));
+		}
+    }
+	
+	/*@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
         player.addStat(StatList.getBlockStats(this));
         player.addExhaustion(0.005F);
@@ -132,8 +139,8 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
         if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
             java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
             ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(MATERIAL).ordinal());
-            if (te instanceof TileEntityBarbedWire) {
-            	int durability = ((TileEntityBarbedWire) te).getDurability();
+            if (te instanceof TileBarbedWire) {
+            	int durability = ((TileBarbedWire) te).getDurability();
             	stack.setItemDamage(durability);
             }
             items.add(drop);
@@ -142,7 +149,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
                 spawnAsEntity(world, pos, item);
             }
         }
-    }
+    }*/
 
     @Override
 	public boolean isOpaqueCube(IBlockState state) {

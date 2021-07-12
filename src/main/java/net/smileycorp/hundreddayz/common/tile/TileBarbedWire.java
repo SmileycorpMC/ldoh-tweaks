@@ -1,4 +1,4 @@
-package net.smileycorp.hundreddayz.common.block;
+package net.smileycorp.hundreddayz.common.tile;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
@@ -8,18 +8,19 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.smileycorp.hundreddayz.common.block.EnumBarbedWireMat;
 
-public class TileEntityBarbedWire extends TileEntity {
+public class TileBarbedWire extends TileEntity {
 	
 	protected int durability;
 	protected int cooldown=0;
 	protected EnumBarbedWireMat mat;
 	
-	public TileEntityBarbedWire() {
+	public TileBarbedWire() {
 		this(EnumBarbedWireMat.IRON);
 	}
 
-	public TileEntityBarbedWire(EnumBarbedWireMat material) {
+	public TileBarbedWire(EnumBarbedWireMat material) {
 		mat = material;
 		durability = material.getDurability();
 	}
