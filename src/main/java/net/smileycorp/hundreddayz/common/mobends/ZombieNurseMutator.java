@@ -27,13 +27,13 @@ public class ZombieNurseMutator extends ZombieMutatorBase<ZombieNurseData, Entit
 		
 		 ModelRenderer dress = new ModelRenderer(original, 16, 32);
 	        dress.setRotationPoint(0.0F, 2.0F, 0.0F);
-	        dress.addBox(-4.0F, -12.0F, -2.0F, 8, 7, 4, 0.0F);
+	        dress.addBox(-4.0F, -12.0F, -2.0F, 8, 11, 4, 0.0F);
 	        body.addChild(dress);
-	     ModelRenderer skirt = new ModelRenderer(original, 40, 32);
-	        skirt.setRotationPoint(0.0F, 2.0F, 0.0F);
-	        skirt.addBox(-4.0F, -6F, -2.5F, 8, 7, 4, 0.0F);
-	        skirt.rotateAngleX =-1f;
-	        body.addChild(skirt);
+	     ModelRenderer skirtMiddle = new ModelRenderer(original, 41, 32);
+	        skirtMiddle.setRotationPoint(0.0F, 2.0F, 0.0F);
+	        skirtMiddle.addBox(-3.0F, -3F, -4.5F, 6, 5, 5, 0.0F);
+	        skirtMiddle.rotateAngleX =-0.7f;
+	        body.addChild(skirtMiddle);
 	        
 	    
 	        
@@ -110,6 +110,17 @@ public class ZombieNurseMutator extends ZombieMutatorBase<ZombieNurseData, Entit
 		rightForeLeg = new ModelPart(original, 0, 16 + 6)
 				.setParent(rightLeg)
 				.setPosition(0, 6.0F, -2.0F);
+		
+		ModelRenderer leftSkirt = new ModelRenderer(original, 0, 32);
+		leftSkirt.setRotationPoint(0.0F, 2.0F, 0.0F);
+		leftSkirt.addBox(-0.4f, -3.0F, -2.5f, 4, 5, 4, 0.0F);
+		leftSkirt.mirror = true;
+        leftLeg.addChild(leftSkirt);
+        
+        ModelRenderer rightSkirt = new ModelRenderer(original, 0, 32);
+        rightSkirt.setRotationPoint(0.0F, 2.0F, 0.0F);
+        rightSkirt.addBox(-4.4f, -3.0F, -2.5f, 4, 5, 4, 0.0F);
+        rightLeg.addChild(rightSkirt);
 
 		rightForeLeg.developBox(-3.9F, 0.0F, 0.0F, 3, 6, 3, scaleFactor)
 				.inflate(0.01F, 0, 0.01F)

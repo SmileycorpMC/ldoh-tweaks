@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -121,35 +122,14 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	}
 	
 	@Override
-	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-		if (world.getTileEntity(pos) instanceof TileBarbedWire) {
-			TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
-			EnumBarbedWireMat mat = state.getValue(MATERIAL);
-			Item item = mat.getDrop();
-			int count = (int) Math.floor((te.getDurability() / mat.getDurability()) * 9);
-			drops.add(new ItemStack(item, count));
-		}
-    }
-	
-	/*@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
         player.addStat(StatList.getBlockStats(this));
         player.addExhaustion(0.005F);
-
-        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
-            java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
-            ItemStack drop = new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(MATERIAL).ordinal());
-            if (te instanceof TileBarbedWire) {
-            	int durability = ((TileBarbedWire) te).getDurability();
-            	stack.setItemDamage(durability);
-            }
-            items.add(drop);
-            ForgeEventFactory.fireBlockHarvesting(items, world, pos, state, 0, 1.0f, true, player);
-            for (ItemStack item : items){
-                spawnAsEntity(world, pos, item);
-            }
-        }
-    }*/
+		EnumBarbedWireMat mat = state.getValue(MATERIAL);
+		Item item = mat.getDrop();
+		int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
+        spawnAsEntity(world, pos, new ItemStack(item, count, 0));
+    }
 
     @Override
 	public boolean isOpaqueCube(IBlockState state) {

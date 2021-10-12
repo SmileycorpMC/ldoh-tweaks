@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.smileycorp.hundreddayz.common.block.BlockBarbedWire;
 import net.smileycorp.hundreddayz.common.block.EnumBarbedWireMat;
 
 public class TileBarbedWire extends TileEntity {
@@ -58,7 +59,7 @@ public class TileBarbedWire extends TileEntity {
 	}
 	
 	public EnumBarbedWireMat getMaterial() {
-		return mat;
+		return world.getBlockState(pos).getValue(BlockBarbedWire.MATERIAL);
 	}
 	
 	@Override

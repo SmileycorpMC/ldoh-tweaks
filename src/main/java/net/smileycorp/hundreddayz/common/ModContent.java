@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,10 +22,9 @@ import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.hundreddayz.common.block.BlockBarbedWire;
 import net.smileycorp.hundreddayz.common.block.BlockHordeSpawner;
-import net.smileycorp.hundreddayz.common.entity.DamageSourceBleed;
 import net.smileycorp.hundreddayz.common.entity.DamageSourceToxicGas;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
-import net.smileycorp.hundreddayz.common.entity.PotionBleeding;
+import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import net.smileycorp.hundreddayz.common.item.ItemBarbedWire;
 import net.smileycorp.hundreddayz.common.item.ItemBase;
 import net.smileycorp.hundreddayz.common.item.ItemGasMask;
@@ -61,8 +59,8 @@ public class ModContent {
 	public static Block BARBED_WIRE = new BlockBarbedWire();
 	public static Block HORDE_SPAWNER = new BlockHordeSpawner();
 	
-	public static Potion BLEED = new PotionBleeding();
-	public static DamageSourceBleed BLEED_DAMAGE = new DamageSourceBleed();
+	/*public static Potion BLEED = new PotionBleeding();
+	public static DamageSourceBleed BLEED_DAMAGE = new DamageSourceBleed();*/
 	public static DamageSourceToxicGas TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	
 	public static Item[] items = {SPAWNER, CLOTH_FABRIC, SYRINGE, GAS_FILTER, GAS_MASK, DIAMOND_NUGGET};
@@ -85,11 +83,6 @@ public class ModContent {
 	}
 	
 	@SubscribeEvent
-    public static void registerPotions(RegistryEvent.Register<Potion> event) {
-        //event.getRegistry().register(BLEED);
-    }
-	
-	@SubscribeEvent
 	public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
 		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		int ID = 201;
@@ -98,10 +91,10 @@ public class ModContent {
 				.id(ModDefinitions.getResource("tf_zombie"), ID++)
 				.name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build();
 		registry.register(TF_ZOMBIE);
-		/*EntityEntry NURSE_ZOMBIE = EntityEntryBuilder.create().entity(EntityZombieNurse.class)
+		EntityEntry NURSE_ZOMBIE = EntityEntryBuilder.create().entity(EntityZombieNurse.class)
 				.id(ModDefinitions.getResource("nurse_zombie"), ID++)
 				.name(ModDefinitions.getName("NurseZombie")).tracker(80, 3, true).build();
-		registry.register(NURSE_ZOMBIE);*/
+		registry.register(NURSE_ZOMBIE);
 	}
 	
 	@SubscribeEvent

@@ -61,7 +61,6 @@ import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hundreddayz.common.capability.SpawnProvider;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
-import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 import net.smileycorp.hundreddayz.common.world.WorldDataSpawnBase;
 import net.smileycorp.hundreddayz.common.world.WorldGenSpawnBase;
 import rafradek.TF2weapons.TF2weapons;
@@ -145,8 +144,8 @@ public class EventListener {
 			if (entity.getClass() == EntityZombie.class) {
 				if (entity.hasCapability(SpawnProvider.SPAWN_TRACKER, null)) {
 					if(!entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).isSpawned()) {
-						if (entity.hasCapability(HordeSpawnProvider.HORDESPAWN, null)) {
-							IHordeSpawn cap = entity.getCapability(HordeSpawnProvider.HORDESPAWN, null);
+						if (entity.hasCapability(Provider.HORDESPAWN, null)) {
+							IHordeSpawn cap = entity.getCapability(Provider.HORDESPAWN, null);
 							if (cap.isHordeSpawned()) {
 								if (DataUtils.isValidUUID(cap.getPlayerUUID())) {
 									entity.getCapability(SpawnProvider.SPAWN_TRACKER, null).setSpawned(true);
@@ -154,7 +153,7 @@ public class EventListener {
 								}
 							}
 						}
-						int day = Math.round(world.getWorldTime()/24000);
+						int day = (int) Math.floor(world.getWorldTime()/24000);
 						EntityZombie zombie = (EntityZombie) entity;
 						EntityMob newentity = null;
 						//turns zombies into inf humans after day 50
@@ -264,7 +263,7 @@ public class EventListener {
 		World world = event.getWorld();
 		EntityLivingBase entity = event.getEntityLiving();
 		if (!world.isRemote) {
-			int day = Math.round(world.getWorldTime()/24000);
+			int day = (int) Math.floor(world.getWorldTime()/24000);
 			if (entity instanceof EntityParasiteBase) {
 				if (entity.getClass() == EntityLodo.class) {
 					if (day < 30) event.setResult(Result.DENY);
@@ -302,10 +301,6 @@ public class EventListener {
 			//adds 1/10 chance for bleed effect to husk
 			if (attacker instanceof EntityHusk && world.rand.nextInt(10)==0) {
 				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70, 0));
-			}
-			//adds 1/5 chance for bleed effect to nurse
-			if (attacker instanceof EntityZombieNurse && world.rand.nextInt(5)==0) {
-				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 30, 1));
 			}
 		}
 	}

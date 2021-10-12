@@ -19,6 +19,7 @@ import net.smileycorp.hundreddayz.common.CommonProxy;
 import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
 import net.smileycorp.hundreddayz.common.entity.EntityTFZombie;
+import net.smileycorp.hundreddayz.common.entity.EntityZombieNurse;
 
 @EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.modid)
 public class ClientProxy extends CommonProxy {
@@ -41,8 +42,8 @@ public class ClientProxy extends CommonProxy {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityTFZombie.class, m-> new RenderTFZombie(m));
-		//RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m-> new RenderZombieNurse(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTFZombie.class, m -> new RenderTFZombie(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
 		for (Item item: ModContent.items) {
 			if (item instanceof IMetaItem) {
 				for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {

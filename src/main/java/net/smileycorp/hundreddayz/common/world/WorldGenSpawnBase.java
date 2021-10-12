@@ -38,7 +38,7 @@ public class WorldGenSpawnBase extends WorldGenerator {
 	@Override
 	public boolean generate(World world, Random rand, BlockPos basepos) {
 		if (world.getBlockState(basepos).getBlock() == Blocks.STONEBRICK) return false;
-		BlockPos exitpos = basepos;
+		BlockPos exitpos = new BlockPos(0, 0, 0);
 		int wh = basepos.getY()+6;
 		for (int i = -13; i <= 13; i++) {
 			for (int k = -13; k <= 13; k++) {
@@ -112,53 +112,55 @@ public class WorldGenSpawnBase extends WorldGenerator {
 	}
 	
 	private void decorateBase(World world, Random rand, BlockPos pos, BlockPos exitpos) {
-		BlockPos wallpos = pos.south(4);
-		world.setBlockState(wallpos.west(4), Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, 
-				BlockStoneBrick.EnumType.CHISELED), 18);
-		world.setBlockState(wallpos.west(3), ModBlocks.WORKBENCH.getDefaultState().withProperty(BlockWorkbench.FACING, EnumFacing.SOUTH), 18);
-		for (int i = 1; i <= 2; i++) {
-			for (int j = 0; j <= 1; j++) {
-				BlockPos chest = wallpos.west(i).up(j);
-				world.setBlockState(chest, Blocks.CHEST.getDefaultState(), 19);
-				((TileEntityLockableLoot) world.getTileEntity(chest)).setLootTable(ModDefinitions.SPAWN_CHEST, rand.nextLong());
+		if (exitpos.getY() != 0) {
+			BlockPos wallpos = pos.south(4);
+			world.setBlockState(wallpos.west(4), Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, 
+					BlockStoneBrick.EnumType.CHISELED), 18);
+			world.setBlockState(wallpos.west(3), ModBlocks.WORKBENCH.getDefaultState().withProperty(BlockWorkbench.FACING, EnumFacing.SOUTH), 18);
+			for (int i = 1; i <= 2; i++) {
+				for (int j = 0; j <= 1; j++) {
+					BlockPos chest = wallpos.west(i).up(j);
+					world.setBlockState(chest, Blocks.CHEST.getDefaultState(), 19);
+					((TileEntityLockableLoot) world.getTileEntity(chest)).setLootTable(ModDefinitions.SPAWN_CHEST, rand.nextLong());
+				}
 			}
-		}
-		world.setBlockState(wallpos, Blocks.CRAFTING_TABLE.getDefaultState(), 18);
-		world.setBlockState(wallpos.east(), FurnitureBlocks.DESK_CABINET_SPRUCE.getDefaultState().withProperty(BlockDeskCabinet.FACING, EnumFacing.SOUTH), 18);
-		((TileEntityLockableLoot) world.getTileEntity(wallpos.east())).setLootTable(ModDefinitions.SPAWN_CABINET, rand.nextLong());
-		for (int i = 2; i <= 4; i++) {
-			world.setBlockState(wallpos.east(i), FurnitureBlocks.TABLE_ANDESITE.getDefaultState(), 19);
-		}
-		world.setBlockState(pos.north(5).down(), BOPBlocks.planks_0.getDefaultState()
-				.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
-		IBlockState door = BOPBlocks.fir_door.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
-		world.setBlockState(pos.north(5), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER), 18);
-		world.setBlockState(pos.north(5).up(), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 18);
-		IBlockState torch = RealisticTorchesBlocks.torchLit.getDefaultState();
-		world.setBlockState(wallpos.east(3).up(2), torch.withProperty(BlockTorch.FACING, EnumFacing.NORTH), 18);
-		world.setBlockState(wallpos.west(3).up(2), torch.withProperty(BlockTorch.FACING, EnumFacing.NORTH), 18);
-		world.setBlockState(pos.add(3, 2, -4), torch.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 18);
-		world.setBlockState(pos.add(-3, 2, -4), torch.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 18);
-		for (int i = -1; i<2; i++) {
-			for (int j = 0; j<=2; j++) {
-				setRandomBrick(rand, world, exitpos.east(i).up(j));
+			world.setBlockState(wallpos, Blocks.CRAFTING_TABLE.getDefaultState(), 18);
+			world.setBlockState(wallpos.east(), FurnitureBlocks.DESK_CABINET_SPRUCE.getDefaultState().withProperty(BlockDeskCabinet.FACING, EnumFacing.SOUTH), 18);
+			((TileEntityLockableLoot) world.getTileEntity(wallpos.east())).setLootTable(ModDefinitions.SPAWN_CABINET, rand.nextLong());
+			for (int i = 2; i <= 4; i++) {
+				world.setBlockState(wallpos.east(i), FurnitureBlocks.TABLE_ANDESITE.getDefaultState(), 19);
 			}
-		}
-		door = Blocks.IRON_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
-		world.setBlockState(exitpos, door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER), 18);
-		world.setBlockState(exitpos.up(), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 18);
-		IBlockState button = Blocks.STONE_BUTTON.getDefaultState();
-		world.setBlockState(exitpos.up().east().north(), button.withProperty(BlockButton.FACING, EnumFacing.NORTH), 18);
-		world.setBlockState(exitpos.up().east().south(), button.withProperty(BlockButton.FACING, EnumFacing.SOUTH), 18);
-		for (int i=0; i<3; i++) {
-			Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
-			EntityVillager villager = new EntityVillager(world);
-			villager.onInitialSpawn(world.getDifficultyForLocation(pos), null);
-			double r = rand.nextInt(30)/10;
-			villager.posX = pos.getX() + dir.x*r;
-			villager.posY = pos.getY();
-			villager.posZ = pos.getZ() + dir.z*r;
-			world.spawnEntity(villager);
+			world.setBlockState(pos.north(5).down(), BOPBlocks.planks_0.getDefaultState()
+					.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
+			IBlockState door = BOPBlocks.fir_door.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
+			world.setBlockState(pos.north(5), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER), 18);
+			world.setBlockState(pos.north(5).up(), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 18);
+			IBlockState torch = RealisticTorchesBlocks.torchLit.getDefaultState();
+			world.setBlockState(wallpos.east(3).up(2), torch.withProperty(BlockTorch.FACING, EnumFacing.NORTH), 18);
+			world.setBlockState(wallpos.west(3).up(2), torch.withProperty(BlockTorch.FACING, EnumFacing.NORTH), 18);
+			world.setBlockState(pos.add(3, 2, -4), torch.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 18);
+			world.setBlockState(pos.add(-3, 2, -4), torch.withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 18);
+			for (int i = -1; i<2; i++) {
+				for (int j = 0; j<=2; j++) {
+					setRandomBrick(rand, world, exitpos.east(i).up(j));
+				}
+			}
+			door = Blocks.IRON_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
+			world.setBlockState(exitpos, door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER), 18);
+			world.setBlockState(exitpos.up(), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 18);
+			IBlockState button = Blocks.STONE_BUTTON.getDefaultState();
+			world.setBlockState(exitpos.up().east().north(), button.withProperty(BlockButton.FACING, EnumFacing.NORTH), 18);
+			world.setBlockState(exitpos.up().east().south(), button.withProperty(BlockButton.FACING, EnumFacing.SOUTH), 18);
+			for (int i=0; i<3; i++) {
+				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+				EntityVillager villager = new EntityVillager(world);
+				villager.onInitialSpawn(world.getDifficultyForLocation(pos), null);
+				double r = rand.nextInt(30)/10;
+				villager.posX = pos.getX() + dir.x*r;
+				villager.posY = pos.getY()+2;
+				villager.posZ = pos.getZ() + dir.z*r;
+				world.spawnEntity(villager);
+			}
 		}
 	}
 

@@ -2,9 +2,12 @@ package net.smileycorp.hundreddayz.client;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -12,7 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.hundreddayz.common.ModContent;
 import net.smileycorp.hundreddayz.common.ModDefinitions;
@@ -40,22 +43,25 @@ public class ClientEventListener {
 	}
 	
 	@SubscribeEvent
-	public void playerTick(PlayerTickEvent event) {
-		EntityPlayer player = event.player;
-		World world = player.world;
-		if (world.isRemote && player!=null) {
-			Minecraft mc = Minecraft.getMinecraft();
-			RayTraceResult ray = player.rayTrace(5, 20);
-			if (ray != null) {
-				if (ray.typeOfHit == RayTraceResult.Type.BLOCK) {
-					BlockPos pos = ray.getBlockPos();
-					IBlockState state = world.getBlockState(pos);
-					if (world.getBlockState(pos).getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileBarbedWire) {
-						TileBarbedWire tile = (TileBarbedWire) world.getTileEntity(pos);
-						int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
-						int cur = tile.getDurability();
-						mc.ingameGUI.setOverlayMessage(cur + "/" + max, false);
-					}
+	public void renderOverlay(RenderTickEvent event) {
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayerSP player = mc.player;
+		if (player != null) {
+			World world = player.world;
+			RayTraceResult ray = player.rayTrace(4.5f, 1);
+			if (ray.typeOfHit == Type.BLOCK) {
+				BlockPos pos = ray.getBlockPos();
+				IBlockState state = world.getBlockState(pos);
+				if (state.getBlock() == ModContent.BARBED_WIRE && world.getTileEntity(pos) instanceof TileBarbedWire) {
+					TileBarbedWire tile = (TileBarbedWire) world.getTileEntity(pos);
+					int max = state.getValue(BlockBarbedWire.MATERIAL).getDurability();
+					int cur = tile.getDurability();
+					RenderManager manager = mc.getRenderManager();
+					boolean thirdPerson = manager.options.thirdPersonView == 2;
+			        float x = (float) (pos.getX()-player.posX + 0.5f);
+			        float y = (float) (pos.getY()-player.posY + 1);
+			        float z = (float) (pos.getZ()-player.posZ + 0.5f);
+			        EntityRenderer.drawNameplate(manager.getFontRenderer(), cur + "/" + max, x, y, z, 0, manager.playerViewY, manager.playerViewX, thirdPerson, false);
 				}
 			}
 		}

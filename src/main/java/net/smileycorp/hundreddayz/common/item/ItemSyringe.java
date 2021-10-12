@@ -85,7 +85,7 @@ public class ItemSyringe extends Item implements IMetaItem {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		World world = player.world;
-		if (target.isPotionActive(HordesInfection.INFECTED) || stack.getMetadata() == 2) {
+		if (target.isPotionActive(HordesInfection.INFECTED) && stack.getMetadata() == 2) {
 			if (!world.isRemote) {
 				target.removePotionEffect(HordesInfection.INFECTED);
 				target.heal(5);

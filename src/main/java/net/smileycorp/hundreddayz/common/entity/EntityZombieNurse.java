@@ -1,5 +1,6 @@
 package net.smileycorp.hundreddayz.common.entity;
 
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
 
 public class EntityZombieNurse extends EntityZombie {
 	
-	private Set<EntityZombie> healTargets = new HashSet<EntityZombie>();
+	private Set<WeakReference<EntityZombie>> healTargets = new HashSet<WeakReference<EntityZombie>>();
 	
 	public EntityZombieNurse(World world) {
 		super(world);
@@ -50,12 +51,12 @@ public class EntityZombieNurse extends EntityZombie {
 			 for (EntityZombie entity : world.getEntitiesWithinAABB(EntityZombie.class, getEntityBoundingBox().grow(5))) {
 				 if (entity.getHealth() < entity.getMaxHealth()) {
 					 if (world.isRemote) {
-						 if (!healTargets.contains(entity)) healTargets.add(entity);
+						 if (!healTargets.contains(entity)) healTargets.add(new WeakReference(entity));
 						 if (entity.getHealth() >= entity.getMaxHealth()) {
 							 healTargets.remove(entity);
 						 }
 						 for (int i = 0; i < 6; ++i) {
-							 world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, entity.posX + (rand.nextDouble() - 0.5D) * entity.width,
+							 world.spawnParticle(EnumParticleTypes.HEART, entity.posX + (rand.nextDouble() - 0.5D) * entity.width,
 								entity.posY + rand.nextDouble() * entity.height, entity.posZ + (rand.nextDouble() - 0.5D) * entity.width, 0.0D, 0.3D, 0.0D);
 				         }
 					 } else {
@@ -64,14 +65,15 @@ public class EntityZombieNurse extends EntityZombie {
 				 }
 			 }
 		 } if (world.isRemote) {
-			 for (EntityZombie entity : healTargets) {
-				 Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
-				 System.out.println(dir);
-				 world.spawnParticle(EnumParticleTypes.END_ROD, posX, posY+0.8d, posZ, dir.x, dir.y, dir.z);
-				 if (entity.getHealth() >= entity.getMaxHealth()) {
-					 healTargets.remove(entity);
+			 for (WeakReference<EntityZombie> ref : healTargets) {
+				 EntityZombie entity = ref.get();
+				 if (entity!=this) {
+					 Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
+					 float v = getDistance(entity)/10;
+					 world.spawnParticle(EnumParticleTypes.END_ROD, posX, posY+0.8d, posZ, dir.x*v, dir.y*v, dir.z*v); 
 				 }
 			 }
+			 healTargets.clear();
 		 }
 		 super.onLivingUpdate();
 	}

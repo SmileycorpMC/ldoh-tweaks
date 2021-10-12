@@ -38,7 +38,7 @@ public class ApocalypseEventListener {
 	public void worldTick(WorldTickEvent event) {
 		World world = event.world;
 		if (!world.isRemote) {
-			int day = Math.round(world.getWorldTime()/24000);
+			int day = (int) Math.floor(world.getWorldTime()/24000);
 			int time = Math.round(world.getWorldTime()%24000);
 			WorldSaveApocalypseEvent data = WorldSaveApocalypseEvent.get(world);
 			/*if (time == 0) {

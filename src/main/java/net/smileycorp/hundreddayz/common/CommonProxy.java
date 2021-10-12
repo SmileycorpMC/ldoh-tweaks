@@ -1,5 +1,6 @@
 package net.smileycorp.hundreddayz.common;
 
+import goblinbob.mobends.core.addon.AddonHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
@@ -9,11 +10,12 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.smileycorp.hordes.infection.InfectionCureHandler;
+import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.hundreddayz.common.apocalypse.ApocalypseEventListener;
 import net.smileycorp.hundreddayz.common.apocalypse.ApocalypseSpawnTable;
 import net.smileycorp.hundreddayz.common.apocalypse.CommandBossEvent;
 import net.smileycorp.hundreddayz.common.capability.ISpawnTracker;
+import net.smileycorp.hundreddayz.common.mobends.HundredDayzAddon;
 
 public class CommonProxy {
 	
@@ -30,12 +32,12 @@ public class CommonProxy {
 	
 	public void init(FMLInitializationEvent event) {
 		GameRegistry.addSmelting(new ItemStack(ModContent.SYRINGE, 1, 3), new ItemStack(ModContent.SYRINGE, 1, 0), 0.1f);
-		//AddonHelper.registerAddon(ModDefinitions.modid, new HundredDayzAddon());
+		AddonHelper.registerAddon(ModDefinitions.modid, new HundredDayzAddon());
 		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), new ISpawnTracker.Factory());
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {
-		InfectionCureHandler.addCureItem(new ItemStack(ModContent.SYRINGE, 2));
+		InfectionRegister.addCureItem(new ItemStack(ModContent.SYRINGE, 2));
 	}
 	
 	public void serverStart(FMLServerStartingEvent event) {
