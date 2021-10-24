@@ -1,0 +1,10 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "net.smileycorp.ldoh.mixin",
+  "refmap": "mixins.ldoh.refmap.json",
+  "mixins": [
+    "MixinEntityLiving"
+  ],
+  "client": [],
+  "server": []
+}

@@ -1,9 +1,9 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "group": "hundreddays:cloth_string",
+    "type": "minecraft:crafting_shapeless",
+    "group": "hundreddayz:cloth_string",
     "ingredients": [
         {
-            "item": "hundreddays:clothing_fabric",
+            "item": "hundreddayz:clothing_fabric",
 			"data": 0
         }
 	],

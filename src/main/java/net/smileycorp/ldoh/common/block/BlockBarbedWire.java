@@ -1,0 +1,174 @@
+package net.smileycorp.ldoh.common.block;
+
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.tile.TileBarbedWire;
+import net.smileycorp.ldoh.common.util.EnumAxis;
+import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
+
+import com.mrcrayfish.guns.entity.EntityProjectile;
+
+public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
+
+	public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
+	public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
+	
+	public BlockBarbedWire() {
+		super(Material.ROCK);
+		String name = "Barbed_Wire";
+		setCreativeTab(ModContent.CREATIVE_TAB);
+		setUnlocalizedName(ModDefinitions.getName(name));
+		setRegistryName(ModDefinitions.getResource(name));
+		setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumAxis.X));
+		setHarvestLevel("pickaxe", 2);
+		setHardness(0.3F);
+	}
+	
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		world.removeTileEntity(pos);
+	}
+	
+    @Override
+	public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta) {
+		return new TileBarbedWire(EnumBarbedWireMat.byMeta(meta%3));
+	}
+	
+	@Override
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+        entity.setInWeb();
+        if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
+        	TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
+        	if (entity instanceof EntityProjectile || entity instanceof IProjectile) te.damage(1);
+        	if (te.getOrUpdateCooldown() == 0) {
+        		te.causeDamage();
+        	}
+        	if (te.getDurability() <= 0) {
+        		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        	}
+        }
+    }
+	
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{MATERIAL, AXIS});
+	}
+	
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase player, EnumHand hand) {
+		EnumAxis axis = EnumAxis.fromVector(player.getLookVec());
+		return getStateFromMeta(player.getHeldItem(hand).getMetadata()).withProperty(AXIS, axis);
+	}
+	
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		EnumAxis axis = meta > 2 ? EnumAxis.Z : EnumAxis.X;
+		return this.getDefaultState().withProperty(MATERIAL, EnumBarbedWireMat.byMeta(meta%3)).withProperty(AXIS, axis);
+	}
+	
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(AXIS).ordinal() * 3 + state.getValue(MATERIAL).ordinal();
+    }
+	
+	@Override
+	public void getSubBlocks(CreativeTabs item, NonNullList<ItemStack> items) {
+        for (int i = 0; i<EnumBarbedWireMat.values().length; i++) {
+        	items.add(new ItemStack(this, 1, i));
+        }
+    }
+	
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
+    }
+	
+	@Override
+	public int quantityDropped(Random random) {
+		return 0;
+	}
+	
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        player.addStat(StatList.getBlockStats(this));
+        player.addExhaustion(0.005F);
+		EnumBarbedWireMat mat = state.getValue(MATERIAL);
+		Item item = mat.getDrop();
+		int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
+        spawnAsEntity(world, pos, new ItemStack(item, count, 0));
+    }
+
+    @Override
+	public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+	@Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return NULL_AABB;
+    }
+
+    @Override
+	public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+    
+    @Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
+    
+    @Override
+	public boolean usesCustomItemHandler(){
+		return true;
+	}
+
+    @Override
+    public int getMaxMeta() {
+    	return EnumBarbedWireMat.values().length * 2;
+    }
+  
+}

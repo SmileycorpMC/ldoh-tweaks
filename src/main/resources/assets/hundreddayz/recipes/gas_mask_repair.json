@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "hundreddayz:gas_mask",
+    "ingredients": [
+        {
+            "item": "hundreddayz:gas_mask"
+        },
+		{
+            "item": "hundreddayz:gas_filter",
+			"data": 0
+        }
+	],
+    "result": {
+        "item": "hundreddayz:gas_mask",
+        "count": 1
+    }
+}

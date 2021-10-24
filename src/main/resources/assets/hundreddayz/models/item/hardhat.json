@@ -1,0 +1,6 @@
+{
+	"parent": "hundreddayz:item/cap",
+	"textures": {
+		"0": "hundreddayz:model/hardhat"
+	}
+}
