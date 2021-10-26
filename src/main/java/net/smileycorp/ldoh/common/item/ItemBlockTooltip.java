@@ -25,7 +25,7 @@ public class ItemBlockTooltip extends ItemBlock {
 		String name = block.getUnlocalizedName().substring(4);
 		setUnlocalizedName(name);
 		setRegistryName(block.getRegistryName());
-		tooltipName = "tooltip." + name;
+		tooltipName = "tooltip" + name;
 		this.lines = lines;
 	}
     

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.RegistryEvent;
@@ -23,10 +24,15 @@ import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.BlockHordeSpawner;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
+import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
+import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDumbZombie;
+import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
+import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
@@ -53,15 +59,19 @@ import com.Fishmod.mod_LavaCow.init.FishItems;
 
 @EventBusSubscriber(modid = ModDefinitions.modid)
 public class ModContent {
-	
+
 	@CapabilityInject(ISpawnTracker.class)
 	public final static Capability<ISpawnTracker> SPAWN_TRACKER = null;
-	
+
 	@CapabilityInject(IBreakBlocks.class)
 	public final static Capability<IBreakBlocks> BLOCK_BREAKING = null;
-	
+
 	@CapabilityInject(IUnburiedSpawner.class)
 	public final static Capability<IUnburiedSpawner> UNBURIED_SPAWNER = null;
+
+	@CapabilityInject(IMiniRaid.class)
+	public final static Capability<IMiniRaid> MINI_RAID = null;
+
 
 	public static CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){
 		@Override
@@ -69,8 +79,8 @@ public class ModContent {
 		public ItemStack getTabIconItem() {
 			return new ItemStack(SYRINGE);
 		}
-	 };
-	
+	};
+
 	public static final Item SPAWNER = new ItemSpawner();
 	public static final Item SYRINGE = new ItemSyringe();
 	public static final Item CLOTH_FABRIC = new ItemBase("Clothing_Fabric");
@@ -82,17 +92,20 @@ public class ModContent {
 	public static final Item HARDHAT = new ItemHelmet("Hardhat", 100, 2, 0f);
 	public static final Item BONESAW = new ItemWeapon("Bonesaw", 100, 5.5);
 	public static final Item TF_PROF_TOKEN = new ItemTFProfessionToken();
-	
+
 	public static final Block HORDE_SPAWNER = new BlockHordeSpawner();
 	public static final Block BARBED_WIRE = new BlockBarbedWire();
 	public static final Block LANDMINE = new BlockLandmine();
-	
+
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
-	
+
+	public static final SoundEvent TF_ENEMY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_enemy"));
+	public static final SoundEvent TF_ALLY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_ally"));
+
 	public static Item[] items = {TF_PROF_TOKEN, SPAWNER, SYRINGE, CLOTH_FABRIC, DIAMOND_NUGGET, GAS_FILTER, GAS_MASK, NURSE_HAT, MECHANIC_HAT, HARDHAT, BONESAW};
 	public static Block[] blocks = {HORDE_SPAWNER, BARBED_WIRE, LANDMINE};
-	
+
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		IForgeRegistry<Block> registry = event.getRegistry();
@@ -101,14 +114,14 @@ public class ModContent {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 	}
-	
+
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
-		items = ArrayUtils.addAll(items, new ItemBarbedWire(), new ItemBlockTooltip(LANDMINE));
+		items = ArrayUtils.addAll(items, new ItemBarbedWire(), new ItemBlockTooltip(LANDMINE, 2));
 		registry.registerAll(items);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private static Item createItem(Block block) {
 		return new ItemBlock(block).setUnlocalizedName(block.getUnlocalizedName().substring(4)).setRegistryName(block.getRegistryName());
@@ -123,6 +136,14 @@ public class ModContent {
 				.id(ModDefinitions.getResource("dumb_zombie"), ID++)
 				.name(ModDefinitions.getName("DumbZombie")).tracker(80, 3, true).build();
 		registry.register(DUMB_ZOMBIE);
+		EntityEntry CRAWLING_ZOMBIE = EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
+				.id(ModDefinitions.getResource("crawling_zombie"), ID++)
+				.name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build();
+		registry.register(CRAWLING_ZOMBIE);
+		EntityEntry CRAWLING_HUSK = EntityEntryBuilder.create().entity(EntityCrawlingHusk.class)
+				.id(ModDefinitions.getResource("crawling_husk"), ID++)
+				.name(ModDefinitions.getName("CrawlingHusk")).tracker(80, 3, true).build();
+		registry.register(CRAWLING_HUSK);
 		EntityEntry TF_ZOMBIE = EntityEntryBuilder.create().entity(EntityTFZombie.class)
 				.id(ModDefinitions.getResource("tf_zombie"), ID++)
 				.name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build();
@@ -143,13 +164,22 @@ public class ModContent {
 				.id(ModDefinitions.getResource("zombie_technician"), ID++)
 				.name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build();
 		registry.register(ZOMBIE_TECHNICIAN);
+		EntityEntry ARCHITECT = EntityEntryBuilder.create().entity(EntityLDOHArchitect.class)
+				.id(ModDefinitions.getResource("architect"), ID++)
+				.name("villager.architect").tracker(80, 3, true).build();
+		registry.register(ARCHITECT);
+		EntityEntry TRADESMAN = EntityEntryBuilder.create().entity(EntityLDOHTradesman.class)
+				.id(ModDefinitions.getResource("tradesman"), ID++)
+				.name("villager.tradesman").tracker(80, 3, true).build();
+		registry.register(TRADESMAN);
+
 	}
-	
+
 	@SubscribeEvent
 	public static void registerOredict(RegistryEvent.Register<IRecipe> event) {
 		OreDictionary.registerOre("fabric", CLOTH_FABRIC);
 		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
 		OreDictionary.registerOre("nuggetDiamond",DIAMOND_NUGGET);
 	}
-	
+
 }

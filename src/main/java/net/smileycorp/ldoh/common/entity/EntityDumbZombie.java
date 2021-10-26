@@ -24,7 +24,7 @@ public class EntityDumbZombie extends EntityZombie {
 	@Override
 	protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.13D);
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17D);
 	}
     
     @Override

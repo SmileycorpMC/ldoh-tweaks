@@ -2,6 +2,8 @@ package net.smileycorp.ldoh.common.world;
 
 import java.util.Random;
 
+import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
+import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +30,16 @@ public class ModWorldGen implements IWorldGenerator {
 			BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
 			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 		}
+		if (chunkGenerator instanceof LostCityChunkGenerator) {
+			if (BuildingInfo.isCity(chunkX, chunkZ, (LostCityChunkGenerator) chunkGenerator)) {
+				x = chunkX * 16 +rand.nextInt(16);
+				z = chunkZ * 16 + rand.nextInt(16);
+				if (rand.nextInt(20)==0) {
+					BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
+					world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
+				}
+			}
+		}
 		BlockPos chunkpos = new BlockPos(x, 0 , z);
 		Biome biome = world.getBiome(chunkpos);
 		if (biome != WastelandWorld.apocalypse_desert) {
@@ -36,7 +48,7 @@ public class ModWorldGen implements IWorldGenerator {
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
 		}
 	}
-	
+
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){
 		ChunkGeneratorSettings.Factory factory = new ChunkGeneratorSettings.Factory();
 		factory.coalMaxHeight = 30;
@@ -57,10 +69,10 @@ public class ModWorldGen implements IWorldGenerator {
 			generator = new WorldGenMinable(block.getDefaultState(), provider.goldSize);
 			count = provider.goldCount;
 		}
-        for (int j = 0; j < count; ++j) {
-            BlockPos blockpos = chunkpos.add(rand.nextInt(16), rand.nextInt(30), rand.nextInt(16));
-            generator.generate(world, rand, blockpos);
-        }
-    }
+		for (int j = 0; j < count; ++j) {
+			BlockPos blockpos = chunkpos.add(rand.nextInt(16), rand.nextInt(30), rand.nextInt(16));
+			generator.generate(world, rand, blockpos);
+		}
+	}
 
 }

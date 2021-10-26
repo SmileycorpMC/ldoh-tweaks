@@ -23,6 +23,8 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
+import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
+import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
@@ -115,7 +117,8 @@ public class ItemSpawner extends Item implements IMetaItem {
     		entries.add(new ModMobEntry(tfclass, 0x436C34, 0xEF0000, "RED"));
     		entries.add(new ModMobEntry(tfclass, 0x436C34, 0x0000E2, "BLU"));
     	}
-    	//entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.hundreddayz.CrawlingZombie.name" , 0x436C34, 0xB5ABB4));
+    	entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.hundreddayz.CrawlingZombie.name" , 0x436C34, 0x720409));
+    	entries.add(new ModMobEntry(EntityCrawlingHusk.class, "entity.hundreddayz.CrawlingHusk.name" , 0xA5926A, 0x720409));
     	entries.add(new ModMobEntry(EntityTFZombie.class, "entity.hundreddayz.TFZombie.name" , 0x436C34, 0xBA8644));
     	entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.hundreddayz.NurseZombie.name", 0x436C34, 0xB5ABB4));
     	entries.add(new ModMobEntry(EntitySwatZombie.class, "entity.hundreddayz.SwatZombie.name", 0x436C34, 0x0C0C0D));

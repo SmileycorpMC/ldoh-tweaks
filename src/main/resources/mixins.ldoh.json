@@ -2,6 +2,9 @@
   "compatibilityLevel": "JAVA_8",
   "package": "net.smileycorp.ldoh.mixin",
   "refmap": "mixins.ldoh.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.7",
+  "plugin": "net.smileycorp.ldoh.mixin.LDOHMixinPlugin",
   "mixins": [
     "MixinEntityLiving"
   ],

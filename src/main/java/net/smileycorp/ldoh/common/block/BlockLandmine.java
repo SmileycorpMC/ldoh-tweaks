@@ -29,7 +29,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 	public static final PropertyBool PRIMED = PropertyBool.create("primed");
 	public static final PropertyBool PRESSED = PropertyBool.create("pressed");
 	
-	public static AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.4D, 0.0D, 0.4D, 0.6D, 0.25D, 0.6D);
+	public static final AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.2D, 0.0D, 0.2D, 0.8D, 0.1D, 0.8D);
 
 	public BlockLandmine() {
 		super(Material.IRON);
@@ -64,6 +64,11 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return NULL_AABB;
 	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return HITBOX_AABB;
+    }
 	
 	@Override
 	public boolean isPassable(IBlockAccess world, BlockPos pos) {

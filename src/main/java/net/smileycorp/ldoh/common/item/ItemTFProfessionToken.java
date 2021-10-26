@@ -5,12 +5,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.tangotek.tektopia.ModItems;
+import net.tangotek.tektopia.ProfessionType;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -35,7 +37,9 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		if(isInCreativeTab(tab)) {
 			for (int i = 0; i < getMaxMeta(); i++) {
-				items.add(new ItemStack(this, 1, i));
+				ItemStack stack = new ItemStack(this, 1, i);
+				stack.setTagCompound(new NBTTagCompound());
+				items.add(stack);
 			}
 		}
     }
@@ -46,7 +50,8 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 		if (!world.isRemote) {
 			if (target instanceof EntityVillagerTek) {
 				EntityVillagerTek villager = (EntityVillagerTek) target;
-				if (!villager.isChild() && villager.isMale() && (ModItems.isItemVillageBound(stack, villager.getVillage()) || !ModItems.isItemVillageBound(stack))) {
+				if (villager.canConvertProfession(ProfessionType.GUARD) && villager.isMale() && villager.getIntelligence() >= 50 && 
+						(ModItems.isItemVillageBound(stack, villager.getVillage()) || !ModItems.isItemVillageBound(stack))) {
 					int meta = stack.getMetadata();
 					try {
 						EntityTF2Character entity = EnumTFClass.values()[meta].createEntity(world);

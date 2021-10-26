@@ -1,16 +1,25 @@
 package net.smileycorp.ldoh.common.capabilities;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.ldoh.common.ModContent;
 
 public interface IBreakBlocks {
-
+	
 	public boolean canBreakBlocks();
+	
+	public boolean tryBreakBlocks();
 	
 	public void enableBlockBreaking(boolean canBreak);
 
@@ -31,13 +40,50 @@ public interface IBreakBlocks {
 		
 	}
 	
-	public static class Implementation implements IBreakBlocks {
+	public static class BreakBlocks implements IBreakBlocks {
+		
+		private final EntityLiving entity;
+		private final World world;
+		
+		public BreakBlocks(EntityLiving entity) {
+			this.entity = entity;
+			this.world = entity == null ? null : entity.world;
+		}
 		
 		private boolean canBreakBlocks = false;
 		
 		@Override
 		public boolean canBreakBlocks() {
 			return canBreakBlocks;
+		}
+		
+		@Override
+		public boolean tryBreakBlocks() {
+			if (canBreakBlocks && entity != null) {
+				if (!world.isRemote &! entity.getNavigator().noPath()) {
+					RayTraceResult ray = world.rayTraceBlocks(entity.getPositionVector(), entity.getPositionVector().add(entity.getLookVec()));
+					if (ray != null) {
+						if (ray.typeOfHit == Type.BLOCK) {
+							BlockPos pos = ray.getBlockPos();
+							Vec3d hit = ray.hitVec;
+							EnumFacing facing = EnumFacing.getFacingFromVector((float) hit.x, (float) hit.y, (float) hit.z);
+							EnumFacing[] offsets = facing.getAxis().getPlane().facings();
+							boolean broke = false;
+							for (int i = -1; i <= 1; i++) {
+								for (int j = -1; j <= 1; j++) {
+									BlockPos pos0 = pos.offset(offsets[0], i).offset(offsets[1], j);
+									IBlockState state = world.getBlockState(pos0);
+									if (!world.isAirBlock(pos0) && state.getBlock().getHarvestLevel(state) <= 2 ) {
+										if (world.destroyBlock(pos0, false)) broke = true;
+									}
+								}
+							}
+							return broke;
+						}
+					}
+				}
+			}
+			return false;
 		}
 
 		@Override
@@ -49,7 +95,11 @@ public interface IBreakBlocks {
 	
 	public static class Provider implements ICapabilitySerializable<NBTBase> {
 		
-		protected IBreakBlocks instance = new Implementation();
+		protected final IBreakBlocks instance;
+		
+		public Provider(EntityLiving entity) {
+			instance = new BreakBlocks(entity);
+		}
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

@@ -4,13 +4,13 @@ import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -23,8 +23,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
-import org.lwjgl.opengl.GL11;
-
 @EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
 public class ClientEventListener {
 	
@@ -32,6 +30,7 @@ public class ClientEventListener {
 	public static int starttime = 0;
 	
 	public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.2f);
+	public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
 
 	public static void displayTitle(String text, int day) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -60,15 +59,37 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.player;
 		if (player!= null && event.getType() == ElementType.ALL) {
-			if (player.getPosition().getY()<=29.5) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDepthMask(false);
-		        GL11.glDisable(GL11.GL_ALPHA_TEST);
-		        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		    	Gui.drawRect(0, 0, mc.displayWidth, mc.displayHeight, GAS_COLOUR.getRGB());
-		    	GL11.glDepthMask(true);
-		        GL11.glEnable(GL11.GL_DEPTH_TEST);
-		        GL11.glEnable(GL11.GL_ALPHA_TEST);
+			if (player.getPosition().getY()<=29.2) {
+				int r = GAS_COLOUR.getRed();
+		        int g = GAS_COLOUR.getGreen();
+		        int b = GAS_COLOUR.getBlue();
+		        int a = GAS_COLOUR.getAlpha();
+				final double x = player.lastTickPosX + ((player.posX - player.lastTickPosX) * event.getPartialTicks());
+				final double y = player.lastTickPosY + ((player.posY - player.lastTickPosY) * event.getPartialTicks());
+				final double z = player.lastTickPosZ + ((player.posZ - player.lastTickPosZ) * event.getPartialTicks());
+				float f = 1 / 32 /10000;
+				int height = mc.displayHeight;
+				int width = mc.displayWidth;
+				GlStateManager.pushMatrix();
+				GlStateManager.disableLighting();
+				GlStateManager.enableBlend();
+				GlStateManager.disableAlpha();
+				GlStateManager.disableTexture2D();
+		        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				mc.getTextureManager().bindTexture(GAS_TEXTURE);
+		        Tessellator tessellator = Tessellator.getInstance();
+		        BufferBuilder bufferbuilder = tessellator.getBuffer();
+		        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+		        bufferbuilder.pos(0, height, 0).tex(0, height * f).color(r, g, b, a).normal((float)x, (float)y, (float)z).endVertex();
+		        bufferbuilder.pos(width, height, 0).tex(width * f, height * f).color(r, g, b, a).normal((float)x, (float)y, (float)z).endVertex();
+		        bufferbuilder.pos(width, 0, 0).tex(width * f, 0).color(r, g, b, a).normal((float)x, (float)y, (float)z).endVertex();
+		        bufferbuilder.pos(0, 0, 0).tex(0, 0).color(r, g, b, a).normal((float)x, (float)y, (float)z).endVertex();
+		        tessellator.draw();
+		        GlStateManager.disableBlend();
+        		GlStateManager.enableAlpha();
+        		GlStateManager.disableLighting();
+        		GlStateManager.enableTexture2D();
+        		GlStateManager.popMatrix();
 			}
 		}
 	}
@@ -78,34 +99,39 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		Entity entity = mc.getRenderViewEntity();
 		if (entity != null) {
-			if (entity.posY >= 29.5 && entity.posY <= 60) {
+			if (entity.posY >= 29.2) {
 				RenderManager rm = mc.getRenderManager();
 				int size = rm.options == null ? 0 : rm.options.renderDistanceChunks*16;
 				int r = GAS_COLOUR.getRed();
 		        int g = GAS_COLOUR.getGreen();
 		        int b = GAS_COLOUR.getBlue();
-		        int a = GAS_COLOUR.getAlpha();
+		        int a = GAS_COLOUR.getAlpha() + 40;
+		        int cx = ((int) Math.floor(entity.posX/16))*16 + 8;
+		        int cz = ((int) Math.floor(entity.posZ/16))*16 + 8;
+		        final double x = entity.lastTickPosX + ((entity.posX - entity.lastTickPosX) * event.getPartialTicks());
 				final double y = entity.lastTickPosY + ((entity.posY - entity.lastTickPosY) * event.getPartialTicks());
-				int l = entity.world.getCombinedLight(entity.getPosition().up((int) Math.round(31-y)), 2);
+				final double z = entity.lastTickPosZ + ((entity.posZ - entity.lastTickPosZ) * event.getPartialTicks());
+				float f = 1 / 32 /10000;
 				GlStateManager.pushMatrix();
 				GlStateManager.disableLighting();
 				GlStateManager.enableBlend();
 				GlStateManager.disableAlpha();
-				mc.getTextureManager().bindTexture(ModDefinitions.getResource("textures/misc/gas.png"));
+				GlStateManager.disableTexture2D();
+		        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				mc.getTextureManager().bindTexture(GAS_TEXTURE);
 				Tessellator tessellator = Tessellator.getInstance();
 		        BufferBuilder buffer = tessellator.getBuffer();
-		        buffer.setTranslation(0, 31-y - 0.01, 0);
-		        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-				buffer.pos(-size, 0, -size).color(r, g, b, a).tex(0, 0).lightmap(l >> 16 & 0xFFFF, l & 0xFFFF).endVertex();
-                buffer.pos(-size, 0, size).color(r, g, b, a).tex(0, 0).lightmap(l >> 16 & 0xFFFF, l & 0xFFFF).endVertex();
-                buffer.pos(size, 0, size).color(r, g, b, a).tex(0, 0).lightmap(l >> 16 & 0xFFFF, l & 0xFFFF).endVertex();
-                buffer.pos(size, 0, -size).color(r, g, b, a).tex(0, 0).lightmap(l >> 16 & 0xFFFF, l & 0xFFFF).endVertex();
+		        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+				buffer.pos(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5-size).tex(0, 0).color(r, g, b, a).normal(cx-size, (float) y, cz-size).endVertex();
+                buffer.pos(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5+size).tex(0, 2*size-f).color(r, g, b, a).normal(cx-size, (float) y, cz+size).endVertex();
+                buffer.pos(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5+size).tex(2*size-f, 2*size-f).color(r, g, b, a).normal(cx+size, (float) y, cz+size).endVertex();
+                buffer.pos(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5-size).tex(2*size-f, 0).color(r, g, b, a).normal(cx+size, (float) y, cz-size).endVertex();
                 tessellator.draw();
                 GlStateManager.disableBlend();
         		GlStateManager.enableAlpha();
         		GlStateManager.disableLighting();
+        		GlStateManager.enableTexture2D();
         		GlStateManager.popMatrix();
-        		buffer.setTranslation(0, 0, 0);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.capabilities;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +23,11 @@ public interface IUnburiedSpawner {
 	public boolean canSpawnEntity();
 
 	public void addEntity(EntityUnburied entity);
-	
+
 	public void removeEntity(EntityUnburied entity);
-	
+
 	public NBTTagCompound writeToNBT(NBTTagList nbt);
-	
+
 	public void readFromNBT(NBTTagList nbt);
 
 	public static class Storage implements IStorage<IUnburiedSpawner> {
@@ -37,33 +38,34 @@ public interface IUnburiedSpawner {
 			instance.writeToNBT(nbt);
 			return nbt;
 		}
-	
+
 		@Override
 		public void readNBT(Capability<IUnburiedSpawner> capability, IUnburiedSpawner instance, EnumFacing side, NBTBase nbt) {
 			instance.readFromNBT((NBTTagList) nbt);
 		}
-		
-		
-	}
-	
-	public static class Implementation implements IUnburiedSpawner {
 
-		private final List<EntityUnburied> entities = new ArrayList<EntityUnburied>();
-		
+
+	}
+
+	public static class UnburiedSpawner implements IUnburiedSpawner {
+
+		private final List<WeakReference<EntityUnburied>> entities = new ArrayList<WeakReference<EntityUnburied>>();
+
 		private final EntityPlayer player;
-		
-		public Implementation(EntityPlayer player) {
+
+		public UnburiedSpawner(EntityPlayer player) {
 			this.player = player;
 		}
-		
+
 		@Override
 		public boolean canSpawnEntity() {
 			if (player == null) return false;
-			List<EntityUnburied> toRemove = new ArrayList<EntityUnburied>();
-			for (EntityUnburied entity : entities) {
-				if (entity == null) toRemove.add(entity);
+			List<WeakReference<EntityUnburied>> toRemove = new ArrayList<WeakReference<EntityUnburied>>();
+			for (WeakReference<EntityUnburied> ref : entities) {
+				EntityUnburied entity = ref.get();
+				if (entity == null) toRemove.add(ref);
 				else if (player.getDistance(entity) > 45 || entity.isDead || entity.isAddedToWorld()) {
-					toRemove.add(entity);
+					toRemove.add(ref);
 					if (entity.isDead)entity.setDead();
 				}
 			}
@@ -73,19 +75,24 @@ public interface IUnburiedSpawner {
 
 		@Override
 		public void addEntity(EntityUnburied entity) {
-			entities.add(entity);
+			entities.add(new WeakReference(entity));
 		}
 
 		@Override
 		public void removeEntity(EntityUnburied entity) {
-			entities.remove(entity);
+			List<WeakReference<EntityUnburied>> toRemove = new ArrayList<WeakReference<EntityUnburied>>();
+			for (WeakReference<EntityUnburied> ref : entities) {
+				if (entity == ref.get()) toRemove.add(ref);
+			}
+			entities.removeAll(toRemove);
 		}
 
 		@Override
 		public NBTTagCompound writeToNBT(NBTTagList nbt) {
-			for (EntityUnburied entity : entities) {
+			for (WeakReference<EntityUnburied> ref : entities) {
+				EntityUnburied entity = ref.get();
 				if (entity != null) {
-					if (!(player.getDistance(entity) > 45 || entity.isDead || entity.isAddedToWorld())) {
+					if (!(entity.isDead || entity.isAddedToWorld())) {
 						nbt.appendTag(new NBTTagInt(entity.getEntityId()));
 					}
 				}
@@ -99,20 +106,20 @@ public interface IUnburiedSpawner {
 				for (NBTBase tag : nbt) {
 					if (tag instanceof NBTTagInt) {
 						Entity entity = player.world.getEntityByID(((NBTTagInt) tag).getInt());
-						if (entity instanceof EntityUnburied)entities.add((EntityUnburied) entity);
+						if (entity instanceof EntityUnburied)entities.add(new WeakReference((EntityUnburied) entity));
 					}
 				}
 			}
 		}
 
 	}
-	
+
 	public static class Provider implements ICapabilitySerializable<NBTTagList> {
-		
+
 		protected final IUnburiedSpawner instance;
-		
+
 		public Provider(EntityPlayer player) {
-			instance = new Implementation(player);
+			instance = new UnburiedSpawner(player);
 		}
 
 		@Override
@@ -135,6 +142,6 @@ public interface IUnburiedSpawner {
 			ModContent.UNBURIED_SPAWNER.getStorage().readNBT(ModContent.UNBURIED_SPAWNER, instance, null, nbt);
 		}
 
-}
- 
+	}
+
 }

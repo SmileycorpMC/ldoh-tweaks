@@ -1,6 +1,9 @@
 {
   "texture": {
     "blur": true
+  },
+  "animation": {
+    "frametime": 3
   }
 }
 

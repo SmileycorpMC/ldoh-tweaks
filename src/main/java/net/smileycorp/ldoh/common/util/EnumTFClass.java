@@ -15,28 +15,30 @@ import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 public enum EnumTFClass {
-	DEMOMAN("demoman", EntityDemoman.class),
-	ENGINEER("engineer", EntityEngineer.class),
-	HEAVY("heavy", EntityHeavy.class),
-	MEDIC("medic", EntityMedic.class),
-	PYRO("pyro", EntityPyro.class),
-	SCOUT("scout", EntityScout.class),
-	SNIPER("sniper", EntitySniper.class),
-	SOLDIER("soldier", EntitySoldier.class),
-	SPY("spy", EntitySpy.class);
-	
+	DEMOMAN("demoman", EntityDemoman.class, 4),
+	ENGINEER("engineer", EntityEngineer.class, 8),
+	HEAVY("heavy", EntityHeavy.class, 7),
+	MEDIC("medic", EntityMedic.class, 8),
+	PYRO("pyro", EntityPyro.class, 5),
+	SCOUT("scout", EntityScout.class, 4),
+	SNIPER("sniper", EntitySniper.class, 7),
+	SOLDIER("soldier", EntitySoldier.class, 5),
+	SPY("spy", EntitySpy.class, 6);
+
 	protected final String name;
 	protected final Class<? extends EntityTF2Character> clazz;
-	
-	EnumTFClass(String name, Class<? extends EntityTF2Character> clazz) {
+	protected final int cost;
+
+	EnumTFClass(String name, Class<? extends EntityTF2Character> clazz, int cost) {
 		this.name = name;
-		this.clazz=clazz;
+		this.clazz = clazz;
+		this.cost = cost;
 	}
-	
+
 	public String getUnlocalisedName() {
 		return name;
 	}
-	
+
 	public boolean testClass(Class<? extends EntityTF2Character> clazz) {
 		return this.clazz.isAssignableFrom(clazz);
 	}
@@ -47,5 +49,9 @@ public enum EnumTFClass {
 
 	public EntityTF2Character createEntity(World world) throws Exception {
 		return clazz.getConstructor(World.class).newInstance(world);
+	}
+
+	public int getCost() {
+		return cost;
 	}
 }

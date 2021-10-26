@@ -11,6 +11,7 @@ public class EntityCrawlingZombie extends EntityZombie {
 	
 	public EntityCrawlingZombie(World world) {
 		super(world);
+		setSize(0.8F, 0.8F);
 	}
 
 	@Override
@@ -21,12 +22,18 @@ public class EntityCrawlingZombie extends EntityZombie {
 	@Override
 	protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.6D);
+        getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.13D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16);
 	}
     
 	@Override
     public ItemStack getPickedResult(RayTraceResult target) {
 		return ItemSpawner.getEggFor(this);
+    }
+	
+	@Override
+	public float getEyeHeight() {
+        return 0.6F;
     }
 
 }

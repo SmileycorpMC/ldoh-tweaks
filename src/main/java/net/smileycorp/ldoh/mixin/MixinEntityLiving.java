@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.ModContent;
-import net.smileycorp.ldoh.common.util.ModUtils;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityLiving.class)
 public abstract class MixinEntityLiving extends EntityLivingBase {
-	
-	private boolean builtTrades = false;
 	
 	public MixinEntityLiving(World world) {
 		super(world);
@@ -31,8 +28,6 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
 				stack.interactWithEntity(player, this, hand);
 				callback.setReturnValue(true);
 				callback.cancel();
-			} else if (!builtTrades){
-				builtTrades = ModUtils.buildTrades(this);
 			}
 		}
 	}

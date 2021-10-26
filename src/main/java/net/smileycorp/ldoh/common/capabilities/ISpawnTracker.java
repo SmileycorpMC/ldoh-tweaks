@@ -31,7 +31,7 @@ public interface ISpawnTracker {
 		
 	}
 	
-	public static class Implementation implements ISpawnTracker {
+	public static class SpawnTracker implements ISpawnTracker {
 
 		private boolean isSpawned = false;
 
