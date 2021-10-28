@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.entity.EntityLiving;
 import net.smileycorp.atlas.api.recipe.WeightedOutputs;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
@@ -22,10 +21,10 @@ import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrol
 
 public class ApocalypseSpawnTable {
 
-	private static WeightedOutputs adaptedtable;
+	private static WeightedOutputs<Class<? extends EntityParasiteBase>> adaptedtable;
 
 	public static void init() {
-		Map<Class<? extends EntityLiving>, Integer> adaptedmap = new HashMap<Class<? extends EntityLiving>, Integer>();
+		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<Class<? extends EntityParasiteBase>, Integer>();
 		adaptedmap.put(EntityShycoAdapted.class, 1);
 		adaptedmap.put(EntityCanraAdapted.class, 1);
 		adaptedmap.put(EntityNoglaAdapted.class, 1);
@@ -33,11 +32,11 @@ public class ApocalypseSpawnTable {
 		adaptedmap.put(EntityEmanaAdapted.class, 1);
 		adaptedmap.put(EntityBanoAdapted.class, 1);
 		adaptedmap.put(EntityRanracAdapted.class, 1);
-		adaptedtable = new WeightedOutputs(adaptedmap);
+		adaptedtable = new WeightedOutputs<Class<? extends EntityParasiteBase>>(adaptedmap);
 	}
 
 	public static List<Class<? extends EntityParasiteBase>> getSpawnsForWave(int wave, Random rand) {
-		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList();
+		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<Class<? extends EntityParasiteBase>>();
 		if (wave % 1 == 0) {
 			spawnlist.add(EntityOronco.class);
 			for (int i = 0; i < 3 + Math.round(wave*0.3); i++) {

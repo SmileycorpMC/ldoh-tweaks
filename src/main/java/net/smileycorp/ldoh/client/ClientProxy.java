@@ -69,11 +69,11 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTFZombie.class, m -> new RenderTFZombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie(m, "swat_zombie"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie(m, "zombie_mechanic"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie(m, "zombie_technician"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHArchitect.class, m -> new RenderArchitect(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHTradesman.class, m -> new RenderTradesman(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHArchitect.class, m -> new RenderArchitect<EntityLDOHArchitect>(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHTradesman.class, m -> new RenderTradesman<EntityLDOHTradesman>(m));
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(ModContent.LANDMINE, new StateMapperLandmine());
 		//register item models

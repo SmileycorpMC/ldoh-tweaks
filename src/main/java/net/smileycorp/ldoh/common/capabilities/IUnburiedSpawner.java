@@ -75,7 +75,7 @@ public interface IUnburiedSpawner {
 
 		@Override
 		public void addEntity(EntityUnburied entity) {
-			entities.add(new WeakReference(entity));
+			entities.add(new WeakReference<EntityUnburied>(entity));
 		}
 
 		@Override
@@ -106,7 +106,7 @@ public interface IUnburiedSpawner {
 				for (NBTBase tag : nbt) {
 					if (tag instanceof NBTTagInt) {
 						Entity entity = player.world.getEntityByID(((NBTTagInt) tag).getInt());
-						if (entity instanceof EntityUnburied)entities.add(new WeakReference((EntityUnburied) entity));
+						if (entity instanceof EntityUnburied)entities.add(new WeakReference<EntityUnburied>((EntityUnburied) entity));
 					}
 				}
 			}

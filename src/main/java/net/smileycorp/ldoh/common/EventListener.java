@@ -74,6 +74,7 @@ import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.Hordes;
+import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
@@ -91,6 +92,7 @@ import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.network.CommonPacketHandler;
+import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 import net.tangotek.tektopia.entities.EntityArchitect;
@@ -116,21 +118,6 @@ import com.legacy.wasteland.world.WastelandWorld;
 
 @EventBusSubscriber(modid=ModDefinitions.modid)
 public class EventListener {
-
-	//TF2 Team Joining
-	/*@SubscribeEvent
-	public static void onInteractEntity(PlayerInteractEvent.EntityInteract event) {
-		World world = event.getEntity().world;
-		EntityPlayer player = event.getEntityPlayer();
-		Entity target = event.getTarget();
-		ItemStack stack = event.getItemStack();
-		//adds player to npc team
-		if (target instanceof EntityTF2Character && !world.isRemote) {
-			if (stack.isEmpty() && player.getTeam() == null) {
-				ModUtils.addPlayerToTeam(player, target.getTeam().getName());
-			}
-		}
-	}*/
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onDeath(LivingDeathEvent event) {
@@ -168,6 +155,7 @@ public class EventListener {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
@@ -325,7 +313,7 @@ public class EventListener {
 	public void hordeSpawn(HordeSpawnEntityEvent event) {
 		Entity entity = event.entity;
 		World world = entity.world;
-		EntityPlayer player = event.getEventPlayer();
+		EntityPlayer player = event.getEntityPlayer();
 		if (!world.isRemote) {
 			//replace zombies with vespas if they are in a sky base
 			if (player.getPosition().getY() - event.pos.getY() > 35) {
@@ -347,6 +335,19 @@ public class EventListener {
 					//sets the entity as a dub zombie, which doesn't recieve epic seige mod ai and is slightly slower
 					event.entity = new EntityDumbZombie(world);
 				}
+			} else if (entity instanceof EntityTF2Character) {
+				world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName() == "RED" ? "BLU" : "RED");
+				((EntityTF2Character) entity).setEntTeam(player.getTeam().getName() == "RED" ? 1 : 0);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void hordeBuildSpawntable(HordeBuildSpawntableEvent event) {
+		int day = (int) Math.floor(event.getEntityWorld().getTotalWorldTime()/24000);
+		if (day > 100 && day%100 == 0) {
+			if (event.getEntityPlayer().getTeam() != null) {
+				for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
 			}
 		}
 	}

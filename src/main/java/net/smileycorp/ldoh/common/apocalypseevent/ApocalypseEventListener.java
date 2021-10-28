@@ -18,7 +18,7 @@ import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 
 @EventBusSubscriber(modid=ModDefinitions.modid)
 public class ApocalypseEventListener {
-	
+
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
@@ -28,12 +28,12 @@ public class ApocalypseEventListener {
 				EntityParasiteBase boss = (EntityParasiteBase) entity;
 				boss.targetTasks.taskEntries.clear();
 				boss.targetTasks.addTask(1, new EntityAIHurtByTarget(boss, true, new Class[] {EntityParasiteBase.class}));
-				boss.targetTasks.addTask(2, new EntityAINearestAttackableTarget(boss, EntityPlayer.class, false));
+				boss.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityPlayer>(boss, EntityPlayer.class, false));
 				boss.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent event) {
 		World world = event.world;
@@ -68,7 +68,7 @@ public class ApocalypseEventListener {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onPlayerJoin(PlayerLoggedInEvent event) {
 		EntityPlayer player = event.player;

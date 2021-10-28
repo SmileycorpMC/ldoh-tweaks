@@ -62,7 +62,7 @@ public class ModMobEntry {
 			} else {
 				entity = clazz.getConstructor(World.class).newInstance(world);
 			}
-		} catch (Exception e) {e.printStackTrace();};
+		} catch (Exception e) {e.printStackTrace();}
 		return entity;
 	}
 

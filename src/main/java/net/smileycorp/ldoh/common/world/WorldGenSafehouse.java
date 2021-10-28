@@ -50,25 +50,25 @@ import com.mrcrayfish.furniture.tileentity.TileEntityTree;
 import com.mrcrayfish.guns.block.BlockWorkbench;
 
 public class WorldGenSafehouse extends WorldGenerator {
-	
+
 	private LocalDateTime time = LocalDateTime.now();
-	
+
 	private boolean isHalloween = false;
 	private boolean isChristmas = false;
 	private boolean isAprilFools = false;
-	
+
 	private BlockPos basepos = null;
 	private BlockPos exitpos = null;
 	private List<BlockPos> wallpos = new ArrayList<BlockPos>();
-	
+
 	private boolean marked = false;
-	
+
 	public WorldGenSafehouse() {
 		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 24) || (time.getMonth() == Month.SEPTEMBER && time.getDayOfMonth() <= 7)) isHalloween = true;
 		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 18) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() == 1)) isChristmas = true;
 		else if (time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1 || new Random().nextInt(300) == 0) isAprilFools = true;
 	}
-	
+
 	public boolean markPositions(World world, BlockPos pos, boolean forced) {
 		basepos = pos;
 		for (int i = -13; i <= 13; i++) {
@@ -91,12 +91,13 @@ public class WorldGenSafehouse extends WorldGenerator {
 		marked = true;
 		return true;
 	}
-	
+
 	public boolean isMarked() {
 		return marked;
 	}
-	
+
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean generate(World world, Random rand, BlockPos backup) {
 		if (!marked) {
 			System.out.println("ffs how even");
@@ -126,7 +127,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 					}
 					if (mi < 5 && mk < 5) {
 						world.setBlockState(pos, BOPBlocks.planks_0.getDefaultState()
-							.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
+								.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
 					}
 				}
 				if (mi <= 6 && mk <= 6) {
@@ -171,12 +172,13 @@ public class WorldGenSafehouse extends WorldGenerator {
 				} else {
 					world.setBlockState(pos.up(j), Blocks.IRON_BARS.getDefaultState(), 19);
 				}
-			} 
+			}
 		}
 		decorateBase(world, rand);
 		return true;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	private void decorateBase(World world, Random rand) {
 		BlockPos pos = basepos.up();
 		if (exitpos == null) {
@@ -184,7 +186,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 			throw new ReportedException(report);
 		}
 		BlockPos wallpos = pos.south(4);
-		world.setBlockState(wallpos.west(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING, 
+		world.setBlockState(wallpos.west(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING,
 				EnumFacing.NORTH), 18);
 		IItemHandler fridgeInv = ((TileFridge) world.getTileEntity(wallpos.west(4))).getCombinedItemHandler();
 		LootTableManager manager = world.getLootTableManager();
@@ -232,7 +234,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 		}
 		world.setBlockState(pos.add(-4, 0, -2), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
 		world.setBlockState(pos.add(-2, 0, -3), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
-		world.setBlockState(pos.add(-3, 1, -3), FurnitureBlocks.PLATE.getDefaultState(), 18);	
+		world.setBlockState(pos.add(-3, 1, -3), FurnitureBlocks.PLATE.getDefaultState(), 18);
 		if (exitpos.getY() != 0) {
 			for (int i = -1; i<2; i++) {
 				for (int j = 0; j<=2; j++) {
@@ -264,7 +266,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 		BlockPos tpos = new BlockPos(tx, world.getHeight(tx, tz), tz);
 		world.setBlockState(tpos, com.Fishmod.mod_LavaCow.init.Modblocks.TOMBSTONE.getDefaultState().withProperty(BlockTombStone.FACING, EnumFacing.EAST), 18);
 	}
-	
+
 	private void placeChristmasDecorations(World world, Random rand, BlockPos pos) {
 		BlockPos treePos = pos.add(3, 0, -3);
 		world.setBlockState(treePos, FurnitureBlocks.TREE_BOTTOM.getDefaultState(), 18);
@@ -277,7 +279,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 			world.setBlockState(pos.add(-6, 2, i), FurnitureBlocks.FAIRY_LIGHT.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.EAST), 18);
 		}
 	}
-	
+
 	private void decorateTree(World world, BlockPos pos) {
 		TileEntityTree tree = (TileEntityTree) world.getTileEntity(pos);
 		for (EnumFacing facing : EnumFacing.VALUES) {

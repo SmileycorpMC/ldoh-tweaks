@@ -16,12 +16,12 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 
 public class ApocalypseBossEvent implements IOngoingEvent {
-	
+
 	private int timer = 0;
 	private final EntityPlayer player;
 	private boolean hasChanged = false;
 	private int wave = 0;
-	
+
 	public ApocalypseBossEvent(EntityPlayer player) {
 		this.player=player;
 	}
@@ -43,7 +43,7 @@ public class ApocalypseBossEvent implements IOngoingEvent {
 		hasChanged = false;
 		return nbt;
 	}
-	
+
 	@Override
 	public void update(World world) {
 		if (!world.isRemote) {
@@ -57,16 +57,16 @@ public class ApocalypseBossEvent implements IOngoingEvent {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isActive(World world) {
 		return player != null && wave  > 0 && wave < 7;
 	}
-	
+
 	public boolean hasChanged() {
 		return hasChanged;
 	}
-	
+
 	public EntityPlayer getPlayer() {
 		return player;
 	}
@@ -84,7 +84,7 @@ public class ApocalypseBossEvent implements IOngoingEvent {
 				world.spawnEntity(entity);
 				entity.targetTasks.taskEntries.clear();
 				entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, new Class[] {EntityParasiteBase.class}));
-				entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, false));
+				entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityPlayer>(entity, EntityPlayer.class, false));
 				entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
 			} catch (Exception e) {
 
@@ -100,5 +100,5 @@ public class ApocalypseBossEvent implements IOngoingEvent {
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
 		}
 	}
-	
+
 }

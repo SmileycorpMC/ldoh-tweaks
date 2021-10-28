@@ -51,6 +51,10 @@ public enum EnumTFClass {
 		return clazz.getConstructor(World.class).newInstance(world);
 	}
 
+	public Class<? extends EntityTF2Character> getEntityClass(){
+		return clazz;
+	}
+
 	public int getCost() {
 		return cost;
 	}

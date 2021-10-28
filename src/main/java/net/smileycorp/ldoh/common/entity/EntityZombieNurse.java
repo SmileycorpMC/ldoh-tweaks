@@ -55,7 +55,7 @@ public class EntityZombieNurse extends EntityZombie {
 			for (EntityZombie entity : world.getEntitiesWithinAABB(EntityZombie.class, getEntityBoundingBox().grow(7), (e) -> e!=this)) {
 				if (entity.getHealth() < entity.getMaxHealth() && getDistance(entity)<=6) {
 					if (world.isRemote) {
-						if (!healTargets.contains(entity)) healTargets.add(new WeakReference(entity));
+						if (!healTargets.contains(entity)) healTargets.add(new WeakReference<EntityZombie>(entity));
 						if (entity.getHealth() >= entity.getMaxHealth()) {
 							healTargets.remove(entity);
 						}
@@ -73,7 +73,7 @@ public class EntityZombieNurse extends EntityZombie {
 			for (WeakReference<EntityZombie> ref : healTargets) {
 				EntityZombie entity = ref.get();
 				if (entity!=this) {
-					Vec3d dir = DirectionUtils.getDirectionVec(getPositionVector(), entity.getPositionVector());
+					Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
 					float v = getDistance(entity);
 					world.spawnParticle(EnumParticleTypes.HEART, posX, posY+0.8d, posZ, dir.x*v, dir.y*v, dir.z*v);
 					System.out.println("( "+ dir.x +", "+dir.y+", "+dir.z+")");

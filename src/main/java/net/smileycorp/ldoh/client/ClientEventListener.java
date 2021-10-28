@@ -109,7 +109,6 @@ public class ClientEventListener {
 				final double x = entity.lastTickPosX + ((entity.posX - entity.lastTickPosX) * event.getPartialTicks());
 				final double y = entity.lastTickPosY + ((entity.posY - entity.lastTickPosY) * event.getPartialTicks());
 				final double z = entity.lastTickPosZ + ((entity.posZ - entity.lastTickPosZ) * event.getPartialTicks());
-				float f = 1 / 32 /10000;
 				GlStateManager.pushMatrix();
 				GlStateManager.disableLighting();
 				GlStateManager.enableBlend();
@@ -117,6 +116,7 @@ public class ClientEventListener {
 				GlStateManager.disableTexture2D();
 				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 				mc.getTextureManager().bindTexture(GAS_TEXTURE);
+				float f = 1 / 32 /10000;
 				Tessellator tessellator = Tessellator.getInstance();
 				BufferBuilder buffer = tessellator.getBuffer();
 				buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);

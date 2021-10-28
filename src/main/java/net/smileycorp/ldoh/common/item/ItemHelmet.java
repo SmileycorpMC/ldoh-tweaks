@@ -1,45 +1,39 @@
 package net.smileycorp.ldoh.common.item;
 
-import javax.annotation.Nullable;
+import java.util.UUID;
 
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.smileycorp.ldoh.client.entity.model.ModelItemHat;
-import net.smileycorp.ldoh.common.ModContent;
-import net.smileycorp.ldoh.common.ModDefinitions;
 
-public class ItemHelmet extends ItemArmor {
-	
-	private final String name;
-	
+import com.google.common.collect.Multimap;
+
+
+public class ItemHelmet extends ItemHat {
+
+	protected final int protection;
+	protected final float toughness;
+
+	public static final UUID HELMET_UUID = UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150");
+
 	public ItemHelmet(String name, int durability, int protection, float toughness) {
-		super(EnumHelper.addArmorMaterial(name, name, durability, new int[]{0, 0, 0, protection}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, toughness), 0, EntityEquipmentSlot.HEAD);
-		setCreativeTab(ModContent.CREATIVE_TAB);
-		setUnlocalizedName(ModDefinitions.getName(name));
-		setRegistryName(ModDefinitions.getResource(name));
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
-		this.name = name;
+		super(name);
+		setMaxDamage(durability);
+		this.protection = protection;
+		this.toughness = toughness;
 	}
-	
+
 	@Override
-    @Nullable
-    @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entity, ItemStack stack, EntityEquipmentSlot slot, ModelBiped base) {
-        return new ModelItemHat();
-    }
-	
-	@Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        return ModDefinitions.modid + ":textures/model/"+name.toLowerCase()+".png";
-    }
-	
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
+	{
+		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+
+		if (equipmentSlot == EntityEquipmentSlot.HEAD) {
+			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(HELMET_UUID, "Armor modifier", protection, 0));
+			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(HELMET_UUID, "Armor toughness", toughness, 0));
+		}
+
+		return multimap;
+	}
+
 }
