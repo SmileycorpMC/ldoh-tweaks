@@ -12,6 +12,7 @@ public class ItemEggColour implements IItemColor {
 		int colour = 0x00000;
 		int meta = stack.getMetadata();
 		if (meta>=ItemSpawner.entries.size());
+		//get colours from the spawn egg entry
 		ModMobEntry entry = ItemSpawner.entries.get(meta);
 		if (tintIndex == 0) {
 			colour = entry.getBackgroundColour();

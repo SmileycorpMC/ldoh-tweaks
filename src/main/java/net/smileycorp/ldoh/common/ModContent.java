@@ -24,6 +24,7 @@ import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.BlockHordeSpawner;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
@@ -71,6 +72,9 @@ public class ModContent {
 
 	@CapabilityInject(IMiniRaid.class)
 	public final static Capability<IMiniRaid> MINI_RAID = null;
+
+	@CapabilityInject(IHunger.class)
+	public final static Capability<IHunger> HUNGER = null;
 
 
 	public static CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){

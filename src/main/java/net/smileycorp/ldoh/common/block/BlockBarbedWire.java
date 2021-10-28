@@ -44,7 +44,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
 	public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
-	
+
 	public BlockBarbedWire() {
 		super(Material.ROCK);
 		String name = "Barbed_Wire";
@@ -55,120 +55,120 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		setHarvestLevel("pickaxe", 2);
 		setHardness(0.3F);
 	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		world.removeTileEntity(pos);
 	}
-	
-    @Override
+
+	@Override
 	public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+		return true;
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileBarbedWire(EnumBarbedWireMat.byMeta(meta%3));
 	}
-	
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-        entity.setInWeb();
-        if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
-        	TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
-        	if (entity instanceof EntityProjectile || entity instanceof IProjectile) te.damage(1);
-        	if (te.getOrUpdateCooldown() == 0) {
-        		te.causeDamage();
-        	}
-        	if (te.getDurability() <= 0) {
-        		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-        	}
-        }
-    }
-	
+		entity.setInWeb();
+		if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
+			TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
+			if (entity instanceof EntityProjectile || entity instanceof IProjectile) te.damage(1);
+			if (te.getOrUpdateCooldown() == 0) {
+				te.causeDamage();
+			}
+			if (te.getDurability() <= 0) {
+				world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+			}
+		}
+	}
+
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[]{MATERIAL, AXIS});
 	}
-	
+
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase player, EnumHand hand) {
 		EnumAxis axis = EnumAxis.fromVector(player.getLookVec());
 		return getStateFromMeta(player.getHeldItem(hand).getMetadata()).withProperty(AXIS, axis);
 	}
-	
+
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		EnumAxis axis = meta > 2 ? EnumAxis.Z : EnumAxis.X;
-		return this.getDefaultState().withProperty(MATERIAL, EnumBarbedWireMat.byMeta(meta%3)).withProperty(AXIS, axis);
+		return getDefaultState().withProperty(MATERIAL, EnumBarbedWireMat.byMeta(meta%3)).withProperty(AXIS, axis);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state) {
 		return state.getValue(AXIS).ordinal() * 3 + state.getValue(MATERIAL).ordinal();
-    }
-	
+	}
+
 	@Override
 	public void getSubBlocks(CreativeTabs item, NonNullList<ItemStack> items) {
-        for (int i = 0; i<EnumBarbedWireMat.values().length; i++) {
-        	items.add(new ItemStack(this, 1, i));
-        }
-    }
-	
+		for (int i = 0; i<EnumBarbedWireMat.values().length; i++) {
+			items.add(new ItemStack(this, 1, i));
+		}
+	}
+
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
-    }
-	
+		return new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
+	}
+
 	@Override
 	public int quantityDropped(Random random) {
 		return 0;
 	}
-	
+
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-        player.addStat(StatList.getBlockStats(this));
-        player.addExhaustion(0.005F);
+		player.addStat(StatList.getBlockStats(this));
+		player.addExhaustion(0.005F);
 		EnumBarbedWireMat mat = state.getValue(MATERIAL);
 		Item item = mat.getDrop();
 		int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
-        spawnAsEntity(world, pos, new ItemStack(item, count, 0));
-    }
+		spawnAsEntity(world, pos, new ItemStack(item, count, 0));
+	}
 
-    @Override
+	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+		return false;
+	}
 
-    @Override
+	@Override
 	@Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return NULL_AABB;
-    }
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return NULL_AABB;
+	}
 
-    @Override
+	@Override
 	public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-    
-    @Override
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
-        return BlockFaceShape.UNDEFINED;
-    }
-    
-    @Override
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
 	public boolean usesCustomItemHandler(){
 		return true;
 	}
 
-    @Override
-    public int getMaxMeta() {
-    	return EnumBarbedWireMat.values().length * 2;
-    }
-  
+	@Override
+	public int getMaxMeta() {
+		return EnumBarbedWireMat.values().length * 2;
+	}
+
 }

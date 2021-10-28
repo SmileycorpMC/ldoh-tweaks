@@ -42,26 +42,28 @@ import net.tangotek.tektopia.client.RenderTradesman;
 
 @EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.modid)
 public class ClientProxy extends CommonProxy {
-	
+
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ClientEventListener());
 	}
-	
+
 	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
 	}
-	
+
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {
 		super.postInit(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
+		//register renderer for barbed wire healthbar
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
+		//register entity renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityDumbZombie.class, m -> new RenderZombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/zombie.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
@@ -72,7 +74,9 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie(m, "zombie_technician"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHArchitect.class, m -> new RenderArchitect(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHTradesman.class, m -> new RenderTradesman(m));
+		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(ModContent.LANDMINE, new StateMapperLandmine());
+		//register item models
 		for (Item item: ModContent.items) {
 			if (item instanceof IMetaItem) {
 				for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
@@ -82,9 +86,10 @@ public class ClientProxy extends CommonProxy {
 				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
 			}
 		}
-		
+
 	}
-	
+
+	//colour our custom spawn egg
 	@SubscribeEvent
 	public static void itemColourHandler(ColorHandlerEvent.Item event) {
 		ItemColors registry = event.getItemColors();

@@ -3,7 +3,6 @@ package net.smileycorp.ldoh.common.capabilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -16,28 +15,28 @@ public interface IMiniRaid {
 
 	public void spawnRaid();
 
-	public NBTTagCompound writeToNBT(NBTTagList nbt);
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt);
 
-	public void readFromNBT(NBTTagList nbt);
+	public void readFromNBT(NBTTagCompound nbt);
 
 	public static class Storage implements IStorage<IMiniRaid> {
 
 		@Override
 		public NBTBase writeNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side) {
-			NBTTagList nbt = new NBTTagList();
+			NBTTagCompound nbt = new NBTTagCompound();
 			instance.writeToNBT(nbt);
 			return nbt;
 		}
 
 		@Override
 		public void readNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side, NBTBase nbt) {
-			instance.readFromNBT((NBTTagList) nbt);
+			instance.readFromNBT((NBTTagCompound) nbt);
 		}
 
 
 	}
 
-	public static class Provider implements ICapabilitySerializable<NBTTagList> {
+	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
 		protected final IMiniRaid instance;
 
@@ -56,12 +55,12 @@ public interface IMiniRaid {
 		}
 
 		@Override
-		public NBTTagList serializeNBT() {
-			return (NBTTagList) ModContent.MINI_RAID.getStorage().writeNBT(ModContent.MINI_RAID, instance, null);
+		public NBTTagCompound serializeNBT() {
+			return (NBTTagCompound) ModContent.MINI_RAID.getStorage().writeNBT(ModContent.MINI_RAID, instance, null);
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagList nbt) {
+		public void deserializeNBT(NBTTagCompound nbt) {
 			ModContent.MINI_RAID.getStorage().readNBT(ModContent.MINI_RAID, instance, null, nbt);
 		}
 

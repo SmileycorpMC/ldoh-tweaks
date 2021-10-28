@@ -24,12 +24,14 @@ public class ModWorldGen implements IWorldGenerator {
 
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+		//generate horde spawning blocks
 		int x = chunkX * 16 +rand.nextInt(16);
 		int z = chunkZ * 16 + rand.nextInt(16);
 		if (rand.nextInt(world.getBiomeProvider().getBiome(new BlockPos(x, 0, z)) == BOPBiomes.wasteland.get() ? 13 : 18)==0) {
 			BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
 			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 		}
+		//give an extra chance to generate in cities
 		if (chunkGenerator instanceof LostCityChunkGenerator) {
 			if (BuildingInfo.isCity(chunkX, chunkZ, (LostCityChunkGenerator) chunkGenerator)) {
 				x = chunkX * 16 +rand.nextInt(16);
@@ -42,6 +44,7 @@ public class ModWorldGen implements IWorldGenerator {
 		}
 		BlockPos chunkpos = new BlockPos(x, 0 , z);
 		Biome biome = world.getBiome(chunkpos);
+		//adds our custom oregen to biomes other than the apocalyptic desert
 		if (biome != WastelandWorld.apocalypse_desert) {
 			genOre(world, chunkpos, rand, Blocks.COAL_ORE);
 			genOre(world, chunkpos, rand, Blocks.IRON_ORE);
@@ -51,9 +54,9 @@ public class ModWorldGen implements IWorldGenerator {
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){
 		ChunkGeneratorSettings.Factory factory = new ChunkGeneratorSettings.Factory();
-		factory.coalMaxHeight = 30;
-		factory.ironMaxHeight = 30;
-		factory.goldMaxHeight = 30;
+		factory.coalMaxHeight = 28;
+		factory.ironMaxHeight = 28;
+		factory.goldMaxHeight = 28;
 		factory.coalCount = (int) Math.round(factory.coalCount/2.5d);
 		factory.ironCount = Math.round(factory.ironCount/2);
 		ChunkGeneratorSettings provider = factory.build();

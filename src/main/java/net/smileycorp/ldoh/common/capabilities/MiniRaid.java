@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.entity.EntityMiniRaidAI;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
@@ -53,27 +56,46 @@ public class MiniRaid implements IMiniRaid {
 
 	@Override
 	public void spawnRaid() {
-		RaidType type = types[phase];
-		for(EntityLivingBase entity : buildList(player.world, type, phase)) {
-
+		if (player!=null) {
+			RaidType type = types[phase];
+			World world = player.world;
+			if (!world.isRemote) {
+				Random rand = world.rand;
+				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), DirectionUtils.getRandomDirectionVecXZ(rand), 75);
+				for(EntityLiving entity : buildList(world, type, phase)) {
+					double x = pos.getX() + (rand.nextFloat() * 2) - 1;
+					double z = pos.getZ() + (rand.nextFloat() * 2) - 1;
+					int y = ((WorldServer)world).getHeight(new BlockPos(x, 0, z)).getY();
+					entity.setPosition(x, y, z);
+					entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+					entity.tasks.addTask(1, new EntityMiniRaidAI(entity, player));
+					world.spawnEntity(entity);
+				}
+			}
+			cooldown = 6000;
 		}
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagList nbt) {
-		// TODO Auto-generated method stub
-		return null;
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setInteger("phase", phase);
+		nbt.setInteger("cooldown", cooldown);
+		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagList nbt) {
-		// TODO Auto-generated method stub
-
+	public void readFromNBT(NBTTagCompound nbt) {
+		if (nbt.hasKey("phase")) {
+			phase = nbt.getInteger("phase");
+		}
+		if (nbt.hasKey("cooldown")) {
+			cooldown = nbt.getInteger("cooldown");
+		}
 	}
 
-	private List<EntityLivingBase> buildList(World world, RaidType type, int phase) {
+	private List<EntityLiving> buildList(World world, RaidType type, int phase) {
 		Random rand = world.rand;
-		List<EntityLivingBase> spawnlist = new ArrayList<EntityLivingBase>();
+		List<EntityLiving> spawnlist = new ArrayList<EntityLiving>();
 		switch (type) {
 		case ALLY:
 			if (player.getTeam() == null && (player.getTeam().getName() == "RED") || player.getTeam().getName() == "BLU") break;
@@ -97,7 +119,7 @@ public class MiniRaid implements IMiniRaid {
 				} catch (Exception e) {}
 			break;
 		case PARASITE:
-			for (int i = 0; i < phase; i++) {
+			for (int i = 0; i < phase*0.5; i++) {
 				int r = rand.nextInt(7);
 				if (r == 0) spawnlist.add(new EntityShyco(world));
 				else if (r == 1) spawnlist.add(new EntityCanra(world));
@@ -107,7 +129,7 @@ public class MiniRaid implements IMiniRaid {
 				else if (r == 5) spawnlist.add(new EntityBano(world));
 				else if (r == 6) spawnlist.add(new EntityRanrac(world));
 			}
-			for (int i = 0; i < phase*2.5; i++) spawnlist.add(new EntityInfHuman(world));
+			for (int i = 0; i < phase*1.5; i++) spawnlist.add(new EntityInfHuman(world));
 			break;
 		case ZOMBIE:
 			spawnlist.add(new EntityZombieNurse(world));

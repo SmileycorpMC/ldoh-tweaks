@@ -79,6 +79,8 @@ import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.common.hordeevent.IHordeSpawn;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IHunger;
+import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
@@ -135,7 +137,7 @@ public class EventListener {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.world;
 		if (!world.isRemote) {
-			//replaces the tf2 character with an infected human
+			//replaces the tf2 character with an infected human if killed by a rupter
 			if (event.getSource().getTrueSource() instanceof EntityMudo) {
 				if (entity instanceof EntityTF2Character) {
 					if (!((EntityTF2Character) entity).isRobot()) {
@@ -175,6 +177,7 @@ public class EventListener {
 			//replacing zombies with rare spawns
 			if (entity.getClass() == EntityZombie.class) {
 				if (entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
+					//uses capability to determine if this entity is loaded from world data or not
 					if(!entity.getCapability(ModContent.SPAWN_TRACKER, null).isSpawned()) {
 						if (entity.hasCapability(Hordes.HORDESPAWN, null)) {
 							IHordeSpawn cap = entity.getCapability(Hordes.HORDESPAWN, null);
@@ -188,12 +191,13 @@ public class EventListener {
 						int day = (int) Math.floor(world.getWorldTime()/24000);
 						EntityZombie zombie = (EntityZombie) entity;
 						EntityMob newentity = null;
-						//turns zombies into inf humans between day 50 and
+						//turns zombies into inf humans between day 50 and 100
 						if (day>=50 && day <=100) {
 							newentity = new EntityInfHuman(world);
 							//turns zombies into a random variant based on rng
 						} else {
 							Random rand = world.rand;
+							//select random number first to allow for proper weighting
 							int randInt = rand.nextInt(100);
 							if (randInt < 3) {
 								newentity = new EntityTFZombie(world);
@@ -224,6 +228,7 @@ public class EventListener {
 						}
 					}
 				}
+				//replace crawling zombies with their husk counterpart in deserts
 			} else if (entity.getClass() == EntityCrawlingZombie.class) {
 				if (entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
 					if(!entity.getCapability(ModContent.SPAWN_TRACKER, null).isSpawned()) {
@@ -257,7 +262,7 @@ public class EventListener {
 			else if (entity instanceof EntityXPOrb) {
 				entity.setDead();
 			}
-			//makes the vespa hostile to the player
+			//makes the vespa hostile to the player and other mobs
 			else if (entity instanceof EntityVespa) {
 				EntityVespa vespa = (EntityVespa) entity;
 				vespa.targetTasks.addTask(2, new EntityAINearestAttackableTarget(vespa, EntityPlayer.class, false));
@@ -274,16 +279,16 @@ public class EventListener {
 			//makes tf2 npcs avoid zombies more
 			else if (entity instanceof EntityTF2Character) {
 				EntityTF2Character npc = (EntityTF2Character) entity;
-				npc.tasks.addTask(2, new EntityAIAvoidEntity(npc, EntityMob.class, 8.0F, 0.6D, 0.6D));
+				npc.tasks.addTask(3, new EntityAIAvoidEntity(npc, EntityMob.class, 5.0F, 0.6D, 0.6D));
 			}
-			//replaces architect with our own version
+			//replaces architect with our own version that has our modified trades
 			else if (entity instanceof EntityArchitect &! (entity instanceof EntityLDOHArchitect)) {
 				EntityLDOHArchitect architect = new EntityLDOHArchitect(world, (EntityArchitect) entity);
 				architect.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
 				world.spawnEntity(architect);
 				event.setCanceled(true);
 			}
-			//replaces tradesman with our own version
+			//replaces tradesman with our own version that has our modified trades
 			else if (entity instanceof EntityTradesman &! (entity instanceof EntityLDOHTradesman)) {
 				EntityLDOHTradesman tradesman = new EntityLDOHTradesman(world, (EntityTradesman) entity);
 				tradesman.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
@@ -293,6 +298,7 @@ public class EventListener {
 		}
 	}
 
+	//randomly prevent picking up lava
 	@SubscribeEvent
 	public void fillBucket(FillBucketEvent event) {
 		World world = event.getWorld();
@@ -300,6 +306,7 @@ public class EventListener {
 		if (ray != null) {
 			if (ray.typeOfHit == Type.BLOCK) {
 				if (world.getBlockState(ray.getBlockPos()).getMaterial() == Material.LAVA) {
+					//50% chance to break the bucket
 					if (world.rand.nextInt(2) == 0) {
 						event.getEmptyBucket().shrink(1);
 						event.setCanceled(true);
@@ -320,14 +327,16 @@ public class EventListener {
 		World world = entity.world;
 		EntityPlayer player = event.getEventPlayer();
 		if (!world.isRemote) {
+			//replace zombies with vespas if they are in a sky base
 			if (player.getPosition().getY() - event.pos.getY() > 35) {
 				event.entity = new EntityVespa(world);
+				//give the vespas the ability to break blocks
 				if (event.entity.hasCapability(ModContent.BLOCK_BREAKING, null)) {
 					event.entity.getCapability(ModContent.BLOCK_BREAKING, null).enableBlockBreaking(true);
 				}
 				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getX());
 			} else if (entity.getClass() == EntityZombie.class && world.getTotalWorldTime()/24000 <=50) {
-				//turns zombies into a random variant based on rng
+				//turns zombies into a random variant based on rng and day
 				Random rand = world.rand;
 				int randInt = rand.nextInt(100);
 				if (randInt < 3) {
@@ -335,6 +344,7 @@ public class EventListener {
 				} else if (randInt < 45 - (world.getWorldTime()/24000)) {
 					event.entity = new EntityCrawlingZombie(world);
 				} else if (randInt < 75 - (world.getWorldTime()/24000) &! (entity instanceof EntityHusk)) {
+					//sets the entity as a dub zombie, which doesn't recieve epic seige mod ai and is slightly slower
 					event.entity = new EntityDumbZombie(world);
 				}
 			}
@@ -382,7 +392,7 @@ public class EventListener {
 					}
 				}
 			}
-			//adds 1/10 chance for bleed effect to husk
+			//adds 1/10 chance for bleed effect from husks
 			if ((attacker instanceof EntityHusk || attacker instanceof EntityCrawlingHusk) && world.rand.nextInt(10)==0) {
 				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
 			}
@@ -417,14 +427,25 @@ public class EventListener {
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
+		//track whether zombies or crawling zombies were loaded from world data or not
 		if (!entity.hasCapability(ModContent.SPAWN_TRACKER, null) && (entity.getClass() == EntityZombie.class || entity.getClass() == EntityCrawlingZombie.class)) {
 			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
+		//lets entities break blocks if the capability is set to enabled
 		if (!entity.hasCapability(ModContent.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
 			event.addCapability(ModDefinitions.getResource("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
 		}
+		//spawner instance to spawn unburied in the caves around players
 		if (!entity.hasCapability(ModContent.UNBURIED_SPAWNER, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
 			event.addCapability(ModDefinitions.getResource("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
+		}
+		//spawner instance for mini raid events
+		if (!entity.hasCapability(ModContent.MINI_RAID, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+			event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider((EntityPlayer) entity));
+		}
+		//gives tf2 npcs hunger
+		if (!entity.hasCapability(ModContent.HUNGER, null) && entity instanceof EntityTF2Character) {
+			event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
 		}
 	}
 
@@ -445,7 +466,7 @@ public class EventListener {
 	}
 
 
-	//Living ticks
+	//make entities that can break blocks do so
 	@SubscribeEvent
 	public void livingTick(LivingUpdateEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
@@ -457,6 +478,9 @@ public class EventListener {
 					cap.tryBreakBlocks();
 				}
 			}
+		}
+		if (entity.hasCapability(ModContent.HUNGER, null)) {
+			entity.getCapability(ModContent.HUNGER, null).onUpdate((EntityLiving) entity);
 		}
 	}
 
@@ -472,9 +496,11 @@ public class EventListener {
 				if (player.getPosition().getY()<30) {
 					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 					if (player.ticksExisted%35==0 && !player.isCreative()) {
+						//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
 						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < ModContent.GAS_MASK.getMaxDamage()) {
 							helm.damageItem(1, player);
 						} else {
+							//deal damage if not wearing it and display message
 							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
 							if (player instanceof EntityPlayerMP) {
 								CommonPacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
@@ -482,15 +508,17 @@ public class EventListener {
 						}
 					}
 				}
-				//unburied
+				//spawn unburied when player is underground
 				if (player.hasCapability(ModContent.UNBURIED_SPAWNER, null) && player.ticksExisted % 60==0) {
 					IUnburiedSpawner spawner = player.getCapability(ModContent.UNBURIED_SPAWNER, null);
 					int y = (int) Math.floor(player.getPosition().getY());
 					Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
 					if (spawner.canSpawnEntity()) {
+						//make sure it's underground and try to prevent spawning in buildings
 						if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && rand.nextInt(Math.max(y, 20)) <= 15) {
 							Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 							BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
+							//check spawn location is valid
 							if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
 									&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
 								for (int j = -5; j <6; j++) {
@@ -500,6 +528,7 @@ public class EventListener {
 									}
 								}
 							}
+							//make sure area is dark, then spawn entity
 							if (world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
 									&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0) &! world.canBlockSeeSky(pos)) {
 								EntityUnburied entity = new EntityUnburied(world);
@@ -513,7 +542,9 @@ public class EventListener {
 				}
 				//lava bucket breaking
 				if (player.inventory.hasItemStack(new ItemStack(Items.LAVA_BUCKET))) {
+					//20% chance every second
 					if (player.ticksExisted%20 == 0 && world.rand.nextInt(5)==0) {
+						//place lava and destroy bucket
 						world.setBlockState(player.getPosition(), Blocks.LAVA.getDefaultState());
 						if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).shrink(1);
 						else for (ItemStack stack : player.inventory.mainInventory) {
@@ -525,10 +556,12 @@ public class EventListener {
 						player.sendMessage(text);
 					}
 				}
+				//gifting ammo to tf2 characters
 				for(EntityTF2Character entity : world.getEntitiesWithinAABB(EntityTF2Character.class, player.getEntityBoundingBox().grow(5))) {
 					for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, entity.getEntityBoundingBox())) {
 						ItemStack stack = item.getItem();
 						if (stack.getItem() instanceof ItemAmmo) {
+							//check entity ammo slots to see if it can pick the items up
 							ItemStackHandler ammo = entity.refill;
 							if (ammo != null) {
 								ItemStack ammostack = ammo.getStackInSlot(0);
@@ -540,7 +573,6 @@ public class EventListener {
 									if (count > 64) {
 										ammostack.setCount(64);
 										stack.setCount(count - 64);
-										if (stack.getCount() == 0) item.setDead();
 									}
 									else {
 										ammostack.setCount(count);
@@ -548,7 +580,17 @@ public class EventListener {
 								}
 							}
 						}
+						if (player.hasCapability(ModContent.HUNGER, null)) {
+							stack = player.getCapability(ModContent.HUNGER, null).tryPickupFood(stack);
+						}
+						if (stack.getCount() == 0) item.setDead();
 					}
+				}
+				//Mini Raids
+				if (player.hasCapability(ModContent.MINI_RAID, null)) {
+					IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
+					//spawn the raid if the time is right
+					if (raid.shouldSpawnRaid()) raid.spawnRaid();
 				}
 			}
 		}
@@ -558,6 +600,7 @@ public class EventListener {
 	@SubscribeEvent(priority=EventPriority.HIGH)
 	public static void setWorldSpawn(CreateSpawnPosition event) {
 		World world = event.getWorld();
+		//set gamerule to disable random offset when spawning
 		if (world.getGameRules().getInt("spawnRadius")>0) world.getGameRules().setOrCreateGameRule("spawnRadius", "0");
 		Random rand = world.rand;
 		if (world.provider.getDimension() == 0) {
@@ -571,15 +614,15 @@ public class EventListener {
 			while (true) {
 				if (biome== WastelandWorld.apocalypse) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
-					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z)) {
+					//checks if the safehouse is spawning below y60 or if the structure bounds intersect with a city or another biome
+					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z) || ModUtils.isCity(world, x, z)) {
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
 					}
 					else if (y >= 60) {
-						if (safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) {
-							break;
-						}
+						//detemines if the safehouse can be placed here
+						if (safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) break;
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
@@ -592,12 +635,14 @@ public class EventListener {
 					x += rand.nextInt(64) - rand.nextInt(64);
 					z += rand.nextInt(64) - rand.nextInt(64);
 				}
+				//gets the biome without loading chunks
 				biome = world.getBiomeProvider().getBiomes(null, x, z, 1, 1, false)[0];
 				tries++;
 
 				//cancel after 1000 tries to not lock the game in an infinite loop
 				if (tries >= 1000) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
+					System.out.println("Found no suitable location for spawn");
 					break;
 				}
 			}
@@ -611,28 +656,12 @@ public class EventListener {
 		}
 	}
 
-	/*@SubscribeEvent
-	public void cityGen(PreGenCityChunkEvent event) {
-		World world = event.getWorld();
-		if (!world.isRemote) {
-			BlockPos spawn = world.getSpawnPoint();
-			Chunk chunk = world.getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());
-			ChunkPos cpos = world.getChunkFromBlockCoords(spawn).getPos();
-			for (int i = -2; i <=2; i++) {
-				for (int j = -2; j <=2; j++) {
-					if (world.getChunkFromChunkCoords(cpos.x + i, cpos.z + j) == chunk) {
-						event.setCanceled(true);
-						return;
-					}
-				}
-			}
-		}
-	}*/
-
+	//cancels recurrentcomplex structures from spawning in certain circumsatances
 	@SubscribeEvent
 	public void structureGen(StructureGenerationEvent.Suggest event) {
 		World world = event.getWorld();
 		if (!world.isRemote) {
+			//cancels structure if it intesects spawn chunks
 			StructureBoundingBox box = event.spawnContext.boundingBox;
 			BlockPos spawn = world.getSpawnPoint();
 			if (box.intersectsWith(spawn.getX() - 20, spawn.getZ() - 20, spawn.getX() + 20, spawn.getZ() + 20)) {
@@ -640,6 +669,7 @@ public class EventListener {
 				return;
 			}
 			IChunkProvider provider = world.getChunkProvider();
+			//cancels structure if it's in a city
 			if (provider instanceof ChunkProviderServer) {
 				IChunkGenerator gen = ((ChunkProviderServer)provider).chunkGenerator;
 				if (gen instanceof LostCityChunkGenerator) {
@@ -658,7 +688,7 @@ public class EventListener {
 		}
 	}
 
-	//modify biome decorators
+	//remove coal, iron and gold from generating outside of deserts so we can use our own generation
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
 	public void createDecorator(GenerateMinable event) {
 		World world = event.getWorld();

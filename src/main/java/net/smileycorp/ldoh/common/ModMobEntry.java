@@ -10,21 +10,21 @@ import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 public class ModMobEntry {
-	
+
 	protected EnumTFClass tfclass = null;
 	protected Class<? extends EntityLiving> clazz;
-	protected String unlocalisedName="";
+	protected String unlocalisedName = "";
 	protected final int foreground;
 	protected final int background;
 	protected String team = "";
-	
+
 	public ModMobEntry(EnumTFClass tfclass, int foreground, int background, String team) {
 		this.tfclass=tfclass;
 		this.foreground=foreground;
 		this.background=background;
 		this.team=team;
 	}
-	
+
 	public ModMobEntry(Class<? extends EntityLiving> clazz, String unlocalisedName, int foreground, int background) {
 		this.clazz=clazz;
 		this.unlocalisedName=unlocalisedName;
@@ -35,11 +35,12 @@ public class ModMobEntry {
 	public int getForegroundColour() {
 		return foreground;
 	}
-	
+
 	public int getBackgroundColour() {
 		return background;
 	}
-	
+
+	//get the entities name
 	public String getLocalisedName() {
 		if (tfclass != null) {
 			return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + tfclass.getUnlocalisedName() + ".name");
@@ -47,15 +48,17 @@ public class ModMobEntry {
 			return  I18n.translateToLocal(unlocalisedName);
 		}
 	}
-	
+
 	public EntityLiving getEntityToSpawn(World world, BlockPos pos) {
 		EntityLiving entity = null;
 		try {
+			//create tf2 zombie with the right class
 			if (tfclass != null) {
 				EntityTF2Character baseentity = tfclass.createEntity(world);
 				baseentity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
 				entity = new EntityTFZombie(baseentity);
 				((EntityTFZombie) entity).setTFTeam(world.getScoreboard().getTeam(team));
+				//spawn entity regularly if entry isn't for a tf2 zombie
 			} else {
 				entity = clazz.getConstructor(World.class).newInstance(world);
 			}
@@ -63,6 +66,7 @@ public class ModMobEntry {
 		return entity;
 	}
 
+	//does this item contain the specified entity
 	public boolean doesMatch(EntityLiving entity) {
 		if (entity instanceof EntityTFZombie) {
 			if (tfclass == null || team == null) return false;
@@ -70,5 +74,5 @@ public class ModMobEntry {
 		}
 		return entity.getClass() == clazz;
 	}
-	
+
 }

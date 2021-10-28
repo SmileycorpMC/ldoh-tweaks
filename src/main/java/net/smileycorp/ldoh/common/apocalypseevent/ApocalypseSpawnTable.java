@@ -15,14 +15,15 @@ import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityCanraAdap
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityHullAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityNoglaAdapted;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSV;
 
 public class ApocalypseSpawnTable {
-	
+
 	private static WeightedOutputs adaptedtable;
-	
+
 	public static void init() {
 		Map<Class<? extends EntityLiving>, Integer> adaptedmap = new HashMap<Class<? extends EntityLiving>, Integer>();
 		adaptedmap.put(EntityShycoAdapted.class, 1);
@@ -31,9 +32,10 @@ public class ApocalypseSpawnTable {
 		adaptedmap.put(EntityHullAdapted.class, 1);
 		adaptedmap.put(EntityEmanaAdapted.class, 1);
 		adaptedmap.put(EntityBanoAdapted.class, 1);
+		adaptedmap.put(EntityRanracAdapted.class, 1);
 		adaptedtable = new WeightedOutputs(adaptedmap);
 	}
-	
+
 	public static List<Class<? extends EntityParasiteBase>> getSpawnsForWave(int wave, Random rand) {
 		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList();
 		if (wave % 1 == 0) {
