@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.util;
 
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,12 +12,14 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -25,12 +28,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.tangotek.tektopia.Village;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 import biomesoplenty.api.biome.BOPBiomes;
 
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class ModUtils {
@@ -80,19 +87,20 @@ public class ModUtils {
 		if (world.getWorldTime()%24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayTimeSpeedModifier(world));
 	}
 
-	//checks if a 64/64 area around the position consists of only regular wasteland
-	public static boolean isOnlyWasteland(World world, int x, int z) {
-		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-32, z-32, 64, 64, false)) if (biome!= WastelandWorld.apocalypse) return false;
-		return true;
-	}
-
 	//gets the cost of an item for a particular tektopia village
 	public  static int getCost(Village village, int baseCost) {
 		float mult = Math.min((village.getTownData().getProfessionSales() / 5) * 0.2F, 10.0F);
 		return (int)(baseCost * (1.0F + mult));
 	}
 
+	//checks if a 64/64 area around the position consists of only regular wasteland
+	public static boolean isOnlyWasteland(World world, int x, int z) {
+		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-32, z-32, 64, 64, false)) if (biome!= WastelandWorld.apocalypse) return false;
+		return true;
+	}
+
 	public static boolean isCity(World world, int x, int z) {
+		for (Biome biome : world.getBiomeProvider().getBiomes(null, x<<4, z<<4, 16, 16, false)) if (biome == WastelandWorld.apocalypse_city) return true;
 		if (world.getChunkProvider() instanceof ChunkProviderServer) {
 			if (((ChunkProviderServer)world.getChunkProvider()).chunkGenerator instanceof LostCityChunkGenerator) {
 				LostCityChunkGenerator gen = (LostCityChunkGenerator) ((ChunkProviderServer)world.getChunkProvider()).chunkGenerator;
@@ -115,5 +123,39 @@ public class ModUtils {
 			ModUtils.addPlayerToTeam(player, entity.getTeam().getName());
 		}
 
+	}
+
+	public static void spawnHorde(World world, BlockPos basepos) {
+		Random rand = world.rand;
+		int day = Math.round(world.getWorldTime()/24000);
+		if (world.getSpawnPoint().getDistance(basepos.getX(), basepos.getY(), basepos.getZ()) >= 200) {
+			for (int i = 0; i < getRandomSize(rand); i++) {
+				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);
+				pos = new BlockPos(pos.getX(), world.getChunkFromBlockCoords(pos).getHeight(pos), pos.getZ());
+				EntityMob entity = getEntity(world, rand, day);
+				entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
+				entity.enablePersistence();
+				entity.onAddedToWorld();
+				world.spawnEntity(entity);
+			}
+		}
+	}
+
+	private static int getRandomSize(Random rand) {
+		if (rand.nextInt(2) == 0) return rand.nextInt(5) + 15;
+		return rand.nextInt(8) + 40;
+	}
+
+	private static EntityMob getEntity(World world, Random rand, int day) {
+		if (day >= 50) return new EntityInfHuman(world);
+		else if (rand.nextInt(5) == 0) {
+			return new EntityCrawlingZombie(world);
+		}
+		else if (rand.nextInt(3) > day/10) {
+			int r = rand.nextInt(10);
+			if (r < 5) return new EntityDummyZombie0(world);
+		}
+		return new EntityZombie(world);
 	}
 }

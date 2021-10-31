@@ -25,19 +25,19 @@ public class ModWorldGen implements IWorldGenerator {
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 		//generate horde spawning blocks
-		int x = chunkX << 4 +rand.nextInt(16);
-		int z = chunkZ << 4 + rand.nextInt(16);
+		int x = (chunkX << 4) +rand.nextInt(16);
+		int z = (chunkZ << 4) + rand.nextInt(16);
 		if (rand.nextInt(world.getBiomeProvider().getBiome(new BlockPos(x, 0, z)) == BOPBiomes.wasteland.get() ? 13 : 18)==0) {
-			BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
+			BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
 			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 		}
 		//give an extra chance to generate in cities
 		if (chunkGenerator instanceof LostCityChunkGenerator) {
 			if (BuildingInfo.isCity(chunkX, chunkZ, (LostCityChunkGenerator) chunkGenerator)) {
-				x = chunkX << 4 +rand.nextInt(16);
-				z = chunkZ << 4 + rand.nextInt(16);
+				x = (chunkX << 4) +rand.nextInt(16);
+				z = (chunkZ << 4) + rand.nextInt(16);
 				if (rand.nextInt(20)==0) {
-					BlockPos pos = new BlockPos(x, world.getHeight(x, x)+1, z);
+					BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
 					world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 				}
 			}

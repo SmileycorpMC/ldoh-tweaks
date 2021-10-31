@@ -53,7 +53,6 @@ tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 
-entity.hundreddayz.DumbZombie.name=Zombie
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler
 entity.hundreddayz.TFZombie.name=TF2 NPC Zombie
@@ -61,6 +60,14 @@ entity.hundreddayz.NurseZombie.name=Zombie Nurse
 entity.hundreddayz.SwatZombie.name=Swat Zombie
 entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
+
+entity.hundreddayz.ZombieNoBreak.name=Zombie
+entity.hundreddayz.ZombieNoPlace.name=Zombie
+entity.hundreddayz.ZombieNoBreakOrPlace.name=Zombie
+
+entity.hundreddayz.HuskNoBreak.name=Husk
+entity.hundreddayz.HuskNoPlace.name=Husk
+entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 death.attack.ToxicGas=%1$s choked on toxic gasses
 death.attack.Shrapnel=%1$s stepped on a landmine;

@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.client;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -19,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
+import net.smileycorp.ldoh.client.entity.RenderDummy;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
 import net.smileycorp.ldoh.client.entity.RenderTFZombie;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
@@ -28,17 +28,13 @@ import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDumbZombie;
-import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
-import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
+import net.smileycorp.ldoh.common.entity.EntityDummy;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-import net.tangotek.tektopia.client.RenderArchitect;
-import net.tangotek.tektopia.client.RenderTradesman;
 
 @EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.modid)
 public class ClientProxy extends CommonProxy {
@@ -64,7 +60,6 @@ public class ClientProxy extends CommonProxy {
 		//register renderer for barbed wire healthbar
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
 		//register entity renderers
-		RenderingRegistry.registerEntityRenderingHandler(EntityDumbZombie.class, m -> new RenderZombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/zombie.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTFZombie.class, m -> new RenderTFZombie(m));
@@ -72,8 +67,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHArchitect.class, m -> new RenderArchitect<EntityLDOHArchitect>(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLDOHTradesman.class, m -> new RenderTradesman<EntityLDOHTradesman>(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityDummy.class, m -> new RenderDummy(m));
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(ModContent.LANDMINE, new StateMapperLandmine());
 		//register item models

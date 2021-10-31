@@ -31,7 +31,13 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDumbZombie;
+import net.smileycorp.ldoh.common.entity.EntityDummy;
+import net.smileycorp.ldoh.common.entity.EntityDummyHusk0;
+import net.smileycorp.ldoh.common.entity.EntityDummyHusk1;
+import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
@@ -136,10 +142,30 @@ public class ModContent {
 		GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
 		int ID = 201;
 		IForgeRegistry<EntityEntry> registry = event.getRegistry();
-		EntityEntry DUMB_ZOMBIE = EntityEntryBuilder.create().entity(EntityDumbZombie.class)
-				.id(ModDefinitions.getResource("dumb_zombie"), ID++)
-				.name(ModDefinitions.getName("DumbZombie")).tracker(80, 3, true).build();
-		registry.register(DUMB_ZOMBIE);
+		EntityEntry ZOMBIE_NO_BREAK = EntityEntryBuilder.create().entity(EntityDummyZombie0.class)
+				.id(ModDefinitions.getResource("zombie_no_break"), ID++)
+				.name(ModDefinitions.getName("ZombieNoBreak")).tracker(80, 3, true).build();
+		registry.register(ZOMBIE_NO_BREAK);
+		EntityEntry ZOMBIE_NO_PLACE = EntityEntryBuilder.create().entity(EntityDummyZombie1.class)
+				.id(ModDefinitions.getResource("zombie_no_place"), ID++)
+				.name(ModDefinitions.getName("ZombieNoPlace")).tracker(80, 3, true).build();
+		registry.register(ZOMBIE_NO_PLACE);
+		EntityEntry ZOMBIE_NO_BREAK_OR_PLACE = EntityEntryBuilder.create().entity(EntityDummyZombie2.class)
+				.id(ModDefinitions.getResource("zombie_no_place_or_break"), ID++)
+				.name(ModDefinitions.getName("ZombieNoBreakOrPlace")).tracker(80, 3, true).build();
+		registry.register(ZOMBIE_NO_BREAK_OR_PLACE);
+		EntityEntry HUSK_NO_BREAK = EntityEntryBuilder.create().entity(EntityDummyHusk0.class)
+				.id(ModDefinitions.getResource("husk_no_break"), ID++)
+				.name(ModDefinitions.getName("HuskNoBreak")).tracker(80, 3, true).build();
+		registry.register(HUSK_NO_BREAK);
+		EntityEntry HUSK_NO_PLACE = EntityEntryBuilder.create().entity(EntityDummyHusk1.class)
+				.id(ModDefinitions.getResource("husk_no_place"), ID++)
+				.name(ModDefinitions.getName("HuskNoPlace")).tracker(80, 3, true).build();
+		registry.register(HUSK_NO_PLACE);
+		EntityEntry HUSK_NO_BREAK_OR_PLACE = EntityEntryBuilder.create().entity(EntityDummyHusk2.class)
+				.id(ModDefinitions.getResource("husk_no_place_or_break"), ID++)
+				.name(ModDefinitions.getName("HuskNoBreakOrPlace")).tracker(80, 3, true).build();
+		registry.register(HUSK_NO_BREAK_OR_PLACE);
 		EntityEntry CRAWLING_ZOMBIE = EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
 				.id(ModDefinitions.getResource("crawling_zombie"), ID++)
 				.name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build();
@@ -176,6 +202,11 @@ public class ModContent {
 				.id(ModDefinitions.getResource("tradesman"), ID++)
 				.name("villager.tradesman").tracker(80, 3, true).build();
 		registry.register(TRADESMAN);
+
+		EntityEntry DUMMY = EntityEntryBuilder.create().entity(EntityDummy.class)
+				.id(ModDefinitions.getResource("dummy"), ID++)
+				.name("Dummy").tracker(80, 3, true).build();
+		registry.register(DUMMY);
 
 	}
 

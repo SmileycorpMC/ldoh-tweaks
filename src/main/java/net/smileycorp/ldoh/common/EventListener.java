@@ -86,7 +86,7 @@ import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDumbZombie;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
@@ -202,11 +202,11 @@ public class EventListener {
 						}
 						//sets up new entity
 						if (newentity != null) {
-							newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 							newentity.renderYawOffset=zombie.renderYawOffset;
 							newentity.setPosition(entity.posX, entity.posY, entity.posZ);
 							if (zombie.isNoDespawnRequired()) newentity.enablePersistence();
 							entity.setDead();
+							newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 							world.spawnEntity(newentity);
 							event.setCanceled(true);
 							ModUtils.setEntitySpeed((EntityMob) entity);
@@ -323,7 +323,7 @@ public class EventListener {
 					event.entity.getCapability(ModContent.BLOCK_BREAKING, null).enableBlockBreaking(true);
 				}
 				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getX());
-			} else if (entity.getClass() == EntityZombie.class && world.getTotalWorldTime()/24000 <=50) {
+			} else if (entity.getClass() == EntityZombie.class && event.getDay() <=50) {
 				//turns zombies into a random variant based on rng and day
 				Random rand = world.rand;
 				int randInt = rand.nextInt(100);
@@ -333,7 +333,7 @@ public class EventListener {
 					event.entity = new EntityCrawlingZombie(world);
 				} else if (randInt < 75 - (world.getWorldTime()/24000) &! (entity instanceof EntityHusk)) {
 					//sets the entity as a dub zombie, which doesn't recieve epic seige mod ai and is slightly slower
-					event.entity = new EntityDumbZombie(world);
+					event.entity = new EntityDummyZombie0(world);
 				}
 			} else if (entity instanceof EntityTF2Character) {
 				world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName() == "RED" ? "BLU" : "RED");
@@ -344,9 +344,10 @@ public class EventListener {
 
 	@SubscribeEvent
 	public void hordeBuildSpawntable(HordeBuildSpawntableEvent event) {
-		int day = (int) Math.floor(event.getEntityWorld().getTotalWorldTime()/24000);
+		int day = event.getDay();
 		if (day > 100 && day%100 == 0) {
 			if (event.getEntityPlayer().getTeam() != null) {
+				event.spawntable.clear();
 				for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
 			}
 		}
@@ -394,7 +395,7 @@ public class EventListener {
 				}
 			}
 			//adds 1/10 chance for bleed effect from husks
-			if ((attacker instanceof EntityHusk || attacker instanceof EntityCrawlingHusk) && world.rand.nextInt(10)==0) {
+			if ((attacker instanceof EntityHusk) && world.rand.nextInt(10)==0) {
 				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
 			}
 		}
@@ -572,11 +573,15 @@ public class EventListener {
 								} else if (ammostack.getItem() == stack.getItem()) {
 									int count = ammostack.getCount() + stack.getCount();
 									if (count > 64) {
-										ammostack.setCount(64);
+										ItemStack ret = ammostack.copy();
+										ret.setCount(64);
+										ammo.setStackInSlot(0, ret);
 										stack.setCount(count - 64);
 									}
 									else {
-										ammostack.setCount(count);
+										ItemStack ret = ammostack.copy();
+										ret.setCount(count);
+										ammo.setStackInSlot(0, ret);
 									}
 								}
 							}
@@ -616,7 +621,7 @@ public class EventListener {
 				if (biome== WastelandWorld.apocalypse) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					//checks if the safehouse is spawning below y60 or if the structure bounds intersect with a city or another biome
-					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z) || ModUtils.isCity(world, x, z)) {
+					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z)) {
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);

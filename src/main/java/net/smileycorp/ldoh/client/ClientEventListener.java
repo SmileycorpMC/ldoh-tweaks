@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -21,7 +22,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
+
+import org.lwjgl.util.vector.Vector3f;
 
 @EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
 public class ClientEventListener {
@@ -115,16 +119,8 @@ public class ClientEventListener {
 				GlStateManager.disableAlpha();
 				GlStateManager.disableTexture2D();
 				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-				mc.getTextureManager().bindTexture(GAS_TEXTURE);
-				float f = 1 / 32 /10000;
-				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder buffer = tessellator.getBuffer();
-				buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-				buffer.pos(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5-size).tex(0, 0).color(r, g, b, a).normal(cx-size, (float) y, cz-size).endVertex();
-				buffer.pos(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5+size).tex(0, 2*size-f).color(r, g, b, a).normal(cx-size, (float) y, cz+size).endVertex();
-				buffer.pos(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5+size).tex(2*size-f, 2*size-f).color(r, g, b, a).normal(cx+size, (float) y, cz+size).endVertex();
-				buffer.pos(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5-size).tex(2*size-f, 0).color(r, g, b, a).normal(cx+size, (float) y, cz-size).endVertex();
-				tessellator.draw();
+				RenderingUtils.drawQuad(new Vec3d(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5-size), new Vec3d(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5+size), GAS_TEXTURE, 32,
+						new Color(r, g, b, a), new Vector3f(cx-size, (float) y, cz-size), new Vector3f(cx-size, (float) y, cz-size));
 				GlStateManager.disableBlend();
 				GlStateManager.enableAlpha();
 				GlStateManager.disableLighting();

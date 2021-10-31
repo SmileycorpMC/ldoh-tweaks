@@ -31,7 +31,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityShyco;
 
 public class MiniRaid implements IMiniRaid {
 
-	protected static final int[] times = {162000, 434000, 606000, 660000, 828000, 1094000, 1172000, 1373000, 1646000, 1756000, 1832000, 2130000};
+	protected static final int[] times = {315000, 434000, 606000, 660000, 828000, 1094000, 1172000, 1373000, 1646000, 1756000, 1832000, 2130000};
 	protected static final RaidType[] types = {RaidType.ALLY, RaidType.ALLY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ALLY, RaidType.PARASITE, RaidType.ENEMY, RaidType.ALLY, RaidType.PARASITE};
 
 	protected int phase = 0;
@@ -98,7 +98,7 @@ public class MiniRaid implements IMiniRaid {
 		List<EntityLiving> spawnlist = new ArrayList<EntityLiving>();
 		switch (type) {
 		case ALLY:
-			if (player.getTeam() == null && (player.getTeam().getName() == "RED") || player.getTeam().getName() == "BLU") break;
+			if (player.getTeam() == null || (player.getTeam().getName() == "RED") || player.getTeam().getName() == "BLU") break;
 			for (int i = 0; i < phase * 2.5; i++)
 				try {
 					EntityTF2Character entity = EnumTFClass.getRandomClass().createEntity(world);
@@ -108,7 +108,7 @@ public class MiniRaid implements IMiniRaid {
 				} catch (Exception e) {}
 			break;
 		case ENEMY:
-			if (player.getTeam() == null && (player.getTeam().getName() == "RED") || player.getTeam().getName() == "BLU")
+			if (player.getTeam() == null || !(player.getTeam().getName() == "RED" || player.getTeam().getName() == "BLU"))
 				return buildList(world, phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE, phase);
 			for (int i = 0; i < phase * 2.5; i++)
 				try {

@@ -32,7 +32,7 @@ public class EntityZombieNurse extends EntityZombie {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(18.0D);
 		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(14.0D);
 	}
 
@@ -74,8 +74,8 @@ public class EntityZombieNurse extends EntityZombie {
 				EntityZombie entity = ref.get();
 				if (entity!=this) {
 					Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
-					float v = getDistance(entity);
-					world.spawnParticle(EnumParticleTypes.HEART, posX, posY+0.8d, posZ, dir.x*v, dir.y*v, dir.z*v);
+					float v = getDistance(entity)/10;
+					world.spawnParticle(EnumParticleTypes.END_ROD, posX, posY+0.8d, posZ, dir.x*v, dir.y*v, dir.z*v);
 					System.out.println("( "+ dir.x +", "+dir.y+", "+dir.z+")");
 				}
 			}
