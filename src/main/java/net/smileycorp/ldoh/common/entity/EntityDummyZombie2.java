@@ -8,8 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.smileycorp.ldoh.common.util.IDummyZombie;
 
-public class EntityDummyZombie2 extends EntityZombie {
+public class EntityDummyZombie2 extends EntityZombie implements IDummyZombie {
 
 	public EntityDummyZombie2(World world) {
 		super(world);

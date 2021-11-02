@@ -1,0 +1,137 @@
+package net.smileycorp.ldoh.common.events;
+
+import java.util.Random;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
+import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
+import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
+import net.smileycorp.ldoh.common.util.EnumTFClass;
+
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityPInfected;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
+
+public class SpawnerEvents {
+
+	//capability manager
+	@SubscribeEvent
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		Entity entity = event.getObject();
+		//spawner instance to spawn unburied in the caves around players
+		if (!entity.hasCapability(ModContent.UNBURIED_SPAWNER, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+			event.addCapability(ModDefinitions.getResource("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
+		}
+		//spawner instance for mini raid events
+		if (!entity.hasCapability(ModContent.MINI_RAID, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+			event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider((EntityPlayer) entity));
+		}
+	}
+
+	//Player ticks
+	@SubscribeEvent
+	public void playerTick(PlayerTickEvent event) {
+		if (event.phase == Phase.END) {
+			EntityPlayer player = event.player;
+			World world = player.world;
+			Random rand = world.rand;
+			if (!world.isRemote) {
+				//spawn unburied when player is underground
+				if (player.hasCapability(ModContent.UNBURIED_SPAWNER, null) && player.ticksExisted % 60==0) {
+					IUnburiedSpawner spawner = player.getCapability(ModContent.UNBURIED_SPAWNER, null);
+					int y = (int) Math.floor(player.getPosition().getY());
+					Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
+					if (spawner.canSpawnEntity()) {
+						//make sure it's underground and try to prevent spawning in buildings
+						if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && rand.nextInt(Math.max(y, 20)) <= 15) {
+							Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+							BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
+							//check spawn location is valid
+							if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
+									&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
+								for (int j = -5; j <6; j++) {
+									if (world.isAirBlock(pos.up(j)) && world.isAirBlock(pos.up(j+1)) && world.isBlockFullCube(pos.up(j-1))) {
+										pos = pos.up(j);
+										break;
+									}
+								}
+							}
+							//make sure area is dark, then spawn entity
+							if (world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
+									&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0) &! world.canBlockSeeSky(pos)) {
+								EntityUnburied entity = new EntityUnburied(world);
+								entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+								entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
+								world.spawnEntity(entity);
+								spawner.addEntity(entity);
+							}
+						}
+					}
+				}
+				//Mini Raids
+				if (player.hasCapability(ModContent.MINI_RAID, null)) {
+					IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
+					//spawn the raid if the time is right
+					if (raid.shouldSpawnRaid()) raid.spawnRaid();
+				}
+			}
+		}
+	}
+
+	//disables parasite spawns before set days
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+		World world = event.getWorld();
+		EntityLivingBase entity = event.getEntityLiving();
+		if (!world.isRemote) {
+			int day = (int) Math.floor(world.getWorldTime()/24000);
+			if (entity instanceof EntityParasiteBase) {
+				if (entity.getClass() == EntityLodo.class) {
+					if (day < 30) event.setResult(Result.DENY);
+				}
+				else if (entity.getClass() == EntityMudo.class) {
+					if (day < 50) event.setResult(Result.DENY);
+				}
+				else if (entity instanceof EntityPInfected) {
+					if (day < 60) event.setResult(Result.DENY);
+				}
+				else if (entity.getClass() == EntityRathol.class) {
+					if(day < 70) event.setResult(Result.DENY);
+				}
+				else if (day < 90) event.setResult(Result.DENY);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void hordeBuildSpawntable(HordeBuildSpawntableEvent event) {
+		int day = event.getDay();
+		if (day > 100 && day%100 == 0) {
+			if (event.getEntityPlayer().getTeam() != null) {
+				event.spawntable.clear();
+				for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
+			}
+		}
+	}
+
+}

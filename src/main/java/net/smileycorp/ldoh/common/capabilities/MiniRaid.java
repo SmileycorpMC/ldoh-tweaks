@@ -93,6 +93,16 @@ public class MiniRaid implements IMiniRaid {
 		}
 	}
 
+	@Override
+	public EntityPlayer getPlayer() {
+		return player;
+	}
+
+	@Override
+	public void setPlayer(EntityPlayer player) {
+		this.player = player;
+	}
+
 	private List<EntityLiving> buildList(World world, RaidType type, int phase) {
 		Random rand = world.rand;
 		List<EntityLiving> spawnlist = new ArrayList<EntityLiving>();

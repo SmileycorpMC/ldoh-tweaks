@@ -4,36 +4,36 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.smileycorp.atlas.api.IOngoingEvent;
 import net.smileycorp.ldoh.common.ModContent;
 
-public interface IMiniRaid {
+public interface IApocalypse extends IOngoingEvent {
 
-	public boolean shouldSpawnRaid();
+	public void spawnWave(World world);
 
-	public void spawnRaid();
+	public boolean canStart(World world);
 
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt);
-
-	public void readFromNBT(NBTTagCompound nbt);
+	public void startEvent();
 
 	public EntityPlayer getPlayer();
 
 	public void setPlayer(EntityPlayer player);
 
-	public static class Storage implements IStorage<IMiniRaid> {
+	public static class Storage implements IStorage<IApocalypse> {
 
 		@Override
-		public NBTBase writeNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side) {
+		public NBTBase writeNBT(Capability<IApocalypse> capability, IApocalypse instance, EnumFacing side) {
 			NBTTagCompound nbt = new NBTTagCompound();
 			instance.writeToNBT(nbt);
 			return nbt;
 		}
 
 		@Override
-		public void readNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side, NBTBase nbt) {
+		public void readNBT(Capability<IApocalypse> capability, IApocalypse instance, EnumFacing side, NBTBase nbt) {
 			instance.readFromNBT((NBTTagCompound) nbt);
 		}
 
@@ -42,36 +42,32 @@ public interface IMiniRaid {
 
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-		protected final IMiniRaid instance;
+		protected final IApocalypse instance;
 
 		public Provider(EntityPlayer player) {
-			instance = new MiniRaid(player);
+			instance = new Apocalypse(player);
 		}
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.MINI_RAID;
+			return capability == ModContent.APOCALYPSE;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.MINI_RAID ? ModContent.MINI_RAID.cast(instance) : null;
+			return capability == ModContent.APOCALYPSE ? ModContent.APOCALYPSE.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.MINI_RAID.getStorage().writeNBT(ModContent.MINI_RAID, instance, null);
+			return (NBTTagCompound) ModContent.APOCALYPSE.getStorage().writeNBT(ModContent.APOCALYPSE, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.MINI_RAID.getStorage().readNBT(ModContent.MINI_RAID, instance, null, nbt);
+			ModContent.APOCALYPSE.getStorage().readNBT(ModContent.APOCALYPSE, instance, null, nbt);
 		}
 
-	}
-
-	public static enum RaidType {
-		ZOMBIE, ENEMY, ALLY, PARASITE;
 	}
 
 }

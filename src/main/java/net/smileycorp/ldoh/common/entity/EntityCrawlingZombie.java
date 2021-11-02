@@ -7,8 +7,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
+import net.smileycorp.ldoh.common.util.IDummyZombie;
 
-public class EntityCrawlingZombie extends EntityZombie {
+public class EntityCrawlingZombie extends EntityZombie implements IDummyZombie {
 
 	public EntityCrawlingZombie(World world) {
 		super(world);

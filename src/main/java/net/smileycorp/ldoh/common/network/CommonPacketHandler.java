@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.SimpleStringMessage;
-import net.smileycorp.ldoh.client.ClientEventListener;
+import net.smileycorp.ldoh.client.ClientHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class CommonPacketHandler {
@@ -28,7 +28,7 @@ public class CommonPacketHandler {
 		public IMessage onMessage(LDOHMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					ClientEventListener.displayTitle(message.getText(), message.getDay());
+					ClientHandler.displayTitle(message.getText(), message.getDay());
 				});
 			}
 			return null;
@@ -43,7 +43,7 @@ public class CommonPacketHandler {
 		public IMessage onMessage(SimpleStringMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					ClientEventListener.displayActionBar(message.getText());
+					ClientHandler.displayActionBar(message.getText());
 				});
 			}
 			return null;

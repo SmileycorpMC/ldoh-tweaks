@@ -23,6 +23,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.BlockHordeSpawner;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
+import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
@@ -82,6 +83,9 @@ public class ModContent {
 	@CapabilityInject(IHunger.class)
 	public final static Capability<IHunger> HUNGER = null;
 
+	@CapabilityInject(IApocalypse.class)
+	public final static Capability<IApocalypse> APOCALYPSE = null;
+
 
 	public static CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){
 		@Override
@@ -100,7 +104,7 @@ public class ModContent {
 	public static final Item NURSE_HAT = new ItemHat("Nurse_Hat");
 	public static final Item MECHANIC_HAT = new ItemHat("Mechanic_Hat");
 	public static final Item HARDHAT = new ItemHelmet("Hardhat", 100, 2, 0f);
-	public static final Item BONESAW = new ItemWeapon("Bonesaw", 100, 5.5);
+	public static final Item BONESAW = new ItemWeapon("Bonesaw", 151, 5.5);
 	public static final Item TF_PROF_TOKEN = new ItemTFProfessionToken();
 
 	public static final Block HORDE_SPAWNER = new BlockHordeSpawner();
@@ -112,6 +116,7 @@ public class ModContent {
 
 	public static final SoundEvent TF_ENEMY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_enemy"));
 	public static final SoundEvent TF_ALLY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_ally"));
+	public static final SoundEvent BEEP = new SoundEvent(ModDefinitions.getResource("beep"));
 
 	public static Item[] items = {TF_PROF_TOKEN, SPAWNER, SYRINGE, CLOTH_FABRIC, DIAMOND_NUGGET, GAS_FILTER, GAS_MASK, NURSE_HAT, MECHANIC_HAT, HARDHAT, BONESAW};
 	public static Block[] blocks = {HORDE_SPAWNER, BARBED_WIRE, LANDMINE};

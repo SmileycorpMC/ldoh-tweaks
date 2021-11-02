@@ -2,16 +2,20 @@ package net.smileycorp.ldoh.common.tile;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 
 public class TileLandmine extends TileEntity implements ITickable {
-	
+
 	private int cooldown = 5;
 	private int primeTimer = 2400;
-	
+
 	@Override
 	public void update() {
 		if (!world.isRemote) {
@@ -19,16 +23,21 @@ public class TileLandmine extends TileEntity implements ITickable {
 			if (!state.getValue(BlockLandmine.PRIMED)) {
 				if (primeTimer-- <= 0) {
 					BlockLandmine.prime(world, pos, state);
+					if (primeTimer%30==0)  {
+						for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, (p)->p.getDistance(pos.getX(), pos.getY(), pos.getZ())<=32)) {
+							player.connection.sendPacket(new SPacketSoundEffect(ModContent.BEEP, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
+						}
+					}
 				}
 			}
 			if (state.getValue(BlockLandmine.PRESSED)) {
 				if (world.getEntitiesWithinAABB(EntityLivingBase.class, BlockLandmine.HITBOX_AABB.offset(pos)).isEmpty()) {
 					if (cooldown--<=0) BlockLandmine.explode(world, pos);
-        		}
-        	}
-		}	
+				}
+			}
+		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		if (compound.hasKey("primeTimer")) {
@@ -37,14 +46,14 @@ public class TileLandmine extends TileEntity implements ITickable {
 		if (compound.hasKey("cooldown")) {
 			cooldown = compound.getInteger("cooldown");
 		}
-        super.readFromNBT(compound);
-    }
+		super.readFromNBT(compound);
+	}
 
-    @Override
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    	compound.setInteger("primeTimer", primeTimer);
-        compound.setInteger("cooldown", cooldown);
-        return super.writeToNBT(compound);
-    }
+		compound.setInteger("primeTimer", primeTimer);
+		compound.setInteger("cooldown", cooldown);
+		return super.writeToNBT(compound);
+	}
 
 }
