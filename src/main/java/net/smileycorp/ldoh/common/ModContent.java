@@ -7,7 +7,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.RegistryEvent;
@@ -114,9 +114,9 @@ public class ModContent {
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
 
-	public static final SoundEvent TF_ENEMY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_enemy"));
-	public static final SoundEvent TF_ALLY_SOUND = new SoundEvent(ModDefinitions.getResource("tf_ally"));
-	public static final SoundEvent BEEP = new SoundEvent(ModDefinitions.getResource("beep"));
+	public static final ResourceLocation TF_ENEMY_SOUND = ModDefinitions.getResource("tf_enemy");
+	public static final ResourceLocation TF_ALLY_SOUND = ModDefinitions.getResource("tf_ally");
+	public static final ResourceLocation LANDMINE_BEEP = ModDefinitions.getResource("landmine_beep");
 
 	public static Item[] items = {TF_PROF_TOKEN, SPAWNER, SYRINGE, CLOTH_FABRIC, DIAMOND_NUGGET, GAS_FILTER, GAS_MASK, NURSE_HAT, MECHANIC_HAT, HARDHAT, BONESAW};
 	public static Block[] blocks = {HORDE_SPAWNER, BARBED_WIRE, LANDMINE};

@@ -121,7 +121,6 @@ public class ModUtils {
 
 	public static void tryJoinTeam(EntityPlayer player, EntityLivingBase entity) {
 		//adds player to npc team
-		System.out.println("wading");
 		if (entity instanceof EntityTF2Character) {
 			ModUtils.addPlayerToTeam(player, entity.getTeam().getName());
 		}
@@ -131,12 +130,14 @@ public class ModUtils {
 	public static void spawnHorde(World world, BlockPos basepos) {
 		Random rand = world.rand;
 		int day = Math.round(world.getWorldTime()/24000);
+		int c = day >= 101 ? 20 : day>= 50 ? day-40 : -1;
+		boolean isParasite = day >= 50 && rand.nextInt(100) <= c;
 		if (world.getSpawnPoint().getDistance(basepos.getX(), basepos.getY(), basepos.getZ()) >= 200) {
 			for (int i = 0; i < getRandomSize(rand); i++) {
 				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);
 				pos = new BlockPos(pos.getX()+rand.nextFloat(), world.getHeight(pos.getX(), pos.getZ()), pos.getZ()+rand.nextFloat());
-				EntityMob entity = getEntity(world, rand, day, pos);
+				EntityMob entity = isParasite? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
 				entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
 				entity.enablePersistence();
 				entity.onAddedToWorld();
@@ -152,7 +153,6 @@ public class ModUtils {
 	}
 
 	private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
-		if (day >= 50) return new EntityInfHuman(world);
 		if (rand.nextInt(5) == 0) {
 			return new EntityCrawlingZombie(world);
 		}

@@ -19,6 +19,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
+import net.smileycorp.hordes.common.event.HordeEndEvent;
+import net.smileycorp.hordes.common.event.HordeStartEvent;
+import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
@@ -106,12 +109,50 @@ public class SpawnerEvents {
 	}
 
 	@SubscribeEvent
+	public void hordeStart(HordeStartEvent event) {
+		int day = event.getDay();
+		if (day > 100 && day%100 == 0) {
+			if (event.getEntityPlayer().getTeam() != null) {
+				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
+					event.setMessage("message.hundreddayz.TFHordeStart");
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void hordeStartWave(HordeStartWaveEvent event) {
+		int day = event.getDay();
+		if (day > 100 && day%100 == 0) {
+			if (event.getEntityPlayer().getTeam() != null) {
+				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
+					event.setSound(ModDefinitions.getResource("tf_enemy"));
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void hordeStart(HordeEndEvent event) {
+		int day = event.getDay();
+		if (day > 100 && day%100 == 0) {
+			if (event.getEntityPlayer().getTeam() != null) {
+				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
+					event.setMessage("message.hundreddayz.TFHordeEnd");
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
 	public void hordeBuildSpawntable(HordeBuildSpawntableEvent event) {
 		int day = event.getDay();
 		if (day > 100 && day%100 == 0) {
 			if (event.getEntityPlayer().getTeam() != null) {
-				event.spawntable.clear();
-				for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
+				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
+					event.spawntable.clear();
+					for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
+				}
 			}
 		}
 	}

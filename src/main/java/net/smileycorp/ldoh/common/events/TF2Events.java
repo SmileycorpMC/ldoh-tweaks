@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.events;
 
+import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,14 +29,17 @@ import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
+import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.entities.EntityNecromancer;
+import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemAmmo;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 
 public class TF2Events {
 
@@ -46,6 +50,10 @@ public class TF2Events {
 		//gives tf2 mercs hunger
 		if (!entity.hasCapability(ModContent.HUNGER, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
+		}
+
+		if (!entity.hasCapability(ModContent.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
+			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
 	}
 
@@ -64,6 +72,9 @@ public class TF2Events {
 						newentity.setPosition(entity.posX, entity.posY, entity.posZ);
 						entity.setDead();
 						world.spawnEntity(newentity);
+						SRPWorldData data = SRPWorldData.get(world);
+						data.setCurrentV(data.getCurrentV() + 1);
+						data.markDirty();
 					}
 				}
 			}
@@ -184,6 +195,15 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				merc.tasks.addTask(3, new EntityAIAvoidEntity(merc, EntityMob.class, 5.0F, 0.6D, 0.6D));
+				if (entity instanceof EntitySpy && entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
+					ISpawnTracker tracker = entity.getCapability(ModContent.SPAWN_TRACKER, null);
+					if (!tracker.isSpawned()) {
+						if (entity.hasCapability(ModContent.HUNGER, null)) {
+							entity.getCapability(ModContent.HUNGER, null).setFoodStack(new ItemStack(ItemListxlfoodmod.baguette, 8));
+						}
+						tracker.setSpawned(true);
+					}
+				}
 				if (merc.hasCapability(ModContent.HUNGER, null)) merc.getCapability(ModContent.HUNGER, null).syncClients(merc);
 			}
 		}

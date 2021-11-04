@@ -5,11 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.ITextComponent;
@@ -43,6 +46,7 @@ public class PlayerEvents {
 					//50% chance to break the bucket
 					if (world.rand.nextInt(2) == 0) {
 						event.getEmptyBucket().shrink(1);
+						event.getEntityPlayer().playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
 						event.setCanceled(true);
 						if (!world.isRemote)  {
 							ITextComponent text = new TextComponentTranslation(ModDefinitions.lavaPickupMessage);
@@ -68,8 +72,11 @@ public class PlayerEvents {
 					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 					if (player.ticksExisted%35==0 && !player.isCreative()) {
 						//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
-						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < ModContent.GAS_MASK.getMaxDamage()) {
+						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < helm.getMaxDamage()) {
 							helm.damageItem(1, player);
+							if (helm.getMetadata() == helm.getMaxDamage()) {
+								((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
+							}
 						} else {
 							//deal damage if not wearing it and display message
 							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
@@ -90,6 +97,7 @@ public class PlayerEvents {
 							if (stack.getItem() == Items.LAVA_BUCKET) stack.shrink(1);
 							break;
 						}
+						((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
 						ITextComponent text = new TextComponentTranslation(ModDefinitions.lavaBreakMessage);
 						text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 						player.sendMessage(text);

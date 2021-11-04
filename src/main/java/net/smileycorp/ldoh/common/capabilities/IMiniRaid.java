@@ -71,7 +71,7 @@ public interface IMiniRaid {
 	}
 
 	public static enum RaidType {
-		ZOMBIE, ENEMY, ALLY, PARASITE;
+		ZOMBIE, ENEMY, ALLY, PARASITE, NONE;
 	}
 
 }

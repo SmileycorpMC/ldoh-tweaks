@@ -11,6 +11,9 @@ message.hundreddayz.FinalDaySubtitle=At midnight the apocalypse will begin.
 message.hundreddayz.WorldsEnd=The air smells of death. You can already feel the horrors this night will bring.
 message.hundreddayz.EventEnd=As the sun finally rises, you can feel the invasion over.
 
+message.hundreddayz.TFHordeStart=An enemy army appears at the horizon.
+message.hundreddayz.TFHordeEnd=The sounds of gunfire start to fade.
+
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
 
@@ -64,7 +67,6 @@ entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie
 entity.hundreddayz.ZombieNoBreakOrPlace.name=Zombie
-
 entity.hundreddayz.HuskNoBreak.name=Husk
 entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
@@ -76,3 +78,7 @@ gui.text.Hunger=Hunger
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot
+
+hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
+hundreddayz.subtitle.tf.ally=Ally Team Approaches
+hundreddayz.subtitle.landmine.beep=Landmine Beeps

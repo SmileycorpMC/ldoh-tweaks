@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 
@@ -15,6 +16,8 @@ public class TileLandmine extends TileEntity implements ITickable {
 
 	private int cooldown = 5;
 	private int primeTimer = 2400;
+
+	public SoundEvent BEEP_SOUND = new SoundEvent(ModContent.LANDMINE_BEEP);
 
 	@Override
 	public void update() {
@@ -25,7 +28,7 @@ public class TileLandmine extends TileEntity implements ITickable {
 					BlockLandmine.prime(world, pos, state);
 					if (primeTimer%30==0)  {
 						for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, (p)->p.getDistance(pos.getX(), pos.getY(), pos.getZ())<=32)) {
-							player.connection.sendPacket(new SPacketSoundEffect(ModContent.BEEP, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
+							player.connection.sendPacket(new SPacketSoundEffect(BEEP_SOUND, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
 						}
 					}
 				}

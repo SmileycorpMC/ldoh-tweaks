@@ -1,0 +1,17 @@
+{
+  "tf_enemy": {
+    "category": "hostile",
+    "subtitle": "hundreddayz.subtitle.tf.enemy",
+    "sounds": [ "hundreddayz:tf_enemy" ]
+  },
+  "tf_enemy": {
+    "category": "passive",
+    "subtitle": "hundreddayz.subtitle.tf.ally",
+    "sounds": [ "hundreddayz:tf_ally" ]
+  }, 
+  "landmine_beep": {
+    "category": "block",
+    "subtitle": "hundreddayz.subtitle.landmine.beep",
+    "sounds": [ "hundreddayz:landmine_beep" ]
+  }
+ }

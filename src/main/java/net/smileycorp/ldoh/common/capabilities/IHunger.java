@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
@@ -97,7 +98,7 @@ public interface IHunger {
 	public static class Hunger implements IHunger {
 
 		protected final FoodStats hunger = new FoodStats();
-		protected ItemStack foodSlot = ItemStack.EMPTY;
+		protected ItemStack foodSlot = new ItemStack(Items.BREAD, 8);
 		protected ItemStack heldItem = ItemStack.EMPTY;
 
 		protected boolean appleCoreInit = false;

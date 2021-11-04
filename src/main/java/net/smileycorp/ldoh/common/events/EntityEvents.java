@@ -31,7 +31,9 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.ldoh.common.ModContent;
@@ -63,7 +65,9 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
+import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class EntityEvents {
@@ -93,29 +97,22 @@ public class EntityEvents {
 			if (entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
 				if(!entity.getCapability(ModContent.SPAWN_TRACKER, null).isSpawned()) {
 					if (entity.getClass() == EntityZombie.class) {
-						int day = (int) Math.floor(world.getWorldTime()/24000);
 						EntityZombie zombie = (EntityZombie) entity;
 						EntityMob newentity = null;
-						//turns zombies into inf humans between day 50 and 100
-						if (day>=50 && day <=100) {
-							newentity = new EntityInfHuman(world);
-							//turns zombies into a random variant based on rng
-						} else {
-							Random rand = world.rand;
-							//select random number first to allow for proper weighting
-							int randInt = rand.nextInt(100);
-							if (randInt < 3) {
-								newentity = new EntityTFZombie(world);
-							} else if (randInt == 3) {
-								newentity = new EntityZombieNurse(world);
-							}  else if (randInt < 15) {
-								newentity = world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert ?
-										new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
-							}
-							//turns zombies into husks in a desert
-							else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
-								newentity = new EntityHusk(world);
-							}
+						Random rand = world.rand;
+						//select random number first to allow for proper weighting
+						int randInt = rand.nextInt(100);
+						if (randInt < 3) {
+							newentity = new EntityTFZombie(world);
+						} else if (randInt == 3) {
+							newentity = new EntityZombieNurse(world);
+						}  else if (randInt < 15) {
+							newentity = world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert ?
+									new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
+						}
+						//turns zombies into husks in a desert
+						else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
+							newentity = new EntityHusk(world);
 						}
 						//sets up new entity
 						if (newentity != null) {
@@ -265,6 +262,28 @@ public class EntityEvents {
 					event.entity = new EntityTFZombie(world);
 				} else if (randInt < 45 - (world.getWorldTime()/24000)) {
 					event.entity = new EntityCrawlingZombie(world);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onDeath(LivingDeathEvent event) {
+		EntityLivingBase entity = event.getEntityLiving();
+		World world = entity.world;
+		if (!world.isRemote) {
+			//replaces the tf2 character with an infected human if killed by a rupter
+			if (event.getSource().getTrueSource() instanceof EntityParasiteBase) {
+				if (entity instanceof EntityVillagerTek) {
+					EntityInfVillager newentity = new EntityInfVillager(world);
+					newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+					newentity.renderYawOffset=entity.renderYawOffset;
+					newentity.setPosition(entity.posX, entity.posY, entity.posZ);
+					entity.setDead();
+					world.spawnEntity(newentity);
+					SRPWorldData data = SRPWorldData.get(world);
+					data.setCurrentV(data.getCurrentV() + 1);
+					data.markDirty();
 				}
 			}
 		}
