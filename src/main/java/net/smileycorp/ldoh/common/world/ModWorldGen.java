@@ -2,9 +2,8 @@ package net.smileycorp.ldoh.common.world;
 
 import java.util.Random;
 
-import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
-import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.minecraft.block.Block;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,6 +16,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.smileycorp.ldoh.common.ModContent;
 import biomesoplenty.api.biome.BOPBiomes;
+import biomesoplenty.api.block.BOPBlocks;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
@@ -27,28 +27,21 @@ public class ModWorldGen implements IWorldGenerator {
 		//generate horde spawning blocks
 		int x = (chunkX << 4) +rand.nextInt(16);
 		int z = (chunkZ << 4) + rand.nextInt(16);
-		if (rand.nextInt(world.getBiomeProvider().getBiome(new BlockPos(x, 0, z)) == BOPBiomes.wasteland.get() ? 13 : 18)==0) {
+		Biome biome = world.getBiomeProvider().getBiomes(null, x, z, 1, 1, false)[0];
+		if (rand.nextInt(biome == WastelandWorld.apocalypse_city ? 7 : biome == BOPBiomes.wasteland.get() ? 13 : biome == Biomes.DEEP_OCEAN ? 24 : 18) == 0) {
 			BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
 			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
 		}
-		//give an extra chance to generate in cities
-		if (chunkGenerator instanceof LostCityChunkGenerator) {
-			if (BuildingInfo.isCity(chunkX, chunkZ, (LostCityChunkGenerator) chunkGenerator)) {
-				x = (chunkX << 4) +rand.nextInt(16);
-				z = (chunkZ << 4) + rand.nextInt(16);
-				if (rand.nextInt(20)==0) {
-					BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
-					world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
-				}
-			}
-		}
 		BlockPos chunkpos = new BlockPos(x, 0 , z);
-		Biome biome = world.getBiome(chunkpos);
 		//adds our custom oregen to biomes other than the apocalyptic desert
 		if (biome != WastelandWorld.apocalypse_desert) {
 			genOre(world, chunkpos, rand, Blocks.COAL_ORE);
 			genOre(world, chunkpos, rand, Blocks.IRON_ORE);
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
+		}
+		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
+			int r = rand.nextInt(4);
+			genSurfaceBlock(world, rand, chunkX, chunkZ, r == 0 ? Blocks.CLAY : r == 1 ? BOPBlocks.white_sand : r == 2 ? BOPBlocks.mud : BOPBlocks.dried_sand);
 		}
 	}
 
@@ -76,6 +69,13 @@ public class ModWorldGen implements IWorldGenerator {
 			BlockPos blockpos = chunkpos.add(rand.nextInt(16), rand.nextInt(30), rand.nextInt(16));
 			generator.generate(world, rand, blockpos);
 		}
+	}
+
+	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ, Block block) {
+		int x = (chunkX << 4) +rand.nextInt(16);
+		int z = (chunkZ << 4) + rand.nextInt(16);
+		WorldGenSurface gen = new WorldGenSurface(block, 100);
+		gen.generate(world, rand, new BlockPos(x, world.getChunkFromChunkCoords(chunkX, chunkZ).getHeightValue(x&15, z&15)-1, z));
 	}
 
 }

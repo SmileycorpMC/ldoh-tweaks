@@ -30,7 +30,7 @@ import net.smileycorp.ldoh.common.events.PlayerEvents;
 import net.smileycorp.ldoh.common.events.SpawnerEvents;
 import net.smileycorp.ldoh.common.events.TF2Events;
 import net.smileycorp.ldoh.common.events.WorldEvents;
-import net.smileycorp.ldoh.common.network.CommonPacketHandler;
+import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 
 public class CommonProxy {
@@ -51,7 +51,7 @@ public class CommonProxy {
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CABINET);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
 		//Setup Packets for use
-		CommonPacketHandler.initPackets();
+		PacketHandler.initPackets();
 	}
 
 	public void init(FMLInitializationEvent event) {

@@ -182,7 +182,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 	private void decorateBase(World world, Random rand) {
 		BlockPos pos = basepos.up();
 		if (exitpos == null) {
-			CrashReport report = CrashReport.makeCrashReport(new Exception("Like actually there's no way for you to be a null value, how the fuck are you crashing here, there's litterally three checks to make sure you can't be null at this point. How the fuck are you null at this point"), "Fuck you I'm crashing the game myself, legitimately how the fuck did you do this.");
+			CrashReport report = CrashReport.makeCrashReport(new Exception("Please report to LDOH discord, I would make a new world if I were you."), "If this crash happens something has gone seriously wrong.");
 			throw new ReportedException(report);
 		}
 		BlockPos wallpos = pos.south(4);

@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
@@ -15,6 +16,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,7 +43,7 @@ public class TF2Events {
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
-		//gives tf2 npcs hunger
+		//gives tf2 mercs hunger
 		if (!entity.hasCapability(ModContent.HUNGER, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
 		}
@@ -65,7 +67,7 @@ public class TF2Events {
 					}
 				}
 			}
-			//adds the player to a team after killing the opposite npc
+			//adds the player to a team after killing the opposite merc
 			if (event.getSource().getTrueSource() instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
 				if (entity instanceof EntityTF2Character) {
@@ -92,13 +94,13 @@ public class TF2Events {
 			entity.getCapability(ModContent.HUNGER, null).onUpdate((EntityLiving) entity);
 		}
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
-			EntityTF2Character npc = (EntityTF2Character) entity;
+			EntityTF2Character merc = (EntityTF2Character) entity;
 			//gifting ammo and food to tf2 characters
-			for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, npc.getEntityBoundingBox())) {
+			for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, merc.getEntityBoundingBox())) {
 				ItemStack stack = item.getItem();
 				if (stack.getItem() instanceof ItemAmmo) {
 					//check entity ammo slots to see if it can pick the items up
-					ItemStackHandler ammo = npc.refill;
+					ItemStackHandler ammo = merc.refill;
 					if (ammo != null) {
 						ItemStack ammostack = ammo.getStackInSlot(0);
 						if (ammostack==null || ammostack.isEmpty()) {
@@ -120,8 +122,8 @@ public class TF2Events {
 						}
 					}
 				}
-				if (npc.hasCapability(ModContent.HUNGER, null)) {
-					stack = npc.getCapability(ModContent.HUNGER, null).tryPickupFood(stack);
+				if (merc.hasCapability(ModContent.HUNGER, null)) {
+					stack = merc.getCapability(ModContent.HUNGER, null).tryPickupFood(stack, merc);
 				}
 				if (stack.getCount() == 0) item.setDead();
 			}
@@ -160,7 +162,7 @@ public class TF2Events {
 		if (entity instanceof EntityTF2Character) {
 			//check the entity isn't a robot
 			if(!((EntityTF2Character) entity).isRobot()) {
-				//spawns a tf2 zombie in the place of the dead npc
+				//spawns a tf2 zombie in the place of the dead merc
 				EntityTFZombie zombie = new EntityTFZombie((EntityTF2Character)entity);
 				world.spawnEntity(zombie);
 				zombie.setPosition(entity.posX, entity.posY, entity.posZ);
@@ -178,11 +180,20 @@ public class TF2Events {
 		Entity entity = event.getEntity();
 		if (entity instanceof EntityNecromancer) event.setCanceled(true);
 		if (!world.isRemote) {
-			//makes tf2 npcs avoid zombies more
+			//makes tf2 mercs avoid zombies more
 			if (entity instanceof EntityTF2Character) {
-				EntityTF2Character npc = (EntityTF2Character) entity;
-				npc.tasks.addTask(3, new EntityAIAvoidEntity(npc, EntityMob.class, 5.0F, 0.6D, 0.6D));
+				EntityTF2Character merc = (EntityTF2Character) entity;
+				merc.tasks.addTask(3, new EntityAIAvoidEntity(merc, EntityMob.class, 5.0F, 0.6D, 0.6D));
+				if (merc.hasCapability(ModContent.HUNGER, null)) merc.getCapability(ModContent.HUNGER, null).syncClients(merc);
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void playerTrack(PlayerEvent.StartTracking event) {
+		if (event.getTarget() instanceof EntityLiving && event.getEntityPlayer() instanceof EntityPlayerMP) {
+			EntityLiving entity = (EntityLiving) event.getTarget();
+			if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 

@@ -26,11 +26,7 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityPInfected;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityLodo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityRathol;
 
 public class SpawnerEvents {
 
@@ -105,21 +101,7 @@ public class SpawnerEvents {
 		EntityLivingBase entity = event.getEntityLiving();
 		if (!world.isRemote) {
 			int day = (int) Math.floor(world.getWorldTime()/24000);
-			if (entity instanceof EntityParasiteBase) {
-				if (entity.getClass() == EntityLodo.class) {
-					if (day < 30) event.setResult(Result.DENY);
-				}
-				else if (entity.getClass() == EntityMudo.class) {
-					if (day < 50) event.setResult(Result.DENY);
-				}
-				else if (entity instanceof EntityPInfected) {
-					if (day < 60) event.setResult(Result.DENY);
-				}
-				else if (entity.getClass() == EntityRathol.class) {
-					if(day < 70) event.setResult(Result.DENY);
-				}
-				else if (day < 90) event.setResult(Result.DENY);
-			}
+			if (entity instanceof EntityParasiteBase && (day < 50)) event.setResult(Result.DENY);
 		}
 	}
 

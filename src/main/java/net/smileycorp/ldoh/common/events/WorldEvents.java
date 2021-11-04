@@ -17,15 +17,18 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
+@EventBusSubscriber(modid = ModDefinitions.modid)
 public class WorldEvents {
 
 	//Spawn in World
@@ -102,6 +105,10 @@ public class WorldEvents {
 			}
 			IChunkProvider provider = world.getChunkProvider();
 			//cancels structure if it's in a city
+			for (Biome biome : world.getBiomeProvider().getBiomes(null, box.minX, box.minZ, box.maxX-box.minX, box.maxZ-box.minZ, false)) if (biome == WastelandWorld.apocalypse_city) {
+				event.setCanceled(true);
+				return;
+			}
 			if (provider instanceof ChunkProviderServer) {
 				IChunkGenerator gen = ((ChunkProviderServer)provider).chunkGenerator;
 				if (gen instanceof LostCityChunkGenerator) {

@@ -4,18 +4,24 @@ import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -36,6 +42,7 @@ import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummy;
@@ -48,6 +55,9 @@ import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
+import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
 @EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
 public class ClientEventListener {
 
@@ -56,6 +66,7 @@ public class ClientEventListener {
 
 	public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.2f);
 	public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
+	public static ResourceLocation TF_HUNGER_TEXTURE = ModDefinitions.getResource("textures/gui/tf_hunger.png");
 
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
@@ -165,6 +176,62 @@ public class ClientEventListener {
 				GlStateManager.disableLighting();
 				GlStateManager.enableTexture2D();
 				GlStateManager.popMatrix();
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void drawGUI(GuiScreenEvent.BackgroundDrawnEvent event) {
+		if (event.getGui() instanceof GuiMercenary) {
+			GuiMercenary gui = (GuiMercenary) event.getGui();
+			EntityTF2Character entity = gui.mercenary;
+			if (entity.hasCapability(ModContent.HUNGER, null)) {
+				Minecraft mc = Minecraft.getMinecraft();
+				IHunger hunger = entity.getCapability(ModContent.HUNGER, null);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+				mc.getTextureManager().bindTexture(TF_HUNGER_TEXTURE);
+				gui.drawTexturedModalRect(gui.getGuiLeft() - 54, gui.getGuiTop(), 0, 0, 54, 70);
+				int v = entity.isPotionActive(MobEffects.HUNGER) ? 79 : 70;
+				int food = hunger.getFoodLevel();
+				for (int i = 0; i<=Math.ceil(food/2); i++) {
+					int x = gui.getGuiLeft() - 50 + ((4-i%5)*9);
+					int y = gui.getGuiTop() + 16 + ((int)Math.floor(i/5)*9);
+					int u = (i+1)*2>food ? 9 : 0;
+					if ((i*2)<food) gui.drawTexturedModalRect(x, y, u, v, 9, 9);
+				}
+				FontRenderer font = gui.fontRenderer;
+				if (!hunger.getFoodSlot().isEmpty()) {
+					GlStateManager.enableLighting();
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					ItemStack stack = hunger.getFoodSlot();
+					gui.itemRender.renderItemAndEffectIntoGUI(stack, gui.getGuiLeft() - 36, gui.getGuiTop() + 42);
+					gui.itemRender.renderItemOverlayIntoGUI(font, stack, gui.getGuiLeft() - 36, gui.getGuiTop() + 42, null);
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableLighting();
+				}
+				String text = I18n.translateToLocal("gui.text.Hunger");
+				font.drawString(text, gui.getGuiLeft() - 26 - (font.getStringWidth(text)/2), gui.getGuiTop()+5, 4210752);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void drawGUIOverlay(GuiScreenEvent.DrawScreenEvent.Post event) {
+		if (event.getGui() instanceof GuiMercenary) {
+			GuiMercenary gui = (GuiMercenary) event.getGui();
+			EntityTF2Character entity = gui.mercenary;
+			if (entity.hasCapability(ModContent.HUNGER, null)) {
+				IHunger hunger = entity.getCapability(ModContent.HUNGER, null);
+				if (!hunger.getFoodSlot().isEmpty()) {
+					int mouseX = event.getMouseX();
+					int mouseY = event.getMouseY();
+					int slotX = gui.getGuiLeft() - 36;
+					int slotY = gui.getGuiTop() + 42;
+					if (mouseX >= slotX  && mouseX <= slotX + 18 && mouseY >= slotY  && mouseY <= slotY + 18) {
+						gui.renderToolTip(hunger.getFoodSlot(), mouseX, mouseY);
+					}
+				}
 			}
 		}
 	}

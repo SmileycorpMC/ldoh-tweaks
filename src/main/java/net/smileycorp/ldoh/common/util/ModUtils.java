@@ -32,6 +32,9 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
+import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
+import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.tangotek.tektopia.Village;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
@@ -132,11 +135,12 @@ public class ModUtils {
 			for (int i = 0; i < getRandomSize(rand); i++) {
 				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);
-				pos = new BlockPos(pos.getX(), world.getChunkFromBlockCoords(pos).getHeight(pos), pos.getZ());
-				EntityMob entity = getEntity(world, rand, day);
+				pos = new BlockPos(pos.getX()+rand.nextFloat(), world.getHeight(pos.getX(), pos.getZ()), pos.getZ()+rand.nextFloat());
+				EntityMob entity = getEntity(world, rand, day, pos);
 				entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
 				entity.enablePersistence();
 				entity.onAddedToWorld();
+				entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 				world.spawnEntity(entity);
 			}
 		}
@@ -147,14 +151,26 @@ public class ModUtils {
 		return rand.nextInt(8) + 40;
 	}
 
-	private static EntityMob getEntity(World world, Random rand, int day) {
+	private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
 		if (day >= 50) return new EntityInfHuman(world);
-		else if (rand.nextInt(5) == 0) {
+		if (rand.nextInt(5) == 0) {
 			return new EntityCrawlingZombie(world);
 		}
-		else if (rand.nextInt(3) > day/10) {
-			int r = rand.nextInt(10);
-			if (r < 5) return new EntityDummyZombie0(world);
+		if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
+			int r = rand.nextInt(100);
+			if (r < 10) return new EntityZombie(world);
+			if (r < 20) return new EntityDummyZombie1(world);
+			if (r < 40) return new EntityDummyZombie0(world);
+			if (r == 40) return new EntityZombieNurse(world);
+			else return new EntityDummyZombie2(world);
+		}
+		else {
+			if (rand.nextInt(3) > day/10) {
+				int r = rand.nextInt(10);
+				if (r < 3) return new EntityDummyZombie2(world);
+				else if (r < 5) return new EntityDummyZombie0(world);
+				else if (r == 7) return new EntityDummyZombie1(world);
+			}
 		}
 		return new EntityZombie(world);
 	}

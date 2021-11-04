@@ -70,7 +70,9 @@ entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 death.attack.ToxicGas=%1$s choked on toxic gasses
-death.attack.Shrapnel=%1$s stepped on a landmine;
+death.attack.Shrapnel=%1$s stepped on a landmine
+
+gui.text.Hunger=Hunger
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot

@@ -28,7 +28,7 @@ import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
-import net.smileycorp.ldoh.common.network.CommonPacketHandler;
+import net.smileycorp.ldoh.common.network.PacketHandler;
 
 public class PlayerEvents {
 
@@ -74,7 +74,7 @@ public class PlayerEvents {
 							//deal damage if not wearing it and display message
 							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
 							if (player instanceof EntityPlayerMP) {
-								CommonPacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
+								PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
 							}
 						}
 					}
