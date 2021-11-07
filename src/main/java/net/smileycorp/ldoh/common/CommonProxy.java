@@ -15,6 +15,8 @@ import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks.BreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IFollowers;
+import net.smileycorp.ldoh.common.capabilities.IFollowers.Followers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.IHunger.Hunger;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
@@ -24,6 +26,7 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.MiniRaid;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
+import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
 import net.smileycorp.ldoh.common.events.ApocalypseEvents;
 import net.smileycorp.ldoh.common.events.EntityEvents;
 import net.smileycorp.ldoh.common.events.PlayerEvents;
@@ -66,6 +69,7 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), () -> new MiniRaid());
 		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), () -> new Hunger());
 		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
+		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
@@ -75,6 +79,8 @@ public class CommonProxy {
 	public void serverStart(FMLServerStartingEvent event) {
 		//Register Boss Command
 		event.registerServerCommand(new CommandBossEvent());
+		//Register mini raids command
+		event.registerServerCommand(new CommandSpawnRaid());
 	}
 
 }

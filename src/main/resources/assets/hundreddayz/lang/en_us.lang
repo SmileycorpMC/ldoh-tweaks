@@ -16,6 +16,10 @@ message.hundreddayz.TFHordeEnd=The sounds of gunfire start to fade.
 
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
+commands.hundreddayz.SpawnRaid.usage=/spawnRaid <raid type> <level>
+commands.hundreddayz.SpawnRaid.success=Successfully spawned %1$s raid.
+commands.hundreddayz.SpawnRaid.invalidValue=%1$s is an invalid parameter for /spawnRaid
+commands.hundreddayz.SpawnRaid.teamFail=you must be on the RED or BLU team to spawn a %1$s raid.
 
 itemGroup.hundreddayz.HundredDayzTab=100 Dayz Tweaks
 

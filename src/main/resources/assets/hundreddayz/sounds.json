@@ -4,8 +4,8 @@
     "subtitle": "hundreddayz.subtitle.tf.enemy",
     "sounds": [ "hundreddayz:tf_enemy" ]
   },
-  "tf_enemy": {
-    "category": "passive",
+  "tf_ally": {
+    "category": "neutral",
     "subtitle": "hundreddayz.subtitle.tf.ally",
     "sounds": [ "hundreddayz:tf_ally" ]
   }, 

@@ -2,9 +2,7 @@ package net.smileycorp.ldoh.common.tile;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
@@ -27,9 +25,7 @@ public class TileLandmine extends TileEntity implements ITickable {
 				if (primeTimer-- <= 0) {
 					BlockLandmine.prime(world, pos, state);
 					if (primeTimer%30==0)  {
-						for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, (p)->p.getDistance(pos.getX(), pos.getY(), pos.getZ())<=32)) {
-							player.connection.sendPacket(new SPacketSoundEffect(BEEP_SOUND, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F));
-						}
+						world.playSound(null, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					}
 				}
 			}

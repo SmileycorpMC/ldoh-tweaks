@@ -1,70 +1,39 @@
 package net.smileycorp.ldoh.client.entity.model;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
-public class ModelDummy extends ModelBase {
-	public ModelRenderer left_arm;
-	public ModelRenderer left_leg;
-	public ModelRenderer head;
-	public ModelRenderer body;
-	public ModelRenderer right_arm;
-	public ModelRenderer right_leg;
-	public ModelRenderer hat;
+public class ModelDummy extends ModelBiped {
 
 	public ModelDummy() {
-		textureWidth = 64;
-		textureHeight = 64;
-		head = new ModelRenderer(this, 0, 0);
-		head.setRotationPoint(0.0F, 22.0F, 6.0F);
-		head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
-		setRotateAngle(head, -1.5707963267948966F, 0.0F, 0.0F);
-		left_arm = new ModelRenderer(this, 40, 16);
-		left_arm.setRotationPoint(-5.0F, 22.0F, 4.0F);
-		left_arm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
-		setRotateAngle(left_arm, -1.5707963267948966F, 0.0F, 0.04817108735504349F);
-		left_leg = new ModelRenderer(this, 0, 16);
-		left_leg.setRotationPoint(-1.9F, 22.0F, -6.0F);
-		left_leg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
-		setRotateAngle(left_leg, -1.5707963267948966F, 0.0F, 0.0F);
-		body = new ModelRenderer(this, 16, 16);
-		body.setRotationPoint(0.0F, 22.0F, 6.0F);
-		body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
-		setRotateAngle(body, -1.5707963267948966F, 0.0F, 0.0F);
-		right_arm = new ModelRenderer(this, 40, 16);
-		right_arm.mirror = true;
-		right_arm.setRotationPoint(5.0F, 22.0F, 4.0F);
-		right_arm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
-		setRotateAngle(right_arm, -1.5707963267948966F, 0.0F, -0.04817108735504349F);
-		right_leg = new ModelRenderer(this, 0, 16);
-		right_leg.mirror = true;
-		right_leg.setRotationPoint(1.9F, 22.0F, -6.0F);
-		right_leg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
-		setRotateAngle(right_leg, -1.5707963267948966F, 0.0F, 0.0F);
-		hat = new ModelRenderer(this, 32, 0);
-		hat.setRotationPoint(0.0F, 22.0F, 6.0F);
-		hat.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.5F);
-		setRotateAngle(hat, -1.5707963267948966F, 0.0F, 0.0F);
+		super(0, 0, 64, 64);
+		isRiding = true;
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		head.render(f5);
-		left_arm.render(f5);
-		left_leg.render(f5);
-		body.render(f5);
-		right_arm.render(f5);
-		right_leg.render(f5);
-		hat.render(f5);
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0.6, 0);
+		super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		GlStateManager.popMatrix();
 	}
 
-	/**
-	 * This is a helper function from Tabula to set the rotation of model parts
-	 */
-	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+		bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
+		bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
+		bipedRightArm.rotateAngleX += -((float)Math.PI / 5F);
+		bipedLeftArm.rotateAngleX += -((float)Math.PI / 5F);
+		bipedRightLeg.rotateAngleX = -1.4137167F;
+		bipedRightLeg.rotateAngleY = ((float)Math.PI / 10F);
+		bipedRightLeg.rotateAngleZ = 0.07853982F;
+		bipedLeftLeg.rotateAngleX = -1.4137167F;
+		bipedLeftLeg.rotateAngleY = -((float)Math.PI / 10F);
+		bipedLeftLeg.rotateAngleZ = -0.07853982F;
+		bipedHead.rotateAngleX = MathHelper.sin((age/20 - 1.5f))/10 +0.1f;
+		bipedHeadwear.rotateAngleX = bipedHead.rotateAngleX;
 	}
+
 }

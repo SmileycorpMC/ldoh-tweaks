@@ -11,17 +11,15 @@ import net.smileycorp.ldoh.common.ModContent;
 
 public interface IMiniRaid {
 
-	public boolean shouldSpawnRaid();
+	public boolean shouldSpawnRaid(EntityPlayer player);
 
-	public void spawnRaid();
+	public void spawnRaid(EntityPlayer player);
+
+	public void spawnRaid(EntityPlayer player, RaidType type, int phase);
 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt);
 
 	public void readFromNBT(NBTTagCompound nbt);
-
-	public EntityPlayer getPlayer();
-
-	public void setPlayer(EntityPlayer player);
 
 	public static class Storage implements IStorage<IMiniRaid> {
 
@@ -42,11 +40,9 @@ public interface IMiniRaid {
 
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-		protected final IMiniRaid instance;
+		protected final IMiniRaid instance = new MiniRaid();
 
-		public Provider(EntityPlayer player) {
-			instance = new MiniRaid(player);
-		}
+		public Provider() {}
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

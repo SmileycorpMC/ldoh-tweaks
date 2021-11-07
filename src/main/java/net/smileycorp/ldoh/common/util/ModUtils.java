@@ -48,6 +48,7 @@ public class ModUtils {
 	public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
 	public static final AttributeModifier WASTELAND_MODIFIER = new AttributeModifier(UUID.fromString("22f4fa64-de73-4b45-9bb2-aae297639594"), "wasteland", 0.5, 2);
+	public static final AttributeModifier FOLLOW_MODIFIER = new AttributeModifier(UUID.fromString("3dc892c7-0def-42d5-8e7f-bb9f00136ad9"), "follow", -1, 2);
 
 	//sets player team and prints according message
 	public static void addPlayerToTeam(EntityPlayer player, String team) {

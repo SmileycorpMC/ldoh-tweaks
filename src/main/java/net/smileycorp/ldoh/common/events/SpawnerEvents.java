@@ -22,6 +22,7 @@ import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
 import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
+import net.smileycorp.hordes.common.hordeevent.HordeSpawnEntry;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
@@ -43,7 +44,7 @@ public class SpawnerEvents {
 		}
 		//spawner instance for mini raid events
 		if (!entity.hasCapability(ModContent.MINI_RAID, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
-			event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider((EntityPlayer) entity));
+			event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider());
 		}
 	}
 
@@ -91,7 +92,7 @@ public class SpawnerEvents {
 				if (player.hasCapability(ModContent.MINI_RAID, null)) {
 					IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
 					//spawn the raid if the time is right
-					if (raid.shouldSpawnRaid()) raid.spawnRaid();
+					if (raid.shouldSpawnRaid(player)) raid.spawnRaid(player);
 				}
 			}
 		}
@@ -151,7 +152,7 @@ public class SpawnerEvents {
 			if (event.getEntityPlayer().getTeam() != null) {
 				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
 					event.spawntable.clear();
-					for (EnumTFClass tfclass : EnumTFClass.values()) event.spawntable.addEntry(tfclass.getEntityClass(), 1);
+					for (EnumTFClass tfclass : EnumTFClass.values()) if (tfclass != EnumTFClass.SPY) event.spawntable.addEntry(new HordeSpawnEntry(tfclass.getEntityClass()) , 1);
 				}
 			}
 		}

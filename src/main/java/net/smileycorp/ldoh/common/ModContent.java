@@ -25,6 +25,7 @@ import net.smileycorp.ldoh.common.block.BlockHordeSpawner;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
@@ -86,6 +87,8 @@ public class ModContent {
 	@CapabilityInject(IApocalypse.class)
 	public final static Capability<IApocalypse> APOCALYPSE = null;
 
+	@CapabilityInject(IFollowers.class)
+	public final static Capability<IFollowers> FOLLOWERS = null;
 
 	public static CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){
 		@Override

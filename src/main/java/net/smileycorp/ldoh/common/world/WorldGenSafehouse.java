@@ -42,7 +42,6 @@ import biomesoplenty.api.enums.BOPWoods;
 import biomesoplenty.common.block.BlockBOPLog;
 import biomesoplenty.common.block.BlockBOPPlanks;
 
-import com.Fishmod.mod_LavaCow.blocks.BlockTombStone;
 import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
 import com.mrcrayfish.furniture.blocks.BlockFurniture;
 import com.mrcrayfish.furniture.init.FurnitureBlocks;
@@ -261,10 +260,6 @@ public class WorldGenSafehouse extends WorldGenerator {
 		world.setBlockState(skullPos, Blocks.SKULL.getDefaultState().withProperty(BlockSkull.FACING, EnumFacing.UP));
 		world.setBlockState(pos.add(1, 1, 4), FurnitureBlocks.CANDLE.getDefaultState(), 18);
 		world.setBlockState(pos.add(-4, 1, -4), FurnitureBlocks.CANDLE.getDefaultState(), 18);
-		int tx = pos.getX() + 9;
-		int tz = pos.getZ() - 9;
-		BlockPos tpos = new BlockPos(tx, world.getHeight(tx, tz), tz);
-		world.setBlockState(tpos, com.Fishmod.mod_LavaCow.init.Modblocks.TOMBSTONE.getDefaultState().withProperty(BlockTombStone.FACING, EnumFacing.EAST), 18);
 	}
 
 	private void placeChristmasDecorations(World world, Random rand, BlockPos pos) {

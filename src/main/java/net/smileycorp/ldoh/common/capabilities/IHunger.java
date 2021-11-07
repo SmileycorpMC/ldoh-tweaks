@@ -389,8 +389,4 @@ public interface IHunger {
 
 	}
 
-	public static enum RaidType {
-		ZOMBIE, ENEMY, ALLY, PARASITE;
-	}
-
 }

@@ -1,4 +1,6 @@
-package net.smileycorp.ldoh.common.entity;
+package net.smileycorp.ldoh.common.entity.ai;
+
+import java.util.concurrent.TimeUnit;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -14,7 +16,10 @@ public class EntityMiniRaidAI extends EntityAIGoToEntityPos {
 	@Override
 	public boolean shouldContinueExecuting() {
 		boolean result = super.shouldContinueExecuting() && entity.getDistance(getTarget())>=10;
-		if (!result) ModUtils.DELAYED_THREAD_EXECUTOR.execute(()->entity.tasks.removeTask(this));
+		if (!result) {
+			System.out.println(entity.getDistance(getTarget()));
+			ModUtils.DELAYED_THREAD_EXECUTOR.schedule(()->entity.tasks.removeTask(this), 20, TimeUnit.MILLISECONDS);
+		}
 		return result;
 	}
 

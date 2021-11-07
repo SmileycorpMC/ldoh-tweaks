@@ -1,6 +1,8 @@
 package net.smileycorp.ldoh.common.events;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -11,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
@@ -21,19 +24,33 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
+import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
+import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 
 public class PlayerEvents {
+
+	//capability manager
+	@SubscribeEvent
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		Entity entity = event.getObject();
+		//spawner instance for boss event
+		if (!entity.hasCapability(ModContent.FOLLOWERS, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+			event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
+		}
+	}
 
 	//randomly prevent picking up lava
 	@SubscribeEvent
@@ -103,6 +120,12 @@ public class PlayerEvents {
 						player.sendMessage(text);
 					}
 				}
+				//follower stopping
+				if (player.hasCapability(ModContent.FOLLOWERS, null)) {
+					IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+					if (player.isSneaking() &! followers.isCrouching()) followers.setCrouching();
+					else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
+				}
 			}
 		}
 	}
@@ -115,12 +138,54 @@ public class PlayerEvents {
 			if (player.hasCapability(ModContent.MINI_RAID, null) && original.hasCapability(ModContent.MINI_RAID, null)) {
 				IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
 				raid.readFromNBT(original.getCapability(ModContent.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
-				raid.setPlayer(player);
 			}
 			if (player.hasCapability(ModContent.APOCALYPSE, null) && original.hasCapability(ModContent.APOCALYPSE, null)) {
 				IApocalypse apocalypse = player.getCapability(ModContent.APOCALYPSE, null);
 				apocalypse.readFromNBT(original.getCapability(ModContent.APOCALYPSE, null).writeToNBT(new NBTTagCompound()));
 				apocalypse.setPlayer(player);
+			}
+			if (player.hasCapability(ModContent.FOLLOWERS, null) && original.hasCapability(ModContent.FOLLOWERS, null)) {
+				IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+				followers.readFromNBT(original.getCapability(ModContent.FOLLOWERS, null).writeToNBT());
+			}
+		}
+	}
+
+	//activate when a player right clicks with an item
+	@SubscribeEvent
+	public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
+		EntityPlayer player = event.getEntityPlayer();
+		World world = player.world;
+		if (player.hasCapability(ModContent.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
+			IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+			if (followers.isCrouching()) {
+				Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
+				if (target instanceof EntityLiving) {
+					if (followers.stopFollowing((EntityLiving) target)) {
+						event.setCancellationResult(EnumActionResult.FAIL);
+						event.setCanceled(true);
+					}
+				}
+			}
+		}
+	}
+
+	//activate when a player right clicks an entity
+	@SubscribeEvent
+	public static void onInteractEntity(PlayerInteractEvent.EntityInteract event) {
+		EntityPlayer player = event.getEntityPlayer();
+		Entity target = event.getTarget();
+		World world = player.world;
+		if (event.getItemStack().isEmpty() && target instanceof EntityLiving &&player.hasCapability(ModContent.FOLLOWERS, null)
+				&& event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
+			IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+			if (followers.isCrouching()) {
+				if (target instanceof EntityLiving) {
+					if (followers.stopFollowing((EntityLiving) target)) {
+						event.setCancellationResult(EnumActionResult.FAIL);
+						event.setCanceled(true);
+					}
+				}
 			}
 		}
 	}

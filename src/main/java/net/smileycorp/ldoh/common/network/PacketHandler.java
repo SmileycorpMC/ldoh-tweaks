@@ -89,7 +89,7 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).startEating((EntityLiving) entity);
+					if (entity!=null) if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).startEating((EntityLiving) entity);
 				});
 			}
 			return null;

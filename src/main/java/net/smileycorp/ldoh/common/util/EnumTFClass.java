@@ -14,16 +14,20 @@ import rafradek.TF2weapons.entity.mercenary.EntitySoldier;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+import com.google.common.base.Predicate;
+
 public enum EnumTFClass {
 	DEMOMAN("demoman", EntityDemoman.class, 4),
 	ENGINEER("engineer", EntityEngineer.class, 8),
 	HEAVY("heavy", EntityHeavy.class, 7),
 	MEDIC("medic", EntityMedic.class, 8),
-	PYRO("pyro", EntityPyro.class, 5),
+	PYRO("pyro", EntityPyro.class, 7),
 	SCOUT("scout", EntityScout.class, 4),
-	SNIPER("sniper", EntitySniper.class, 7),
+	SNIPER("sniper", EntitySniper.class, 6),
 	SOLDIER("soldier", EntitySoldier.class, 5),
 	SPY("spy", EntitySpy.class, 6);
+
+	private static Random rand = new Random();
 
 	protected final String name;
 	protected final Class<? extends EntityTF2Character> clazz;
@@ -44,7 +48,13 @@ public enum EnumTFClass {
 	}
 
 	public static EnumTFClass getRandomClass() {
-		return values()[new Random().nextInt(values().length)];
+		return values()[rand.nextInt(values().length)];
+	}
+
+	public static EnumTFClass getRandomClass(Predicate<EnumTFClass> predicate) {
+		EnumTFClass tfClass = getRandomClass();
+		while (!predicate.apply(tfClass)) tfClass = getRandomClass();
+		return tfClass;
 	}
 
 	public EntityTF2Character createEntity(World world) throws Exception {

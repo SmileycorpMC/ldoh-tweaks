@@ -28,7 +28,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityNoglaAdap
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
-import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSV;
+import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSIV;
 
 public class Apocalypse implements IApocalypse {
 
@@ -155,7 +155,7 @@ public class Apocalypse implements IApocalypse {
 		}
 		else if (wave % 1 == 1) {
 			for (int i = 0; i < 3 + Math.round(wave*1.4); i++) {
-				spawnlist.add(EntityVenkrolSV.class);
+				spawnlist.add(EntityVenkrolSIV.class);
 			}
 		}
 		return spawnlist;
