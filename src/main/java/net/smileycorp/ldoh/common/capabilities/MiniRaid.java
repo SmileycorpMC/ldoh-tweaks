@@ -118,8 +118,10 @@ public class MiniRaid implements IMiniRaid {
 	private RaidType getRaidType(EntityPlayer player) {
 		RaidType type = types[phase];
 		if (type == RaidType.ALLY || type == RaidType.ENEMY) {
-			if (player.getTeam() == null |!(player.getTeam().getName() == "RED" || player.getTeam().getName() == "BLU")) {
-				type = type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
+			if (player.getTeam() == null) {
+				return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
+			} else if (!(player.getTeam().getName() == "RED" || player.getTeam().getName() == "BLU")) {
+				return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
 			}
 		}
 		return type;
