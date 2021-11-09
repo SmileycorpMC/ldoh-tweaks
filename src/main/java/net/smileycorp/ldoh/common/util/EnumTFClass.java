@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common.util;
 
 import java.util.Random;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import rafradek.TF2weapons.entity.mercenary.EntityDemoman;
 import rafradek.TF2weapons.entity.mercenary.EntityEngineer;
@@ -13,6 +14,9 @@ import rafradek.TF2weapons.entity.mercenary.EntitySniper;
 import rafradek.TF2weapons.entity.mercenary.EntitySoldier;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.item.ItemFromData;
+import rafradek.TF2weapons.item.ItemWeapon;
+import rafradek.TF2weapons.util.WeaponData;
 
 import com.google.common.base.Predicate;
 
@@ -39,22 +43,12 @@ public enum EnumTFClass {
 		this.cost = cost;
 	}
 
-	public String getUnlocalisedName() {
+	public String getClassName() {
 		return name;
 	}
 
 	public boolean testClass(Class<? extends EntityTF2Character> clazz) {
 		return this.clazz.isAssignableFrom(clazz);
-	}
-
-	public static EnumTFClass getRandomClass() {
-		return values()[rand.nextInt(values().length)];
-	}
-
-	public static EnumTFClass getRandomClass(Predicate<EnumTFClass> predicate) {
-		EnumTFClass tfClass = getRandomClass();
-		while (!predicate.apply(tfClass)) tfClass = getRandomClass();
-		return tfClass;
 	}
 
 	public EntityTF2Character createEntity(World world) throws Exception {
@@ -67,5 +61,34 @@ public enum EnumTFClass {
 
 	public int getCost() {
 		return cost;
+	}
+
+	public boolean canUseItem(ItemStack stack) {
+		if (stack.getItem() instanceof ItemWeapon) {
+			WeaponData data = ItemFromData.getData(stack);
+			if (data != null) {
+				if (ItemFromData.isItemOfClass(data, name)) {
+					return true;
+				}
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static EnumTFClass getRandomClass() {
+		return values()[rand.nextInt(values().length)];
+	}
+
+	public static EnumTFClass getRandomClass(Predicate<EnumTFClass> predicate) {
+		EnumTFClass tfClass = getRandomClass();
+		while (!predicate.apply(tfClass)) tfClass = getRandomClass();
+		return tfClass;
+	}
+
+	public static EnumTFClass getClass(EntityTF2Character entity) {
+		for (EnumTFClass tfClass : values()) if (tfClass.testClass(entity.getClass())) return tfClass;
+		return null;
 	}
 }

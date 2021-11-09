@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketSoundEffect;
@@ -31,14 +30,12 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
-import net.smileycorp.ldoh.common.network.PacketHandler;
 
 public class PlayerEvents {
 
@@ -84,25 +81,6 @@ public class PlayerEvents {
 			EntityPlayer player = event.player;
 			World world = player.world;
 			if (!world.isRemote) {
-				//toxic gas
-				if (player.getPosition().getY()<30) {
-					ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-					if (player.ticksExisted%35==0 && !player.isCreative()) {
-						//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
-						if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < helm.getMaxDamage()) {
-							helm.damageItem(1, player);
-							if (helm.getMetadata() == helm.getMaxDamage()) {
-								((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
-							}
-						} else {
-							//deal damage if not wearing it and display message
-							player.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
-							if (player instanceof EntityPlayerMP) {
-								PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) player);
-							}
-						}
-					}
-				}
 				//lava bucket breaking
 				if (player.inventory.hasItemStack(new ItemStack(Items.LAVA_BUCKET))) {
 					//20% chance every second

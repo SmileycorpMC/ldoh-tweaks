@@ -25,7 +25,7 @@ import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
-import net.smileycorp.ldoh.common.entity.ai.EntityMiniRaidAI;
+import net.smileycorp.ldoh.common.entity.ai.AIMiniRaid;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -106,7 +106,7 @@ public class MiniRaid implements IMiniRaid {
 					if (type == RaidType.ALLY) entity.setGlowing(true);
 					else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 200));
 					world.spawnEntity(entity);
-					entity.tasks.addTask(1, new EntityMiniRaidAI(entity, player));
+					entity.tasks.addTask(1, new AIMiniRaid(entity, player));
 					System.out.println("Spawned " + entity + " at " + entity.getPosition());
 				}
 				HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);

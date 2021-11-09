@@ -23,7 +23,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.ldoh.common.entity.ai.EntityTurretTarget;
+import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
 public class EntityTurret extends EntityLiving {
@@ -41,21 +41,28 @@ public class EntityTurret extends EntityLiving {
 
 	public EntityTurret(World world) {
 		super(world);
+		setSize(0.5f, 0.5f);
 	}
 
 	@Override
 	protected void entityInit() {
-		dataManager.register(TEAM, null);
+		super.entityInit();
+		dataManager.register(TEAM, "");
 		dataManager.register(PLACEMENT, EnumFacing.UP);
 		dataManager.register(FACING, new Rotations(0, 1, 0));
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
-		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
-		setHealth(40);
+	}
+
+	@Override
+	public void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
+		getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
+		getAttributeMap().getAttributeInstance(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(255);
 	}
 
 	@Override
 	protected void initEntityAI() {
-		targetTasks.addTask(1, new EntityTurretTarget(this));
+		targetTasks.addTask(1, new AITurretTarget(this));
 	}
 
 	@Override
@@ -105,6 +112,14 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
+	protected void collideWithEntity(Entity entityIn){}
+
+	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (ticksExisted%5 == 0) {
@@ -112,10 +127,12 @@ public class EntityTurret extends EntityLiving {
 				if (!world.isRemote) owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(ownerUUID);
 			}
 			if (owner != null) {
-				if (owner.getTeam() != null &! owner.getTeam().isSameTeam(getTeam())) {
-					dataManager.set(TEAM, owner.getTeam().getName());
-				} else if (dataManager.get(TEAM) != null) {
-					dataManager.set(TEAM, null);
+				if (owner.getTeam() != null) {
+					if(!owner.getTeam().isSameTeam(getTeam())) {
+						dataManager.set(TEAM, owner.getTeam().getName());
+					}
+				} else if (dataManager.get(TEAM) != "") {
+					dataManager.set(TEAM,"");
 				}
 			}
 		}

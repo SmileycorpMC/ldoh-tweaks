@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "hundreddayz:turret",
+	"pattern" : [
+		" M ",
+		"IDI",
+		"I I"
+	],
+    "key" : {
+		"I" : {
+    		"type": "forge:ore_dict",
+    		"ore": "ingotIron"
+        },
+		"M" : {
+            "item": "cgm:chain_gun",
+			"data": 0
+        },
+		"D" : {
+    		"item": "minecraft:dispenser",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "hundreddayz:turret",
+        "count": 1,
+		"data": 0
+    }
+}

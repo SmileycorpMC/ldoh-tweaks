@@ -43,7 +43,7 @@ public class ModMobEntry {
 	//get the entities name
 	public String getLocalisedName() {
 		if (tfclass != null) {
-			return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + tfclass.getUnlocalisedName() + ".name");
+			return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + tfclass.getClassName() + ".name");
 		} else {
 			return  I18n.translateToLocal(unlocalisedName);
 		}

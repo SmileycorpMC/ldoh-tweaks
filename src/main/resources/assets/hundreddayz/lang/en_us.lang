@@ -49,6 +49,7 @@ tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
 tile.hundreddayz.Landmine.name=Landmine
+tile.hundreddayz.Turret.name=Sentry Turret
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
@@ -56,6 +57,8 @@ tooltip.hundreddayz.BarbedWire.Gold=Has Low durability and high damage.
 tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damage.
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
+tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
+tooltip.hundreddayz.Turret1=Uses basic ammo and power.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
@@ -75,10 +78,13 @@ entity.hundreddayz.HuskNoBreak.name=Husk
 entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
+entity.hundreddayz.Turret.name=Sentry Turret
+
 death.attack.ToxicGas=%1$s choked on toxic gasses
 death.attack.Shrapnel=%1$s stepped on a landmine
 
 gui.text.Hunger=Hunger
+gui.text.Curing=Syringes
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot

@@ -8,13 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 
-public class EntityTurretTarget extends EntityAIBase {
+public class AITurretTarget extends EntityAIBase {
 
 	protected final EntityTurret turret;
 
 	protected AxisAlignedBB targetArea;
 
-	public EntityTurretTarget(EntityTurret turret) {
+	public AITurretTarget(EntityTurret turret) {
 		this.turret = turret;
 		targetArea = new AxisAlignedBB(turret.posX - 60, turret.posY - 60, turret.posZ - 60, turret.posX + 60, turret.posY - 60, turret.posZ - 60);
 	}

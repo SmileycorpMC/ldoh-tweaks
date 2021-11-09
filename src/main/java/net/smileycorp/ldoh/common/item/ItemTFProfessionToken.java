@@ -25,7 +25,7 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 
 	@Override
 	public String byMeta(int meta) {
-		return EnumTFClass.values()[meta].getUnlocalisedName();
+		return EnumTFClass.values()[meta].getClassName();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 	public String getUnlocalizedName(ItemStack stack) {
 		int meta = stack.getMetadata();
 		if (meta >= getMaxMeta()) return super.getUnlocalizedName(stack);
-		return this.getUnlocalizedName() +"."+ EnumTFClass.values()[meta].getUnlocalisedName();
+		return this.getUnlocalizedName() +"."+ EnumTFClass.values()[meta].getClassName();
 	}
 
 }

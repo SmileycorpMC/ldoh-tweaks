@@ -23,8 +23,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.BlockHordeSpawner;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
+import net.smileycorp.ldoh.common.block.BlockTurret;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
@@ -44,6 +46,7 @@ import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
@@ -60,6 +63,7 @@ import net.smileycorp.ldoh.common.item.ItemWeapon;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
+import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -90,6 +94,9 @@ public class ModContent {
 	@CapabilityInject(IFollowers.class)
 	public final static Capability<IFollowers> FOLLOWERS = null;
 
+	@CapabilityInject(ICuring.class)
+	public final static Capability<ICuring> CURING = null;
+
 	public static CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){
 		@Override
 		@SideOnly(Side.CLIENT)
@@ -113,6 +120,7 @@ public class ModContent {
 	public static final Block HORDE_SPAWNER = new BlockHordeSpawner();
 	public static final Block BARBED_WIRE = new BlockBarbedWire();
 	public static final Block LANDMINE = new BlockLandmine();
+	public static final Block TURRET = new BlockTurret();
 
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
@@ -122,7 +130,7 @@ public class ModContent {
 	public static final ResourceLocation LANDMINE_BEEP = ModDefinitions.getResource("landmine_beep");
 
 	public static Item[] items = {TF_PROF_TOKEN, SPAWNER, SYRINGE, CLOTH_FABRIC, DIAMOND_NUGGET, GAS_FILTER, GAS_MASK, NURSE_HAT, MECHANIC_HAT, HARDHAT, BONESAW};
-	public static Block[] blocks = {HORDE_SPAWNER, BARBED_WIRE, LANDMINE};
+	public static Block[] blocks = {HORDE_SPAWNER, BARBED_WIRE, LANDMINE, TURRET};
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -131,12 +139,13 @@ public class ModContent {
 		GameRegistry.registerTileEntity(TileBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
+		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
 	}
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();
-		items = ArrayUtils.addAll(items, new ItemBarbedWire(), new ItemBlockTooltip(LANDMINE, 2));
+		items = ArrayUtils.addAll(items, new ItemBarbedWire(), new ItemBlockTooltip(LANDMINE, 2), new ItemBlockTooltip(TURRET, 2));
 		registry.registerAll(items);
 	}
 
@@ -210,12 +219,14 @@ public class ModContent {
 				.id(ModDefinitions.getResource("tradesman"), ID++)
 				.name("villager.tradesman").tracker(80, 3, true).build();
 		registry.register(TRADESMAN);
-
 		EntityEntry DUMMY = EntityEntryBuilder.create().entity(EntityDummy.class)
 				.id(ModDefinitions.getResource("dummy"), ID++)
-				.name("Dummy").tracker(80, 3, true).build();
+				.name(ModDefinitions.getName("Dummy")).tracker(80, 3, true).build();
 		registry.register(DUMMY);
-
+		EntityEntry TURRET = EntityEntryBuilder.create().entity(EntityTurret.class)
+				.id(ModDefinitions.getResource("turret"), ID++)
+				.name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build();
+		registry.register(TURRET);
 	}
 
 	@SubscribeEvent

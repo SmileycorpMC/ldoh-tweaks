@@ -7,6 +7,7 @@ import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
@@ -29,8 +31,8 @@ import net.smileycorp.ldoh.common.tile.TileTurret;
 
 public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
 
-	private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.3, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.7, 1),
-		new AxisAlignedBB(0.3, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.7, 1, 1), new AxisAlignedBB(0, 0, 0.3, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.7)};
+	private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.7, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.3, 1),
+		new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1), new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3)};
 
 	public BlockTurret() {
 		super(Material.IRON);
@@ -41,6 +43,11 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 		setHarvestLevel("pickaxe", 2);
 		setHardness(1F);
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
 	}
 
 	@Override
@@ -68,8 +75,8 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt!=null && world.getTileEntity(pos) instanceof TileTurret && placer instanceof EntityPlayer) {
-			((TileTurret) world.getTileEntity(pos)).spawnEntity((EntityPlayer) placer, state.getValue(FACING), nbt);
+		if (world.getTileEntity(pos) instanceof TileTurret && placer instanceof EntityPlayer &! placer.world.isRemote) {
+			((TileTurret) world.getTileEntity(pos)).spawnEntity((EntityPlayer) placer, state.getValue(FACING), nbt == null ? new NBTTagCompound() : nbt);
 		}
 	}
 
@@ -90,7 +97,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer).getOpposite());
+		return getDefaultState().withProperty(FACING, facing);
 	}
 
 	@Override
@@ -111,6 +118,26 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return AABBs[state.getValue(FACING).ordinal()];
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face) {
+		return BlockFaceShape.UNDEFINED;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
 	}
 
 	//From BlockFlowerPot, should delay until drops are spawned, before block is broken

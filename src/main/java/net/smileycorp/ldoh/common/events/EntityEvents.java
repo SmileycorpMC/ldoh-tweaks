@@ -12,9 +12,15 @@ import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootEntryItem;
@@ -35,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
@@ -52,6 +59,7 @@ import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
+import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.IDummyZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.entities.EntityArchitect;
@@ -91,7 +99,7 @@ public class EntityEvents {
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
-		if (entity instanceof EntityNecromancer) event.setCanceled(true);
+		if (entity instanceof EntityNecromancer || entity instanceof EntityXPOrb) event.setCanceled(true);
 		if (!world.isRemote) {
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
@@ -205,10 +213,6 @@ public class EntityEvents {
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, IAnimaniaAnimal.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityVillagerTek.class, false));
 			}
-			//kills xp orbs as they spawn because we dont need them
-			else if (entity instanceof EntityXPOrb) {
-				entity.setDead();
-			}
 			//makes the vespa hostile to the player and other mobs
 			else if (entity instanceof EntityVespa) {
 				EntityVespa vespa = (EntityVespa) entity;
@@ -311,9 +315,6 @@ public class EntityEvents {
 			LootEntryItem clothLoot = new LootEntryItem(ModContent.CLOTH_FABRIC, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(0, 2))}, new LootCondition[0], "cloth_fabric");
 			table.addPool(new LootPool(new LootEntryItem[]{clothLoot}, new LootCondition[]{new KilledByPlayer(false),
 					new RandomChanceWithLooting(1f, 0.5f)}, new RandomValueRange(1), new RandomValueRange(0), "cloth_fabric"));
-
-			LootEntryItem gunpowder = new LootEntryItem(Items.GUNPOWDER, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "gunpowder");
-			table.addPool(new LootPool(new LootEntryItem[]{gunpowder}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "gunpowder"));
 			LootEntryItem eye = new LootEntryItem(Items.FERMENTED_SPIDER_EYE, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "spider_eye");
 			table.addPool(new LootPool(new LootEntryItem[]{eye}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "spider_eye"));
 		}
@@ -330,6 +331,27 @@ public class EntityEvents {
 			if (cap.canBreakBlocks()) {
 				if (world.getWorldTime() % 10 == 0) {
 					cap.tryBreakBlocks();
+				}
+			}
+		}
+		//toxic gas
+		if (!world.isRemote && (entity instanceof EntityPlayer || entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek)) {
+			if (entity.getPosition().getY()<30) {
+				ItemStack helm = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+				if (entity.ticksExisted%35==0) {
+					//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
+					if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < helm.getMaxDamage()) {
+						helm.damageItem(1, entity);
+						if (helm.getMetadata() == helm.getMaxDamage() && entity instanceof EntityPlayerMP) {
+							((EntityPlayerMP)entity).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, entity.posX, entity.posY, entity.posZ, 1.0F, 1.0F));
+						}
+					} else {
+						//deal damage if not wearing it and display message
+						entity.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
+						if (entity instanceof EntityPlayerMP) {
+							PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) entity);
+						}
+					}
 				}
 			}
 		}

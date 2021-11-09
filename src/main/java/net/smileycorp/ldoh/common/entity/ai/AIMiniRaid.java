@@ -7,9 +7,9 @@ import net.minecraft.entity.EntityLiving;
 import net.smileycorp.atlas.api.entity.ai.EntityAIGoToEntityPos;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
-public class EntityMiniRaidAI extends EntityAIGoToEntityPos {
+public class AIMiniRaid extends EntityAIGoToEntityPos {
 
-	public EntityMiniRaidAI(EntityLiving entity, Entity target) {
+	public AIMiniRaid(EntityLiving entity, Entity target) {
 		super(entity, target);
 	}
 

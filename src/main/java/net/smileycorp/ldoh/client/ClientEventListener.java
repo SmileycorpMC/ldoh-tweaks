@@ -38,16 +38,19 @@ import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
 import net.smileycorp.ldoh.client.entity.RenderDummy;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
 import net.smileycorp.ldoh.client.entity.RenderTFZombie;
+import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummy;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
@@ -67,6 +70,7 @@ public class ClientEventListener {
 	public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.2f);
 	public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
 	public static ResourceLocation TF_HUNGER_TEXTURE = ModDefinitions.getResource("textures/gui/tf_hunger.png");
+	public static ResourceLocation MEDIC_SYRINGES_TEXTURE = ModDefinitions.getResource("textures/gui/medic_syringes.png");
 
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
@@ -81,6 +85,7 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDummy.class, m -> new RenderDummy(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(ModContent.LANDMINE, new StateMapperLandmine());
 		//register item models
@@ -213,6 +218,27 @@ public class ClientEventListener {
 				String text = I18n.translateToLocal("gui.text.Hunger");
 				font.drawString(text, gui.getGuiLeft() - 26 - (font.getStringWidth(text)/2), gui.getGuiTop()+5, 4210752);
 			}
+			if (entity.hasCapability(ModContent.CURING, null)) {
+				Minecraft mc = Minecraft.getMinecraft();
+				ICuring curing = entity.getCapability(ModContent.CURING, null);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+				mc.getTextureManager().bindTexture(MEDIC_SYRINGES_TEXTURE);
+				gui.drawTexturedModalRect(gui.getGuiLeft() - 54, gui.getGuiTop() + 112, 0, 0, 54, 54);
+				FontRenderer font = gui.fontRenderer;
+				int count = curing.getSyringeCount();
+				if (count > 0) {
+					GlStateManager.enableLighting();
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					ItemStack stack = new ItemStack(ModContent.SYRINGE, count, 2);
+					gui.itemRender.renderItemAndEffectIntoGUI(stack, gui.getGuiLeft() - 36, gui.getGuiTop() + 136);
+					gui.itemRender.renderItemOverlayIntoGUI(font, stack, gui.getGuiLeft() - 36, gui.getGuiTop() + 136, null);
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableLighting();
+				}
+				String text = I18n.translateToLocal("gui.text.Curing");
+				font.drawString(text, gui.getGuiLeft() - 26 - (font.getStringWidth(text)/2), gui.getGuiTop()+117, 4210752);
+			}
 		}
 	}
 
@@ -221,15 +247,25 @@ public class ClientEventListener {
 		if (event.getGui() instanceof GuiMercenary) {
 			GuiMercenary gui = (GuiMercenary) event.getGui();
 			EntityTF2Character entity = gui.mercenary;
+			int mouseX = event.getMouseX();
+			int mouseY = event.getMouseY();
 			if (entity.hasCapability(ModContent.HUNGER, null)) {
 				IHunger hunger = entity.getCapability(ModContent.HUNGER, null);
 				if (!hunger.getFoodSlot().isEmpty()) {
-					int mouseX = event.getMouseX();
-					int mouseY = event.getMouseY();
 					int slotX = gui.getGuiLeft() - 36;
 					int slotY = gui.getGuiTop() + 42;
 					if (mouseX >= slotX  && mouseX <= slotX + 18 && mouseY >= slotY  && mouseY <= slotY + 18) {
 						gui.renderToolTip(hunger.getFoodSlot(), mouseX, mouseY);
+					}
+				}
+			}
+			if (entity.hasCapability(ModContent.CURING, null)) {
+				int count = entity.getCapability(ModContent.CURING, null).getSyringeCount();
+				if (count > 0) {
+					int slotX = gui.getGuiLeft() - 36;
+					int slotY = gui.getGuiTop() + 136;
+					if (mouseX >= slotX  && mouseX <= slotX + 18 && mouseY >= slotY  && mouseY <= slotY + 18) {
+						gui.renderToolTip(new ItemStack(ModContent.SYRINGE, count, 2), mouseX, mouseY);
 					}
 				}
 			}

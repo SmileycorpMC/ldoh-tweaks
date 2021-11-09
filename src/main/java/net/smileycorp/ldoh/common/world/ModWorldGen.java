@@ -41,7 +41,7 @@ public class ModWorldGen implements IWorldGenerator {
 		}
 		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
 			int r = rand.nextInt(4);
-			genSurfaceBlock(world, rand, chunkX, chunkZ, r == 0 ? Blocks.CLAY : r == 1 ? BOPBlocks.white_sand : r == 2 ? BOPBlocks.mud : BOPBlocks.dried_sand);
+			genSurfaceBlock(world, rand, chunkX, chunkZ, r == 0 ? Blocks.CLAY : r == 1 ? BOPBlocks.white_sand : r == 2 ? BOPBlocks.mud : Blocks.SOUL_SAND);
 		}
 	}
 

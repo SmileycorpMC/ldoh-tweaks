@@ -13,6 +13,7 @@ import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.ldoh.client.ClientHandler;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 
 public class PacketHandler {
@@ -24,7 +25,7 @@ public class PacketHandler {
 		NETWORK_INSTANCE.registerMessage(ClientSyncFood.class, SyncFoodMessage.class, 1, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncHunger.class, SyncHungerMessage.class, 2, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientStartEat.class, StartEatingMessage.class, 3, Side.CLIENT);
-
+		NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
 	}
 
 	public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {
@@ -90,6 +91,25 @@ public class PacketHandler {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
 					if (entity!=null) if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).startEating((EntityLiving) entity);
+				});
+			}
+			return null;
+		}
+	}
+
+	public static class ClientSyncSyringes implements IMessageHandler<SyncSyringesMessage, IMessage> {
+
+		public ClientSyncSyringes() {}
+
+		@Override
+		public IMessage onMessage(SyncSyringesMessage message, MessageContext ctx) {
+			if (ctx.side == Side.CLIENT) {
+				Minecraft.getMinecraft().addScheduledTask(() -> {
+					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
+					if (entity!=null) if (entity.hasCapability(ModContent.CURING, null)) {
+						ICuring curing = entity.getCapability(ModContent.CURING, null);
+						curing.setSyringeCount(message.getCount());
+					}
 				});
 			}
 			return null;

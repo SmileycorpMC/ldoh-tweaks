@@ -105,9 +105,13 @@ public class WorldEvents {
 			}
 			IChunkProvider provider = world.getChunkProvider();
 			//cancels structure if it's in a city
-			for (Biome biome : world.getBiomeProvider().getBiomes(null, box.minX, box.minZ, box.maxX-box.minX, box.maxZ-box.minZ, false)) if (biome == WastelandWorld.apocalypse_city) {
-				event.setCanceled(true);
-				return;
+			for (int x = box.minX; x <= box.maxX; x++) {
+				for (int z = box.minZ; z <= box.maxZ; z++) {
+					if (world.getBiome(new BlockPos(x, 0, z)) == WastelandWorld.apocalypse_city) {
+						event.setCanceled(true);
+						return;
+					}
+				}
 			}
 			if (provider instanceof ChunkProviderServer) {
 				IChunkGenerator gen = ((ChunkProviderServer)provider).chunkGenerator;

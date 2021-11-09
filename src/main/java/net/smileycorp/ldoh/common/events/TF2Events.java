@@ -1,10 +1,15 @@
 package net.smileycorp.ldoh.common.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,14 +33,20 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
+import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import net.tangotek.tektopia.entities.EntityNecromancer;
+import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
+import rafradek.TF2weapons.entity.mercenary.EntityMedic;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.inventory.InventoryLoadout;
 import rafradek.TF2weapons.item.ItemAmmo;
+import rafradek.TF2weapons.item.ItemFromData;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
@@ -51,9 +62,11 @@ public class TF2Events {
 		if (!entity.hasCapability(ModContent.HUNGER, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
 		}
-
 		if (!entity.hasCapability(ModContent.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
 			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
+		}
+		if (!entity.hasCapability(ModContent.CURING, null) && entity instanceof EntityMedic) {
+			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
 		}
 	}
 
@@ -106,6 +119,7 @@ public class TF2Events {
 		}
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
+			EnumTFClass tfClass = EnumTFClass.getClass(merc);
 			//gifting ammo and food to tf2 characters
 			for(EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, merc.getEntityBoundingBox())) {
 				ItemStack stack = item.getItem();
@@ -133,8 +147,21 @@ public class TF2Events {
 						}
 					}
 				}
+				//gifting weapons
+				if (tfClass.canUseItem(stack)) {
+					InventoryLoadout loadout = merc.loadout;
+					for (int i = 0; i < 4; i++) {
+						if (merc.loadout.getStackInSlot(i).isEmpty() && ItemFromData.isItemOfClassSlot(ItemFromData.getData(stack), i, tfClass.getClassName())) {
+							loadout.insertItem(i, stack, false);
+							item.setDead();
+						}
+					}
+				}
 				if (merc.hasCapability(ModContent.HUNGER, null)) {
 					stack = merc.getCapability(ModContent.HUNGER, null).tryPickupFood(stack, merc);
+				}
+				if (merc.hasCapability(ModContent.CURING, null)) {
+					stack = merc.getCapability(ModContent.CURING, null).tryPickupSyringe(stack, merc);
 				}
 				if (stack.getCount() == 0) item.setDead();
 			}
@@ -189,7 +216,6 @@ public class TF2Events {
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
-		if (entity instanceof EntityNecromancer) event.setCanceled(true);
 		if (!world.isRemote) {
 			//makes tf2 mercs avoid zombies more
 			if (entity instanceof EntityTF2Character) {
@@ -203,8 +229,19 @@ public class TF2Events {
 						}
 						tracker.setSpawned(true);
 					}
+				} else if (entity instanceof EntityMedic) {
+					List<EntityAIBase> tasks = new ArrayList<EntityAIBase>();
+					for (EntityAITaskEntry task : ((EntityTF2Character) entity).tasks.taskEntries) {
+						EntityAIBase ai = task.action;
+						if (ai instanceof EntityAIUseMedigun &!(ai instanceof AIModifiedMedigun)) tasks.add(ai);
+					}
+					if (!tasks.isEmpty()) {
+						for (EntityAIBase task : tasks)((EntityTF2Character) entity).tasks.removeTask(task);
+						((EntityTF2Character) entity).tasks.addTask(3, new AIModifiedMedigun(merc));
+					}
 				}
 				if (merc.hasCapability(ModContent.HUNGER, null)) merc.getCapability(ModContent.HUNGER, null).syncClients(merc);
+				if (merc.hasCapability(ModContent.CURING, null)) merc.getCapability(ModContent.CURING, null).syncClients(merc);
 			}
 		}
 	}
@@ -214,6 +251,7 @@ public class TF2Events {
 		if (event.getTarget() instanceof EntityLiving && event.getEntityPlayer() instanceof EntityPlayerMP) {
 			EntityLiving entity = (EntityLiving) event.getTarget();
 			if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
+			if (entity.hasCapability(ModContent.CURING, null)) entity.getCapability(ModContent.CURING, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 
