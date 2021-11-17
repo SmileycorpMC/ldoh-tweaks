@@ -20,7 +20,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 
@@ -34,7 +34,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 	public BlockLandmine() {
 		super(Material.IRON);
 		String name = "Landmine";
-		setCreativeTab(ModContent.CREATIVE_TAB);
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setHarvestLevel("pickaxe", 2);
@@ -148,7 +148,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 		float z = pos.getX() + 0.5f;
 		for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(x-3, y-3, z-3, x+3, y+3, z+3))) {
 			if (entity.attackable() &! entity.isImmuneToExplosions()) {
-				entity.attackEntityFrom(ModContent.SHRAPNEL_DAMAGE, (float) Math.exp(3.4-entity.getDistance(x, y, z)));
+				entity.attackEntityFrom(LDOHTweaks.SHRAPNEL_DAMAGE, (float) Math.exp(3.4-entity.getDistance(x, y, z)));
 			}
 		}
 		Explosion explosion = world.createExplosion(null, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, 3, false);

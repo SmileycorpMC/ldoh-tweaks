@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.atlas.api.IOngoingEvent;
-import net.smileycorp.ldoh.common.ModContent;
 
 public interface IApocalypse extends IOngoingEvent {
 
@@ -50,22 +49,22 @@ public interface IApocalypse extends IOngoingEvent {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.APOCALYPSE;
+			return capability == LDOHCapabilities.APOCALYPSE;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.APOCALYPSE ? ModContent.APOCALYPSE.cast(instance) : null;
+			return capability == LDOHCapabilities.APOCALYPSE ? LDOHCapabilities.APOCALYPSE.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.APOCALYPSE.getStorage().writeNBT(ModContent.APOCALYPSE, instance, null);
+			return (NBTTagCompound) LDOHCapabilities.APOCALYPSE.getStorage().writeNBT(LDOHCapabilities.APOCALYPSE, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.APOCALYPSE.getStorage().readNBT(ModContent.APOCALYPSE, instance, null, nbt);
+			LDOHCapabilities.APOCALYPSE.getStorage().readNBT(LDOHCapabilities.APOCALYPSE, instance, null, nbt);
 		}
 
 	}

@@ -3,7 +3,7 @@ package net.smileycorp.ldoh.common.entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.ItemTagType;
@@ -37,7 +37,7 @@ public class EntityLDOHTradesman extends EntityTradesman {
 				}
 			}
 			for (int i = 0; i < EnumTFClass.values().length-1; i++) {
-				ItemStack stack = ModItems.makeTaggedItem(new ItemStack(ModContent.TF_PROF_TOKEN, 1, i), ItemTagType.VILLAGER);
+				ItemStack stack = ModItems.makeTaggedItem(new ItemStack(LDOHItems.TF_PROF_TOKEN, 1, i), ItemTagType.VILLAGER);
 				ModItems.bindItemToVillage(stack, village);
 				buyingList.add(createMerchantRecipe(stack, ModUtils.getCost(village, EnumTFClass.values()[i].getCost())));
 			}

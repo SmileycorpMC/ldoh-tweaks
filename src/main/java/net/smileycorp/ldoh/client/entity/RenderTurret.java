@@ -9,6 +9,8 @@ import net.smileycorp.ldoh.common.entity.EntityTurret;
 
 public class RenderTurret extends RenderLiving<EntityTurret> {
 
+	public static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/entity/turret.png");
+
 	public RenderTurret(RenderManager rendermanager)
 	{
 		super(rendermanager, new ModelTurret(), 0.5F);
@@ -16,7 +18,7 @@ public class RenderTurret extends RenderLiving<EntityTurret> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityTurret entity) {
-		return ModDefinitions.getResource("textures/entity/turret.png");
+		return TEXTURE;
 	}
 
 }

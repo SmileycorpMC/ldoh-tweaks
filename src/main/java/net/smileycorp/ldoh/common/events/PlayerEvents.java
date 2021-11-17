@@ -31,11 +31,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class PlayerEvents {
 
@@ -44,7 +44,7 @@ public class PlayerEvents {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//spawner instance for boss event
-		if (!entity.hasCapability(ModContent.FOLLOWERS, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+		if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
 			event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
 		}
 	}
@@ -99,8 +99,8 @@ public class PlayerEvents {
 					}
 				}
 				//follower stopping
-				if (player.hasCapability(ModContent.FOLLOWERS, null)) {
-					IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+				if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
+					IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
 					if (player.isSneaking() &! followers.isCrouching()) followers.setCrouching();
 					else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
 				}
@@ -113,18 +113,18 @@ public class PlayerEvents {
 		EntityPlayer player = event.getEntityPlayer();
 		EntityPlayer original = event.getOriginal();
 		if (player != null && original != null &!(player instanceof FakePlayer || original instanceof FakePlayer)) {
-			if (player.hasCapability(ModContent.MINI_RAID, null) && original.hasCapability(ModContent.MINI_RAID, null)) {
-				IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
-				raid.readFromNBT(original.getCapability(ModContent.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
+			if (player.hasCapability(LDOHCapabilities.MINI_RAID, null) && original.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
+				IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
+				raid.readFromNBT(original.getCapability(LDOHCapabilities.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
 			}
-			if (player.hasCapability(ModContent.APOCALYPSE, null) && original.hasCapability(ModContent.APOCALYPSE, null)) {
-				IApocalypse apocalypse = player.getCapability(ModContent.APOCALYPSE, null);
-				apocalypse.readFromNBT(original.getCapability(ModContent.APOCALYPSE, null).writeToNBT(new NBTTagCompound()));
+			if (player.hasCapability(LDOHCapabilities.APOCALYPSE, null) && original.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
+				IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
+				apocalypse.readFromNBT(original.getCapability(LDOHCapabilities.APOCALYPSE, null).writeToNBT(new NBTTagCompound()));
 				apocalypse.setPlayer(player);
 			}
-			if (player.hasCapability(ModContent.FOLLOWERS, null) && original.hasCapability(ModContent.FOLLOWERS, null)) {
-				IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
-				followers.readFromNBT(original.getCapability(ModContent.FOLLOWERS, null).writeToNBT());
+			if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && original.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
+				IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
+				followers.readFromNBT(original.getCapability(LDOHCapabilities.FOLLOWERS, null).writeToNBT());
 			}
 		}
 	}
@@ -134,8 +134,8 @@ public class PlayerEvents {
 	public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
 		EntityPlayer player = event.getEntityPlayer();
 		World world = player.world;
-		if (player.hasCapability(ModContent.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
-			IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+		if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
+			IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
 			if (followers.isCrouching()) {
 				Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
 				if (target instanceof EntityLiving) {
@@ -154,9 +154,9 @@ public class PlayerEvents {
 		EntityPlayer player = event.getEntityPlayer();
 		Entity target = event.getTarget();
 		World world = player.world;
-		if (event.getItemStack().isEmpty() && target instanceof EntityLiving &&player.hasCapability(ModContent.FOLLOWERS, null)
+		if (event.getItemStack().isEmpty() && target instanceof EntityLiving &&player.hasCapability(LDOHCapabilities.FOLLOWERS, null)
 				&& event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
-			IFollowers followers = player.getCapability(ModContent.FOLLOWERS, null);
+			IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
 			if (followers.isCrouching()) {
 				if (target instanceof EntityLiving) {
 					if (followers.stopFollowing((EntityLiving) target)) {

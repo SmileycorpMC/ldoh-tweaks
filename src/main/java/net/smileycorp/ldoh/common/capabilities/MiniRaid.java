@@ -20,7 +20,7 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.Hordes;
 import net.smileycorp.hordes.common.hordeevent.HordeEventPacketHandler;
 import net.smileycorp.hordes.common.hordeevent.HordeSoundMessage;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
@@ -184,8 +184,8 @@ public class MiniRaid implements IMiniRaid {
 	}
 
 	private ResourceLocation getSound(RaidType type) {
-		if (type == RaidType.ALLY) return ModContent.TF_ALLY_SOUND;
-		if (type == RaidType.ENEMY) return ModContent.TF_ENEMY_SOUND;
+		if (type == RaidType.ALLY) return ModDefinitions.TF_ALLY_SOUND;
+		if (type == RaidType.ENEMY) return ModDefinitions.TF_ENEMY_SOUND;
 		return Hordes.HORDE_SOUND;
 	}
 

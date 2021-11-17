@@ -21,32 +21,32 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class ItemSyringe extends Item implements IMetaItem {
-	
+
 	String name = "Syringe";
 	String[] variants = {"Empty", "Blood", "Cure", "Contaminated"};
-	
+
 	public ItemSyringe() {
-		setCreativeTab(ModContent.CREATIVE_TAB);
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setMaxStackSize(1);
 		setHasSubtypes(true);
 	}
-	
+
 	@Override
 	public String byMeta(int meta) {
 		return variants[meta].toLowerCase();
 	}
-	
+
 	@Override
 	public int getMaxMeta() {
 		return variants.length;
 	}
-	
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		if(isInCreativeTab(tab)) {
@@ -54,14 +54,14 @@ public class ItemSyringe extends Item implements IMetaItem {
 				items.add(new ItemStack(this, 1, i));
 			}
 		}
-    }
-	
+	}
+
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
 		EnumAction action = (stack.getMetadata()==0) ? EnumAction.BOW : EnumAction.NONE;
 		return action;
-    }
-	
+	}
+
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack stack = player.getHeldItem(hand);
@@ -71,9 +71,9 @@ public class ItemSyringe extends Item implements IMetaItem {
 			player.setActiveHand(hand);
 			action = EnumActionResult.SUCCESS;
 		}
-		return action;	
-    }
-	
+		return action;
+	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
@@ -83,9 +83,9 @@ public class ItemSyringe extends Item implements IMetaItem {
 			player.setActiveHand(hand);
 			action = EnumActionResult.SUCCESS;
 		}
-        return new ActionResult<ItemStack>(action, stack);
-    }
-	
+		return new ActionResult<ItemStack>(action, stack);
+	}
+
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		World world = player.world;
@@ -108,37 +108,37 @@ public class ItemSyringe extends Item implements IMetaItem {
 			}
 			return true;
 		}
-        return false;
-    }
-	
+		return false;
+	}
+
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
-        return stack.getMetadata() == 2 ? new ItemStack(ModContent.SYRINGE, 1, 3) : super.getContainerItem(stack);
-    }
-	
+		return stack.getMetadata() == 2 ? new ItemStack(LDOHItems.SYRINGE, 1, 3) : super.getContainerItem(stack);
+	}
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		int duration = (stack.getMetadata()==0) ? 20 : 0;
 		return duration;
-    }
+	}
 
-    @Override
+	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
 		if (stack.getMetadata() == 0 && entity instanceof EntityPlayer) {
 			stack.setItemDamage(1);
 			entity.attackEntityFrom(DamageSource.CACTUS, 0.5f);
-    	}
+		}
 		return stack;
-    }
-    
-    @Override
+	}
+
+	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-        return this.getUnlocalizedName() +"."+ variants[stack.getMetadata()];
-    }
-    
-    @Override
+		return this.getUnlocalizedName() +"."+ variants[stack.getMetadata()];
+	}
+
+	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-    	if (stack.getMetadata() == 0) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.Syringe"));
-    	else if (stack.getMetadata() == 2) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.AntibodySerum"));
+		if (stack.getMetadata() == 0) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.Syringe"));
+		else if (stack.getMetadata() == 2) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.AntibodySerum"));
 	}
 }

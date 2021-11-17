@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.smileycorp.ldoh.common.ModContent;
 
 public interface IBreakBlocks {
 	
@@ -103,22 +102,22 @@ public interface IBreakBlocks {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.BLOCK_BREAKING;
+			return capability == LDOHCapabilities.BLOCK_BREAKING;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.BLOCK_BREAKING ? ModContent.BLOCK_BREAKING.cast(instance) : null;
+			return capability == LDOHCapabilities.BLOCK_BREAKING ? LDOHCapabilities.BLOCK_BREAKING.cast(instance) : null;
 		}
 
 		@Override
 		public NBTBase serializeNBT() {
-			return ModContent.BLOCK_BREAKING.getStorage().writeNBT(ModContent.BLOCK_BREAKING, instance, null);
+			return LDOHCapabilities.BLOCK_BREAKING.getStorage().writeNBT(LDOHCapabilities.BLOCK_BREAKING, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTBase nbt) {
-			ModContent.BLOCK_BREAKING.getStorage().readNBT(ModContent.BLOCK_BREAKING, instance, null, nbt);
+			LDOHCapabilities.BLOCK_BREAKING.getStorage().readNBT(LDOHCapabilities.BLOCK_BREAKING, instance, null, nbt);
 		}
 
 }

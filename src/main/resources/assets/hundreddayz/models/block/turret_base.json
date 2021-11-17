@@ -1,6 +1,7 @@
 {
+	"parent":"block/block",
 	"textures": {
-		"particle": "#texture",
+		"particle": "hundreddayz:blocks/turret_base",
 		"texture": "hundreddayz:blocks/turret_base"
 	},
 	"elements": [ 	 

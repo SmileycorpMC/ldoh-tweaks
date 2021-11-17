@@ -31,11 +31,12 @@ import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
+import net.smileycorp.ldoh.common.capabilities.IExhaustion;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
@@ -59,14 +60,20 @@ public class TF2Events {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//gives tf2 mercs hunger
-		if (!entity.hasCapability(ModContent.HUNGER, null) && entity instanceof EntityTF2Character) {
-			event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
+		if (!entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
+			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
 		}
-		if (!entity.hasCapability(ModContent.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
-			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
+		//give spies baguettes
+		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
+			if (!((EntitySpy)entity).isRobot())  event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
-		if (!entity.hasCapability(ModContent.CURING, null) && entity instanceof EntityMedic) {
+		//give medics ability to cure
+		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
+		}
+		//give mercs exhaustion/sleeping
+		if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
+			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Exhaustion"), new IExhaustion.Provider());
 		}
 	}
 
@@ -109,13 +116,17 @@ public class TF2Events {
 		}
 	}
 
-	//make entities that can break blocks do so
 	@SubscribeEvent
 	public void livingTick(LivingUpdateEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.world;
-		if (entity.hasCapability(ModContent.HUNGER, null)) {
-			entity.getCapability(ModContent.HUNGER, null).onUpdate((EntityLiving) entity);
+		//hunger tick
+		if (entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
+			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.HUNGER, null).onUpdate((EntityLiving) entity);
+		}
+		//exhaustion tick
+		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
+			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).onUpdate((EntityLiving) entity);
 		}
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
@@ -157,11 +168,11 @@ public class TF2Events {
 						}
 					}
 				}
-				if (merc.hasCapability(ModContent.HUNGER, null)) {
-					stack = merc.getCapability(ModContent.HUNGER, null).tryPickupFood(stack, merc);
+				if (merc.hasCapability(LDOHCapabilities.HUNGER, null) &! merc.isRobot()) {
+					stack = merc.getCapability(LDOHCapabilities.HUNGER, null).tryPickupFood(stack, merc);
 				}
-				if (merc.hasCapability(ModContent.CURING, null)) {
-					stack = merc.getCapability(ModContent.CURING, null).tryPickupSyringe(stack, merc);
+				if (merc.hasCapability(LDOHCapabilities.CURING, null)) {
+					stack = merc.getCapability(LDOHCapabilities.CURING, null).tryPickupSyringe(stack, merc);
 				}
 				if (stack.getCount() == 0) item.setDead();
 			}
@@ -182,6 +193,13 @@ public class TF2Events {
 					if(!((EntityTF2Character) entity).isRobot()) {
 						entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
 					}
+				}
+			}
+			if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityLiving) {
+				IExhaustion cap = entity.getCapability(LDOHCapabilities.EXHAUSTION, null);
+				if (cap.isSleeping((EntityLiving) entity)) {
+					cap.setSleeping((EntityLiving) entity, false);
+					if (attacker instanceof EntityLivingBase)((EntityLiving) entity).setAttackTarget((EntityLivingBase) attacker);
 				}
 			}
 		}
@@ -221,11 +239,11 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				merc.tasks.addTask(3, new EntityAIAvoidEntity(merc, EntityMob.class, 5.0F, 0.6D, 0.6D));
-				if (entity instanceof EntitySpy && entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
-					ISpawnTracker tracker = entity.getCapability(ModContent.SPAWN_TRACKER, null);
+				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
+					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
 					if (!tracker.isSpawned()) {
-						if (entity.hasCapability(ModContent.HUNGER, null)) {
-							entity.getCapability(ModContent.HUNGER, null).setFoodStack(new ItemStack(ItemListxlfoodmod.baguette, 8));
+						if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
+							entity.getCapability(LDOHCapabilities.HUNGER, null).setFoodStack(new ItemStack(ItemListxlfoodmod.baguette, 8));
 						}
 						tracker.setSpawned(true);
 					}
@@ -240,8 +258,9 @@ public class TF2Events {
 						((EntityTF2Character) entity).tasks.addTask(3, new AIModifiedMedigun(merc));
 					}
 				}
-				if (merc.hasCapability(ModContent.HUNGER, null)) merc.getCapability(ModContent.HUNGER, null).syncClients(merc);
-				if (merc.hasCapability(ModContent.CURING, null)) merc.getCapability(ModContent.CURING, null).syncClients(merc);
+				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
+				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
+				if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
 			}
 		}
 	}
@@ -250,8 +269,9 @@ public class TF2Events {
 	public void playerTrack(PlayerEvent.StartTracking event) {
 		if (event.getTarget() instanceof EntityLiving && event.getEntityPlayer() instanceof EntityPlayerMP) {
 			EntityLiving entity = (EntityLiving) event.getTarget();
-			if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
-			if (entity.hasCapability(ModContent.CURING, null)) entity.getCapability(ModContent.CURING, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
+			if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) entity.getCapability(LDOHCapabilities.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
+			if (entity.hasCapability(LDOHCapabilities.CURING, null)) entity.getCapability(LDOHCapabilities.CURING, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
+			if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 

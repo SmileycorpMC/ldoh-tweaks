@@ -36,16 +36,12 @@ public class TileTurret extends TileEntity {
 		return entity == null ? null : entity.getOwner();
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		if (nbt.hasKey("entity")) entity = (EntityTurret) world.getEntityByID(nbt.getInteger("entity"));
-		super.readFromNBT(nbt);
+	public EntityTurret getEntity() {
+		return entity;
 	}
 
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		if (entity != null) nbt.setInteger("entity", entity.getEntityId());
-		return super.writeToNBT(nbt);
+	public void setEntity(EntityTurret entity) {
+		this.entity = entity;
 	}
 
 }

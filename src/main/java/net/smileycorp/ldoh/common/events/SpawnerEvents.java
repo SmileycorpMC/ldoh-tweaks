@@ -23,10 +23,10 @@ import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
 import net.smileycorp.hordes.common.hordeevent.HordeSpawnEntry;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
@@ -39,11 +39,11 @@ public class SpawnerEvents {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//spawner instance to spawn unburied in the caves around players
-		if (!entity.hasCapability(ModContent.UNBURIED_SPAWNER, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+		if (!entity.hasCapability(LDOHCapabilities.UNBURIED_SPAWNER, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
 			event.addCapability(ModDefinitions.getResource("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
 		}
 		//spawner instance for mini raid events
-		if (!entity.hasCapability(ModContent.MINI_RAID, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+		if (!entity.hasCapability(LDOHCapabilities.MINI_RAID, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
 			event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider());
 		}
 	}
@@ -57,8 +57,8 @@ public class SpawnerEvents {
 			Random rand = world.rand;
 			if (!world.isRemote) {
 				//spawn unburied when player is underground
-				if (player.hasCapability(ModContent.UNBURIED_SPAWNER, null) && player.ticksExisted % 60==0) {
-					IUnburiedSpawner spawner = player.getCapability(ModContent.UNBURIED_SPAWNER, null);
+				if (player.hasCapability(LDOHCapabilities.UNBURIED_SPAWNER, null) && player.ticksExisted % 60==0) {
+					IUnburiedSpawner spawner = player.getCapability(LDOHCapabilities.UNBURIED_SPAWNER, null);
 					int y = (int) Math.floor(player.getPosition().getY());
 					Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
 					if (spawner.canSpawnEntity()) {
@@ -89,8 +89,8 @@ public class SpawnerEvents {
 					}
 				}
 				//Mini Raids
-				if (player.hasCapability(ModContent.MINI_RAID, null)) {
-					IMiniRaid raid = player.getCapability(ModContent.MINI_RAID, null);
+				if (player.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
+					IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
 					//spawn the raid if the time is right
 					if (raid.shouldSpawnRaid(player)) raid.spawnRaid(player);
 				}

@@ -137,38 +137,40 @@ public class ModelTurret extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
-		switch (((EntityTurret) entity).getPlacement()) {
-		case DOWN:
-			GlStateManager.rotate((float) Math.PI, 1, 0, 0);
-			break;
-		case EAST:
-			GlStateManager.rotate((float) Math.PI/2, 1, 1, 0);
-			break;
-		case SOUTH:
-			GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
-			GlStateManager.rotate((float) Math.PI, 0, 1, 0);
-			break;
-		case WEST:
-			GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
-			GlStateManager.rotate((float) Math.PI*1.5f, 0, 1, 0);
-			break;
-		case NORTH:
-			GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
-			break;
-		default:
-			break;
+		if (entity != null) {
+			switch (((EntityTurret) entity).getPlacement()) {
+			case DOWN:
+				GlStateManager.rotate((float) Math.PI, 1, 0, 0);
+				break;
+			case EAST:
+				GlStateManager.rotate((float) Math.PI/2, 1, 1, 0);
+				break;
+			case SOUTH:
+				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
+				GlStateManager.rotate((float) Math.PI, 0, 1, 0);
+				break;
+			case WEST:
+				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
+				GlStateManager.rotate((float) Math.PI*1.5f, 0, 1, 0);
+				break;
+			case NORTH:
+				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
+				break;
+			default:
+				break;
 
+			}
+			if (entity.getTeam()!=null) {
+				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
+				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
+			}
 		}
-		if (entity.getTeam()!=null) {
-			int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
-			GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
-		}
-		base.render(f5);
+		base.render(scale);
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popMatrix();
-		axel.render(f5);
+		axel.render(scale);
 	}
 
 	/**

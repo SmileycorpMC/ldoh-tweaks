@@ -22,7 +22,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.followme.common.ai.AIFollowPlayer;
 import net.smileycorp.followme.common.network.FollowSyncMessage;
 import net.smileycorp.followme.common.network.PacketHandler;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -183,22 +182,22 @@ public interface IFollowers {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.FOLLOWERS;
+			return capability == LDOHCapabilities.FOLLOWERS;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.FOLLOWERS ? ModContent.FOLLOWERS.cast(instance) : null;
+			return capability == LDOHCapabilities.FOLLOWERS ? LDOHCapabilities.FOLLOWERS.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.FOLLOWERS.getStorage().writeNBT(ModContent.FOLLOWERS, instance, null);
+			return (NBTTagCompound) LDOHCapabilities.FOLLOWERS.getStorage().writeNBT(LDOHCapabilities.FOLLOWERS, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.FOLLOWERS.getStorage().readNBT(ModContent.FOLLOWERS, instance, null, nbt);
+			LDOHCapabilities.FOLLOWERS.getStorage().readNBT(LDOHCapabilities.FOLLOWERS, instance, null, nbt);
 		}
 
 	}

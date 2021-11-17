@@ -17,8 +17,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 
 import com.mrcrayfish.guns.init.ModGuns;
 
@@ -52,7 +52,7 @@ public class EntitySwatZombie extends EntityZombie {
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, MACHINE_PISTOL);
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModContent.GAS_MASK));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.GAS_MASK));
 		inventoryArmorDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.1F;
 		inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.1F;
 	}

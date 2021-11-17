@@ -12,8 +12,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import buildcraft.core.BCCoreItems;
 
 public class EntityZombieTechnician extends EntityZombie {
@@ -25,7 +25,7 @@ public class EntityZombieTechnician extends EntityZombie {
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
 		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(BCCoreItems.wrench));
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModContent.HARDHAT));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.HARDHAT));
 		inventoryArmorDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.1F;
 		inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.1F;
 	}

@@ -33,9 +33,9 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTableManager;
 import net.minecraftforge.items.IItemHandler;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
+import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.util.EnumAxis;
 import biomesoplenty.api.block.BOPBlocks;
 import biomesoplenty.api.enums.BOPWoods;
@@ -165,7 +165,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 						exitpos = pos;
 					}
 				} else if (j==h) {
-					IBlockState state = ModContent.BARBED_WIRE.getDefaultState();
+					IBlockState state = LDOHBlocks.BARBED_WIRE.getDefaultState();
 					if (mi == 13) state = state.withProperty(BlockBarbedWire.AXIS, EnumAxis.Z);
 					world.setBlockState(pos.up(j), state, 18);
 				} else {

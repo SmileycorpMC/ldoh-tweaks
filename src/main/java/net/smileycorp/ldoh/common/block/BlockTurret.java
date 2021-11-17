@@ -25,19 +25,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
 public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
 
 	private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.7, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.3, 1),
-		new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1), new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3)};
+		new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
 
 	public BlockTurret() {
 		super(Material.IRON);
 		String name = "Turret";
-		setCreativeTab(ModContent.CREATIVE_TAB);
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setHarvestLevel("pickaxe", 2);

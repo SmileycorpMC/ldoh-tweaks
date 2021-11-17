@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.common;
 
 import goblinbob.mobends.core.addon.AddonHelper;
 import ivorius.reccomplex.events.RCEventBus;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -10,13 +9,14 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks.BreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.ICuring.Curing;
+import net.smileycorp.ldoh.common.capabilities.IExhaustion;
+import net.smileycorp.ldoh.common.capabilities.IExhaustion.Exhaustion;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IFollowers.Followers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
@@ -60,8 +60,6 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-		//Syringe Sterilisation
-		GameRegistry.addSmelting(new ItemStack(ModContent.SYRINGE, 1, 3), new ItemStack(ModContent.SYRINGE, 1, 0), 0.1f);
 		//Mobends support for nurse model
 		AddonHelper.registerAddon(ModDefinitions.modid, new LDOHMobendsAddon());
 		//Register Capabilities
@@ -73,6 +71,7 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
+		CapabilityManager.INSTANCE.register(IExhaustion.class, new IExhaustion.Storage(), () -> new Exhaustion());
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {

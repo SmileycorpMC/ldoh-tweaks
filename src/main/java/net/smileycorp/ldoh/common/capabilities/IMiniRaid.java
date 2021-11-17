@@ -7,7 +7,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.smileycorp.ldoh.common.ModContent;
 
 public interface IMiniRaid {
 
@@ -46,22 +45,22 @@ public interface IMiniRaid {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.MINI_RAID;
+			return capability == LDOHCapabilities.MINI_RAID;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.MINI_RAID ? ModContent.MINI_RAID.cast(instance) : null;
+			return capability == LDOHCapabilities.MINI_RAID ? LDOHCapabilities.MINI_RAID.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.MINI_RAID.getStorage().writeNBT(ModContent.MINI_RAID, instance, null);
+			return (NBTTagCompound) LDOHCapabilities.MINI_RAID.getStorage().writeNBT(LDOHCapabilities.MINI_RAID, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.MINI_RAID.getStorage().readNBT(ModContent.MINI_RAID, instance, null, nbt);
+			LDOHCapabilities.MINI_RAID.getStorage().readNBT(LDOHCapabilities.MINI_RAID, instance, null, nbt);
 		}
 
 	}

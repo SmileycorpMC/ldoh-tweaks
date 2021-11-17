@@ -32,7 +32,6 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.network.StartEatingMessage;
 import net.smileycorp.ldoh.common.network.SyncFoodMessage;
@@ -365,26 +364,26 @@ public interface IHunger {
 
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-		protected final IHunger instance = ModContent.HUNGER.getDefaultInstance();
+		protected final IHunger instance = LDOHCapabilities.HUNGER.getDefaultInstance();
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.HUNGER;
+			return capability == LDOHCapabilities.HUNGER;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.HUNGER ? ModContent.HUNGER.cast(instance) : null;
+			return capability == LDOHCapabilities.HUNGER ? LDOHCapabilities.HUNGER.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.HUNGER.getStorage().writeNBT(ModContent.HUNGER, instance, null);
+			return (NBTTagCompound) LDOHCapabilities.HUNGER.getStorage().writeNBT(LDOHCapabilities.HUNGER, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.HUNGER.getStorage().readNBT(ModContent.HUNGER, instance, null, nbt);
+			LDOHCapabilities.HUNGER.getStorage().readNBT(LDOHCapabilities.HUNGER, instance, null, nbt);
 		}
 
 	}

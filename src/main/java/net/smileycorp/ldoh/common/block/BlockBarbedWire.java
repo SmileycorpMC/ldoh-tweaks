@@ -32,7 +32,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumAxis;
@@ -48,7 +48,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	public BlockBarbedWire() {
 		super(Material.ROCK);
 		String name = "Barbed_Wire";
-		setCreativeTab(ModContent.CREATIVE_TAB);
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
 		setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumAxis.X));

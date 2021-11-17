@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
 		ItemStack stack = player.getHeldItem(hand);
 		if (!world.isRemote) {
 			if (player.getTeam() == null) ModUtils.tryJoinTeam(player, this);
-			if (stack.getItem() == ModContent.TF_PROF_TOKEN) {
+			if (stack.getItem() == LDOHItems.TF_PROF_TOKEN) {
 				stack.interactWithEntity(player, this, hand);
 				callback.setReturnValue(true);
 				callback.cancel();

@@ -6,7 +6,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.smileycorp.ldoh.common.ModContent;
 
 public interface ISpawnTracker {
 
@@ -49,26 +48,26 @@ public interface ISpawnTracker {
 	
 	public class Provider implements ICapabilitySerializable<NBTBase> {
 		
-		protected ISpawnTracker instance = ModContent.SPAWN_TRACKER.getDefaultInstance();
+		protected ISpawnTracker instance = LDOHCapabilities.SPAWN_TRACKER.getDefaultInstance();
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.SPAWN_TRACKER;
+			return capability == LDOHCapabilities.SPAWN_TRACKER;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.SPAWN_TRACKER ? ModContent.SPAWN_TRACKER.cast(instance) : null;
+			return capability == LDOHCapabilities.SPAWN_TRACKER ? LDOHCapabilities.SPAWN_TRACKER.cast(instance) : null;
 		}
 
 		@Override
 		public NBTBase serializeNBT() {
-			return ModContent.SPAWN_TRACKER.getStorage().writeNBT(ModContent.SPAWN_TRACKER, instance, null);
+			return LDOHCapabilities.SPAWN_TRACKER.getStorage().writeNBT(LDOHCapabilities.SPAWN_TRACKER, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTBase nbt) {
-			ModContent.SPAWN_TRACKER.getStorage().readNBT(ModContent.SPAWN_TRACKER, instance, null, nbt);
+			LDOHCapabilities.SPAWN_TRACKER.getStorage().readNBT(LDOHCapabilities.SPAWN_TRACKER, instance, null, nbt);
 		}
 
 }

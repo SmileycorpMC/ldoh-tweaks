@@ -8,7 +8,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 
 public class ItemBlockTooltip extends ItemBlock {
 	
@@ -21,7 +21,7 @@ public class ItemBlockTooltip extends ItemBlock {
 	
 	public ItemBlockTooltip(Block block, int lines) {
 		super(block);
-		setCreativeTab(ModContent.CREATIVE_TAB);
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		String name = block.getUnlocalizedName().substring(4);
 		setUnlocalizedName(name);
 		setRegistryName(block.getRegistryName());

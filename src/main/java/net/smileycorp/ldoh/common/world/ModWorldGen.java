@@ -14,7 +14,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import biomesoplenty.api.biome.BOPBiomes;
 import biomesoplenty.api.block.BOPBlocks;
 
@@ -30,7 +30,7 @@ public class ModWorldGen implements IWorldGenerator {
 		Biome biome = world.getBiomeProvider().getBiomes(null, x, z, 1, 1, false)[0];
 		if (rand.nextInt(biome == WastelandWorld.apocalypse_city ? 7 : biome == BOPBiomes.wasteland.get() ? 13 : biome == Biomes.DEEP_OCEAN ? 24 : 18) == 0) {
 			BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
-			world.setBlockState(pos, ModContent.HORDE_SPAWNER.getDefaultState(), 18);
+			world.setBlockState(pos, LDOHBlocks.HORDE_SPAWNER.getDefaultState(), 18);
 		}
 		BlockPos chunkpos = new BlockPos(x, 0 , z);
 		//adds our custom oregen to biomes other than the apocalyptic desert

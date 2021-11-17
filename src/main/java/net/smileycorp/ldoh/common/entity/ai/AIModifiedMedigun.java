@@ -1,8 +1,8 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -15,8 +15,8 @@ public class AIModifiedMedigun extends EntityAIUseMedigun {
 	@Override
 	public void updateTask() {
 		super.updateTask();
-		if (pressed && entityHost.hasCapability(ModContent.CURING, null) &! entityHost.world.isRemote) {
-			ICuring curing = entityHost.getCapability(ModContent.CURING, null);
+		if (pressed && entityHost.hasCapability(LDOHCapabilities.CURING, null) &! entityHost.world.isRemote) {
+			ICuring curing = entityHost.getCapability(LDOHCapabilities.CURING, null);
 			if (curing.getSyringeCount() >= 0 && attackTarget.isPotionActive(HordesInfection.INFECTED)) {
 				attackTarget.removeActivePotionEffect(HordesInfection.INFECTED);
 				curing.setSyringeCount(curing.getSyringeCount()-1);

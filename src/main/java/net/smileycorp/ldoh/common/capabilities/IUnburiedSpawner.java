@@ -14,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.smileycorp.ldoh.common.ModContent;
 
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 
@@ -124,22 +123,22 @@ public interface IUnburiedSpawner {
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.UNBURIED_SPAWNER;
+			return capability == LDOHCapabilities.UNBURIED_SPAWNER;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.UNBURIED_SPAWNER ? ModContent.UNBURIED_SPAWNER.cast(instance) : null;
+			return capability == LDOHCapabilities.UNBURIED_SPAWNER ? LDOHCapabilities.UNBURIED_SPAWNER.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagList serializeNBT() {
-			return (NBTTagList) ModContent.UNBURIED_SPAWNER.getStorage().writeNBT(ModContent.UNBURIED_SPAWNER, instance, null);
+			return (NBTTagList) LDOHCapabilities.UNBURIED_SPAWNER.getStorage().writeNBT(LDOHCapabilities.UNBURIED_SPAWNER, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagList nbt) {
-			ModContent.UNBURIED_SPAWNER.getStorage().readNBT(ModContent.UNBURIED_SPAWNER, instance, null, nbt);
+			LDOHCapabilities.UNBURIED_SPAWNER.getStorage().readNBT(LDOHCapabilities.UNBURIED_SPAWNER, instance, null, nbt);
 		}
 
 	}

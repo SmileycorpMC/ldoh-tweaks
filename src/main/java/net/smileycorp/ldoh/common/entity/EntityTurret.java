@@ -13,16 +13,14 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Rotations;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
@@ -30,14 +28,14 @@ public class EntityTurret extends EntityLiving {
 
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 	protected static final DataParameter<EnumFacing> PLACEMENT = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
-	protected static final DataParameter<Rotations> FACING = EntityDataManager.<Rotations>createKey(EntityTurret.class, DataSerializers.ROTATIONS);
 
 	protected EntityPlayer owner = null;
 	protected UUID ownerUUID = null;
 	protected Entity target = null;
 	protected BlockPos tilePos;
+	protected TileTurret tile = null;
 
-	protected NonNullList<ItemStack> inventory = NonNullList.withSize(5, ItemStack.EMPTY);
+	protected NonNullList<ItemStack> inventory = NonNullList.withSize(6, ItemStack.EMPTY);
 
 	public EntityTurret(World world) {
 		super(world);
@@ -49,7 +47,6 @@ public class EntityTurret extends EntityLiving {
 		super.entityInit();
 		dataManager.register(TEAM, "");
 		dataManager.register(PLACEMENT, EnumFacing.UP);
-		dataManager.register(FACING, new Rotations(0, 1, 0));
 	}
 
 	@Override
@@ -97,11 +94,9 @@ public class EntityTurret extends EntityLiving {
 			dataManager.set(TEAM, owner.getTeam().getName());
 		}
 		tilePos = tile.getPos();
+		dataManager.set(PLACEMENT, facing);
 		if (nbt.hasKey("inventory")) ItemStackHelper.loadAllItems(nbt.getCompoundTag("inventory"), inventory);
 		if (nbt.hasKey("health")) setHealth(nbt.getFloat("health"));
-		dataManager.set(PLACEMENT, facing);
-		Vec3i vec = facing.getDirectionVec();
-		dataManager.set(FACING, new Rotations(vec.getX(), vec.getY(), vec.getZ()));
 	}
 
 	public NBTTagCompound saveToTile() {
@@ -122,6 +117,13 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
+		if (tile == null &! world.isRemote) {
+			TileEntity tile = world.getTileEntity(tilePos);
+			if (tile instanceof TileTurret) {
+				this.tile = (TileTurret) tile;
+				((TileTurret) tile).setEntity(this);
+			}
+		}
 		if (ticksExisted%5 == 0) {
 			if (owner == null || owner.isDead |! owner.isAddedToWorld()) {
 				if (!world.isRemote) owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(ownerUUID);
@@ -137,8 +139,14 @@ public class EntityTurret extends EntityLiving {
 			}
 		}
 		if (hasTarget()) {
-			Vec3d vec = DirectionUtils.getDirectionVec(this, target);
-			dataManager.set(FACING, new Rotations((float)vec.x, (float)vec.y, (float)vec.z));
+			EnumFacing placement = getPlacement();
+			if (placement.getAxis() == Axis.X) {
+
+			} else if (placement.getAxis() == Axis.Y) {
+
+			} else if (placement.getAxis() == Axis.Z) {
+
+			}
 		}
 	}
 
@@ -188,10 +196,6 @@ public class EntityTurret extends EntityLiving {
 
 	public EnumFacing getPlacement() {
 		return dataManager.get(PLACEMENT);
-	}
-
-	public Rotations getFacing() {
-		return dataManager.get(FACING);
 	}
 
 }

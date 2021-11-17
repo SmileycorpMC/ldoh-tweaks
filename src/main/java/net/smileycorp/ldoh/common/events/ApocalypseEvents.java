@@ -7,9 +7,9 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class ApocalypseEvents {
 
@@ -18,7 +18,7 @@ public class ApocalypseEvents {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//spawner instance for boss event
-		if (!entity.hasCapability(ModContent.APOCALYPSE, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
+		if (!entity.hasCapability(LDOHCapabilities.APOCALYPSE, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
 			event.addCapability(ModDefinitions.getResource("Apocalypse"), new IApocalypse.Provider((EntityPlayer) entity));
 		}
 	}
@@ -29,7 +29,7 @@ public class ApocalypseEvents {
 		if (player != null) {
 			World world = player.world;
 			if (!world.isRemote) {
-				IApocalypse apocalypse = player.getCapability(ModContent.APOCALYPSE, null);
+				IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
 				if (apocalypse.canStart(world)) apocalypse.startEvent();
 				if (apocalypse.isActive(world)) apocalypse.update(world);
 			}

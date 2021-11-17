@@ -17,9 +17,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 
 public class EntityZombieNurse extends EntityZombie {
 
@@ -38,8 +38,8 @@ public class EntityZombieNurse extends EntityZombie {
 
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModContent.BONESAW));
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModContent.NURSE_HAT));
+		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(LDOHItems.BONESAW));
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.NURSE_HAT));
 		inventoryArmorDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.1F;
 		inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.1F;
 	}

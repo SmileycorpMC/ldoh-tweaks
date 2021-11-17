@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.network.SyncSyringesMessage;
 
@@ -72,7 +72,7 @@ public interface ICuring {
 
 		@Override
 		public ItemStack tryPickupSyringe(ItemStack stack, EntityLiving entity) {
-			if (stack.getItem() == ModContent.SYRINGE && stack.getMetadata() == 2 &! stack.isEmpty()) {
+			if (stack.getItem() == LDOHItems.SYRINGE && stack.getMetadata() == 2 &! stack.isEmpty()) {
 				if (syringeCount == 0) {
 					syringeCount = stack.getCount();
 					syncClients(entity);
@@ -107,26 +107,26 @@ public interface ICuring {
 
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-		protected final ICuring instance = ModContent.CURING.getDefaultInstance();
+		protected final ICuring instance = LDOHCapabilities.CURING.getDefaultInstance();
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == ModContent.CURING;
+			return capability == LDOHCapabilities.CURING;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == ModContent.CURING ? ModContent.CURING.cast(instance) : null;
+			return capability == LDOHCapabilities.CURING ? LDOHCapabilities.CURING.cast(instance) : null;
 		}
 
 		@Override
 		public NBTTagCompound serializeNBT() {
-			return (NBTTagCompound) ModContent.CURING.getStorage().writeNBT(ModContent.CURING, instance, null);
+			return (NBTTagCompound) LDOHCapabilities.CURING.getStorage().writeNBT(LDOHCapabilities.CURING, instance, null);
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			ModContent.CURING.getStorage().readNBT(ModContent.CURING, instance, null, nbt);
+			LDOHCapabilities.CURING.getStorage().readNBT(LDOHCapabilities.CURING, instance, null, nbt);
 		}
 
 	}

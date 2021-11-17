@@ -16,9 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid.RaidType;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class CommandSpawnRaid extends CommandBase {
 
@@ -54,7 +54,7 @@ public class CommandSpawnRaid extends CommandBase {
 			int level = parseInt(args[1]);
 			server.addScheduledTask(() -> {
 				EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-				if (player.hasCapability(ModContent.MINI_RAID, null)) player.getCapability(ModContent.MINI_RAID, null).spawnRaid(player, type, level);
+				if (player.hasCapability(LDOHCapabilities.MINI_RAID, null)) player.getCapability(LDOHCapabilities.MINI_RAID, null).spawnRaid(player, type, level);
 			});
 			notifyCommandListener(sender, this, "commands."+ModDefinitions.modid+".SpawnRaid.success", new Object[] {new TextComponentTranslation(args[0])});
 		}

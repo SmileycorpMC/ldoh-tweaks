@@ -11,10 +11,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.ldoh.client.ClientHandler;
-import net.smileycorp.ldoh.common.ModContent;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class PacketHandler {
 
@@ -26,6 +26,7 @@ public class PacketHandler {
 		NETWORK_INSTANCE.registerMessage(ClientSyncHunger.class, SyncHungerMessage.class, 2, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientStartEat.class, StartEatingMessage.class, 3, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
+		NETWORK_INSTANCE.registerMessage(ClientSyncSleep.class, SyncSleepMessage.class, 5, Side.CLIENT);
 	}
 
 	public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {
@@ -52,8 +53,8 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(ModContent.HUNGER, null)) {
-						IHunger hunger = entity.getCapability(ModContent.HUNGER, null);
+					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
+						IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
 						hunger.setFoodStack(message.getStack());
 					}
 				});
@@ -71,8 +72,8 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(ModContent.HUNGER, null)) {
-						IHunger hunger = entity.getCapability(ModContent.HUNGER, null);
+					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
+						IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
 						hunger.setFoodLevel(message.getHunger());
 					}
 				});
@@ -90,7 +91,7 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(ModContent.HUNGER, null)) entity.getCapability(ModContent.HUNGER, null).startEating((EntityLiving) entity);
+					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) entity.getCapability(LDOHCapabilities.HUNGER, null).startEating((EntityLiving) entity);
 				});
 			}
 			return null;
@@ -106,10 +107,26 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(ModContent.CURING, null)) {
-						ICuring curing = entity.getCapability(ModContent.CURING, null);
+					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.CURING, null)) {
+						ICuring curing = entity.getCapability(LDOHCapabilities.CURING, null);
 						curing.setSyringeCount(message.getCount());
 					}
+				});
+			}
+			return null;
+		}
+	}
+
+	public static class ClientSyncSleep implements IMessageHandler<SyncSleepMessage, IMessage> {
+
+		public ClientSyncSleep() {}
+
+		@Override
+		public IMessage onMessage(SyncSleepMessage message, MessageContext ctx) {
+			if (ctx.side == Side.CLIENT) {
+				Minecraft.getMinecraft().addScheduledTask(() -> {
+					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
+					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).setSleeping((EntityLiving) entity, message.isSleeping());
 				});
 			}
 			return null;

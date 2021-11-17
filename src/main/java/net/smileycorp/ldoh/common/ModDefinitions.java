@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModDefinitions {
 
+	//mod constants
 	public static final String modid = "hundreddayz";
 	public static final String name = "Last Days of Humanity Tweaks";
 	public static final String version = "alpha 1.1.3";
@@ -15,6 +16,7 @@ public class ModDefinitions {
 	public static final String client = location + "client.ClientProxy";
 	public static final String common = location + "common.CommonProxy";
 
+	//lang keys
 	public static final String joinTeamMessage = "message.hundreddayz.JoinTeam";
 	public static final String postJoinTeamMessage = "message.hundreddayz.PostJoinTeam";
 	public static final String otherJoinTeamMessage = "message.hundreddayz.OtherJoinTeam";
@@ -25,10 +27,17 @@ public class ModDefinitions {
 	public static final String lavaPickupMessage = "message.hundreddayz.Lava.Pickup";
 	public static final String lavaBreakMessage = "message.hundreddayz.Lava.Break";
 
+	//sounds
+	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
+	public static final ResourceLocation TF_ALLY_SOUND = getResource("tf_ally");
+	public static final ResourceLocation LANDMINE_BEEP = getResource("landmine_beep");
+
+	//loot tables
 	public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");
 	public static final ResourceLocation SAFEHOUSE_CABINET = getResource("chests/safehouse_cabinet");
 	public static final ResourceLocation SAFEHOUSE_FRIDGE = getResource("chests/safehouse_fridge");
 
+	//helper methods
 	public static String getName(String name) {
 		return modid + "." + name.replace("_", "");
 	}

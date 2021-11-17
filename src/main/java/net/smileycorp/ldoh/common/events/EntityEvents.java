@@ -43,10 +43,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
-import net.smileycorp.ldoh.common.ModContent;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummyHusk0;
@@ -59,6 +60,7 @@ import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.IDummyZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -85,11 +87,11 @@ public class EntityEvents {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//track whether zombies or crawling zombies were loaded from world data or not
-		if (!entity.hasCapability(ModContent.SPAWN_TRACKER, null) && (entity.getClass() == EntityZombie.class || entity instanceof IDummyZombie)) {
+		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && (entity.getClass() == EntityZombie.class || entity instanceof IDummyZombie)) {
 			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
 		//lets entities break blocks if the capability is set to enabled
-		if (!entity.hasCapability(ModContent.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
+		if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
 			event.addCapability(ModDefinitions.getResource("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
 		}
 	}
@@ -102,8 +104,8 @@ public class EntityEvents {
 		if (entity instanceof EntityNecromancer || entity instanceof EntityXPOrb) event.setCanceled(true);
 		if (!world.isRemote) {
 			//replacing zombies with rare spawns
-			if (entity.hasCapability(ModContent.SPAWN_TRACKER, null)) {
-				if(!entity.getCapability(ModContent.SPAWN_TRACKER, null).isSpawned()) {
+			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
+				if(!entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).isSpawned()) {
 					if (entity.getClass() == EntityZombie.class) {
 						EntityZombie zombie = (EntityZombie) entity;
 						EntityMob newentity = null;
@@ -134,7 +136,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(ModContent.SPAWN_TRACKER, null).setSpawned(true);
+							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 						//replace crawling zombies with their husk counterpart in deserts
 					} else if (entity.getClass() == EntityCrawlingZombie.class) {
@@ -151,7 +153,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(ModContent.SPAWN_TRACKER, null).setSpawned(true);
+							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 					}
 					else if (entity.getClass() == EntityDummyZombie0.class) {
@@ -168,7 +170,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(ModContent.SPAWN_TRACKER, null).setSpawned(true);
+							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 					} else if (entity.getClass() == EntityDummyZombie1.class) {
 						if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
@@ -184,7 +186,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(ModContent.SPAWN_TRACKER, null).setSpawned(true);
+							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 					} else if (entity.getClass() == EntityDummyZombie2.class) {
 						if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
@@ -200,7 +202,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(ModContent.SPAWN_TRACKER, null).setSpawned(true);
+							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 					}
 				}
@@ -254,8 +256,8 @@ public class EntityEvents {
 			if (player.getPosition().getY() - event.pos.getY() > 35) {
 				event.entity = new EntityVespa(world);
 				//give the vespas the ability to break blocks
-				if (event.entity.hasCapability(ModContent.BLOCK_BREAKING, null)) {
-					event.entity.getCapability(ModContent.BLOCK_BREAKING, null).enableBlockBreaking(true);
+				if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
+					event.entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);
 				}
 				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getX());
 			} else if (entity.getClass() == EntityZombie.class && event.getDay() <=50) {
@@ -312,7 +314,7 @@ public class EntityEvents {
 		ResourceLocation loc = event.getName();
 		if (loc == LootTableList.ENTITIES_ZOMBIE) {
 			LootTable table  = event.getTable();
-			LootEntryItem clothLoot = new LootEntryItem(ModContent.CLOTH_FABRIC, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(0, 2))}, new LootCondition[0], "cloth_fabric");
+			LootEntryItem clothLoot = new LootEntryItem(LDOHItems.CLOTH_FABRIC, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(0, 2))}, new LootCondition[0], "cloth_fabric");
 			table.addPool(new LootPool(new LootEntryItem[]{clothLoot}, new LootCondition[]{new KilledByPlayer(false),
 					new RandomChanceWithLooting(1f, 0.5f)}, new RandomValueRange(1), new RandomValueRange(0), "cloth_fabric"));
 			LootEntryItem eye = new LootEntryItem(Items.FERMENTED_SPIDER_EYE, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "spider_eye");
@@ -326,8 +328,8 @@ public class EntityEvents {
 	public void livingTick(LivingUpdateEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.world;
-		if (entity.hasCapability(ModContent.BLOCK_BREAKING, null)) {
-			IBreakBlocks cap = entity.getCapability(ModContent.BLOCK_BREAKING, null);
+		if (entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
+			IBreakBlocks cap = entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null);
 			if (cap.canBreakBlocks()) {
 				if (world.getWorldTime() % 10 == 0) {
 					cap.tryBreakBlocks();
@@ -340,14 +342,14 @@ public class EntityEvents {
 				ItemStack helm = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 				if (entity.ticksExisted%35==0) {
 					//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
-					if (helm.getItem() == ModContent.GAS_MASK && helm.getMetadata() < helm.getMaxDamage()) {
+					if (helm.getItem() == LDOHItems.GAS_MASK && helm.getMetadata() < helm.getMaxDamage()) {
 						helm.damageItem(1, entity);
 						if (helm.getMetadata() == helm.getMaxDamage() && entity instanceof EntityPlayerMP) {
 							((EntityPlayerMP)entity).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, entity.posX, entity.posY, entity.posZ, 1.0F, 1.0F));
 						}
 					} else {
 						//deal damage if not wearing it and display message
-						entity.attackEntityFrom(ModContent.TOXIC_GAS_DAMAGE, 1);
+						entity.attackEntityFrom(LDOHTweaks.TOXIC_GAS_DAMAGE, 1);
 						if (entity instanceof EntityPlayerMP) {
 							PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) entity);
 						}
