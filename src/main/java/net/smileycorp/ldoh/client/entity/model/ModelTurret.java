@@ -142,21 +142,22 @@ public class ModelTurret extends ModelBase {
 		if (entity != null) {
 			switch (((EntityTurret) entity).getPlacement()) {
 			case DOWN:
-				GlStateManager.rotate((float) Math.PI, 1, 0, 0);
+				GlStateManager.rotate(180, 1, 0, 0);
 				break;
 			case EAST:
-				GlStateManager.rotate((float) Math.PI/2, 1, 1, 0);
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.rotate(90, 0, 1, 0);
 				break;
 			case SOUTH:
-				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
-				GlStateManager.rotate((float) Math.PI, 0, 1, 0);
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.rotate(180, 0, 1, 0);
 				break;
 			case WEST:
-				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
-				GlStateManager.rotate((float) Math.PI*1.5f, 0, 1, 0);
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.rotate(-90, 0, 1, 0);
 				break;
 			case NORTH:
-				GlStateManager.rotate((float) Math.PI/2, 1, 0, 0);
+				GlStateManager.rotate(-90, 1, 0, 0);
 				break;
 			default:
 				break;
@@ -169,8 +170,15 @@ public class ModelTurret extends ModelBase {
 		}
 		base.render(scale);
 		GlStateManager.color(1, 1, 1);
-		GlStateManager.popMatrix();
 		axel.render(scale);
+		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch, float scale, Entity entity) {
+		base.rotateAngleY = yaw;
+		axel.rotateAngleY = yaw;
+		axel.rotateAngleX = pitch;
 	}
 
 	/**
