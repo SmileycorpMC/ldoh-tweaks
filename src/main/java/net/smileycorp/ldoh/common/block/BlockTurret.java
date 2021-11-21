@@ -73,6 +73,16 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	}
 
 	@Override
+	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
+		return world.isBlockFullCube(pos.offset(side.getOpposite()));
+	}
+
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighbor, BlockPos neighborPos) {
+		if (!canPlaceBlockOnSide(world, pos, state.getValue(FACING))) world.destroyBlock(pos, true);
+	}
+
+	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (world.getTileEntity(pos) instanceof TileTurret && placer instanceof EntityPlayer &! placer.world.isRemote) {

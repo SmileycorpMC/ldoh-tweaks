@@ -140,26 +140,30 @@ public class ModelTurret extends ModelBase {
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		if (entity != null) {
-			switch (((EntityTurret) entity).getPlacement()) {
+			switch (((EntityTurret) entity).getFacing()) {
+			case UP: break;
 			case DOWN:
 				GlStateManager.rotate(180, 1, 0, 0);
+				GlStateManager.translate(0, -2.5, 0);
 				break;
-			case EAST:
-				GlStateManager.rotate(90, 1, 0, 0);
-				GlStateManager.rotate(90, 0, 1, 0);
+			case NORTH:
+				GlStateManager.rotate(-90, 1, 0, 0);
+				GlStateManager.translate(0, -1.25, 1.25);
 				break;
 			case SOUTH:
 				GlStateManager.rotate(90, 1, 0, 0);
 				GlStateManager.rotate(180, 0, 1, 0);
+				GlStateManager.translate(0, -1.25, 1.25);
+				break;
+			case EAST:
+				GlStateManager.rotate(-90, 0, 1, 0);
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.translate(0, -1.25, -1.25);
 				break;
 			case WEST:
+				GlStateManager.rotate(90, 0, 1, 0);
 				GlStateManager.rotate(90, 1, 0, 0);
-				GlStateManager.rotate(-90, 0, 1, 0);
-				break;
-			case NORTH:
-				GlStateManager.rotate(-90, 1, 0, 0);
-				break;
-			default:
+				GlStateManager.translate(0, -1.25, -1.25);
 				break;
 
 			}

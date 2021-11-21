@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -19,14 +20,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -39,6 +43,8 @@ import net.smileycorp.ldoh.client.entity.RenderTF2CharacterLDOH;
 import net.smileycorp.ldoh.client.entity.RenderTFZombie;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
+import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
+import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
@@ -54,6 +60,7 @@ import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.common.item.LDOHItems;
+import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -98,10 +105,20 @@ public class ClientEventListener {
 				for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
 					ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(ModDefinitions.getResource("items/"+item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
 				}
-			} else {
-				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
-			}
+			} else ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
 		}
+		//register renderer for barbed wire healthbar
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
+		//register turret item renderer
+		Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
+	}
+
+	@SubscribeEvent
+	public static void onModelBake(ModelBakeEvent event) {
+		IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
+		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
+		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
+		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
 	}
 
 	//Render Gas Overlay when below gas level
