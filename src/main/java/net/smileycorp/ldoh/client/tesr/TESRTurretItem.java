@@ -88,13 +88,40 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 	public void renderByItem(ItemStack stack) {
 		Minecraft mc = Minecraft.getMinecraft();
 		GlStateManager.pushMatrix();
-		if (transforms == TransformType.GUI) {
-			GlStateManager.scale(1.25, 1.25, 1.25);
-		}
-		GlStateManager.translate(0.45, 0.45, 0);
-		if (transforms == TransformType.FIRST_PERSON_LEFT_HAND || transforms == TransformType.FIRST_PERSON_RIGHT_HAND ||
-				transforms == TransformType.THIRD_PERSON_LEFT_HAND || transforms == TransformType.THIRD_PERSON_RIGHT_HAND) {
-			GlStateManager.rotate(90, 0, 1, 0);
+		switch (transforms) {
+			case GUI:
+				GlStateManager.scale(1.15, 1.15, 1.15);
+				GlStateManager.translate(0.43, 0.53, 0);
+				break;
+			case FIXED:
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.translate(-0.25, 0.25, 0.25);
+				break;
+			case GROUND:
+				GlStateManager.scale(1.5, 1.5, 1.5);
+				GlStateManager.translate(0.34, 0.3, 0.34);
+				break;
+			case FIRST_PERSON_RIGHT_HAND:
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.translate(0, 0.2, 0.5);
+				break;
+			case FIRST_PERSON_LEFT_HAND:
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.rotate(180, 0, 1, 0);
+				GlStateManager.translate(0, 0.2, 0);
+				break;
+			case THIRD_PERSON_RIGHT_HAND:
+				GlStateManager.scale(1.3, 1.3, 1.3);
+				GlStateManager.rotate(90, 0, 0, 1);
+				GlStateManager.translate(0, 0, 0.6);
+				break;
+			case THIRD_PERSON_LEFT_HAND:
+				GlStateManager.scale(1.3, 1.3, 1.3);
+				GlStateManager.translate(0, 0, 0.6);
+				break;
+			default: break;
 		}
 		IBakedModel base = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(BASE_LOC);
 		mc.getRenderItem().renderItem(stack, ForgeHooksClient.handleCameraTransforms(base, transforms, false));
@@ -102,7 +129,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -0.9, 0);
-		turret.render(null, 0, 0, 0, 0, 0, 0.05f);
+		turret.render(null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
 		GlStateManager.popMatrix();
 	}
 
