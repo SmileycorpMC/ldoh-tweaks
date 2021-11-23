@@ -46,7 +46,7 @@ import net.smileycorp.ldoh.common.world.ModWorldGen;
 
 import com.Fishmod.mod_LavaCow.init.FishItems;
 
-@EventBusSubscriber(modid = ModDefinitions.modid)
+@EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
 
 	public static final Set<Item> ITEMS = new HashSet<Item>();

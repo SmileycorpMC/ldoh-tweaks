@@ -14,7 +14,7 @@ import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 
 public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 	
-	private final String TOOLTIP = "tooltip." + ModDefinitions.modid + ".BarbedWire";
+	private final String TOOLTIP = "tooltip." + ModDefinitions.MODID + ".BarbedWire";
 	
 	public ItemBarbedWire() {
 		super(LDOHBlocks.BARBED_WIRE);

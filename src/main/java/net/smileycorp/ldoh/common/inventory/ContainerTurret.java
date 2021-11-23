@@ -14,24 +14,24 @@ public class ContainerTurret extends Container {
 	protected InventoryTurret inv;
 	protected InventoryPlayer playerInv;
 
-	public ContainerTurret(EntityTurret turret, InventoryPlayer playerInv){
+	public ContainerTurret(EntityTurret turret, EntityPlayer player){
 		this.turret = turret;
 		world = turret.world;
 		inv = turret.getInventory();
-		this.playerInv = playerInv;
+		playerInv = player.inventory;
 		//turret inventory
 		for (int i = 0; i< inv.getSizeInventory(); i++) {
-			addSlotToContainer(new Slot(turret.getInventory(), i, 62 + (i%3)*18, 17 + ((int) Math.floor(i/3))*18));
+			addSlotToContainer(new Slot(turret.getInventory(), i, 79 + i*18, 53));
 		}
 		//player inventory
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 66 + i * 18));
+				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 		//hotbar
 		for (int k = 0; k < 9; ++k) {
-			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 124));
+			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
 		}
 	}
 

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -15,10 +16,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
-@Mod(modid=ModDefinitions.modid, name = ModDefinitions.name, version = ModDefinitions.name, dependencies = ModDefinitions.dependencies)
+@Mod(modid=ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
 public class LDOHTweaks {
 
-	@SidedProxy(clientSide = ModDefinitions.client, serverSide = ModDefinitions.common)
+	@Instance(ModDefinitions.MODID)
+	public static LDOHTweaks INSTANCE;
+
+
+	@SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
 	public static CommonProxy PROXY;
 
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();

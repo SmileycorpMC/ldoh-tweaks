@@ -57,12 +57,12 @@ public class ModUtils {
 		scoreboard.addPlayerToTeam(player.getName(), team);
 		ITextComponent component = new TextComponentString(team);
 		component.setStyle(new Style().setColor(scoreboard.getTeam(team).getColor()));
-		player.sendMessage(new TextComponentTranslation(ModDefinitions.joinTeamMessage, new Object[]{component.getFormattedText()}));
-		player.sendMessage(new TextComponentTranslation(ModDefinitions.postJoinTeamMessage));
+		player.sendMessage(new TextComponentTranslation(ModDefinitions.JOIN_TEAM_MESSAGE, new Object[]{component.getFormattedText()}));
+		player.sendMessage(new TextComponentTranslation(ModDefinitions.POST_JOIN_TEAM_MESSAGE));
 		if (!player.world.isRemote) {
 			for (EntityPlayer other : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
 				if (other!=player) {
-					player.sendMessage(new TextComponentTranslation(ModDefinitions.otherJoinTeamMessage, new Object[]{player.getName(), component.getFormattedText()}));
+					player.sendMessage(new TextComponentTranslation(ModDefinitions.OTHER_JOIN_TEAM_MESSAGE, new Object[]{player.getName(), component.getFormattedText()}));
 				}
 			}
 		}

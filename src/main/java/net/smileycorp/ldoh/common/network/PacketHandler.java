@@ -18,7 +18,7 @@ import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class PacketHandler {
 
-	public static final SimpleNetworkWrapper NETWORK_INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ModDefinitions.modid);
+	public static final SimpleNetworkWrapper NETWORK_INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ModDefinitions.MODID);
 
 	public static void initPackets() {
 		NETWORK_INSTANCE.registerMessage(ClientSyncHandlerAction.class, SimpleStringMessage.class, 0, Side.CLIENT);

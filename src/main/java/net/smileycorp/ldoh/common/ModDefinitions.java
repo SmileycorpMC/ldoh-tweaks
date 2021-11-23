@@ -5,27 +5,27 @@ import net.minecraft.util.ResourceLocation;
 public class ModDefinitions {
 
 	//mod constants
-	public static final String modid = "hundreddayz";
-	public static final String name = "Last Days of Humanity Tweaks";
-	public static final String version = "alpha 1.1.3";
-	public static final String dependencies = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
+	public static final String MODID = "hundreddayz";
+	public static final String NAME = "Last Days of Humanity Tweaks";
+	public static final String VERSIONS = "alpha 1.1.3";
+	public static final String DEPENDENCIES = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
 			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"
 			+ "required-after:bibliocraft;required-after:car;required-after:buildcraftcore;after:biometweaker";
-	public static final String location = "net.smileycorp.ldoh.";
-	public static final String client = location + "client.ClientProxy";
-	public static final String common = location + "common.CommonProxy";
+	public static final String LOCATION = "net.smileycorp.ldoh.";
+	public static final String CLIENT = LOCATION + "client.ClientProxy";
+	public static final String COMMON = LOCATION + "common.CommonProxy";
 
-	//lang keys
-	public static final String joinTeamMessage = "message.hundreddayz.JoinTeam";
-	public static final String postJoinTeamMessage = "message.hundreddayz.PostJoinTeam";
-	public static final String otherJoinTeamMessage = "message.hundreddayz.OtherJoinTeam";
-	public static final String dayCountMessage = "message.hundreddayz.DayCount";
-	public static final String finalDayMessage = "message.hundreddayz.FinalDay";
-	public static final String worldsEndMessage = "message.hundreddayz.WorldsEnd";
-	public static final String gasMessage = "message.hundreddayz.Gas";
-	public static final String lavaPickupMessage = "message.hundreddayz.Lava.Pickup";
-	public static final String lavaBreakMessage = "message.hundreddayz.Lava.Break";
+	//translation keys
+	public static final String JOIN_TEAM_MESSAGE = "message.hundreddayz.JoinTeam";
+	public static final String POST_JOIN_TEAM_MESSAGE = "message.hundreddayz.PostJoinTeam";
+	public static final String OTHER_JOIN_TEAM_MESSAGE = "message.hundreddayz.OtherJoinTeam";
+	public static final String DAY_COUNT_MESSAGE = "message.hundreddayz.DayCount";
+	public static final String DAY_100_MESSAGE = "message.hundreddayz.FinalDay";
+	public static final String APOCALYPSE_MESSAGE = "message.hundreddayz.WorldsEnd";
+	public static final String GAS_MESSAGE = "message.hundreddayz.Gas";
+	public static final String LAVA_PICKUP_MESSAGE = "message.hundreddayz.Lava.Pickup";
+	public static final String LAVA_BREAK_MESSAGE = "message.hundreddayz.Lava.Break";
 
 	//sounds
 	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
@@ -39,11 +39,11 @@ public class ModDefinitions {
 
 	//helper methods
 	public static String getName(String name) {
-		return modid + "." + name.replace("_", "");
+		return MODID + "." + name.replace("_", "");
 	}
 
 	public static ResourceLocation getResource(String name) {
-		return new ResourceLocation(modid, name.toLowerCase());
+		return new ResourceLocation(MODID, name.toLowerCase());
 	}
 
 }

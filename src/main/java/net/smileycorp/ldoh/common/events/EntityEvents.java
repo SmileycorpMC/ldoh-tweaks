@@ -351,7 +351,7 @@ public class EntityEvents {
 						//deal damage if not wearing it and display message
 						entity.attackEntityFrom(LDOHTweaks.TOXIC_GAS_DAMAGE, 1);
 						if (entity instanceof EntityPlayerMP) {
-							PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.gasMessage), (EntityPlayerMP) entity);
+							PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.GAS_MESSAGE), (EntityPlayerMP) entity);
 						}
 					}
 				}

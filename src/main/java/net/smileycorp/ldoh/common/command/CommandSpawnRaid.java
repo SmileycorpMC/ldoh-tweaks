@@ -29,7 +29,7 @@ public class CommandSpawnRaid extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands."+ModDefinitions.modid+".SpawnRaid.usage";
+		return "commands."+ModDefinitions.MODID+".SpawnRaid.usage";
 	}
 
 	@Override
@@ -40,26 +40,26 @@ public class CommandSpawnRaid extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (args.length!=2) {
-			throw new CommandException("commands."+ModDefinitions.modid+".SpawnRaid.usage", new Object[] {});
+			throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.usage", new Object[] {});
 		}
 		try {
 			Entity entity = sender.getCommandSenderEntity();
 			RaidType type = RaidType.valueOf(args[0]);
-			if (type == null || type == RaidType.NONE) throw new CommandException("commands."+ModDefinitions.modid+".SpawnRaid.invalidValue", new Object[] {new TextComponentTranslation(args[0])});
+			if (type == null || type == RaidType.NONE) throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.invalidValue", new Object[] {new TextComponentTranslation(args[0])});
 			if (type == RaidType.ALLY || type == RaidType.ENEMY) {
-				if (entity.getTeam() == null) throw new CommandException("commands."+ModDefinitions.modid+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
+				if (entity.getTeam() == null) throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
 				else if (!(entity.getTeam().getName() == "RED" || entity.getTeam().getName() == "BLU"))
-					throw new CommandException("commands."+ModDefinitions.modid+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
+					throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
 			}
 			int level = parseInt(args[1]);
 			server.addScheduledTask(() -> {
 				EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
 				if (player.hasCapability(LDOHCapabilities.MINI_RAID, null)) player.getCapability(LDOHCapabilities.MINI_RAID, null).spawnRaid(player, type, level);
 			});
-			notifyCommandListener(sender, this, "commands."+ModDefinitions.modid+".SpawnRaid.success", new Object[] {new TextComponentTranslation(args[0])});
+			notifyCommandListener(sender, this, "commands."+ModDefinitions.MODID+".SpawnRaid.success", new Object[] {new TextComponentTranslation(args[0])});
 		}
 		catch (NumberInvalidException e) {
-			throw new CommandException("commands."+ModDefinitions.modid+".SpawnRaid.invalidValue", new Object[] {new TextComponentTranslation(args[1])});
+			throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.invalidValue", new Object[] {new TextComponentTranslation(args[1])});
 		}
 	}
 

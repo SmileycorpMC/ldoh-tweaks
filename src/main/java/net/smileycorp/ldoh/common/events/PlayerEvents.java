@@ -63,7 +63,7 @@ public class PlayerEvents {
 						event.getEntityPlayer().playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
 						event.setCanceled(true);
 						if (!world.isRemote)  {
-							ITextComponent text = new TextComponentTranslation(ModDefinitions.lavaPickupMessage);
+							ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_PICKUP_MESSAGE);
 							text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 							event.getEntityPlayer().sendMessage(text);
 							event.getEntityPlayer().attackEntityFrom(DamageSource.LAVA, 3);
@@ -93,7 +93,7 @@ public class PlayerEvents {
 							break;
 						}
 						((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
-						ITextComponent text = new TextComponentTranslation(ModDefinitions.lavaBreakMessage);
+						ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_BREAK_MESSAGE);
 						text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 						player.sendMessage(text);
 					}

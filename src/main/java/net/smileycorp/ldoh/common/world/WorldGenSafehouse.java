@@ -63,9 +63,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 	private boolean marked = false;
 
 	public WorldGenSafehouse() {
-		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 24) || (time.getMonth() == Month.SEPTEMBER && time.getDayOfMonth() <= 7)) isHalloween = true;
-		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 18) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() == 1)) isChristmas = true;
-		else if (time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1 || new Random().nextInt(300) == 0) isAprilFools = true;
+		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 17)) isHalloween = true;
+		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 18) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() <= 2)) isChristmas = true;
+		else if ((time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1) || new Random().nextInt(256) == 0) isAprilFools = true;
 	}
 
 	public boolean markPositions(World world, BlockPos pos, boolean forced) {

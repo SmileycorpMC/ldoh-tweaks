@@ -18,7 +18,7 @@ public class CommandBossEvent extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "commands."+ModDefinitions.modid+".StartBossEvent.usage";
+		return "commands."+ModDefinitions.MODID+".StartBossEvent.usage";
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CommandBossEvent extends CommandBase {
 				}
 			}
 		});
-		notifyCommandListener(sender, this, "commands."+ModDefinitions.modid+".StartBossEvent.success", new Object[0]);
+		notifyCommandListener(sender, this, "commands."+ModDefinitions.MODID+".StartBossEvent.success", new Object[0]);
 	}
 
 }

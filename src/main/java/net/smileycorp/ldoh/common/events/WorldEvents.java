@@ -28,7 +28,7 @@ import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
-@EventBusSubscriber(modid = ModDefinitions.modid)
+@EventBusSubscriber(modid = ModDefinitions.MODID)
 public class WorldEvents {
 
 	//Spawn in World

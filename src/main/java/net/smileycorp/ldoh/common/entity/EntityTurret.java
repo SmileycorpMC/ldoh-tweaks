@@ -13,11 +13,15 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
@@ -159,6 +163,19 @@ public class EntityTurret extends EntityLiving {
 			}
 		}
 	}
+
+	@Override
+	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
+		if (tile != null &! world.isRemote) {
+			BlockPos pos = tile.getPos();
+			if ((getTeam() == null && player.getTeam() == null) ||
+					getTeam().equals(player.getTeam())) {
+				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+				return EnumActionResult.SUCCESS;
+			}
+		}
+        return super.applyPlayerInteraction(player, vec, hand);
+    }
 
 	@Override
 	public void onDeath(DamageSource source) {

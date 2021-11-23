@@ -42,7 +42,7 @@ public class IntestineCategory implements IRecipeCategory<Wrapper> {
 
 	@Override
 	public String getModName() {
-		return ModDefinitions.modid;
+		return ModDefinitions.MODID;
 	}
 
 	@Override

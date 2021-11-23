@@ -10,7 +10,7 @@ public class LDOHMobendsAddon implements IAddon {
 
 	@Override
 	public String getDisplayName() {
-		return ModDefinitions.name;
+		return ModDefinitions.NAME;
 	}
 
 	@Override

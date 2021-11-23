@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
@@ -27,6 +28,7 @@ import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
 public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
@@ -89,6 +91,16 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 			((TileTurret) world.getTileEntity(pos)).spawnEntity((EntityPlayer) placer, state.getValue(FACING), nbt == null ? new NBTTagCompound() : nbt);
 		}
 	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileTurret) {
+        	EntityTurret turret = ((TileTurret) te).getEntity();
+        	turret.applyPlayerInteraction(player, null, hand);
+    	}
+        return false;
+    }
 
 	@Override
 	public BlockStateContainer createBlockState() {

@@ -2,6 +2,10 @@ package net.smileycorp.ldoh.common;
 
 import goblinbob.mobends.core.addon.AddonHelper;
 import ivorius.reccomplex.events.RCEventBus;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -9,6 +13,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.smileycorp.ldoh.client.gui.GUITurret;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
@@ -29,13 +36,16 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.MiniRaid;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
+import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.events.ApocalypseEvents;
 import net.smileycorp.ldoh.common.events.EntityEvents;
 import net.smileycorp.ldoh.common.events.PlayerEvents;
 import net.smileycorp.ldoh.common.events.SpawnerEvents;
 import net.smileycorp.ldoh.common.events.TF2Events;
 import net.smileycorp.ldoh.common.events.WorldEvents;
+import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.network.PacketHandler;
+import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 
 public class CommonProxy {
@@ -61,7 +71,7 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {
 		//Mobends support for nurse model
-		AddonHelper.registerAddon(ModDefinitions.modid, new LDOHMobendsAddon());
+		AddonHelper.registerAddon(ModDefinitions.MODID, new LDOHMobendsAddon());
 		//Register Capabilities
 		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), () -> new SpawnTracker());
 		CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));
@@ -72,6 +82,33 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
 		CapabilityManager.INSTANCE.register(IExhaustion.class, new IExhaustion.Storage(), () -> new Exhaustion());
+		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
+
+			@Override
+			public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+				if (ID == 0){
+					TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+					if (te instanceof TileTurret) {
+						EntityTurret turret = ((TileTurret) te).getEntity();
+						if (turret!= null) return new ContainerTurret(turret, player);
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+				if (ID == 0){
+					TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+					if (te instanceof TileTurret) {
+						EntityTurret turret = ((TileTurret) te).getEntity();
+						if (turret!= null) return new GUITurret(turret, player);
+					}
+				}
+				return null;
+			}
+
+		});
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {

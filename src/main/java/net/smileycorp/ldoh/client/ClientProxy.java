@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.ldoh.common.CommonProxy;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
-@EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.modid)
+@EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.MODID)
 public class ClientProxy extends CommonProxy {
 
 	@Override

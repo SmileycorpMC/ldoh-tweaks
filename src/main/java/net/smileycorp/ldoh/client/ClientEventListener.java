@@ -67,7 +67,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-@EventBusSubscriber(modid=ModDefinitions.modid, value=Side.CLIENT)
+@EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
 public class ClientEventListener {
 
 	public static String title = "";

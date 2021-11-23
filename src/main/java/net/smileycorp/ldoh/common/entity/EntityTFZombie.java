@@ -203,7 +203,7 @@ public class EntityTFZombie extends EntityZombie {
 			}
 			return I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + getTFClass().getClassName() + ".name");
 		} catch(Exception e) {
-			return I18n.translateToLocal("entity." + ModDefinitions.modid + ".TFZombie.name");
+			return I18n.translateToLocal("entity." + ModDefinitions.MODID + ".TFZombie.name");
 		}
 	}
 
