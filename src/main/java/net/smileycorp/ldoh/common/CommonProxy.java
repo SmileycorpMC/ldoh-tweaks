@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.smileycorp.ldoh.client.gui.GUITurret;
+import net.smileycorp.ldoh.client.gui.GuiTurret;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
@@ -85,8 +85,8 @@ public class CommonProxy {
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 
 			@Override
-			public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-				if (ID == 0){
+			public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+				if (id == 0){
 					TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 					if (te instanceof TileTurret) {
 						EntityTurret turret = ((TileTurret) te).getEntity();
@@ -102,7 +102,7 @@ public class CommonProxy {
 					TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 					if (te instanceof TileTurret) {
 						EntityTurret turret = ((TileTurret) te).getEntity();
-						if (turret!= null) return new GUITurret(turret, player);
+						if (turret!= null) return new GuiTurret(turret, player);
 					}
 				}
 				return null;

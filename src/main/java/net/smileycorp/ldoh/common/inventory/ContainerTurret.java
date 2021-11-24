@@ -21,7 +21,7 @@ public class ContainerTurret extends Container {
 		playerInv = player.inventory;
 		//turret inventory
 		for (int i = 0; i< inv.getSizeInventory(); i++) {
-			addSlotToContainer(new Slot(turret.getInventory(), i, 79 + i*18, 53));
+			addSlotToContainer(new Slot(turret.getInventory(), i, 62 + i*18, 54));
 		}
 		//player inventory
 		for (int i = 0; i < 3; ++i) {
@@ -37,8 +37,7 @@ public class ContainerTurret extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		if (turret.getTeam() == null) return player.getTeam() == null;
-		return turret.getTeam().equals(player.getTeam());
+		return turret.isSameTeam(player);
 	}
 
 }

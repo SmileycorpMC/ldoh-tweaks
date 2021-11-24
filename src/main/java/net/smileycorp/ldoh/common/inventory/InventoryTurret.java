@@ -8,7 +8,7 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 public class InventoryTurret extends InventoryBasic {
 
 	public InventoryTurret() {
-		super(ModDefinitions.getName("entity.turret"), false, 5);
+		super(ModDefinitions.getName("entity.turret"), false, 6);
 	}
 
 	public NBTTagCompound writeToNBT() {

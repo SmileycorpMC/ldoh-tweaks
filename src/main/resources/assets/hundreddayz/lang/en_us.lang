@@ -85,6 +85,7 @@ death.attack.Shrapnel=%1$s stepped on a landmine
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
+gui.text.Owner=Owner: 
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot

@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -23,6 +24,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
@@ -94,11 +96,15 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileTurret) {
-        	EntityTurret turret = ((TileTurret) te).getEntity();
-        	turret.applyPlayerInteraction(player, null, hand);
-    	}
+		if (!world.isRemote) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te != null) {
+		        if (te instanceof TileTurret) {
+		        	EntityTurret turret = ((TileTurret) te).getEntity();
+		        	if (turret!=null) return turret.applyPlayerInteraction(player, new Vec3d(hitX, hitY, hitZ), hand) == EnumActionResult.SUCCESS;
+		    	}
+			}
+		}
         return false;
     }
 

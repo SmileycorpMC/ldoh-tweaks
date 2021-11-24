@@ -20,7 +20,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
@@ -31,15 +35,16 @@ public class EntityTurret extends EntityLiving {
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
 
+	//read these values from the nbt and cache them to make sure it gets loaded / synced properly
+	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
+	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
+
 	protected Entity target = null;
 	protected InventoryTurret inventory = new InventoryTurret();
 
 	protected EntityPlayer owner = null;
 	protected TileTurret tile = null;
-
-	//read these values from the nbt and cache them to make sure it gets loaded properly
-	protected UUID ownerUUID = null;
-	protected BlockPos tilePos;
+	protected String username = null;
 
 	public EntityTurret(World world) {
 		super(world);
@@ -51,6 +56,8 @@ public class EntityTurret extends EntityLiving {
 		super.entityInit();
 		dataManager.register(TEAM, "");
 		dataManager.register(FACING, EnumFacing.UP);
+		dataManager.register(TILE_POS, null);
+		dataManager.register(OWNER_UUID, "");
 	}
 
 	@Override
@@ -70,10 +77,10 @@ public class EntityTurret extends EntityLiving {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
-		if (nbt.hasKey("owner")) ownerUUID = UUID.fromString(nbt.getString("owner"));
+		if (nbt.hasKey("owner")) dataManager.set(OWNER_UUID, nbt.getString("owner"));
 		if (nbt.hasKey("tilePos")) {
-			NBTTagCompound pos =  nbt.getCompoundTag("tilePos");
-			tilePos = new BlockPos(pos.getInteger("x"), pos.getInteger("y"), pos.getInteger("z"));
+			NBTTagCompound pos = nbt.getCompoundTag("tilePos");
+			dataManager.set(TILE_POS, new BlockPos(pos.getInteger("x"), pos.getInteger("y"), pos.getInteger("z")));
 		}
 		if (nbt.hasKey("facing")) {
 			dataManager.set(FACING, EnumFacing.getFront(nbt.getInteger("facing")));
@@ -84,9 +91,10 @@ public class EntityTurret extends EntityLiving {
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setTag("inventory", inventory.writeToNBT());
-		if (owner!=null) nbt.setString("owner", ownerUUID.toString());
-		if (tilePos != null) {
+		if (owner!=null) nbt.setString("owner", dataManager.get(OWNER_UUID));
+		if (TILE_POS != null) {
 			NBTTagCompound pos = new NBTTagCompound();
+			BlockPos tilePos = dataManager.get(TILE_POS);
 			pos.setInteger("x", tilePos.getX());
 			pos.setInteger("y", tilePos.getY());
 			pos.setInteger("z", tilePos.getZ());
@@ -96,12 +104,12 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
-		ownerUUID = owner.getUniqueID();
+		dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
 		this.owner = owner;
 		if (owner.getTeam() != null) {
 			dataManager.set(TEAM, owner.getTeam().getName());
 		}
-		tilePos = tile.getPos();
+		dataManager.set(TILE_POS, tile.getPos());
 		dataManager.set(FACING, facing);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
 		if (nbt.hasKey("health")) setHealth(nbt.getFloat("health"));
@@ -130,16 +138,25 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (!world.isRemote && tile == null) {
-			TileEntity tile = world.getTileEntity(tilePos);
+		if (tile == null) {
+			TileEntity tile = world.getTileEntity(dataManager.get(TILE_POS));
 			if (tile instanceof TileTurret) {
 				this.tile = (TileTurret) tile;
 				((TileTurret) tile).setEntity(this);
 			}
 		}
 		if (ticksExisted%5 == 0) {
+			if (world.isRemote && username == null) {
+				String uuidString = dataManager.get(OWNER_UUID);
+				if (DataUtils.isValidUUID(uuidString)) {
+					username = UsernameCache.getLastKnownUsername(UUID.fromString(uuidString));
+				}
+				if (username == null) username = uuidString;
+			}
 			if (owner == null || owner.isDead |! owner.isAddedToWorld()) {
-				if (!world.isRemote) owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(ownerUUID);
+				String uuidString = dataManager.get(OWNER_UUID);
+				if (!world.isRemote && DataUtils.isValidUUID(uuidString)) owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(uuidString));
+
 			}
 			//data check owner and update team accordingly
 			if (owner != null) {
@@ -167,9 +184,8 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
 		if (tile != null &! world.isRemote) {
-			BlockPos pos = tile.getPos();
-			if ((getTeam() == null && player.getTeam() == null) ||
-					getTeam().equals(player.getTeam())) {
+			if (isSameTeam(player)) {
+				BlockPos pos = tile.getPos();
 				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
 				return EnumActionResult.SUCCESS;
 			}
@@ -180,9 +196,10 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
-		if (tilePos!=null) {
-			world.destroyBlock(tilePos, false);
-			world.removeTileEntity(tilePos);
+		BlockPos pos = dataManager.get(TILE_POS);
+		if (TILE_POS!=null) {
+			world.destroyBlock(pos, false);
+			world.removeTileEntity(pos);
 		}
 	}
 
@@ -213,12 +230,18 @@ public class EntityTurret extends EntityLiving {
 		return world.getScoreboard().getTeam(dataManager.get(TEAM));
 	}
 
+	public boolean isSameTeam(Entity entity) {
+		if (getTeam() == null) return entity.getTeam() == null;
+		return getTeam().equals(entity.getTeam());
+	}
+
 	public EntityPlayer getOwner() {
 		return owner;
 	}
 
 	public UUID getOwnerUUID() {
-		return ownerUUID;
+		String uuidString = dataManager.get(OWNER_UUID);
+		return DataUtils.isValidUUID(uuidString) ? UUID.fromString(uuidString) : null;
 	}
 
 	public EnumFacing getFacing() {
@@ -227,5 +250,10 @@ public class EntityTurret extends EntityLiving {
 
 	public InventoryTurret getInventory() {
 		return inventory;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public String getOwnerUsername() {
+		return username;
 	}
 }

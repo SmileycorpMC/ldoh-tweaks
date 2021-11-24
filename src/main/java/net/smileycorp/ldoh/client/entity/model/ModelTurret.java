@@ -140,6 +140,22 @@ public class ModelTurret extends ModelBase {
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		if (entity != null) {
+			if (entity.getTeam()!=null) {
+				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
+				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
+			}
+		} else {
+			gun_middle.rotateAngleZ=(0.0261799388f*age);
+		}
+		base.render(scale);
+		GlStateManager.color(1, 1, 1);
+		axel.render(scale);
+		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch, float scale, Entity entity) {
+		if (entity != null) {
 			switch (((EntityTurret) entity).getFacing()) {
 			case UP: break;
 			case DOWN:
@@ -167,24 +183,10 @@ public class ModelTurret extends ModelBase {
 				break;
 
 			}
-			if (entity.getTeam()!=null) {
-				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
-				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
-			}
-		} else {
-			gun_middle.rotateAngleZ=(0.0261799388f*age);
+			base.rotateAngleY = yaw;
+			axel.rotateAngleY = yaw;
+			axel.rotateAngleX = pitch;
 		}
-		base.render(scale);
-		GlStateManager.color(1, 1, 1);
-		axel.render(scale);
-		GlStateManager.popMatrix();
-	}
-
-	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch, float scale, Entity entity) {
-		base.rotateAngleY = yaw;
-		axel.rotateAngleY = yaw;
-		axel.rotateAngleX = pitch;
 	}
 
 	/**
