@@ -18,7 +18,7 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 
-public class Turret extends GuiContainer {
+public class GuiTurret extends GuiContainer {
 
 	public static ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/turret.png");
 	public static final String TRANSLATION_KEY = "entity.hundreddayz.Turret.name";
@@ -27,7 +27,7 @@ public class Turret extends GuiContainer {
 	protected ModelBase turretModel = new ModelTurret();
 	protected String owner = null;
 
-	public Turret(EntityTurret turret, EntityPlayer player) {
+	public GuiTurret(EntityTurret turret, EntityPlayer player) {
 		super(new ContainerTurret(turret, player));
 		this.turret = turret;
 		width = 176;
