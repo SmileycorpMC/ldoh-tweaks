@@ -14,12 +14,14 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -37,6 +39,8 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumAxis;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
+import net.tangotek.tektopia.entities.EntityVillagerTek;
+import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import com.mrcrayfish.guns.entity.EntityProjectile;
 
@@ -169,6 +173,11 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	@Override
 	public int getMaxMeta() {
 		return EnumBarbedWireMat.values().length * 2;
+	}
+
+	@Override
+	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
+		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.BLOCKED : super.getAiPathNodeType(state, world, pos, entity);
 	}
 
 }

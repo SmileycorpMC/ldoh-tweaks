@@ -103,8 +103,8 @@ public class MiniRaid implements IMiniRaid {
 					entity.setPosition(x+rand.nextFloat(), y, z+rand.nextFloat());
 					entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 					entity.enablePersistence();
-					if (type == RaidType.ALLY) entity.setGlowing(true);
-					else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 200));
+					if (type == RaidType.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
+					else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
 					world.spawnEntity(entity);
 					entity.tasks.addTask(1, new AIMiniRaid(entity, player));
 					System.out.println("Spawned " + entity + " at " + entity.getPosition());

@@ -3,7 +3,8 @@
   "package": "net.smileycorp.ldoh.mixin",
   "refmap": "mixins.ldoh.refmap.json",
   "mixins": [
-    "MixinEntityLiving"
+    "MixinEntityLiving",
+    "MixinBlock"
   ],
   "client": [],
   "server": []

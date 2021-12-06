@@ -3,10 +3,9 @@ package net.smileycorp.ldoh.common.entity.ai;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.util.ModUtils;
 
 public class AITurretTarget extends EntityAIBase {
 
@@ -35,11 +34,7 @@ public class AITurretTarget extends EntityAIBase {
 
 	private boolean canTarget(EntityLivingBase entity) {
 		if (turret.getDistance(entity)>60) return false;
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator())
-			if (turret.getTeam()!=null && entity.getTeam()!=null) {
-				if (!turret.getTeam().isSameTeam(entity.getTeam())) return true;
-			} else if (entity instanceof EntityMob) return true;
-		return false;
+		return ModUtils.canTarget(turret, entity);
 	}
 
 }

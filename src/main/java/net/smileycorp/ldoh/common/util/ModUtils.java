@@ -29,6 +29,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
@@ -36,6 +37,7 @@ import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.tangotek.tektopia.Village;
+import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 import biomesoplenty.api.biome.BOPBiomes;
@@ -126,7 +128,26 @@ public class ModUtils {
 		if (entity instanceof EntityTF2Character) {
 			ModUtils.addPlayerToTeam(player, entity.getTeam().getName());
 		}
+	}
 
+	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
+		if (target instanceof EntityPlayer &! ((EntityPlayer) target).isSpectator()) {
+			if (entity.getTeam()!=null) {
+				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
+			}
+		} else if (target instanceof EntityMob) {
+			if (entity.getTeam()!=null) {
+				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
+			} else return true;
+		}
+		return false;
+	}
+
+	public static boolean shouldHeal(EntityLivingBase entity, EntityLivingBase target) {
+		if (!canTarget(entity, target) || target instanceof EntityVillagerTek) {
+			if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
+		}
+		return false;
 	}
 
 	public static void spawnHorde(World world, BlockPos basepos) {

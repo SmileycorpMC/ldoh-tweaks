@@ -9,9 +9,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.ItemStackHandler;
+import net.smileycorp.followme.common.event.FollowUserEvent;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
@@ -34,6 +37,7 @@ import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IExhaustion;
+import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
@@ -41,7 +45,10 @@ import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import rafradek.TF2weapons.TF2weapons;
+import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
+import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.mercenary.EntityMedic;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
@@ -52,6 +59,7 @@ import rafradek.TF2weapons.item.ItemFromData;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
+import com.google.common.base.Predicates;
 
 public class TF2Events {
 
@@ -66,6 +74,10 @@ public class TF2Events {
 		//give spies baguettes
 		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
 			if (!((EntitySpy)entity).isRobot())  event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
+		}
+		//give engineer buildings persistence
+		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityBuilding) {
+			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
 		//give medics ability to cure
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
@@ -210,11 +222,6 @@ public class TF2Events {
 	public void onInfect(InfectionDeathEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.world;
-		//lets players kill tf2 mobs to stop infection
-		if (event.getSource().getTrueSource() instanceof EntityPlayer) {
-			event.setCanceled(true);
-			return;
-		}
 		if (entity instanceof EntityTF2Character) {
 			//check the entity isn't a robot
 			if(!((EntityTF2Character) entity).isRobot()) {
@@ -235,10 +242,26 @@ public class TF2Events {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
-			//makes tf2 mercs avoid zombies more
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
-				merc.tasks.addTask(3, new EntityAIAvoidEntity(merc, EntityMob.class, 5.0F, 0.6D, 0.6D));
+				//makes tf2 mercs avoid zombies more
+				merc.tasks.addTask(3, new EntityAIAvoidEntity(merc, EntityZombie.class, 5.0F, 0.6D, 0.6D));
+				//redo targeting ai
+				merc.targetTasks.taskEntries.clear();
+				if (entity instanceof EntityMedic) {
+					//medic heal targeting
+					merc.targetTasks.addTask(1, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e)->ModUtils.shouldHeal(merc, e), false, true) {
+						@Override
+						public boolean shouldExecute() {
+							return ModUtils.shouldHeal(merc, targetEntity);
+						}
+					});
+					merc.targetTasks.addTask(2, new EntityAIHurtByTarget(merc, true));
+					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e)->ModUtils.canTarget(merc, e), true, false));
+				} else {
+					merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
+					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e)->ModUtils.canTarget(merc, e), true, false));
+				}
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
 					if (!tracker.isSpawned()) {
@@ -258,9 +281,19 @@ public class TF2Events {
 						((EntityTF2Character) entity).tasks.addTask(3, new AIModifiedMedigun(merc));
 					}
 				}
+				//sync capability data to clients
 				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
 				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
 				if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
+			//give persistence to tf2 buildings
+			} else if (entity instanceof EntityBuilding) {
+				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
+					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
+					if (!tracker.isSpawned()) {
+						((EntityBuilding) entity).enablePersistence();
+						tracker.setSpawned(true);
+					}
+				}
 			}
 		}
 	}
@@ -284,6 +317,19 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName() == "RED" ? "BLU" : "RED");
 				((EntityTF2Character) entity).setEntTeam(player.getTeam().getName() == "RED" ? 1 : 0);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFollow(FollowUserEvent event) {
+		EntityLivingBase user = event.user;
+		EntityLivingBase entity = event.getEntityLiving();
+		if (user.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityLiving) {
+			IFollowers cap = user.getCapability(LDOHCapabilities.FOLLOWERS, null);
+			if (cap.isFollowing((EntityLiving)entity)) {
+				cap.stopFollowing((EntityLiving)entity);
+				event.setCanceled(true);
 			}
 		}
 	}

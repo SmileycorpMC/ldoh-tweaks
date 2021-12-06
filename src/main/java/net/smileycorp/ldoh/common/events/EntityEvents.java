@@ -5,7 +5,6 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityHusk;
@@ -37,12 +36,12 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
+import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
@@ -56,17 +55,12 @@ import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
-import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
-import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.IDummyZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import net.tangotek.tektopia.entities.EntityArchitect;
-import net.tangotek.tektopia.entities.EntityNecromancer;
-import net.tangotek.tektopia.entities.EntityTradesman;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntitySentry;
@@ -75,9 +69,6 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class EntityEvents {
@@ -96,12 +87,23 @@ public class EntityEvents {
 		}
 	}
 
+	//hooks into the hordes infection event
+	//lets players kill infected mobs to stop infection
+	//highest priority to fire before our other handlers
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onInfect(InfectionDeathEvent event) {
+		if (event.getSource().getTrueSource() instanceof EntityPlayer) {
+			event.setCanceled(true);
+			return;
+		}
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
-		if (entity instanceof EntityNecromancer || entity instanceof EntityXPOrb) event.setCanceled(true);
+		if (entity instanceof EntityXPOrb) event.setCanceled(true);
 		if (!world.isRemote) {
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
@@ -230,20 +232,6 @@ public class EntityEvents {
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
 			}
 		}
-		//replaces architect with our own version that has our modified trades
-		if (entity instanceof EntityArchitect &! (entity instanceof EntityLDOHArchitect)) {
-			EntityLDOHArchitect architect = new EntityLDOHArchitect(world, (EntityArchitect) entity);
-			architect.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
-			world.spawnEntity(architect);
-			event.setCanceled(true);
-		}
-		//replaces tradesman with our own version that has our modified trades
-		else if (entity instanceof EntityTradesman &! (entity instanceof EntityLDOHTradesman)) {
-			EntityLDOHTradesman tradesman = new EntityLDOHTradesman(world, (EntityTradesman) entity);
-			tradesman.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
-			world.spawnEntity(tradesman);
-			event.setCanceled(true);
-		}
 	}
 
 	@SubscribeEvent
@@ -268,28 +256,6 @@ public class EntityEvents {
 					event.entity = new EntityTFZombie(world);
 				} else if (randInt < 45 - (world.getWorldTime()/24000)) {
 					event.entity = new EntityCrawlingZombie(world);
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onDeath(LivingDeathEvent event) {
-		EntityLivingBase entity = event.getEntityLiving();
-		World world = entity.world;
-		if (!world.isRemote) {
-			//replaces the tf2 character with an infected human if killed by a rupter
-			if (event.getSource().getTrueSource() instanceof EntityParasiteBase) {
-				if (entity instanceof EntityVillagerTek) {
-					EntityInfVillager newentity = new EntityInfVillager(world);
-					newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-					newentity.renderYawOffset=entity.renderYawOffset;
-					newentity.setPosition(entity.posX, entity.posY, entity.posZ);
-					entity.setDead();
-					world.spawnEntity(newentity);
-					SRPWorldData data = SRPWorldData.get(world);
-					data.setCurrentV(data.getCurrentV() + 1);
-					data.markDirty();
 				}
 			}
 		}

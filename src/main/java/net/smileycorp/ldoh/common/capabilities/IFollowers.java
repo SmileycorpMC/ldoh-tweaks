@@ -35,6 +35,8 @@ public interface IFollowers {
 	public void setUncrouching();
 
 	public boolean stopFollowing(EntityLiving entity);
+	
+	public boolean isFollowing(EntityLiving entity);
 
 	public void readFromNBT(NBTTagCompound compound);
 
@@ -166,6 +168,16 @@ public interface IFollowers {
 					if (attribute.hasModifier(ModUtils.FOLLOW_MODIFIER)) attribute.removeModifier(ModUtils.FOLLOW_MODIFIER);
 					followers.remove(target);
 					return true;
+				}
+			}
+			return false;
+		}
+		
+		@Override
+		public boolean isFollowing(EntityLiving entity) {
+			if (player!=null) {
+				for (WeakReference<EntityLiving> ref : followers) {
+					if (ref.get() == entity) return true;
 				}
 			}
 			return false;

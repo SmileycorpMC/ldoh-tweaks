@@ -10,6 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.SimpleStringMessage;
+import net.smileycorp.hordes.infection.CureEntityMessage;
+import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.client.ClientHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
@@ -27,6 +29,7 @@ public class PacketHandler {
 		NETWORK_INSTANCE.registerMessage(ClientStartEat.class, StartEatingMessage.class, 3, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncSleep.class, SyncSleepMessage.class, 5, Side.CLIENT);
+		NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 6, Side.CLIENT);
 	}
 
 	public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {
@@ -127,6 +130,25 @@ public class PacketHandler {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
 					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).setSleeping((EntityLiving) entity, message.isSleeping());
+				});
+			}
+			return null;
+		}
+	}
+	
+	public static class ClientSyncMedicCure implements IMessageHandler<SyncMedicCureMessage, IMessage> {
+
+		public ClientSyncMedicCure() {}
+
+		@Override
+		public IMessage onMessage(SyncMedicCureMessage message, MessageContext ctx) {
+			if (ctx.side == Side.CLIENT) {
+				Minecraft.getMinecraft().addScheduledTask(() -> {
+					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
+					if (entity instanceof EntityLiving) {
+						((EntityLiving) entity).removePotionEffect(HordesInfection.INFECTED);
+						net.smileycorp.hordes.client.ClientHandler.processCureEntityMessage(new CureEntityMessage(entity));
+					}
 				});
 			}
 			return null;
