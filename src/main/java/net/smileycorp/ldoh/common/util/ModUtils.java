@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -24,6 +25,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
@@ -31,6 +33,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.IVillageData;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
@@ -131,12 +135,9 @@ public class ModUtils {
 	}
 
 	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
-		if (target instanceof EntityPlayer &! ((EntityPlayer) target).isSpectator()) {
-			if (entity.getTeam()!=null) {
-				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
-			}
-		} else if (target instanceof EntityMob) {
-			if (entity.getTeam()!=null) {
+		if (entity != null && target != null) {
+			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
+			if (entity.getTeam()!=null && (target.getTeam()!=null || target instanceof EntityMob)) {
 				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
 			} else return true;
 		}
@@ -144,10 +145,34 @@ public class ModUtils {
 	}
 
 	public static boolean shouldHeal(EntityLivingBase entity, EntityLivingBase target) {
-		if (!canTarget(entity, target) || target instanceof EntityVillagerTek) {
-			if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
+		if (entity != null && target != null) {
+			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
+			if (!canTarget(entity, target) || target instanceof EntityVillagerTek) {
+				if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
+			}
 		}
 		return false;
+	}
+
+	public static BlockPos readPosFromNBT(NBTTagCompound nbt) {
+		return new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
+	}
+
+	public static NBTTagCompound writePosToNBT(BlockPos pos) {
+		NBTTagCompound nbt = new NBTTagCompound();
+		if (pos != null) {
+			nbt.setInteger("x", pos.getX());
+			nbt.setInteger("y", pos.getY());
+			nbt.setInteger("z", pos.getZ());
+		}
+		return nbt;
+	}
+
+	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
+		IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
+		if (!cap.hasVillage()) return false;
+		BlockPos village = cap.getVillage().getCenter();
+		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 120;
 	}
 
 	public static void spawnHorde(World world, BlockPos basepos) {
@@ -197,4 +222,5 @@ public class ModUtils {
 		}
 		return new EntityZombie(world);
 	}
+
 }

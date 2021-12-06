@@ -10,6 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.tangotek.tektopia.ModItems;
 import net.tangotek.tektopia.ProfessionType;
@@ -62,6 +63,9 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 						entity.setPosition(target.posX, target.posY, target.posZ);
 						entity.renderYawOffset = target.renderYawOffset;
 						entity.setCustomNameTag(target.getCustomNameTag());
+						if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && villager.hasVillage()) {
+							entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null).setVillage(villager.getVillage());
+						}
 						target.setDead();
 						world.spawnEntity(entity);
 						player.playSound(SoundEvents.ENTITY_ILLAGER_CAST_SPELL, 1.0F, 1.0F);

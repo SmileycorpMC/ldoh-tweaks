@@ -101,8 +101,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 		if (!canPlaceBlockAt(world, pos)) {
 			if (state.getValue(PRIMED)) explode(world, pos);
 			else {
-				dropBlockAsItem(world, pos, state, 0);
-				world.setBlockToAir(pos);
+				world.destroyBlock(fromPos, true);
 			}
 		}
 	}

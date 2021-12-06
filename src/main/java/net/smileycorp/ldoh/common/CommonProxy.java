@@ -1,6 +1,5 @@
 package net.smileycorp.ldoh.common;
 
-import goblinbob.mobends.core.addon.AddonHelper;
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -9,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,6 +33,8 @@ import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker.SpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
+import net.smileycorp.ldoh.common.capabilities.IVillageData;
+import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
 import net.smileycorp.ldoh.common.capabilities.MiniRaid;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
@@ -71,7 +73,7 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {
 		//Mobends support for nurse model
-		AddonHelper.registerAddon(ModDefinitions.MODID, new LDOHMobendsAddon());
+		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 		//Register Capabilities
 		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), () -> new SpawnTracker());
 		CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));
@@ -82,6 +84,7 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
 		CapabilityManager.INSTANCE.register(IExhaustion.class, new IExhaustion.Storage(), () -> new Exhaustion());
+		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), () -> new VillageData());
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 
 			@Override

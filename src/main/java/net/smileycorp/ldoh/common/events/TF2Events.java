@@ -12,7 +12,6 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,12 +39,13 @@ import net.smileycorp.ldoh.common.capabilities.IExhaustion;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
+import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import rafradek.TF2weapons.TF2weapons;
+import net.tangotek.tektopia.VillageManager;
 import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
@@ -59,7 +59,6 @@ import rafradek.TF2weapons.item.ItemFromData;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-import com.google.common.base.Predicates;
 
 public class TF2Events {
 
@@ -86,6 +85,10 @@ public class TF2Events {
 		//give mercs exhaustion/sleeping
 		if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Exhaustion"), new IExhaustion.Provider());
+		}
+		//give mercs home village
+		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
+			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
 		}
 	}
 
@@ -285,6 +288,15 @@ public class TF2Events {
 				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
 				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
 				if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
+				//fetch closest village to entities that were spawned in one
+				if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
+					IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
+					if (cap.shouldHaveVillage() &! cap.hasVillage()) {
+						VillageManager villages = VillageManager.get(world);
+						cap.setVillage(villages);
+					}
+				}
+
 			//give persistence to tf2 buildings
 			} else if (entity instanceof EntityBuilding) {
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
@@ -320,7 +332,7 @@ public class TF2Events {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onFollow(FollowUserEvent event) {
 		EntityLivingBase user = event.user;
