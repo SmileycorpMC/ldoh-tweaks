@@ -15,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -170,13 +169,21 @@ public class EntityTurret extends EntityLiving {
 			}
 		}
 		if (hasTarget()) {
-			EnumFacing placement = getFacing();
-			if (placement.getAxis() == Axis.X) {
-
-			} else if (placement.getAxis() == Axis.Y) {
-
-			} else if (placement.getAxis() == Axis.Z) {
-
+			//Vec3d dir = DirectionUtils.getDirectionVec(this, target);
+			switch (getFacing()) {
+			case UP:
+				getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ, 12, 12);
+				break;
+			case DOWN:
+				break;
+			case NORTH:
+				break;
+			case SOUTH:
+				break;
+			case EAST:
+				break;
+			case WEST:
+				break;
 			}
 		}
 	}

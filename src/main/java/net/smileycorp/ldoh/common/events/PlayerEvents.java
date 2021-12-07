@@ -82,20 +82,22 @@ public class PlayerEvents {
 			World world = player.world;
 			if (!world.isRemote) {
 				//lava bucket breaking
-				if (player.inventory.hasItemStack(new ItemStack(Items.LAVA_BUCKET))) {
-					//20% chance every second
-					if (player.ticksExisted%20 == 0 && world.rand.nextInt(5)==0) {
-						//place lava and destroy bucket
-						world.setBlockState(player.getPosition(), Blocks.LAVA.getDefaultState());
-						if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).shrink(1);
-						else for (ItemStack stack : player.inventory.mainInventory) {
-							if (stack.getItem() == Items.LAVA_BUCKET) stack.shrink(1);
-							break;
+				if (!player.isCreative()) {
+					if (player.inventory.hasItemStack(new ItemStack(Items.LAVA_BUCKET))) {
+						//20% chance every second
+						if (player.ticksExisted%20 == 0 && world.rand.nextInt(5)==0) {
+							//place lava and destroy bucket
+							world.setBlockState(player.getPosition(), Blocks.LAVA.getDefaultState());
+							if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).shrink(1);
+							else for (ItemStack stack : player.inventory.mainInventory) {
+								if (stack.getItem() == Items.LAVA_BUCKET) stack.shrink(1);
+								break;
+							}
+							((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
+							ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_BREAK_MESSAGE);
+							text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
+							player.sendMessage(text);
 						}
-						((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
-						ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_BREAK_MESSAGE);
-						text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-						player.sendMessage(text);
 					}
 				}
 				//follower stopping

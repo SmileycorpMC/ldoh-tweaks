@@ -137,13 +137,16 @@ public class ModelTurret extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scale) {
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		if (entity != null) {
 			if (entity.getTeam()!=null) {
 				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
 				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
 			}
+			base.rotateAngleY = headYaw;
+			axel.rotateAngleY = headYaw;
+			axel.rotateAngleX = headPitch;
 		} else {
 			gun_middle.rotateAngleZ=(0.0261799388f*age);
 		}
@@ -181,11 +184,7 @@ public class ModelTurret extends ModelBase {
 				GlStateManager.rotate(90, 1, 0, 0);
 				GlStateManager.translate(0, -1.25, -1.25);
 				break;
-
 			}
-			base.rotateAngleY = yaw;
-			axel.rotateAngleY = yaw;
-			axel.rotateAngleX = pitch;
 		}
 	}
 

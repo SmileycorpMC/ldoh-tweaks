@@ -25,6 +25,7 @@ public class MixinBlock {
 
 	@Inject(at=@At("HEAD"), method = "getAiPathNodeType(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/entity/EntityLiving;)Lnet/minecraft/pathfinding/PathNodeType;", cancellable = true, remap = false)
 	public void getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity, CallbackInfoReturnable<PathNodeType> callback) {
+		System.out.println("block mixin");
 		if (state.getBlock() == Blocks.FIRE && (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek)) {
 			callback.setReturnValue(PathNodeType.BLOCKED);
 			callback.cancel();
