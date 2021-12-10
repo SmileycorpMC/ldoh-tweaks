@@ -138,6 +138,7 @@ public class ModelTurret extends ModelBase {
 
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
+		//System.out.println(headYaw + ", " + headPitch);
 		GlStateManager.pushMatrix();
 		if (entity != null) {
 			if (entity.getTeam()!=null) {
@@ -158,6 +159,7 @@ public class ModelTurret extends ModelBase {
 
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch, float scale, Entity entity) {
+		//System.out.println(yaw + ", " + pitch);
 		if (entity != null) {
 			switch (((EntityTurret) entity).getFacing()) {
 			case UP: break;

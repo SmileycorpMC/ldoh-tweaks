@@ -1,0 +1,17 @@
+{
+  "mappings": {
+    "net/smileycorp/ldoh/mixin/MixinEntityLiving": {
+      "processInitialInteract(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;)Z": "Lnet/minecraft/entity/EntityLiving;func_184230_a(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;)Z"
+    },
+	"net/smileycorp/ldoh/mixin/MixinBlock": {
+      "getAiPathNodeType(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/entity/EntityLiving;)Lnet/minecraft/pathfinding/PathNodeType;": ";net/minecraft/block/Block;getAiPathNodeType(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/entity/EntityLiving;)Lnet/minecraft/pathfinding/PathNodeType;"
+    }
+  },
+  "data": {
+    "searge": {
+      "net/smileycorp/ldoh/mixin/MixinEntityLiving": {
+        "processInitialInteract(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;)Z": "Lnet/minecraft/entity/EntityLiving;func_184230_a(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;)Z"
+      }
+    }
+  }
+}

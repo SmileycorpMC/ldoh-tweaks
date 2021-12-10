@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombie;
@@ -258,12 +259,12 @@ public class TF2Events {
 							return ModUtils.shouldHeal(merc, targetEntity);
 						}
 					};
-					/*merc.targetTasks.addTask(1, ai);
+					merc.targetTasks.addTask(1, ai);
 					merc.targetTasks.addTask(2, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));*/
+					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));
 				} else {
-					/*merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));*/
+					merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
+					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));
 				}
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);

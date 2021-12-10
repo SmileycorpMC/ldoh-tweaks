@@ -8,14 +8,19 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 public class TileHordeSpawner extends TileEntity implements ITickable {
 
 	private boolean spawned = false;
+	private boolean isNatural = false;
 
 	@Override
 	public void update() {
 		if (!world.isRemote &! spawned) {
-			ModUtils.spawnHorde(world, pos);
+			ModUtils.spawnHorde(world, pos, isNatural);
 			spawned = true;
 			BlockHordeSpawner.breakBlock(world, pos);
 		}
+	}
+
+	public void setNatural() {
+		isNatural = true;
 	}
 
 }

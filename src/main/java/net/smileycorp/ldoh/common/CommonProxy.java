@@ -44,6 +44,7 @@ import net.smileycorp.ldoh.common.events.EntityEvents;
 import net.smileycorp.ldoh.common.events.PlayerEvents;
 import net.smileycorp.ldoh.common.events.SpawnerEvents;
 import net.smileycorp.ldoh.common.events.TF2Events;
+import net.smileycorp.ldoh.common.events.TektopiaEvents;
 import net.smileycorp.ldoh.common.events.WorldEvents;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.network.PacketHandler;
@@ -58,6 +59,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EntityEvents());
 		MinecraftForge.EVENT_BUS.register(new PlayerEvents());
 		MinecraftForge.EVENT_BUS.register(new SpawnerEvents());
+		MinecraftForge.EVENT_BUS.register(new TektopiaEvents());
 		MinecraftForge.EVENT_BUS.register(new TF2Events());
 		MinecraftForge.EVENT_BUS.register(new WorldEvents());
 		MinecraftForge.ORE_GEN_BUS.register(new WorldEvents());

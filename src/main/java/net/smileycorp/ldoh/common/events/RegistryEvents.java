@@ -35,6 +35,7 @@ import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
 import net.smileycorp.ldoh.common.item.ItemBarbedWire;
+import net.smileycorp.ldoh.common.item.ItemBlockLDOH;
 import net.smileycorp.ldoh.common.item.ItemBlockTooltip;
 import net.smileycorp.ldoh.common.item.ItemTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
@@ -66,6 +67,7 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
+		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 
 	private static void registerItem(IForgeRegistry<Item> registry, Item item) {

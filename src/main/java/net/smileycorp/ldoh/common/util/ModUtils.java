@@ -139,7 +139,7 @@ public class ModUtils {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
 			if (entity.getTeam()!=null && (target.getTeam()!=null || target instanceof EntityMob)) {
 				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
-			} else return true;
+			}
 		}
 		return false;
 	}
@@ -147,8 +147,10 @@ public class ModUtils {
 	public static boolean shouldHeal(EntityLivingBase entity, EntityLivingBase target) {
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (!canTarget(entity, target) || target instanceof EntityVillagerTek) {
-				if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
+			if (target instanceof EntityPlayer || target instanceof EntityVillagerTek || target instanceof EntityTF2Character) {
+				if (!canTarget(entity, target)) {
+					if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
+				}
 			}
 		}
 		return false;
@@ -175,12 +177,12 @@ public class ModUtils {
 		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 120;
 	}
 
-	public static void spawnHorde(World world, BlockPos basepos) {
+	public static void spawnHorde(World world, BlockPos basepos, boolean isNatural) {
 		Random rand = world.rand;
 		int day = Math.round(world.getWorldTime()/24000);
 		int c = day >= 101 ? 20 : day>= 50 ? day-40 : -1;
 		boolean isParasite = day >= 50 && rand.nextInt(100) <= c;
-		if (world.getSpawnPoint().getDistance(basepos.getX(), basepos.getY(), basepos.getZ()) >= 200) {
+		if (!isNatural || world.getSpawnPoint().getDistance(basepos.getX(), basepos.getY(), basepos.getZ()) >= 200) {
 			for (int i = 0; i < getRandomSize(rand); i++) {
 				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);

@@ -21,7 +21,7 @@ commands.hundreddayz.SpawnRaid.success=Successfully spawned %1$s raid.
 commands.hundreddayz.SpawnRaid.invalidValue=%1$s is an invalid parameter for /spawnRaid
 commands.hundreddayz.SpawnRaid.teamFail=you must be on the RED or BLU team to spawn a %1$s raid.
 
-itemGroup.hundreddayz.HundredDayzTab=100 Dayz Tweaks
+itemGroup.hundreddayz.HundredDayzTab=LDoH Tweaks
 
 item.hundreddayz.TFProfessionToken.demoman.name=Demoman
 item.hundreddayz.TFProfessionToken.engineer.name=Engineer
@@ -50,6 +50,7 @@ tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
 tile.hundreddayz.Landmine.name=Landmine
 tile.hundreddayz.Turret.name=Sentry Turret
+tile.hundreddayz.HordeSpawner.name=Horde Spawner
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
