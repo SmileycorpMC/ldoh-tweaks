@@ -6,6 +6,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.item.LDOHItems;
+
+import com.mrcrayfish.guns.init.ModGuns;
 
 public class InventoryTurret extends InventoryBasic {
 
@@ -14,7 +17,7 @@ public class InventoryTurret extends InventoryBasic {
 	}
 
 	public int getAmmoSlot() {
-		for(int i = inventoryContents.size()-1; i > 0; i--) {
+		for(int i = inventoryContents.size()-1; i >= 0; i--) {
 			if (isAmmo(inventoryContents.get(i))) return i;
 		}
 		return -1;
@@ -22,7 +25,7 @@ public class InventoryTurret extends InventoryBasic {
 
 	private boolean isAmmo(ItemStack stack) {
 		Item item = stack.getItem();
-		return false;
+		return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
 	}
 
 	public boolean hasAmmo() {
@@ -35,6 +38,11 @@ public class InventoryTurret extends InventoryBasic {
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		ItemStackHelper.loadAllItems(nbt, inventoryContents);
+	}
+
+	public ItemStack getAmmo() {
+		int slot = getAmmoSlot();
+		return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
 	}
 
 }

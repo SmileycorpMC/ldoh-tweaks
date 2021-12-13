@@ -78,6 +78,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 
 	@Override
 	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
+		if(side != EnumFacing.UP) return false;
 		return world.isBlockFullCube(pos.offset(side.getOpposite()));
 	}
 

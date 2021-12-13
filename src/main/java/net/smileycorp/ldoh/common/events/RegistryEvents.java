@@ -26,6 +26,7 @@ import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
+import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
@@ -170,6 +171,10 @@ public class RegistryEvents {
 				.id(ModDefinitions.getResource("turret"), ID++)
 				.name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build();
 		registry.register(TURRET);
+		EntityEntry INCENDIARY_PROJECTILE = EntityEntryBuilder.create().entity(EntityIncendiaryProjectile.class)
+				.id(ModDefinitions.getResource("incendiary_projectile"), ID++)
+				.name(ModDefinitions.getName("IncendiaryProjectile")).tracker(64, 80, true).build();
+		registry.register(INCENDIARY_PROJECTILE);
 	}
 
 }

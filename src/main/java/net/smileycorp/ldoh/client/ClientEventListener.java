@@ -67,6 +67,9 @@ import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+import com.mrcrayfish.guns.client.gui.DisplayProperty;
+import com.mrcrayfish.guns.client.gui.GuiWorkbench;
+
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
 public class ClientEventListener {
 
@@ -111,6 +114,7 @@ public class ClientEventListener {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
 		//register turret item renderer
 		Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
+		GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.INCENDIARY_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
 	}
 
 	@SubscribeEvent

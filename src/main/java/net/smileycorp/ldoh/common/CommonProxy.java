@@ -2,6 +2,8 @@ package net.smileycorp.ldoh.common;
 
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,6 +40,7 @@ import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
 import net.smileycorp.ldoh.common.capabilities.MiniRaid;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
+import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.events.ApocalypseEvents;
 import net.smileycorp.ldoh.common.events.EntityEvents;
@@ -47,9 +50,14 @@ import net.smileycorp.ldoh.common.events.TF2Events;
 import net.smileycorp.ldoh.common.events.TektopiaEvents;
 import net.smileycorp.ldoh.common.events.WorldEvents;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
+
+import com.mrcrayfish.guns.common.WorkbenchRegistry;
+import com.mrcrayfish.guns.item.AmmoRegistry;
+import com.mrcrayfish.guns.item.ItemAmmo;
 
 public class CommonProxy {
 
@@ -114,6 +122,10 @@ public class CommonProxy {
 			}
 
 		});
+		//add incendiary ammo
+		AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);
+		WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
+				new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {

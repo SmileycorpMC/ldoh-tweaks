@@ -73,7 +73,7 @@ public class GuiTurret extends GuiContainer {
         GlStateManager.translate(x+36, y+16, 40);
         GlStateManager.rotate(-30, 1, 0, 0);
         GlStateManager.rotate(135, 0, 1, 0);
-        turretModel.render(turret, 0, 0, 0, turret.rotationYaw, turret.rotationPitch, 2);
+        turretModel.render(turret, 0, 0, 0, 0, 0, 2);
         GlStateManager.popMatrix();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();

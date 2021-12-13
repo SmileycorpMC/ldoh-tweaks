@@ -54,6 +54,7 @@ import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
+import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
@@ -68,6 +69,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.animania.api.interfaces.IAnimaniaAnimal;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class EntityEvents {
@@ -269,6 +271,11 @@ public class EntityEvents {
 			if ((attacker instanceof EntityHusk) && world.rand.nextInt(10)==0) {
 				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
 			}
+		}
+		if (attacker instanceof EntityIncendiaryProjectile) {
+			if (entity instanceof EntityParasiteBase) event.setAmount(event.getAmount() * 3f);
+			else event.setAmount(event.getAmount() * 0.7f);
+			entity.setFire(2);
 		}
 	}
 

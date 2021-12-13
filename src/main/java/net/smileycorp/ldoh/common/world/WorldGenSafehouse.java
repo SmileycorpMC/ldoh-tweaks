@@ -8,8 +8,10 @@ import java.util.Random;
 
 import jds.bibliocraft.blocks.BiblioWoodBlock.EnumWoodType;
 import jds.bibliocraft.blocks.BlockSeat;
+import mariot7.xlfoodmod.init.BlockListxlfoodmod;
 import net.blay09.mods.cookingforblockheads.block.BlockFridge;
 import net.blay09.mods.cookingforblockheads.tile.TileFridge;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockButton;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockHorizontal;
@@ -55,6 +57,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 	private boolean isHalloween = false;
 	private boolean isChristmas = false;
 	private boolean isAprilFools = false;
+	private boolean isAnniversary = false;
+
+	private Block[] cakes = {Blocks.CAKE, BlockListxlfoodmod.chocolate_cake, BlockListxlfoodmod.oreo_cake, BlockListxlfoodmod.cheese_cake, BlockListxlfoodmod.strawberry_cake, BlockListxlfoodmod.pumpkin_cake};
 
 	private BlockPos basepos = null;
 	private BlockPos exitpos = null;
@@ -64,8 +69,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 
 	public WorldGenSafehouse() {
 		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 17)) isHalloween = true;
-		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 18) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() <= 2)) isChristmas = true;
+		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 11) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() <= 2)) isChristmas = true;
 		else if ((time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1) || new Random().nextInt(256) == 0) isAprilFools = true;
+		else if ((time.getMonth() == Month.MAY && time.getDayOfMonth() == 21) || (time.getMonth() == Month.JUNE && time.getDayOfMonth() == 2)) isAnniversary = true;
 	}
 
 	public boolean markPositions(World world, BlockPos pos, boolean forced) {
@@ -233,7 +239,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 		}
 		world.setBlockState(pos.add(-4, 0, -2), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
 		world.setBlockState(pos.add(-2, 0, -3), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
-		world.setBlockState(pos.add(-3, 1, -3), FurnitureBlocks.PLATE.getDefaultState(), 18);
+		Block block = FurnitureBlocks.PLATE;
+		if (isAnniversary) block = cakes[rand.nextInt(cakes.length)];
+		else world.setBlockState(pos.add(-3, 1, -3), block.getDefaultState(), 18);
 		if (exitpos.getY() != 0) {
 			for (int i = -1; i<2; i++) {
 				for (int j = 0; j<=2; j++) {

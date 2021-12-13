@@ -16,5 +16,6 @@ public class LDOHItems {
 	public static final Item HARDHAT = new ItemHelmet("Hardhat", 100, 2, 0f);
 	public static final Item BONESAW = new ItemWeapon("Bonesaw", 151, 5.5);
 	public static final Item TF_PROF_TOKEN = new ItemTFProfessionToken();
+	public static final Item INCENDIARY_AMMO = new ItemIncendiaryAmmo();
 
 }

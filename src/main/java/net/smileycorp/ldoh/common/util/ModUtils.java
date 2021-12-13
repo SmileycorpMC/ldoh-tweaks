@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.util;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -7,6 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -18,8 +20,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -135,16 +139,18 @@ public class ModUtils {
 	}
 
 	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
+		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (entity.getTeam()!=null && (target.getTeam()!=null || target instanceof EntityMob)) {
-				if (!entity.getTeam().isSameTeam(target.getTeam())) return true;
-			}
+			if (entity.getTeam() != null) if (target.getTeam() != null || target instanceof EntityMob)
+				return !entity.getTeam().isSameTeam(target.getTeam());
+			else return entity instanceof EntityMob &!(entity instanceof EntityTF2Character);
 		}
 		return false;
 	}
 
 	public static boolean shouldHeal(EntityLivingBase entity, EntityLivingBase target) {
+		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
 			if (target instanceof EntityPlayer || target instanceof EntityVillagerTek || target instanceof EntityTF2Character) {
@@ -175,6 +181,26 @@ public class ModUtils {
 		if (!cap.hasVillage()) return false;
 		BlockPos village = cap.getVillage().getCenter();
 		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 120;
+	}
+
+	public static RayTraceResult rayTrace(World world, EntityLivingBase entity, float distance) {
+		Vec3d eyepos = entity.getPositionEyes(1f);
+		Vec3d lookangle = entity.getLook(1f);
+		Vec3d lastVec = eyepos.addVector(lookangle.x, lookangle.y, lookangle.z);
+		RayTraceResult blockRay = world.rayTraceBlocks(eyepos, eyepos.addVector(lookangle.x * distance, lookangle.y * distance, lookangle.z * distance), false, false, true);
+		for (int x = 0; x <16*distance; x++) {
+			float reach = x/16f;
+			Vec3d vec = eyepos.addVector(lookangle.x*reach, lookangle.y*reach, lookangle.z*reach);
+			if (blockRay == null || blockRay.hitVec == null) return new RayTraceResult(lookangle, null);
+			if (blockRay.hitVec.distanceTo(eyepos) < vec.distanceTo(eyepos)) break;
+			AxisAlignedBB AABB = new AxisAlignedBB(lastVec.x, lastVec.y, lastVec.z, vec.x, vec.y, vec.z);
+			List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(entity, AABB);
+			if (!entities.isEmpty()) {
+				return new RayTraceResult(entities.get(0), lookangle);
+			}
+			lastVec = vec;
+		}
+		return blockRay;
 	}
 
 	public static void spawnHorde(World world, BlockPos basepos, boolean isNatural) {

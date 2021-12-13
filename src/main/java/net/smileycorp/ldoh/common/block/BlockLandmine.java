@@ -161,7 +161,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 				entity.attackEntityFrom(LDOHTweaks.SHRAPNEL_DAMAGE, (float) Math.exp(3.4-entity.getDistance(x, y, z)));
 			}
 		}
-		Explosion explosion = world.createExplosion(null, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, 3, false);
+		Explosion explosion = world.createExplosion(null, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, 4, false);
 		for (int i = -1; i <=1; i++) {
 			for (int k = -1; k <=1; k++) {
 				if (Math.abs(i)!=Math.abs(k) || i == 0) {

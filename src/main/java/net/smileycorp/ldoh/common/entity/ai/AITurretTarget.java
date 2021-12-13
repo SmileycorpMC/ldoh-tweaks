@@ -11,11 +11,8 @@ public class AITurretTarget extends EntityAIBase {
 
 	protected final EntityTurret turret;
 
-	protected AxisAlignedBB targetArea;
-
 	public AITurretTarget(EntityTurret turret) {
 		this.turret = turret;
-		targetArea = new AxisAlignedBB(turret.posX - 60, turret.posY - 60, turret.posZ - 60, turret.posX + 60, turret.posY - 60, turret.posZ - 60);
 	}
 
 	@Override
@@ -24,8 +21,9 @@ public class AITurretTarget extends EntityAIBase {
 	}
 
 	@Override
-	public void startExecuting() {
-		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class, targetArea, (e)->canTarget(e))) {
+	public void updateTask() {
+		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
+				new AxisAlignedBB(turret.posX - 60, turret.posY - 60, turret.posZ - 60, turret.posX + 60, turret.posY + 60, turret.posZ + 60), (e) -> canTarget(e))) {
 			turret.getEntitySenses().canSee(entity);
 			turret.setTarget(entity);
 			return;
@@ -33,7 +31,7 @@ public class AITurretTarget extends EntityAIBase {
 	}
 
 	private boolean canTarget(EntityLivingBase entity) {
-		if (turret.getDistance(entity)>60) return false;
+		if (turret.getDistance(entity) > 60) return false;
 		return ModUtils.canTarget(turret, entity);
 	}
 

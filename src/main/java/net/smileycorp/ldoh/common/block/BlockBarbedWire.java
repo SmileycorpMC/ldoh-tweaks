@@ -179,7 +179,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
-		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.BLOCKED : super.getAiPathNodeType(state, world, pos, entity);
+		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.DAMAGE_CACTUS : super.getAiPathNodeType(state, world, pos, entity);
 	}
 
 }

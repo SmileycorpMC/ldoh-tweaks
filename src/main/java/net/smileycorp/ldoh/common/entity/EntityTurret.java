@@ -4,8 +4,10 @@ import java.util.UUID;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -25,20 +27,23 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.ldoh.common.LDOHTweaks;
+import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
+import net.smileycorp.ldoh.common.util.ModUtils;
 
 public class EntityTurret extends EntityLiving {
 
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
+	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
 
 	//read these values from the nbt and cache them to make sure it gets loaded / synced properly
 	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
 	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 
-	protected Entity target = null;
+	protected EntityLivingBase target = null;
 	protected InventoryTurret inventory = new InventoryTurret();
 
 	protected EntityPlayer owner = null;
@@ -55,6 +60,7 @@ public class EntityTurret extends EntityLiving {
 		super.entityInit();
 		dataManager.register(TEAM, "");
 		dataManager.register(FACING, EnumFacing.UP);
+		dataManager.register(COOLDOWN, 0);
 		dataManager.register(TILE_POS, null);
 		dataManager.register(OWNER_UUID, "");
 	}
@@ -70,6 +76,7 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	protected void initEntityAI() {
 		targetTasks.addTask(1, new AITurretTarget(this));
+		tasks.addTask(1, new AITurretShoot(this));
 	}
 
 	@Override
@@ -84,6 +91,8 @@ public class EntityTurret extends EntityLiving {
 		if (nbt.hasKey("facing")) {
 			dataManager.set(FACING, EnumFacing.getFront(nbt.getInteger("facing")));
 		}
+		if (nbt.hasKey("yaw")) rotationYaw = nbt.getFloat("yaw");
+		if (nbt.hasKey("pitch")) rotationPitch = nbt.getFloat("pitch");
 	}
 
 	@Override
@@ -100,6 +109,8 @@ public class EntityTurret extends EntityLiving {
 			nbt.setTag("tilePos", pos);
 		}
 		nbt.setInteger("facing", dataManager.get(FACING).ordinal());
+		nbt.setFloat("yaw", rotationYaw);
+		nbt.setFloat("pitch", rotationPitch);
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
@@ -172,9 +183,10 @@ public class EntityTurret extends EntityLiving {
 			//Vec3d dir = DirectionUtils.getDirectionVec(this, target);
 			switch (getFacing()) {
 			case UP:
-				getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ, 12, 12);
+				getLookHelper().setLookPosition(target.posX, target.posY + 0.5, target.posZ, 12, 12);
 				break;
 			case DOWN:
+				getLookHelper().setLookPosition(target.posX, posY-target.posY + 0.5, target.posZ, 12, 12);
 				break;
 			case NORTH:
 				break;
@@ -186,6 +198,7 @@ public class EntityTurret extends EntityLiving {
 				break;
 			}
 		}
+		if (getCooldown() > 0) setCooldown(getCooldown()-1);
 	}
 
 	@Override
@@ -211,14 +224,16 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public boolean hasTarget() {
-		return target!=null && (!target.isDead && target.isAddedToWorld()) &!(getDistance(target) > 60);
+		if (target == null) return false;
+		return (!target.isDead && target.isAddedToWorld()) && getDistance(target) <= 60
+				&& ModUtils.canTarget(this, target) && getEntitySenses().canSee(target);
 	}
 
-	public void setTarget(Entity target) {
+	public void setTarget(EntityLivingBase target) {
 		this.target = target;
 	}
 
-	public Entity getTarget() {
+	public EntityLivingBase getTarget() {
 		return target;
 	}
 
@@ -229,7 +244,7 @@ public class EntityTurret extends EntityLiving {
 
 	@Override
 	protected boolean canDespawn() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -240,6 +255,14 @@ public class EntityTurret extends EntityLiving {
 	public boolean isSameTeam(Entity entity) {
 		if (getTeam() == null) return entity.getTeam() == null;
 		return getTeam().equals(entity.getTeam());
+	}
+
+	public int getCooldown() {
+		return dataManager.get(COOLDOWN);
+	}
+
+	public void setCooldown(int cooldown) {
+		dataManager.set(COOLDOWN, cooldown);
 	}
 
 	public EntityPlayer getOwner() {
@@ -259,8 +282,17 @@ public class EntityTurret extends EntityLiving {
 		return inventory;
 	}
 
+	public boolean hasAmmo() {
+		return inventory.hasAmmo();
+	}
+
+	public ItemStack getAmmo() {
+		return inventory.getAmmo();
+	}
+
 	@SideOnly(Side.CLIENT)
 	public String getOwnerUsername() {
 		return username;
 	}
+
 }

@@ -10,6 +10,8 @@ message.hundreddayz.FinalDay=Dawn of the final day.
 message.hundreddayz.FinalDaySubtitle=At midnight the apocalypse will begin.
 message.hundreddayz.WorldsEnd=The air smells of death. You can already feel the horrors this night will bring.
 message.hundreddayz.EventEnd=As the sun finally rises, you can feel the invasion over.
+message.hundreddayz.Evolution_0=The zombies have evolved, now they can break blocks.
+message.hundreddayz.Evolution_1=The zombies have evolved, now they can pillar.
 
 message.hundreddayz.TFHordeStart=An enemy army appears at the horizon.
 message.hundreddayz.TFHordeEnd=The sounds of gunfire start to fade.
@@ -45,6 +47,8 @@ item.hundreddayz.NurseHat.name=Nurse Hat
 item.hundreddayz.MechanicHat.name=Mechanic Hat
 item.hundreddayz.Hardhat.name=Hardhat
 item.hundreddayz.Bonesaw.name=Bonesaw
+item.hundreddayz.incendiary_ammo.name=Incendiary Ammo
+
 tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
@@ -59,10 +63,12 @@ tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damag
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
 tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
-tooltip.hundreddayz.Turret1=Uses basic ammo and power.
+tooltip.hundreddayz.Turret1=Uses basic or incendiary ammo ammo.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
+tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
+tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler

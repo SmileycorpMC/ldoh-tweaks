@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 
@@ -39,5 +40,31 @@ public class ContainerTurret extends Container {
 	public boolean canInteractWith(EntityPlayer player) {
 		return turret.isSameTeam(player);
 	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = inventorySlots.get(index);
+
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            if (index < inv.getSizeInventory()) {
+                if (!mergeItemStack(itemstack1, inv.getSizeInventory(), inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!mergeItemStack(itemstack1, 0, inv.getSizeInventory(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemstack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            }
+            else {
+                slot.onSlotChanged();
+            }
+        }
+
+        return itemstack;
+    }
 
 }

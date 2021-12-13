@@ -26,6 +26,8 @@ public class ModDefinitions {
 	public static final String GAS_MESSAGE = "message.hundreddayz.Gas";
 	public static final String LAVA_PICKUP_MESSAGE = "message.hundreddayz.Lava.Pickup";
 	public static final String LAVA_BREAK_MESSAGE = "message.hundreddayz.Lava.Break";
+	public static final String ZOMBIE_EVOLUTION_MESSAGE_0 = "message.hundreddayz.Evolution_0";
+	public static final String ZOMBIE_EVOLUTION_MESSAGE_1 = "message.hundreddayz.Evolution_1";
 
 	//sounds
 	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");

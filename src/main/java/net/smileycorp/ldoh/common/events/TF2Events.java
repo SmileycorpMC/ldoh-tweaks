@@ -248,6 +248,7 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
+				merc.tasks.addTask(1, new EntityAIStayInVillage(merc));
 				merc.tasks.addTask(3, new EntityAIAvoidEntity<EntityZombie>(merc, EntityZombie.class, 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
