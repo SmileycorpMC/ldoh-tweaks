@@ -25,7 +25,7 @@ public class TileLandmine extends TileEntity implements ITickable {
 				if (primeTimer-- <= 0) {
 					BlockLandmine.prime(world, pos, state);
 					if (primeTimer%30==0)  {
-						world.playSound(null, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						world.playSound(null, pos, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					}
 				}
 			}

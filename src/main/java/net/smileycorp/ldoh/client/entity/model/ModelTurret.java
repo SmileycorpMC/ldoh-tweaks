@@ -146,12 +146,8 @@ public class ModelTurret extends ModelBase {
 				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
 			}
 			axel.rotateAngleX = headPitch * 0.0174533f;
-			if (((EntityTurret)entity).getCooldown() > 0) {
-				gun_middle.rotateAngleZ += 0.20943951;
-			}
-		} else {
-			gun_middle.rotateAngleZ=(0.0261799388f*age);
-		}
+			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
+		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
 		base.render(scale);
 		GlStateManager.color(1, 1, 1);
 		axel.render(scale);

@@ -20,7 +20,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -63,17 +62,6 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		if (world.getTileEntity(pos) instanceof TileTurret) ((TileTurret) world.getTileEntity(pos)).breakBlock();
 		super.breakBlock(world, pos, state);
-	}
-
-
-	@Override
-	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-		ItemStack stack = new ItemStack((Block) this);
-		if (world.getTileEntity(pos) instanceof TileTurret) {
-			NBTTagCompound nbt = ((TileTurret) world.getTileEntity(pos)).getDropNBT();
-			stack.setTagCompound(nbt);
-		}
-		drops.add(stack);
 	}
 
 	@Override
@@ -171,9 +159,17 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 
 	//From BlockFlowerPot, should delay until drops are spawned, before block is broken
 	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-	{
-		if (willHarvest) return true;
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+		if (willHarvest &! world.isRemote) {
+			if (world.getTileEntity(pos) instanceof TileTurret) {
+				TileTurret tile = (TileTurret) world.getTileEntity(pos);
+				ItemStack stack = new ItemStack((Block) this);
+				NBTTagCompound nbt = tile.getDropNBT();
+				stack.setTagCompound(nbt);
+				tile.getEntity().entityDropItem(stack, 0f);
+			}
+			return true;
+		}
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 

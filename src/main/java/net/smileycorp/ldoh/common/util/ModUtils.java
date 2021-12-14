@@ -142,8 +142,7 @@ public class ModUtils {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (entity.getTeam() != null) if (target.getTeam() != null || target instanceof EntityMob)
-				return !entity.getTeam().isSameTeam(target.getTeam());
+			if (entity.getTeam() != null) if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());
 			else return entity instanceof EntityMob &!(entity instanceof EntityTF2Character);
 		}
 		return false;
@@ -174,6 +173,10 @@ public class ModUtils {
 			nbt.setInteger("z", pos.getZ());
 		}
 		return nbt;
+	}
+
+	public static String getPosString(BlockPos pos) {
+		return "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
 	}
 
 	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {

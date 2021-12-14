@@ -135,7 +135,7 @@ public class PacketHandler {
 			return null;
 		}
 	}
-	
+
 	public static class ClientSyncMedicCure implements IMessageHandler<SyncMedicCureMessage, IMessage> {
 
 		public ClientSyncMedicCure() {}

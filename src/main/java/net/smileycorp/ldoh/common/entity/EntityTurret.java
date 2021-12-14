@@ -38,6 +38,8 @@ public class EntityTurret extends EntityLiving {
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
 	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
+	protected static final DataParameter<Float> SPIN = EntityDataManager.<Float>createKey(EntityTurret.class, DataSerializers.FLOAT);
+	protected static final DataParameter<Integer> TARGET = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
 
 	//read these values from the nbt and cache them to make sure it gets loaded / synced properly
 	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
@@ -49,6 +51,7 @@ public class EntityTurret extends EntityLiving {
 	protected EntityPlayer owner = null;
 	protected TileTurret tile = null;
 	protected String username = null;
+	protected Vec3d turretPos;
 
 	public EntityTurret(World world) {
 		super(world);
@@ -61,6 +64,8 @@ public class EntityTurret extends EntityLiving {
 		dataManager.register(TEAM, "");
 		dataManager.register(FACING, EnumFacing.UP);
 		dataManager.register(COOLDOWN, 0);
+		dataManager.register(SPIN, 0f);
+		dataManager.register(TARGET, getEntityId());
 		dataManager.register(TILE_POS, null);
 		dataManager.register(OWNER_UUID, "");
 	}
@@ -91,8 +96,8 @@ public class EntityTurret extends EntityLiving {
 		if (nbt.hasKey("facing")) {
 			dataManager.set(FACING, EnumFacing.getFront(nbt.getInteger("facing")));
 		}
-		if (nbt.hasKey("yaw")) rotationYaw = nbt.getFloat("yaw");
-		if (nbt.hasKey("pitch")) rotationPitch = nbt.getFloat("pitch");
+		if (nbt.hasKey("cooldown")) dataManager.set(COOLDOWN, nbt.getInteger("cooldown"));
+		if (nbt.hasKey("spin")) dataManager.set(SPIN, nbt.getFloat("spin"));
 	}
 
 	@Override
@@ -109,8 +114,8 @@ public class EntityTurret extends EntityLiving {
 			nbt.setTag("tilePos", pos);
 		}
 		nbt.setInteger("facing", dataManager.get(FACING).ordinal());
-		nbt.setFloat("yaw", rotationYaw);
-		nbt.setFloat("pitch", rotationPitch);
+		nbt.setInteger("cooldown", dataManager.get(COOLDOWN));
+		nbt.setFloat("spin", dataManager.get(SPIN));
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
@@ -180,25 +185,23 @@ public class EntityTurret extends EntityLiving {
 			}
 		}
 		if (hasTarget()) {
-			//Vec3d dir = DirectionUtils.getDirectionVec(this, target);
-			switch (getFacing()) {
-			case UP:
-				getLookHelper().setLookPosition(target.posX, target.posY + 0.5, target.posZ, 12, 12);
-				break;
-			case DOWN:
-				getLookHelper().setLookPosition(target.posX, posY-target.posY + 0.5, target.posZ, 12, 12);
-				break;
-			case NORTH:
-				break;
-			case SOUTH:
-				break;
-			case EAST:
-				break;
-			case WEST:
-				break;
-			}
+			getLookHelper().setLookPosition(target.posX, target.posY + (target.height * 0.75), target.posZ, 12, 12);
 		}
-		if (getCooldown() > 0) setCooldown(getCooldown()-1);
+		if (getCooldown() > 0) {
+			setCooldown(getCooldown()-1);
+			setSpin(getSpin()+0.34906585f);
+		}
+		if (getPositionVector()!=turretPos) {
+			posX = turretPos.x;
+			posY = turretPos.y;
+			posZ = turretPos.z;
+		}
+	}
+
+	@Override
+	public void onAddedToWorld() {
+		super.onAddedToWorld();
+		turretPos = getPositionVector();
 	}
 
 	@Override
@@ -216,6 +219,7 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
+		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
 		BlockPos pos = dataManager.get(TILE_POS);
 		if (TILE_POS!=null) {
 			world.destroyBlock(pos, false);
@@ -223,18 +227,35 @@ public class EntityTurret extends EntityLiving {
 		}
 	}
 
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		if (source.getTrueSource() instanceof EntityLivingBase) {
+			EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+			if (canTarget(entity)) setTarget(entity);
+		}
+		return super.attackEntityFrom(source, amount);
+	}
+
 	public boolean hasTarget() {
 		if (target == null) return false;
-		return (!target.isDead && target.isAddedToWorld()) && getDistance(target) <= 60
-				&& ModUtils.canTarget(this, target) && getEntitySenses().canSee(target);
+		return !target.isDead && target.isAddedToWorld() && canTarget(target) && getEntitySenses().canSee(target);
 	}
 
 	public void setTarget(EntityLivingBase target) {
 		this.target = target;
+		dataManager.set(TARGET, target == null ? getEntityId() : target.getEntityId());
 	}
 
 	public EntityLivingBase getTarget() {
-		return target;
+		if (world.isRemote) {
+			int id = dataManager.get(TARGET);
+			System.out.println(id + ": " + world.getEntityByID(id));
+			if (id != getEntityId()) {
+				Entity target = world.getEntityByID(id);
+				if (target instanceof EntityLivingBase) return (EntityLivingBase) target;
+			}
+			return null;
+		} else return target;
 	}
 
 	@Override
@@ -249,7 +270,8 @@ public class EntityTurret extends EntityLiving {
 
 	@Override
 	public Team getTeam() {
-		return world.getScoreboard().getTeam(dataManager.get(TEAM));
+		String team = dataManager.get(TEAM);
+		return team.isEmpty() ? null : world.getScoreboard().getTeam(team);
 	}
 
 	public boolean isSameTeam(Entity entity) {
@@ -257,12 +279,9 @@ public class EntityTurret extends EntityLiving {
 		return getTeam().equals(entity.getTeam());
 	}
 
-	public int getCooldown() {
-		return dataManager.get(COOLDOWN);
-	}
-
-	public void setCooldown(int cooldown) {
-		dataManager.set(COOLDOWN, cooldown);
+	public boolean canTarget(EntityLivingBase entity) {
+		if (getDistance(entity) > 60) return false;
+		return ModUtils.canTarget(this, entity);
 	}
 
 	public EntityPlayer getOwner() {
@@ -276,6 +295,22 @@ public class EntityTurret extends EntityLiving {
 
 	public EnumFacing getFacing() {
 		return dataManager.get(FACING);
+	}
+
+	public int getCooldown() {
+		return dataManager.get(COOLDOWN);
+	}
+
+	public void setCooldown(int cooldown) {
+		dataManager.set(COOLDOWN, cooldown);
+	}
+
+	public float getSpin() {
+		return dataManager.get(SPIN);
+	}
+
+	public void setSpin(float spin) {
+		dataManager.set(SPIN, spin);
 	}
 
 	public InventoryTurret getInventory() {

@@ -5,6 +5,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
@@ -13,7 +14,7 @@ import com.mrcrayfish.guns.init.ModGuns;
 public class InventoryTurret extends InventoryBasic {
 
 	public InventoryTurret() {
-		super(ModDefinitions.getName("entity.turret"), false, 6);
+		super(ModDefinitions.getName("entity.turret"), false, 9);
 	}
 
 	public int getAmmoSlot() {
@@ -43,6 +44,10 @@ public class InventoryTurret extends InventoryBasic {
 	public ItemStack getAmmo() {
 		int slot = getAmmoSlot();
 		return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
+	}
+
+	public NonNullList<ItemStack> getItems() {
+		return inventoryContents;
 	}
 
 }

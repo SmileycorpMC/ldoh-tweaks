@@ -22,17 +22,17 @@ public class ContainerTurret extends Container {
 		playerInv = player.inventory;
 		//turret inventory
 		for (int i = 0; i< inv.getSizeInventory(); i++) {
-			addSlotToContainer(new Slot(turret.getInventory(), i, 62 + i*18, 54));
+			addSlotToContainer(new Slot(turret.getInventory(), i, 8 + i*18, 67));
 		}
 		//player inventory
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 97 + i * 18));
 			}
 		}
 		//hotbar
 		for (int k = 0; k < 9; ++k) {
-			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 142));
+			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 155));
 		}
 	}
 

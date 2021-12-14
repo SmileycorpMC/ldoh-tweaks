@@ -92,7 +92,10 @@ death.attack.Shrapnel=%1$s stepped on a landmine
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
-gui.text.Owner=Owner: 
+gui.turret.text.Owner=Owner: 
+gui.turret.text.NoTarget=No Target
+gui.turret.text.Target=Target:  
+gui.turret.text.Retarget=Retarget
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot
