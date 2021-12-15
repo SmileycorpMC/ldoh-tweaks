@@ -63,7 +63,7 @@ public interface IUnburiedSpawner {
 			for (WeakReference<EntityUnburied> ref : entities) {
 				EntityUnburied entity = ref.get();
 				if (entity == null) toRemove.add(ref);
-				else if (player.getDistance(entity) > 45 || entity.isDead || entity.isAddedToWorld()) {
+				else if (player.getDistance(entity) > 45 || entity.isDead || !entity.isAddedToWorld()) {
 					toRemove.add(ref);
 					if (entity.isDead)entity.setDead();
 				}

@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import biomesoplenty.api.biome.BOPBiomes;
-import biomesoplenty.api.block.BOPBlocks;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
@@ -42,9 +41,11 @@ public class ModWorldGen implements IWorldGenerator {
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
 		}
 		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
-			int r = rand.nextInt(4);
-			genSurfaceBlock(world, rand, chunkX, chunkZ, r == 0 ? Blocks.CLAY : r == 1 ? BOPBlocks.white_sand : r == 2 ? BOPBlocks.mud : Blocks.SOUL_SAND);
+			int r = rand.nextInt(3);
+			genSurfaceBlock(world, rand, chunkX, chunkZ);
 		}
+		genNest(world, rand, chunkX, chunkZ);
+		if(biome == BOPBiomes.wasteland.get()) genNest(world, rand, chunkX, chunkZ);
 	}
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){
@@ -73,11 +74,20 @@ public class ModWorldGen implements IWorldGenerator {
 		}
 	}
 
-	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ, Block block) {
+	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ) {
 		int x = (chunkX << 4) +rand.nextInt(16);
 		int z = (chunkZ << 4) + rand.nextInt(16);
-		WorldGenSurface gen = new WorldGenSurface(block, 100);
+		WorldGenSurface gen = new WorldGenSurface();
 		gen.generate(world, rand, new BlockPos(x, world.getChunkFromChunkCoords(chunkX, chunkZ).getHeightValue(x&15, z&15)-1, z));
+	}
+
+	private void genNest(World world, Random rand, int chunkX, int chunkZ) {
+		if (rand.nextInt(25) == 0) {
+			int x = (chunkX << 4) +rand.nextInt(16);
+			int y = rand.nextInt(10)+ 10;
+			int z = (chunkZ << 4) + rand.nextInt(16);
+			new WorldGenNest().generate(world, rand, new BlockPos(x, y, z));
+		}
 	}
 
 }

@@ -142,8 +142,8 @@ public class ModUtils {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (entity.getTeam() != null) if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());
-			else return entity instanceof EntityMob &!(entity instanceof EntityTF2Character);
+			if (entity.getTeam() != null) { if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());
+			} else return target instanceof EntityMob &!(target instanceof EntityTF2Character);
 		}
 		return false;
 	}
@@ -176,14 +176,14 @@ public class ModUtils {
 	}
 
 	public static String getPosString(BlockPos pos) {
-		return "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
+		return pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
 	}
 
 	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
 		IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
 		if (!cap.hasVillage()) return false;
 		BlockPos village = cap.getVillage().getCenter();
-		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 120;
+		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 75;
 	}
 
 	public static RayTraceResult rayTrace(World world, EntityLivingBase entity, float distance) {

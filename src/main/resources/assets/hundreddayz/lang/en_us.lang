@@ -94,8 +94,7 @@ gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
 gui.turret.text.Owner=Owner: 
 gui.turret.text.NoTarget=No Target
-gui.turret.text.Target=Target:  
-gui.turret.text.Retarget=Retarget
+gui.turret.text.Target=Target: 
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot

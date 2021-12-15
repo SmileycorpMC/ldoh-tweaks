@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common.events;
+package net.smileycorp.ldoh.common.entity.ai;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.math.BlockPos;

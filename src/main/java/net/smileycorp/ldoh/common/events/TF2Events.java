@@ -43,6 +43,7 @@ import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityTFZombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
+import net.smileycorp.ldoh.common.entity.ai.EntityAIStayInVillage;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.VillageManager;

@@ -21,13 +21,11 @@ public class AITurretTarget extends EntityAIBase {
 
 	@Override
 	public void updateTask() {
-		for (int i = 0; i < 70; i+=10) {
-			for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
-					new AxisAlignedBB(turret.posX - i, turret.posY - i, turret.posZ - i, turret.posX + i, turret.posY + i, turret.posZ + i), (e) -> turret.canTarget(e))) {
-				turret.getEntitySenses().canSee(entity);
-				turret.setTarget(entity);
-				return;
-			}
+		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
+				new AxisAlignedBB(turret.posX - 50, turret.posY - 50, turret.posZ - 50, turret.posX + 50, turret.posY + 50, turret.posZ + 50), (e) -> turret.canTarget(e))) {
+			turret.getEntitySenses().canSee(entity);
+			turret.setTarget(entity);
+			return;
 		}
 	}
 

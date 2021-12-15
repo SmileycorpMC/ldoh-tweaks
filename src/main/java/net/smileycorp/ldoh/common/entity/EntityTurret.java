@@ -185,6 +185,7 @@ public class EntityTurret extends EntityLiving {
 			}
 		}
 		if (hasTarget()) {
+			EntityLivingBase target = getTarget();
 			getLookHelper().setLookPosition(target.posX, target.posY + (target.height * 0.75), target.posZ, 12, 12);
 		}
 		if (getCooldown() > 0) {
@@ -237,6 +238,7 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public boolean hasTarget() {
+		EntityLivingBase target = getTarget();
 		if (target == null) return false;
 		return !target.isDead && target.isAddedToWorld() && canTarget(target) && getEntitySenses().canSee(target);
 	}
@@ -249,7 +251,6 @@ public class EntityTurret extends EntityLiving {
 	public EntityLivingBase getTarget() {
 		if (world.isRemote) {
 			int id = dataManager.get(TARGET);
-			System.out.println(id + ": " + world.getEntityByID(id));
 			if (id != getEntityId()) {
 				Entity target = world.getEntityByID(id);
 				if (target instanceof EntityLivingBase) return (EntityLivingBase) target;
@@ -280,7 +281,7 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public boolean canTarget(EntityLivingBase entity) {
-		if (getDistance(entity) > 60) return false;
+		if (getDistance(entity) > 50) return false;
 		return ModUtils.canTarget(this, entity);
 	}
 

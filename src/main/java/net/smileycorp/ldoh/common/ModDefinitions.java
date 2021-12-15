@@ -38,6 +38,7 @@ public class ModDefinitions {
 	public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");
 	public static final ResourceLocation SAFEHOUSE_CABINET = getResource("chests/safehouse_cabinet");
 	public static final ResourceLocation SAFEHOUSE_FRIDGE = getResource("chests/safehouse_fridge");
+	public static final ResourceLocation NEST_CRATE = getResource("chests/nest_crate");
 
 	//helper methods
 	public static String getName(String name) {

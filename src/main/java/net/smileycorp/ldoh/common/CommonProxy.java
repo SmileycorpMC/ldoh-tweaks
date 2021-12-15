@@ -77,6 +77,7 @@ public class CommonProxy {
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CHEST);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CABINET);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
+		LootTableList.register(ModDefinitions.NEST_CRATE);
 		//Setup Packets for use
 		PacketHandler.initPackets();
 	}

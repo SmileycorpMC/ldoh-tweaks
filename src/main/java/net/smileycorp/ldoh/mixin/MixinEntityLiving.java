@@ -23,7 +23,6 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
 
 	@Inject(at=@At("HEAD"), method = "processInitialInteract(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;)Z", cancellable = true)
 	public void processInitialInteract(EntityPlayer player, EnumHand hand, CallbackInfoReturnable<Boolean> callback) {
-		System.out.println("entity mixin");
 		ItemStack stack = player.getHeldItem(hand);
 		if (!world.isRemote) {
 			if (player.getTeam() == null) ModUtils.tryJoinTeam(player, this);

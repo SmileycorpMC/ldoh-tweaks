@@ -63,7 +63,7 @@ public class SpawnerEvents {
 					Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
 					if (spawner.canSpawnEntity()) {
 						//make sure it's underground and try to prevent spawning in buildings
-						if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && rand.nextInt(Math.max(y, 20)) <= 15) {
+						if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && rand.nextInt(Math.max(y, 25)) <= 18) {
 							Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 							BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
 							//check spawn location is valid

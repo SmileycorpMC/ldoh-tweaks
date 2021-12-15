@@ -76,7 +76,6 @@ public class EntityZombieNurse extends EntityZombie {
 					Vec3d dir = DirectionUtils.getDirectionVec(this, entity);
 					float v = getDistance(entity)/10;
 					world.spawnParticle(EnumParticleTypes.END_ROD, posX, posY+0.8d, posZ, dir.x*v, dir.y*v, dir.z*v);
-					System.out.println("( "+ dir.x +", "+dir.y+", "+dir.z+")");
 				}
 			}
 			healTargets.clear();

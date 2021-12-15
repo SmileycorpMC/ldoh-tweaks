@@ -4,29 +4,27 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockSand;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import biomesoplenty.api.block.BOPBlocks;
 
 public class WorldGenSurface extends WorldGenerator {
 
-	protected final IBlockState oreBlock;
+	protected IBlockState[] states = {Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState(), BOPBlocks.mud.getDefaultState(),
+			Blocks.SOUL_SAND.getDefaultState(), Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND)};
 	/** The number of blocks to generate. */
-	protected final int numberOfBlocks;
+	protected final int numberOfBlocks = 100;
 
 	private Set<BlockPos> positions = new HashSet<BlockPos>();
 
-	public WorldGenSurface(Block block, int blockCount) {
-		oreBlock = block.getDefaultState();
-		numberOfBlocks = blockCount;
-	}
-
 	@Override
 	public boolean generate(World world, Random rand, BlockPos center) {
+		IBlockState state = states[rand.nextInt(states.length)];
 		float f = rand.nextFloat() * (float)Math.PI;
 		double d0 = center.getX() + 8 + MathHelper.sin(f) * numberOfBlocks / 8.0F;
 		double d1 = center.getX() + 8 - MathHelper.sin(f) * numberOfBlocks / 8.0F;
@@ -68,7 +66,7 @@ public class WorldGenSurface extends WorldGenerator {
 		for (BlockPos pos : positions) {
 			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL) {
 				int r = (int) Math.floor(Math.pow(pos.getX() - center.getX(), 2) + Math.pow(pos.getZ() - center.getZ(), 2));
-				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, oreBlock, 18);
+				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, state, 18);
 			}
 		}
 		return true;
