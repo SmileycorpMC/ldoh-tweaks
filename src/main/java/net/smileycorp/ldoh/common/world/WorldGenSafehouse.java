@@ -105,7 +105,6 @@ public class WorldGenSafehouse extends WorldGenerator {
 	@SuppressWarnings("unchecked")
 	public boolean generate(World world, Random rand, BlockPos backup) {
 		if (!marked) {
-			System.out.println("ffs how even");
 			markPositions(world, world.getSpawnPoint().down(), true);
 		}
 		int wh = basepos.getY()+6;

@@ -2,12 +2,16 @@ package net.smileycorp.ldoh.client.entity;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.smileycorp.ldoh.client.entity.model.ModelTF2CharacterLDOH;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IExhaustion;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import rafradek.TF2weapons.client.model.ModelHeavy;
+import rafradek.TF2weapons.client.renderer.LayerArmorTint;
+import rafradek.TF2weapons.client.renderer.LayerWearables;
 import rafradek.TF2weapons.client.renderer.entity.RenderTF2Character;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -18,6 +22,11 @@ public class RenderTF2CharacterLDOH extends RenderTF2Character {
 		mainModel = new ModelTF2CharacterLDOH();
 		modelMain = (ModelBiped) mainModel;
 		modelHeavy = new ModelHeavy();
+		layerRenderers.clear();
+		addLayer(new LayerHeldItemTF2(this));
+		addLayer(new LayerArmorTint(this));
+		addLayer(new LayerWearables(this));
+		layerRenderers.removeIf(layer -> (LayerRenderer<?>)layer instanceof LayerCustomHead);
 	}
 
 	@Override

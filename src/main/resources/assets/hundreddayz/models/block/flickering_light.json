@@ -1,0 +1,48 @@
+{
+	"textures": {
+		"particle": "hundreddayz:blocks/light",
+		"light": "hundreddayz:blocks/light",
+		"holder": "blocks/hardened_clay_stained_cyan"
+	},
+	"elements": [ 	 
+		{
+			"__comment": "Box1",
+			"from": [ 2, 15, 8 ],
+			"to": [ 14, 16, 9 ],
+			"faces": {
+				"down": { "uv": [ 2, 7, 14, 8 ], "texture": "#light" },
+				"up": { "uv": [ 2, 7, 14, 8 ], "texture": "#light" },
+				"north": { "uv": [ 2, 7, 14, 8 ], "texture": "#light" },
+				"south": { "uv": [ 2, 7, 14, 8 ], "texture": "#light" },
+				"west": { "uv": [ 8, 7, 9, 8 ], "texture": "#light" },
+				"east": { "uv": [ 8, 7, 9, 8 ], "texture": "#light" }
+			}
+		},
+		{
+			"__comment": "Box2",
+			"from": [ 1.5, 15, 8 ],
+			"to": [ 2, 16, 9 ],
+			"faces": {
+				"down": { "uv": [ 1.5, 7, 2, 8 ], "texture": "#holder" },
+				"up": { "uv": [ 1.5, 8, 2, 9 ], "texture": "#holder" },
+				"north": { "uv": [ 14, 0, 14.5, 1 ], "texture": "#holder" },
+				"south": { "uv": [ 1.5, 0, 2, 1 ], "texture": "#holder" },
+				"west": { "uv": [ 8, 0, 9, 1 ], "texture": "#holder" },
+				"east": { "uv": [ 7, 0, 8, 1 ], "texture": "#holder" }
+			}
+		},
+		{
+			"__comment": "Box2",
+			"from": [ 14, 15, 8 ],
+			"to": [ 14.5, 16, 9 ],
+			"faces": {
+				"down": { "uv": [ 14, 7, 14.5, 8 ], "texture": "#holder" },
+				"up": { "uv": [ 14, 8, 14.5, 9 ], "texture": "#holder" },
+				"north": { "uv": [ 1.5, 0, 2, 1 ], "texture": "#holder" },
+				"south": { "uv": [ 14, 0, 14.5, 1 ], "texture": "#holder" },
+				"west": { "uv": [ 8, 0, 9, 1 ], "texture": "#holder" },
+				"east": { "uv": [ 7, 0, 8, 1 ], "texture": "#holder" }
+			}
+		}
+	]
+}

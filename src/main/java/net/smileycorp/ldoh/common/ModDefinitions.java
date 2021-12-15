@@ -33,13 +33,14 @@ public class ModDefinitions {
 	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
 	public static final ResourceLocation TF_ALLY_SOUND = getResource("tf_ally");
 	public static final ResourceLocation LANDMINE_BEEP = getResource("landmine_beep");
+	public static final ResourceLocation SNORE = getResource("snore");
+
 
 	//loot tables
 	public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");
 	public static final ResourceLocation SAFEHOUSE_CABINET = getResource("chests/safehouse_cabinet");
 	public static final ResourceLocation SAFEHOUSE_FRIDGE = getResource("chests/safehouse_fridge");
 	public static final ResourceLocation NEST_CRATE = getResource("chests/nest_crate");
-
 	//helper methods
 	public static String getName(String name) {
 		return MODID + "." + name.replace("_", "");

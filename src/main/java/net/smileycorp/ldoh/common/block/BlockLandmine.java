@@ -92,8 +92,8 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, BlockPos pos) {
-		return super.canPlaceBlockAt(world, pos) && world.getBlockState(pos.down()).isSideSolid(world, pos, EnumFacing.UP);
+	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
+		return side == EnumFacing.UP && world.isBlockFullCube(pos.down());
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 		if (!canPlaceBlockAt(world, pos)) {
 			if (state.getValue(PRIMED)) explode(world, pos);
 			else {
-				world.destroyBlock(fromPos, true);
+				world.destroyBlock(pos, true);
 			}
 		}
 	}
@@ -110,10 +110,6 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		world.removeTileEntity(pos);
 		if (state.getValue(PRIMED)) explode(world, pos);
-		else {
-			dropBlockAsItem(world, pos, state, 0);
-			world.setBlockToAir(pos);
-		}
 	}
 
 	@Override

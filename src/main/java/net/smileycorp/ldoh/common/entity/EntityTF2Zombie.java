@@ -25,22 +25,22 @@ import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-public class EntityTFZombie extends EntityZombie {
+public class EntityTF2Zombie extends EntityZombie {
 
-	protected static final DataParameter<Byte> TF_TEAM = EntityDataManager.createKey(EntityTFZombie.class, DataSerializers.BYTE);
-	protected static final DataParameter<String> TF_CLASS = EntityDataManager.createKey(EntityTFZombie.class, DataSerializers.STRING);
+	protected static final DataParameter<Byte> TF_TEAM = EntityDataManager.createKey(EntityTF2Zombie.class, DataSerializers.BYTE);
+	protected static final DataParameter<String> TF_CLASS = EntityDataManager.createKey(EntityTF2Zombie.class, DataSerializers.STRING);
 
 	protected Team tfteam;
 	protected EnumTFClass tfclass;
 	protected EntityTF2Character baseentity;
 	private WeaponsCapability weaponCap;
 
-	public EntityTFZombie(World world) {
+	public EntityTF2Zombie(World world) {
 		super(world);
 		setRandomProperties();
 	}
 
-	public EntityTFZombie(EntityTF2Character entity) {
+	public EntityTF2Zombie(EntityTF2Character entity) {
 		super(entity.world);
 		buildPropertiesFrom(entity);
 	}

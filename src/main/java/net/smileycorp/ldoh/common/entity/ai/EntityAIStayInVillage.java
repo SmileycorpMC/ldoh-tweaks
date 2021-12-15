@@ -20,7 +20,7 @@ public class EntityAIStayInVillage extends EntityAIGoToPos {
 			if (ModUtils.isTooFarFromVillage(entity, entity.world)) {
 				BlockPos center = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null).getVillage().getCenter();
 				Vec3d dir = DirectionUtils.getDirectionVec(entity.getPositionVector(), new Vec3d(center));
-				pos = DirectionUtils.getClosestLoadedPos(entity.world, entity.getPosition(), dir, 10);
+				pos = DirectionUtils.getClosestLoadedPos(entity.world, entity.getPosition(), dir, 25);
 				return true;
 			}
 		}

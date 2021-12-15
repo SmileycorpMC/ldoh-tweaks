@@ -5,12 +5,15 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 
-public class BlockHordeSpawner extends Block implements ITileEntityProvider {
+public class BlockHordeSpawner extends Block implements ITileEntityProvider, IBlockProperties {
 
 
 	public BlockHordeSpawner() {
@@ -18,6 +21,14 @@ public class BlockHordeSpawner extends Block implements ITileEntityProvider {
 		String name = "Horde_Spawner";
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
+		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
+		setHardness(-1F);
+		setResistance(-1F);
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -27,8 +38,8 @@ public class BlockHordeSpawner extends Block implements ITileEntityProvider {
 
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
+		return true;
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {

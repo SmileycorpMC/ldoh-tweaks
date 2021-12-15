@@ -25,15 +25,15 @@ commands.hundreddayz.SpawnRaid.teamFail=you must be on the RED or BLU team to sp
 
 itemGroup.hundreddayz.HundredDayzTab=LDoH Tweaks
 
-item.hundreddayz.TFProfessionToken.demoman.name=Demoman
-item.hundreddayz.TFProfessionToken.engineer.name=Engineer
-item.hundreddayz.TFProfessionToken.heavy.name=Heavy
-item.hundreddayz.TFProfessionToken.medic.name=Medic
-item.hundreddayz.TFProfessionToken.pyro.name=Pyro
-item.hundreddayz.TFProfessionToken.scout.name=Scout
-item.hundreddayz.TFProfessionToken.sniper.name=Sniper
-item.hundreddayz.TFProfessionToken.soldier.name=Soldier
-item.hundreddayz.TFProfessionToken.spy.name=Spy
+item.hundreddayz.TF2ProfessionToken.demoman.name=Demoman
+item.hundreddayz.TF2ProfessionToken.engineer.name=Engineer
+item.hundreddayz.TF2ProfessionToken.heavy.name=Heavy
+item.hundreddayz.TF2ProfessionToken.medic.name=Medic
+item.hundreddayz.TF2ProfessionToken.pyro.name=Pyro
+item.hundreddayz.TF2ProfessionToken.scout.name=Scout
+item.hundreddayz.TF2ProfessionToken.sniper.name=Sniper
+item.hundreddayz.TF2ProfessionToken.soldier.name=Soldier
+item.hundreddayz.TF2ProfessionToken.spy.name=Spy
 item.hundreddayz.ClothingFabric.name=Clothing Scraps
 item.hundreddayz.DiamondNugget.name=Diamond Nugget
 item.hundreddayz.Syringe.Empty.name=Empty Syringe
@@ -54,6 +54,7 @@ tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
 tile.hundreddayz.Landmine.name=Landmine
 tile.hundreddayz.Turret.name=Sentry Turret
+tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
@@ -102,3 +103,4 @@ jei.category.hundreddayz.Intestines=Intestines Loot
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
+hundreddayz.subtitle.snoring=Snoring

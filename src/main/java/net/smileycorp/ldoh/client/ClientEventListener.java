@@ -40,7 +40,7 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
 import net.smileycorp.ldoh.client.entity.RenderTF2CharacterLDOH;
-import net.smileycorp.ldoh.client.entity.RenderTFZombie;
+import net.smileycorp.ldoh.client.entity.RenderTF2Zombie;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
@@ -53,7 +53,7 @@ import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
@@ -93,7 +93,7 @@ public class ClientEventListener {
 		//register entity renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/zombie.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTFZombie.class, m -> new RenderTFZombie(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, m -> new RenderTF2Zombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));

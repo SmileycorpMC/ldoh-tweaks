@@ -205,7 +205,6 @@ public interface IHunger {
 						}
 						hunger.setFoodLevel(Math.min(foodItem.getHealAmount(foodSlot) + hunger.getFoodLevel(), 20));
 						hunger.setFoodSaturationLevel(Math.min(hunger.getSaturationLevel() + foodItem.getHealAmount(foodSlot) * foodItem.getSaturationModifier(foodSlot) * 2.0F, hunger.getFoodLevel()));
-						//System.out.println("ate " + foodSlot + " restoring " + ((ItemFood) foodSlot.getItem()).getHealAmount(foodSlot));
 						foodSlot.shrink(1);
 						heldItem = ItemStack.EMPTY;
 						PacketHandler.NETWORK_INSTANCE.sendToAll(new SyncFoodMessage(entity, foodSlot));
@@ -215,7 +214,6 @@ public interface IHunger {
 			if (!foodSlot.isEmpty() && eatingTicks == 0 &! entity.world.isRemote) {
 				if (hunger.getFoodLevel() + ((ItemFood) foodSlot.getItem()).getHealAmount(foodSlot) <= 20) {
 					startEating(entity);
-					//System.out.println("starting to eat");
 				}
 			}
 			if (!entity.world.isRemote && hunger.prevFoodLevel != hunger.getFoodLevel()) PacketHandler.NETWORK_INSTANCE.sendToAll(new SyncHungerMessage(entity, hunger.getFoodLevel()));

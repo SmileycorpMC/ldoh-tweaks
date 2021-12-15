@@ -22,12 +22,8 @@ public class TileLandmine extends TileEntity implements ITickable {
 		if (!world.isRemote) {
 			IBlockState state = world.getBlockState(pos);
 			if (!state.getValue(BlockLandmine.PRIMED)) {
-				if (primeTimer-- <= 0) {
-					BlockLandmine.prime(world, pos, state);
-					if (primeTimer%30==0)  {
-						world.playSound(null, pos, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
-					}
-				}
+				if (primeTimer%40==0) world.playSound(null, pos, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				if (primeTimer-- <= 0) BlockLandmine.prime(world, pos, state);
 			}
 			if (state.getValue(BlockLandmine.PRESSED)) {
 				if (world.getEntitiesWithinAABB(EntityLivingBase.class, BlockLandmine.HITBOX_AABB.offset(pos)).isEmpty()) {

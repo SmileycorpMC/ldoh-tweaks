@@ -41,7 +41,6 @@ public class ModWorldGen implements IWorldGenerator {
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
 		}
 		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
-			int r = rand.nextInt(3);
 			genSurfaceBlock(world, rand, chunkX, chunkZ);
 		}
 		genNest(world, rand, chunkX, chunkZ);
@@ -82,7 +81,7 @@ public class ModWorldGen implements IWorldGenerator {
 	}
 
 	private void genNest(World world, Random rand, int chunkX, int chunkZ) {
-		if (rand.nextInt(25) == 0) {
+		if (rand.nextInt(50) == 0) {
 			int x = (chunkX << 4) +rand.nextInt(16);
 			int y = rand.nextInt(10)+ 10;
 			int z = (chunkZ << 4) + rand.nextInt(16);

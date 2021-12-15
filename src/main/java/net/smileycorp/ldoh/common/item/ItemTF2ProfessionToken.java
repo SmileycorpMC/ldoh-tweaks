@@ -17,10 +17,10 @@ import net.tangotek.tektopia.ProfessionType;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
+public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
 
-	public ItemTFProfessionToken() {
-		super("TF_Profession_Token");
+	public ItemTF2ProfessionToken() {
+		super("TF2_Profession_Token");
 		setMaxStackSize(1);
 	}
 
@@ -65,6 +65,7 @@ public class ItemTFProfessionToken extends ItemBase implements IMetaItem {
 						entity.setCustomNameTag(target.getCustomNameTag());
 						if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && villager.hasVillage()) {
 							entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null).setVillage(villager.getVillage());
+							entity.setHomePosAndDistance(villager.getVillage().getCenter(), 75);
 						}
 						target.setDead();
 						world.spawnEntity(entity);

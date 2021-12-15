@@ -2,8 +2,8 @@
 	"pools": [{
 			"name": "hundreddayz:nest_junk",
 			"rolls": {
-				"min": 7,
-				"max": 9
+				"min": 5,
+				"max": 7
 			},
 			"entries": [{
 					"type": "item",
@@ -63,8 +63,8 @@
 		{
 			"name": "hundreddayz:nest_loot",
 			"rolls": {
-				"min": 4,
-				"max": 6
+				"min": 3,
+				"max": 5
 			},
 			"entries": [{
 					"type": "item",

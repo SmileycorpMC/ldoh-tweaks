@@ -1,0 +1,7 @@
+{
+	"parent": "hundreddayz:block/flickering_light",
+	"textures": {
+		"particle": "hundreddayz:blocks/light_on",
+		"light": "hundreddayz:blocks/light_on"
+	}
+}

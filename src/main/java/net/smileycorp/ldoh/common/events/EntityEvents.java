@@ -55,7 +55,7 @@ import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
-import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
@@ -115,7 +115,7 @@ public class EntityEvents {
 						//select random number first to allow for proper weighting
 						int randInt = rand.nextInt(100);
 						if (randInt < 3) {
-							newentity = new EntityTFZombie(world);
+							newentity = new EntityTF2Zombie(world);
 						} else if (randInt == 3) {
 							newentity = new EntityZombieNurse(world);
 						}  else if (randInt < 15) {
@@ -241,7 +241,7 @@ public class EntityEvents {
 		EntityPlayer player = event.getEntityPlayer();
 		if (!world.isRemote) {
 			//replace zombies with vespas if they are in a sky base
-			if (player.getPosition().getY() - event.pos.getY() > 35) {
+			if (player.getPosition().getY() - event.pos.getY() > 30) {
 				event.entity = new EntityVespa(world);
 				//give the vespas the ability to break blocks
 				if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
@@ -253,7 +253,7 @@ public class EntityEvents {
 				Random rand = world.rand;
 				int randInt = rand.nextInt(100);
 				if (randInt < 3) {
-					event.entity = new EntityTFZombie(world);
+					event.entity = new EntityTF2Zombie(world);
 				} else if (randInt < 45 - (world.getWorldTime()/24000)) {
 					event.entity = new EntityCrawlingZombie(world);
 				}

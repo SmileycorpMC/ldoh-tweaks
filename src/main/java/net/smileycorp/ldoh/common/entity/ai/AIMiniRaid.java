@@ -16,10 +16,7 @@ public class AIMiniRaid extends EntityAIGoToEntityPos {
 	@Override
 	public boolean shouldContinueExecuting() {
 		boolean result = super.shouldContinueExecuting() && entity.getDistance(getTarget())>=10;
-		if (!result) {
-			System.out.println(entity.getDistance(getTarget()));
-			ModUtils.DELAYED_THREAD_EXECUTOR.schedule(()->entity.tasks.removeTask(this), 20, TimeUnit.MILLISECONDS);
-		}
+		if (!result) ModUtils.DELAYED_THREAD_EXECUTOR.schedule(()->entity.tasks.removeTask(this), 20, TimeUnit.MILLISECONDS);
 		return result;
 	}
 

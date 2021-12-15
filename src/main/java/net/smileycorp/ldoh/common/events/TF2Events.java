@@ -12,7 +12,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -41,9 +41,8 @@ import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
-import net.smileycorp.ldoh.common.entity.ai.EntityAIStayInVillage;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.VillageManager;
@@ -230,7 +229,7 @@ public class TF2Events {
 			//check the entity isn't a robot
 			if(!((EntityTF2Character) entity).isRobot()) {
 				//spawns a tf2 zombie in the place of the dead merc
-				EntityTFZombie zombie = new EntityTFZombie((EntityTF2Character)entity);
+				EntityTF2Zombie zombie = new EntityTF2Zombie((EntityTF2Character)entity);
 				world.spawnEntity(zombie);
 				zombie.setPosition(entity.posX, entity.posY, entity.posZ);
 				zombie.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
@@ -249,8 +248,8 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
-				merc.tasks.addTask(1, new EntityAIStayInVillage(merc));
-				merc.tasks.addTask(3, new EntityAIAvoidEntity<EntityZombie>(merc, EntityZombie.class, 5.0F, 0.6D, 0.6D));
+				//merc.tasks.addTask(1, new EntityAIStayInVillage(merc));
+				merc.tasks.addTask(3, new EntityAIAvoidEntity<EntityMob>(merc, EntityMob.class, (e)->ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
 				if (entity instanceof EntityMedic) {
@@ -300,7 +299,7 @@ public class TF2Events {
 					}
 				}
 
-			//give persistence to tf2 buildings
+				//give persistence to tf2 buildings
 			} else if (entity instanceof EntityBuilding) {
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);

@@ -123,7 +123,6 @@ public class ModUtils {
 				for (int i = -1; i<=1; i++) {
 					for (int k = -1; k<=1; k++) {
 						if (BuildingInfo.isCity(cpos.x + i, cpos.z + k, gen)) return true;
-						else System.out.println("chunk at "+(cpos.x + i)+", "+(cpos.z + k)+" is not city");
 					}
 				}
 			}
@@ -158,6 +157,11 @@ public class ModUtils {
 				}
 			}
 		}
+		return false;
+	}
+
+	public static boolean shouldSnore(EntityLivingBase entity) {
+		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) return entity.getCapability(LDOHCapabilities.EXHAUSTION, null).isSleeping((EntityLiving) entity);
 		return false;
 	}
 

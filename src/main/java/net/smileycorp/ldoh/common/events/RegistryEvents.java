@@ -30,7 +30,7 @@ import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
 import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
@@ -139,7 +139,7 @@ public class RegistryEvents {
 				.id(ModDefinitions.getResource("crawling_husk"), ID++)
 				.name(ModDefinitions.getName("CrawlingHusk")).tracker(80, 3, true).build();
 		registry.register(CRAWLING_HUSK);
-		EntityEntry TF_ZOMBIE = EntityEntryBuilder.create().entity(EntityTFZombie.class)
+		EntityEntry TF_ZOMBIE = EntityEntryBuilder.create().entity(EntityTF2Zombie.class)
 				.id(ModDefinitions.getResource("tf_zombie"), ID++)
 				.name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build();
 		registry.register(TF_ZOMBIE);

@@ -20,7 +20,7 @@ public class ItemIncendiaryAmmo extends ItemAmmo {
 
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-	    for(int i = 0; i < 1; i++) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.incendiary_ammo" + i));
+		for(int i = 0; i < 2; i++) tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.incendiary_ammo" + i));
 	}
 
 }

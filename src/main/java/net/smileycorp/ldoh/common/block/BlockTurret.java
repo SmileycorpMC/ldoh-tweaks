@@ -20,6 +20,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -88,14 +89,17 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 		if (!world.isRemote) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te != null) {
-		        if (te instanceof TileTurret) {
-		        	EntityTurret turret = ((TileTurret) te).getEntity();
-		        	if (turret!=null) return turret.applyPlayerInteraction(player, new Vec3d(hitX, hitY, hitZ), hand) == EnumActionResult.SUCCESS;
-		    	}
+				if (te instanceof TileTurret) {
+					EntityTurret turret = ((TileTurret) te).getEntity();
+					if (turret!=null) return turret.applyPlayerInteraction(player, new Vec3d(hitX, hitY, hitZ), hand) == EnumActionResult.SUCCESS;
+				}
 			}
 		}
-        return false;
-    }
+		return false;
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
 
 	@Override
 	public BlockStateContainer createBlockState() {

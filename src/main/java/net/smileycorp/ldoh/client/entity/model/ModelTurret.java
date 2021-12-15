@@ -138,7 +138,6 @@ public class ModelTurret extends ModelBase {
 
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
-		//System.out.println(headYaw + ", " + headPitch);
 		GlStateManager.pushMatrix();
 		if (entity != null) {
 			if (entity.getTeam()!=null) {

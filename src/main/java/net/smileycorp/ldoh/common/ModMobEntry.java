@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.TextUtils;
-import net.smileycorp.ldoh.common.entity.EntityTFZombie;
+import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -56,8 +56,8 @@ public class ModMobEntry {
 			if (tfclass != null) {
 				EntityTF2Character baseentity = tfclass.createEntity(world);
 				baseentity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
-				entity = new EntityTFZombie(baseentity);
-				((EntityTFZombie) entity).setTFTeam(world.getScoreboard().getTeam(team));
+				entity = new EntityTF2Zombie(baseentity);
+				((EntityTF2Zombie) entity).setTFTeam(world.getScoreboard().getTeam(team));
 				//spawn entity regularly if entry isn't for a tf2 zombie
 			} else {
 				entity = clazz.getConstructor(World.class).newInstance(world);
@@ -68,9 +68,9 @@ public class ModMobEntry {
 
 	//does this item contain the specified entity
 	public boolean doesMatch(EntityLiving entity) {
-		if (entity instanceof EntityTFZombie) {
+		if (entity instanceof EntityTF2Zombie) {
 			if (tfclass == null || team == null) return false;
-			return tfclass == ((EntityTFZombie) entity).getTFClass() && team.equals(((EntityTFZombie) entity).getTFTeam().getName());
+			return tfclass == ((EntityTF2Zombie) entity).getTFClass() && team.equals(((EntityTF2Zombie) entity).getTFTeam().getName());
 		}
 		return entity.getClass() == clazz;
 	}

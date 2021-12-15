@@ -24,25 +24,25 @@ public class WorldGenNest extends WorldGenerator {
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos center) {
-		for (int i = -3; i < 4; i++) {
-			for (int j = -3; j < 4; j++) {
-				for (int k = -3; k < 4; k++) {
+		for (int i = -4; i < 5; i++) {
+			for (int j = -4; j < 5; j++) {
+				for (int k = -4; k < 45; k++) {
 					BlockPos pos = center.add(i, j, k);
 					double r = pos.getDistance(center.getX(), center.getY(), center.getZ());
-					if (r<=5) placeBlock(world, pos);
+					if (r<=4) placeBlock(world, pos);
 				}
 			}
 		}
-		for (int i = -3; i < 4; i++) {
-			for (int j = -3; j < 4; j++) {
-				for (int k = -3; k < 4; k++) {
+		for (int i = -4; i < 5; i++) {
+			for (int j = -4; j < 5; j++) {
+				for (int k = -4; k < 45; k++) {
 					BlockPos pos = center.add(i, j, k);
 					double r = pos.getDistance(center.getX(), center.getY(), center.getZ());
-					if (r<=4) world.setBlockState(pos, Blocks.AIR.getDefaultState(), 18);
+					if (r<=3) world.setBlockState(pos, Blocks.AIR.getDefaultState(), 18);
 				}
 			}
 		}
-		BlockPos floor = center.down(4);
+		BlockPos floor = center.down(3);
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			if (facing.getAxis() == EnumFacing.Axis.Y) continue;
 			world.setBlockState(floor.offset(facing), FurnitureBlocks.CRATE_DARK_OAK.getDefaultState(), 18);
