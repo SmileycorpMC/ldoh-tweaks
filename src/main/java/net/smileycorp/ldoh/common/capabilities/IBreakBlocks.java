@@ -13,13 +13,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.util.ModUtils;
 
 public interface IBreakBlocks {
-	
+
 	public boolean canBreakBlocks();
-	
+
 	public boolean tryBreakBlocks();
-	
+
 	public void enableBlockBreaking(boolean canBreak);
 
 	public static class Storage implements IStorage<IBreakBlocks> {
@@ -30,37 +32,38 @@ public interface IBreakBlocks {
 			nbt.setBoolean("canBreakBlocks", instance.canBreakBlocks());
 			return nbt;
 		}
-	
+
 		@Override
 		public void readNBT(Capability<IBreakBlocks> capability, IBreakBlocks instance, EnumFacing side, NBTBase nbt) {
 			instance.enableBlockBreaking(((NBTTagCompound)nbt).getBoolean("canBreakBlocks"));
 		}
-		
-		
+
+
 	}
-	
+
 	public static class BreakBlocks implements IBreakBlocks {
-		
+
 		private final EntityLiving entity;
 		private final World world;
-		
+
 		public BreakBlocks(EntityLiving entity) {
 			this.entity = entity;
-			this.world = entity == null ? null : entity.world;
+			world = entity == null ? null : entity.world;
 		}
-		
+
 		private boolean canBreakBlocks = false;
-		
+
 		@Override
 		public boolean canBreakBlocks() {
 			return canBreakBlocks;
 		}
-		
+
 		@Override
 		public boolean tryBreakBlocks() {
 			if (canBreakBlocks && entity != null) {
 				if (!world.isRemote &! entity.getNavigator().noPath()) {
-					RayTraceResult ray = world.rayTraceBlocks(entity.getPositionVector(), entity.getPositionVector().add(entity.getLookVec()));
+					Vec3d dir = DirectionUtils.getDirectionVec(entity.getPositionVector(), ModUtils.getVecFromPathPoint(entity.getNavigator().getPath().getFinalPathPoint()));
+					RayTraceResult ray = world.rayTraceBlocks(entity.getPositionVector(), entity.getPositionVector().add(dir.scale(2)));
 					if (ray != null) {
 						if (ray.typeOfHit == Type.BLOCK) {
 							BlockPos pos = ray.getBlockPos();
@@ -91,11 +94,11 @@ public interface IBreakBlocks {
 		}
 
 	}
-	
+
 	public static class Provider implements ICapabilitySerializable<NBTBase> {
-		
+
 		protected final IBreakBlocks instance;
-		
+
 		public Provider(EntityLiving entity) {
 			instance = new BreakBlocks(entity);
 		}
@@ -120,6 +123,6 @@ public interface IBreakBlocks {
 			LDOHCapabilities.BLOCK_BREAKING.getStorage().readNBT(LDOHCapabilities.BLOCK_BREAKING, instance, null, nbt);
 		}
 
-}
- 
+	}
+
 }

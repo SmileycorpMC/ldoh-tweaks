@@ -17,6 +17,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -247,7 +248,8 @@ public class EntityEvents {
 				if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
 					event.entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);
 				}
-				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getX());
+				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getZ());
+
 			} else if (entity.getClass() == EntityZombie.class && event.getDay() <=50) {
 				//turns zombies into a random variant based on rng and day
 				Random rand = world.rand;
@@ -303,7 +305,7 @@ public class EntityEvents {
 			IBreakBlocks cap = entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null);
 			if (cap.canBreakBlocks()) {
 				if (world.getWorldTime() % 10 == 0) {
-					cap.tryBreakBlocks();
+					if (cap.tryBreakBlocks()) entity.attackEntityFrom(DamageSource.MAGIC, 10f);
 				}
 			}
 		}

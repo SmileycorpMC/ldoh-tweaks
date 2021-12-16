@@ -19,6 +19,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -181,6 +182,10 @@ public class ModUtils {
 
 	public static String getPosString(BlockPos pos) {
 		return pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
+	}
+
+	public static Vec3d getVecFromPathPoint(PathPoint pathPoint) {
+		return new Vec3d(pathPoint.x, pathPoint.y, pathPoint.z);
 	}
 
 	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
