@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -209,13 +211,23 @@ public class EntityTurret extends EntityLiving {
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
 		if (tile != null &! world.isRemote) {
 			if (isSameTeam(player)) {
-				BlockPos pos = tile.getPos();
-				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
-				return EnumActionResult.SUCCESS;
+				ItemStack stack = player.getHeldItem(hand);
+				if (stack.getItem() == Items.IRON_INGOT) {
+					if (getHealth() < getMaxHealth()) {
+						heal(4f);
+						if (!player.isCreative()) stack.shrink(1);
+						playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
+						return EnumActionResult.SUCCESS;
+					}
+				} else {
+					BlockPos pos = tile.getPos();
+					player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+					return EnumActionResult.SUCCESS;
+				}
 			}
 		}
-        return super.applyPlayerInteraction(player, vec, hand);
-    }
+		return super.applyPlayerInteraction(player, vec, hand);
+	}
 
 	@Override
 	public void onDeath(DamageSource source) {

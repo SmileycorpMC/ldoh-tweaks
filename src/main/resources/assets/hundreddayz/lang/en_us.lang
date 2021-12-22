@@ -16,6 +16,10 @@ message.hundreddayz.Evolution_1=The zombies have evolved, now they can pillar.
 message.hundreddayz.TFHordeStart=An enemy army appears at the horizon.
 message.hundreddayz.TFHordeEnd=The sounds of gunfire start to fade.
 
+message.hundreddayz.VillagerMessage0=Word has been spread among the surviving civillians of a %1$s, who has constructed a heavilly fortified compound.
+message.hundreddayz.VillagerMessage.Survivor=Survivor
+message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
+
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
 commands.hundreddayz.SpawnRaid.usage=/spawnRaid <raid type> <level>
@@ -65,6 +69,7 @@ tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
 tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
 tooltip.hundreddayz.Turret1=Uses basic or incendiary ammo ammo.
+tooltip.hundreddayz.Turret2=Repair with iron.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
@@ -99,6 +104,7 @@ gui.turret.text.Target=Target:
 
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot
+jei.category.hundreddayz.GunWorkbench=Gun Workbench
 
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches

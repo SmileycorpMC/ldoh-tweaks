@@ -122,6 +122,8 @@ public class EntityEvents {
 						}  else if (randInt < 15) {
 							newentity = world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert ?
 									new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
+						} else if (world.getWorldTime() < 240000) {
+							newentity = rand.nextInt(20) == 0 ? new EntityDummyZombie1(world) : new EntityDummyZombie2(world);
 						}
 						//turns zombies into husks in a desert
 						else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {

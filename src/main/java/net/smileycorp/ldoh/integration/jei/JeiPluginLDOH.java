@@ -14,6 +14,7 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 
 import com.Fishmod.mod_LavaCow.init.FishItems;
 import com.google.common.collect.Lists;
+import com.mrcrayfish.guns.init.ModBlocks;
 
 @JEIPlugin
 public class JeiPluginLDOH implements IModPlugin {
@@ -28,6 +29,7 @@ public class JeiPluginLDOH implements IModPlugin {
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 		registry.addRecipeCategories(new SyringeCategory(guiHelper));
 		registry.addRecipeCategories(new IntestineCategory(guiHelper));
+		registry.addRecipeCategories(new GunWorkbenchCategory(guiHelper));
 	}
 
 	@Override
@@ -39,8 +41,9 @@ public class JeiPluginLDOH implements IModPlugin {
 		registry.handleRecipes(IntestineCategory.Wrapper.class, (r) -> r, IntestineCategory.ID);
 		registry.addRecipes(Lists.newArrayList(new IntestineCategory.Wrapper()), IntestineCategory.ID);
 		registry.addRecipeCatalyst(new ItemStack(FishItems.INTESTINE), IntestineCategory.ID);
+		registry.handleRecipes(GunWorkbenchCategory.Wrapper.class, (r) -> r, GunWorkbenchCategory.ID);
+		registry.addRecipes(GunWorkbenchCategory.getRecipes(), GunWorkbenchCategory.ID);
+		registry.addRecipeCatalyst(new ItemStack(ModBlocks.WORKBENCH), GunWorkbenchCategory.ID);
 	}
-
-
 
 }

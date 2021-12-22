@@ -7,7 +7,7 @@ public class ModDefinitions {
 	//mod constants
 	public static final String MODID = "hundreddayz";
 	public static final String NAME = "LDoH Tweaks";
-	public static final String VERSIONS = "1.1.3a";
+	public static final String VERSIONS = "1.1.4";
 	public static final String DEPENDENCIES = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
 			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"
@@ -29,6 +29,7 @@ public class ModDefinitions {
 	public static final String LAVA_BREAK_MESSAGE = "message.hundreddayz.Lava.Break";
 	public static final String ZOMBIE_EVOLUTION_MESSAGE_0 = "message.hundreddayz.Evolution_0";
 	public static final String ZOMBIE_EVOLUTION_MESSAGE_1 = "message.hundreddayz.Evolution_1";
+	public static final String VILLAGER_MESSAGE = "message.hundreddayz.VillagerMessage";
 
 	//sounds
 	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");

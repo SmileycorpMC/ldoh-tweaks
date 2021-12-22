@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.client;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.ldoh.common.CommonProxy;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 
 @EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.MODID)
 public class ClientProxy extends CommonProxy {
@@ -16,6 +18,8 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ClientEventListener());
+		//Mobends support for nurse model
+		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 	}
 
 	@Override

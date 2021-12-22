@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -53,7 +52,6 @@ import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
-import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
 import com.mrcrayfish.guns.item.AmmoRegistry;
@@ -83,8 +81,6 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-		//Mobends support for nurse model
-		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 		//Register Capabilities
 		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), () -> new SpawnTracker());
 		CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));

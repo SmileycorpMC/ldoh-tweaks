@@ -1,8 +1,6 @@
 package net.smileycorp.ldoh.common.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -10,13 +8,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.SimpleStringMessage;
-import net.smileycorp.hordes.infection.CureEntityMessage;
-import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.client.ClientHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.ICuring;
-import net.smileycorp.ldoh.common.capabilities.IHunger;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
 public class PacketHandler {
 
@@ -55,11 +48,7 @@ public class PacketHandler {
 		public IMessage onMessage(SyncFoodMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
-						IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
-						hunger.setFoodStack(message.getStack());
-					}
+					ClientHandler.syncFood(message);
 				});
 			}
 			return null;
@@ -74,11 +63,7 @@ public class PacketHandler {
 		public IMessage onMessage(SyncHungerMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
-						IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
-						hunger.setFoodLevel(message.getHunger());
-					}
+					ClientHandler.syncHunger(message);
 				});
 			}
 			return null;
@@ -93,8 +78,7 @@ public class PacketHandler {
 		public IMessage onMessage(StartEatingMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) entity.getCapability(LDOHCapabilities.HUNGER, null).startEating((EntityLiving) entity);
+					ClientHandler.startEating(message);
 				});
 			}
 			return null;
@@ -109,11 +93,7 @@ public class PacketHandler {
 		public IMessage onMessage(SyncSyringesMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.CURING, null)) {
-						ICuring curing = entity.getCapability(LDOHCapabilities.CURING, null);
-						curing.setSyringeCount(message.getCount());
-					}
+					ClientHandler.syncSyringes(message);
 				});
 			}
 			return null;
@@ -128,8 +108,7 @@ public class PacketHandler {
 		public IMessage onMessage(SyncSleepMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity!=null) if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).setSleeping((EntityLiving) entity, message.isSleeping());
+					ClientHandler.syncSleeping(message);
 				});
 			}
 			return null;
@@ -144,11 +123,7 @@ public class PacketHandler {
 		public IMessage onMessage(SyncMedicCureMessage message, MessageContext ctx) {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
-					Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-					if (entity instanceof EntityLiving) {
-						((EntityLiving) entity).removePotionEffect(HordesInfection.INFECTED);
-						net.smileycorp.hordes.client.ClientHandler.processCureEntityMessage(new CureEntityMessage(entity));
-					}
+					ClientHandler.syncMedicCure(message);
 				});
 			}
 			return null;
