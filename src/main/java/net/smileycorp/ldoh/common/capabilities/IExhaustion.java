@@ -108,7 +108,7 @@ public interface IExhaustion {
 				if (!(entity.tasks.taskEntries.isEmpty() || entity.targetTasks.taskEntries.isEmpty())) setSleeping(entity, false);
 				if (entity.ticksExisted % 20 == 0) {
 					if (isSleeping(entity)) {
-						exhaustion = exhaustion - 2;
+						exhaustion = exhaustion - 8;
 						if (tired &! isTired(entity)) {
 							IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
 							if (attribute.hasModifier(ModUtils.TIRED_MODIFIER)) attribute.removeModifier(ModUtils.TIRED_MODIFIER);

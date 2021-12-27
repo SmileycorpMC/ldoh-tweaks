@@ -7,7 +7,7 @@ public class ModDefinitions {
 	//mod constants
 	public static final String MODID = "hundreddayz";
 	public static final String NAME = "LDoH Tweaks";
-	public static final String VERSIONS = "1.1.4";
+	public static final String VERSIONS = "1.1.4a";
 	public static final String DEPENDENCIES = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
 			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"

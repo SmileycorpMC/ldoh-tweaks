@@ -18,13 +18,13 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ClientEventListener());
-		//Mobends support for nurse model
-		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 	}
 
 	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
+		//Mobends support for nurse model
+		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 	}
 
 	@Override
