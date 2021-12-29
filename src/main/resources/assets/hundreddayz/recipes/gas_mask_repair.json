@@ -3,7 +3,8 @@
     "group": "hundreddayz:gas_mask",
     "ingredients": [
         {
-            "item": "hundreddayz:gas_mask"
+            "item": "hundreddayz:gas_mask",
+			"data": 32767
         },
 		{
             "item": "hundreddayz:gas_filter",
@@ -12,6 +13,7 @@
 	],
     "result": {
         "item": "hundreddayz:gas_mask",
+		"data": 0,
         "count": 1
     }
 }
