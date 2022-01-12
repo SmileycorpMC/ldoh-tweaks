@@ -39,7 +39,6 @@ import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
-import net.smileycorp.ldoh.client.entity.RenderTF2CharacterLDOH;
 import net.smileycorp.ldoh.client.entity.RenderTF2Zombie;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
@@ -98,7 +97,7 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Character.class, m -> new RenderTF2CharacterLDOH(m));
+		//RenderingRegistry.registerEntityRenderingHandler(EntityTF2Character.class, m -> new RenderTF2CharacterLDOH(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());

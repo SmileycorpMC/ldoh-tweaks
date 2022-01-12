@@ -4,16 +4,11 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.util.ResourceLocation;
 import net.smileycorp.ldoh.client.entity.model.ModelTF2CharacterLDOH;
-import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.IExhaustion;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import rafradek.TF2weapons.client.model.ModelHeavy;
 import rafradek.TF2weapons.client.renderer.LayerArmorTint;
 import rafradek.TF2weapons.client.renderer.LayerWearables;
 import rafradek.TF2weapons.client.renderer.entity.RenderTF2Character;
-import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 public class RenderTF2CharacterLDOH extends RenderTF2Character {
 
@@ -29,7 +24,7 @@ public class RenderTF2CharacterLDOH extends RenderTF2Character {
 		layerRenderers.removeIf(layer -> (LayerRenderer<?>)layer instanceof LayerCustomHead);
 	}
 
-	@Override
+	/*@Override
 	protected ResourceLocation getEntityTexture(EntityTF2Character entity) {
 		ResourceLocation loc = super.getEntityTexture(entity);
 		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) &! entity.isRobot()) {
@@ -38,6 +33,6 @@ public class RenderTF2CharacterLDOH extends RenderTF2Character {
 			else if (cap.isTired(entity)) loc = ModDefinitions.getResource(loc.getResourcePath().replace("tf2", "tf_tired"));
 		}
 		return loc;
-	}
+	}*/
 
 }

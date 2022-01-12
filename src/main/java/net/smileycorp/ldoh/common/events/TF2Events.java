@@ -83,9 +83,9 @@ public class TF2Events {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
 		}
 		//give mercs exhaustion/sleeping
-		if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
+		/*if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Exhaustion"), new IExhaustion.Provider());
-		}
+		}*/
 		//give mercs home village
 		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
@@ -140,9 +140,9 @@ public class TF2Events {
 			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.HUNGER, null).onUpdate((EntityLiving) entity);
 		}
 		//exhaustion tick
-		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
+		/*if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
 			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).onUpdate((EntityLiving) entity);
-		}
+		}*/
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
 			EnumTFClass tfClass = EnumTFClass.getClass(merc);
@@ -289,7 +289,7 @@ public class TF2Events {
 				//sync capability data to clients
 				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
 				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
-				if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
+				//if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
 				//fetch closest village to entities that were spawned in one
 				if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
 					IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
@@ -318,7 +318,7 @@ public class TF2Events {
 			EntityLiving entity = (EntityLiving) event.getTarget();
 			if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) entity.getCapability(LDOHCapabilities.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 			if (entity.hasCapability(LDOHCapabilities.CURING, null)) entity.getCapability(LDOHCapabilities.CURING, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
-			if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
+			//if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 

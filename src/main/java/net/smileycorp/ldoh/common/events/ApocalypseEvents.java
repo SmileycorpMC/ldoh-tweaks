@@ -28,7 +28,7 @@ public class ApocalypseEvents {
 		EntityPlayer player = event.player;
 		if (player != null) {
 			World world = player.world;
-			if (!world.isRemote) {
+			if (!world.isRemote && world.getGameRules().getBoolean("doDaylightCycle")) {
 				IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
 				if (apocalypse.canStart(world)) apocalypse.startEvent();
 				if (apocalypse.isActive(world)) apocalypse.update(world);
