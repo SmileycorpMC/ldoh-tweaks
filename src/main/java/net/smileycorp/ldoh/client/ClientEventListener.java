@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -213,7 +212,7 @@ public class ClientEventListener {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.getTextureManager().bindTexture(TF_HUNGER_TEXTURE);
 				gui.drawTexturedModalRect(gui.getGuiLeft() - 54, gui.getGuiTop(), 0, 0, 54, 70);
-				int v = entity.isPotionActive(MobEffects.HUNGER) ? 79 : 70;
+				int v = hunger.hasHungerEffect() ? 79 : 70;
 				int food = hunger.getFoodLevel();
 				for (int i = 0; i<=Math.ceil(food/2); i++) {
 					int x = gui.getGuiLeft() - 50 + ((4-i%5)*9);

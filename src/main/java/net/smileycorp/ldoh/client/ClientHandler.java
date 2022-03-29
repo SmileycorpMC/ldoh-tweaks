@@ -14,6 +14,7 @@ import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.network.StartEatingMessage;
 import net.smileycorp.ldoh.common.network.SyncFoodMessage;
+import net.smileycorp.ldoh.common.network.SyncHungerEffectMessage;
 import net.smileycorp.ldoh.common.network.SyncHungerMessage;
 import net.smileycorp.ldoh.common.network.SyncMedicCureMessage;
 import net.smileycorp.ldoh.common.network.SyncSleepMessage;
@@ -83,6 +84,15 @@ public class ClientHandler {
 		if (entity instanceof EntityLiving) {
 			((EntityLiving) entity).removePotionEffect(HordesInfection.INFECTED);
 			net.smileycorp.hordes.client.ClientHandler.processCureEntityMessage(new CureEntityMessage(entity));
+		}
+	}
+
+	//sync the hunger potion effect to the client
+	public static void syncHungerEffect(SyncHungerEffectMessage message) {
+		Entity entity = message.getEntity(Minecraft.getMinecraft().world);
+		if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
+			IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
+			hunger.setHungerEffect((EntityLiving) entity, message.hasHunger());
 		}
 	}
 
