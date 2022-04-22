@@ -25,8 +25,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.network.StartEatingMessage;
@@ -74,8 +72,6 @@ public interface IHunger {
 
 	public void syncClient(EntityLiving entity, EntityPlayerMP player);
 
-
-	@SideOnly(Side.CLIENT)
 	public void setFoodSaturationLevel(float foodSaturationLevelIn);
 
 	public static class Storage implements IStorage<IHunger> {
@@ -307,7 +303,6 @@ public interface IHunger {
 		}
 
 		@Override
-		@SideOnly(Side.CLIENT)
 		public void setFoodSaturationLevel(float foodSaturationLevelIn)
 		{
 			foodSaturationLevel = foodSaturationLevelIn;
