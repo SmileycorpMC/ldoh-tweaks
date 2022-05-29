@@ -130,7 +130,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -0.9, 0);
-		turret.render(null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
+		turret.render(mc.player, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
 		GlStateManager.popMatrix();
 	}
 

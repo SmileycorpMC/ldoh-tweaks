@@ -2,9 +2,8 @@ package net.smileycorp.ldoh.client.entity.model;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.math.MathHelper;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.minecraft.entity.EntityLivingBase;
+import net.smileycorp.hordes.infection.HordesInfection;
 import rafradek.TF2weapons.client.model.ModelTF2Character;
 
 public class ModelTF2CharacterLDOH extends ModelTF2Character {
@@ -16,19 +15,27 @@ public class ModelTF2CharacterLDOH extends ModelTF2Character {
 
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
+		/*if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
 			if (entity.getCapability(LDOHCapabilities.EXHAUSTION, null).isSleeping((EntityLiving) entity)) {
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, 0.6, 0);
 				super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 				GlStateManager.popMatrix();
 			} else super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		 */
+		if (((EntityLivingBase) entity).isPotionActive(HordesInfection.INFECTED)) {
+			GlStateManager.pushMatrix();
+			int l = ((EntityLivingBase) entity).getActivePotionEffect(HordesInfection.INFECTED).getAmplifier() + 1;
+			GlStateManager.color(1-(0.05f*l), 1, 1-(0.2f*l));
+			super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+			GlStateManager.popMatrix();
 		} else super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+
 	}
 
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
-		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
+		/*if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
 			if (entity.getCapability(LDOHCapabilities.EXHAUSTION, null).isSleeping((EntityLiving) entity)) {
 				bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
 				bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F;
@@ -43,7 +50,7 @@ public class ModelTF2CharacterLDOH extends ModelTF2Character {
 				bipedHead.rotateAngleX = MathHelper.sin((age/20 - 1.5f))/10 +0.1f;
 				bipedHeadwear.rotateAngleX = bipedHead.rotateAngleX;
 			} else super.setRotationAngles(limbSwing, limbSwingAmount, age, netHeadYaw, headPitch, scaleFactor, entity);
-		} else super.setRotationAngles(limbSwing, limbSwingAmount, age, netHeadYaw, headPitch, scaleFactor, entity);
+		} else*/ super.setRotationAngles(limbSwing, limbSwingAmount, age, netHeadYaw, headPitch, scaleFactor, entity);
 	}
 
 }

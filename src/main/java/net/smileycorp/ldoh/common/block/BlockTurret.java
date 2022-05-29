@@ -67,7 +67,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 
 	@Override
 	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
-		if(side != EnumFacing.UP) return false;
+		//if(side != EnumFacing.UP) return false;
 		return world.isBlockFullCube(pos.offset(side.getOpposite()));
 	}
 
@@ -139,6 +139,12 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return AABBs[state.getValue(FACING).ordinal()];
+	}
+
+	@Override
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return NULL_AABB;
 	}
 
 	@Override

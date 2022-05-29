@@ -9,6 +9,8 @@ import net.smileycorp.ldoh.common.entity.EntityTurret;
 public class AITurretTarget extends EntityAIBase {
 
 	protected final EntityTurret turret;
+	protected float distance = 100;
+	protected EntityLivingBase target = null;
 
 	public AITurretTarget(EntityTurret turret) {
 		this.turret = turret;
@@ -23,8 +25,15 @@ public class AITurretTarget extends EntityAIBase {
 	public void updateTask() {
 		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
 				new AxisAlignedBB(turret.posX - 50, turret.posY - 50, turret.posZ - 50, turret.posX + 50, turret.posY + 50, turret.posZ + 50), (e) -> turret.canTarget(e))) {
-			turret.getEntitySenses().canSee(entity);
-			turret.setTarget(entity);
+			float distance = turret.getDistance(entity);
+			if (turret.getEntitySenses().canSee(entity) && distance < this.distance) {
+				target = entity;
+				this.distance = distance;
+			}
+		}
+		if (target != null) {
+			turret.setTarget(target);
+			distance = 100;
 			return;
 		}
 	}

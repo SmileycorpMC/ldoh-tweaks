@@ -38,6 +38,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
+import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumAxis;
 import biomesoplenty.api.block.BOPBlocks;
 import biomesoplenty.api.enums.BOPWoods;
@@ -173,6 +174,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 					IBlockState state = LDOHBlocks.BARBED_WIRE.getDefaultState();
 					if (mi == 13) state = state.withProperty(BlockBarbedWire.AXIS, EnumAxis.Z);
 					world.setBlockState(pos.up(j), state, 18);
+					TileBarbedWire te = new TileBarbedWire();
+					world.setTileEntity(pos.up(j), te);
+					te.damage(rand.nextInt(150));
 				} else {
 					world.setBlockState(pos.up(j), Blocks.IRON_BARS.getDefaultState(), 19);
 				}

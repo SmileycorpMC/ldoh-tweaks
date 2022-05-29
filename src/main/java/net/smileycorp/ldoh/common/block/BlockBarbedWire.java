@@ -13,14 +13,17 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
@@ -98,6 +101,16 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	}
 
 	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if (stack.hasTagCompound()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+			if (world.getTileEntity(pos) instanceof TileBarbedWire && nbt.hasKey("durability") &! placer.world.isRemote) {
+				((TileBarbedWire) world.getTileEntity(pos)).setDurability(nbt.getInteger("durability"));
+			}
+		}
+	}
+
+	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase player, EnumHand hand) {
 		EnumAxis axis = EnumAxis.fromVector(player.getLookVec());
 		return getStateFromMeta(player.getHeldItem(hand).getMetadata()).withProperty(AXIS, axis);
@@ -136,9 +149,19 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		player.addStat(StatList.getBlockStats(this));
 		player.addExhaustion(0.005F);
 		EnumBarbedWireMat mat = state.getValue(MATERIAL);
-		Item item = mat.getDrop();
-		int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
-		spawnAsEntity(world, pos, new ItemStack(item, count, 0));
+		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
+			ItemStack drop = new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
+			if (((TileBarbedWire) te).getDurability() < mat.getDurability()) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setInteger("durability", ((TileBarbedWire) te).getDurability());
+				drop.setTagCompound(nbt);
+			}
+			spawnAsEntity(world, pos, drop);
+		} else {
+			Item item = mat.getDrop();
+			int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
+			spawnAsEntity(world, pos, new ItemStack(item, count, 0));
+		}
 	}
 
 	@Override

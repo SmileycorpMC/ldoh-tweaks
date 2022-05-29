@@ -205,7 +205,7 @@ public class TF2Events {
 				event.setAmount(3f);
 				if (entity instanceof EntityTF2Character) {
 					//gives the infection effect to non-robots
-					if(!((EntityTF2Character) entity).isRobot()) {
+					if(!((EntityTF2Character) entity).isRobot() &! entity.isPotionActive(HordesInfection.INFECTED)) {
 						entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
 					}
 				}

@@ -188,7 +188,7 @@ public class EntityTurret extends EntityLiving {
 		}
 		if (hasTarget()) {
 			EntityLivingBase target = getTarget();
-			getLookHelper().setLookPosition(target.posX, target.posY + (target.height * 0.75), target.posZ, 12, 12);
+			getLookHelper().setLookPosition(target.posX + (target.width*0.5f), target.posY + (target.height * 0.75), target.posZ + (target.width*0.5f), 10, 80);
 		}
 		if (getCooldown() > 0) {
 			setCooldown(getCooldown()-1);

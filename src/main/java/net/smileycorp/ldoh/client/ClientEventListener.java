@@ -38,8 +38,10 @@ import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
+import net.smileycorp.ldoh.client.entity.RenderTF2CharacterLDOH;
 import net.smileycorp.ldoh.client.entity.RenderTF2Zombie;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
+import net.smileycorp.ldoh.client.entity.RenderZombieFireman;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
@@ -53,6 +55,7 @@ import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
@@ -96,8 +99,9 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
-		//RenderingRegistry.registerEntityRenderingHandler(EntityTF2Character.class, m -> new RenderTF2CharacterLDOH(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Character.class, m -> new RenderTF2CharacterLDOH(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, m -> new RenderZombieFireman(m));
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
 		//register item models
@@ -190,7 +194,7 @@ public class ClientEventListener {
 				GlStateManager.disableAlpha();
 				GlStateManager.disableTexture2D();
 				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-				RenderingUtils.drawQuad(new Vec3d(cx-x+0.5-size, 31-y - 0.1, cz-z+0.5-size), new Vec3d(cx-x+0.5+size, 31-y - 0.1, cz-z+0.5+size), GAS_TEXTURE, 32,
+				RenderingUtils.drawQuad(new Vec3d(cx-x+0.5-size, 30.9-y, cz-z+0.5-size), new Vec3d(cx-x+0.5+size, 30.9-y, cz-z+0.5+size), GAS_TEXTURE, 32,
 						new Color(r, g, b, a), new Vector3f(cx-size, (float) y, cz-size), new Vector3f(cx-size, (float) y, cz-size));
 				GlStateManager.disableBlend();
 				GlStateManager.enableAlpha();

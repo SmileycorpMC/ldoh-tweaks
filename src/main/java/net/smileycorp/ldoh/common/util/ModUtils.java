@@ -199,12 +199,11 @@ public class ModUtils {
 		Vec3d eyepos = entity.getPositionEyes(1f);
 		Vec3d lookangle = entity.getLook(1f);
 		Vec3d lastVec = eyepos.addVector(lookangle.x, lookangle.y, lookangle.z);
-		RayTraceResult blockRay = world.rayTraceBlocks(eyepos, eyepos.addVector(lookangle.x * distance, lookangle.y * distance, lookangle.z * distance), false, false, true);
+		RayTraceResult blockRay = world.rayTraceBlocks(eyepos, eyepos.addVector(lookangle.x * distance, lookangle.y * distance, lookangle.z * distance), false, true, false);
 		for (int x = 0; x <16*distance; x++) {
 			float reach = x/16f;
 			Vec3d vec = eyepos.addVector(lookangle.x*reach, lookangle.y*reach, lookangle.z*reach);
-			if (blockRay == null || blockRay.hitVec == null) return new RayTraceResult(lookangle, null);
-			if (blockRay.hitVec.distanceTo(eyepos) < vec.distanceTo(eyepos)) break;
+			if (!(blockRay == null || blockRay.hitVec == null)) if (blockRay.hitVec.distanceTo(eyepos) < vec.distanceTo(eyepos)) break;
 			AxisAlignedBB AABB = new AxisAlignedBB(lastVec.x, lastVec.y, lastVec.z, vec.x, vec.y, vec.z);
 			List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(entity, AABB);
 			if (!entities.isEmpty()) {

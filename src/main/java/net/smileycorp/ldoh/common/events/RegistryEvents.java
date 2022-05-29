@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -32,6 +34,7 @@ import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
@@ -97,6 +100,7 @@ public class RegistryEvents {
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		GameRegistry.addSmelting(new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 0), 0.1f);
+		GameRegistry.addSmelting(new ItemStack(Blocks.QUARTZ_BLOCK, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.QUARTZ, 1, 0), 0.1f);
 		OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
 		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
 		OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
@@ -175,6 +179,10 @@ public class RegistryEvents {
 				.id(ModDefinitions.getResource("incendiary_projectile"), ID++)
 				.name(ModDefinitions.getName("IncendiaryProjectile")).tracker(64, 80, true).build();
 		registry.register(INCENDIARY_PROJECTILE);
+		EntityEntry ZOMBIE_FIREMAN = EntityEntryBuilder.create().entity(EntityZombieFireman.class)
+				.id(ModDefinitions.getResource("zombie_fireman"), ID++)
+				.name(ModDefinitions.getName("ZombieFireman")).tracker(80, 3, true).build();
+		registry.register(ZOMBIE_FIREMAN);
 	}
 
 }

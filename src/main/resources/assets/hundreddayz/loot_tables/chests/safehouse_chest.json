@@ -2,8 +2,8 @@
 	"pools": [{
 		"name": "hundreddayz:safehouse_chest",
 		"rolls": {
-			"min": 7,
-			"max": 10
+			"min": 5,
+			"max": 8
 		},
 		"entries": [{
 				"type": "item",
@@ -32,6 +32,21 @@
 			{
 				"type": "item",
 				"name": "minecraft:stonebrick",
+				"functions": [{
+					"function": "set_count",
+					"count": {
+						"min": 1,
+						"max": 3
+					}
+				}, {
+					"function": "set_data",
+					"data": 2
+				}],
+				"weight": 17
+			},
+			{
+				"type": "item",
+				"name": "minecraft:cobblestone",
 				"functions": [{
 					"function": "set_count",
 					"count": {

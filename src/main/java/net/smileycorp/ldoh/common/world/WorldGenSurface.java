@@ -15,8 +15,6 @@ import biomesoplenty.api.block.BOPBlocks;
 
 public class WorldGenSurface extends WorldGenerator {
 
-	protected IBlockState[] states = {Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState(), BOPBlocks.mud.getDefaultState(),
-			Blocks.SOUL_SAND.getDefaultState(), Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND)};
 	/** The number of blocks to generate. */
 	protected final int numberOfBlocks = 100;
 
@@ -24,7 +22,8 @@ public class WorldGenSurface extends WorldGenerator {
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos center) {
-		IBlockState state = states[rand.nextInt(states.length)];
+		EnumVariant variant = EnumVariant.values()[rand.nextInt(EnumVariant.values().length)];
+
 		float f = rand.nextFloat() * (float)Math.PI;
 		double d0 = center.getX() + 8 + MathHelper.sin(f) * numberOfBlocks / 8.0F;
 		double d1 = center.getX() + 8 - MathHelper.sin(f) * numberOfBlocks / 8.0F;
@@ -66,10 +65,24 @@ public class WorldGenSurface extends WorldGenerator {
 		for (BlockPos pos : positions) {
 			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL) {
 				int r = (int) Math.floor(Math.pow(pos.getX() - center.getX(), 2) + Math.pow(pos.getZ() - center.getZ(), 2));
-				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, state, 18);
+				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, world.rand.nextInt(Math.max(r, 1))<30 ? variant.state1 : variant.state2, 18);
 			}
 		}
 		return true;
+	}
+
+	private static enum EnumVariant {
+
+		SOUL_SAND(Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.mud.getDefaultState()),
+		CLAY(Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState()),
+		TERRACOTTA(Blocks.HARDENED_CLAY.getDefaultState(), Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND));
+
+		protected final IBlockState state1, state2;
+
+		private EnumVariant(IBlockState state1, IBlockState state2) {
+			this.state1 = state1;
+			this.state2 = state2;
+		}
 	}
 
 }

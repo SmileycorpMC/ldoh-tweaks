@@ -52,6 +52,8 @@ item.hundreddayz.MechanicHat.name=Mechanic Hat
 item.hundreddayz.Hardhat.name=Hardhat
 item.hundreddayz.Bonesaw.name=Bonesaw
 item.hundreddayz.incendiary_ammo.name=Incendiary Ammo
+item.hundreddayz.FireAxe.name=Fire Axe
+item.hundreddayz.FireHat.name=Fireman Hat
 
 tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
@@ -65,6 +67,7 @@ tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
 tooltip.hundreddayz.BarbedWire.Gold=Has Low durability and high damage.
 tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damage.
+tooltip.hundreddayz.BarbedWire.Durability=Durability:
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
 tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
@@ -83,6 +86,7 @@ entity.hundreddayz.NurseZombie.name=Zombie Nurse
 entity.hundreddayz.SwatZombie.name=Swat Zombie
 entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
+entity.hundreddayz.ZombieFireman.name=Zombie Fireman
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie

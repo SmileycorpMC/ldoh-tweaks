@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -57,6 +58,7 @@ import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
+import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
@@ -122,8 +124,8 @@ public class EntityEvents {
 						}  else if (randInt < 15) {
 							newentity = world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert ?
 									new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
-						} else if (world.getWorldTime() < 240000) {
-							newentity = rand.nextInt(20) == 0 ? new EntityDummyZombie1(world) : new EntityDummyZombie2(world);
+						} else if (randInt < 18) {
+							newentity = new EntityZombieFireman(world);
 						}
 						//turns zombies into husks in a desert
 						else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
@@ -235,6 +237,8 @@ public class EntityEvents {
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
 			}
 		}
+		//fix rare skeleton horse traps from appearing
+		if (entity instanceof EntitySkeletonHorse) event.setCanceled(true);
 	}
 
 	@SubscribeEvent
