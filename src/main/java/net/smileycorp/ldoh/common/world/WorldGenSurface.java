@@ -17,13 +17,18 @@ public class WorldGenSurface extends WorldGenerator {
 
 	/** The number of blocks to generate. */
 	protected final int numberOfBlocks = 100;
+	
+	private final IBlockState state1, state2;
 
 	private Set<BlockPos> positions = new HashSet<BlockPos>();
+	
+	public WorldGenSurface(IBlockState state1, IBlockState state2) {
+		this.state1 = state1;
+		this.state2 = state2;
+	}
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos center) {
-		EnumVariant variant = EnumVariant.values()[rand.nextInt(EnumVariant.values().length)];
-
 		float f = rand.nextFloat() * (float)Math.PI;
 		double d0 = center.getX() + 8 + MathHelper.sin(f) * numberOfBlocks / 8.0F;
 		double d1 = center.getX() + 8 - MathHelper.sin(f) * numberOfBlocks / 8.0F;
@@ -63,15 +68,15 @@ public class WorldGenSurface extends WorldGenerator {
 			}
 		}
 		for (BlockPos pos : positions) {
-			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL) {
+			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL || world.getBlockState(pos).getBlock() == BOPBlocks.dried_sand) {
 				int r = (int) Math.floor(Math.pow(pos.getX() - center.getX(), 2) + Math.pow(pos.getZ() - center.getZ(), 2));
-				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, world.rand.nextInt(Math.max(r, 1))<30 ? variant.state1 : variant.state2, 18);
+				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, world.rand.nextInt(Math.max(r, 1))<35 ? state1 : state2, 18);
 			}
 		}
 		return true;
 	}
 
-	private static enum EnumVariant {
+	public static enum EnumVariant {
 
 		SOUL_SAND(Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.mud.getDefaultState()),
 		CLAY(Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState()),

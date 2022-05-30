@@ -3,6 +3,9 @@ package net.smileycorp.ldoh.common.world;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockDirt.DirtType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -16,12 +19,17 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
+import net.smileycorp.ldoh.common.world.WorldGenSurface.EnumVariant;
 import biomesoplenty.api.biome.BOPBiomes;
+import biomesoplenty.api.block.BOPBlocks;
+import biomesoplenty.common.block.BlockBOPDirt;
+import biomesoplenty.common.block.BlockBOPDirt.BOPDirtType;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class ModWorldGen implements IWorldGenerator {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 		//generate horde spawning blocks
@@ -41,7 +49,11 @@ public class ModWorldGen implements IWorldGenerator {
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
 		}
 		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
-			genSurfaceBlock(world, rand, chunkX, chunkZ);
+			EnumVariant variant = EnumVariant.values()[new Random().nextInt(EnumVariant.values().length)];
+			genSurfaceBlock(world, rand, chunkX, chunkZ, variant.state1, variant.state2);
+		} else if (biome == BOPBiomes.wasteland.get() && rand.nextInt(25) == 0) {
+			genSurfaceBlock(world, rand, chunkX, chunkZ, Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.dirt.getDefaultState()
+					.withProperty(BlockBOPDirt.VARIANT, BOPDirtType.LOAMY).withProperty(BlockBOPDirt.COARSE, true));
 		}
 		genNest(world, rand, chunkX, chunkZ, biome == BOPBiomes.wasteland.get());
 	}
@@ -71,11 +83,11 @@ public class ModWorldGen implements IWorldGenerator {
 			generator.generate(world, rand, blockpos);
 		}
 	}
-
-	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ) {
+	
+	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ, IBlockState state1, IBlockState state2) {
 		int x = (chunkX << 4) +rand.nextInt(16);
 		int z = (chunkZ << 4) + rand.nextInt(16);
-		WorldGenSurface gen = new WorldGenSurface();
+		WorldGenSurface gen = new WorldGenSurface(state1, state2);
 		gen.generate(world, rand, new BlockPos(x, world.getChunkFromChunkCoords(chunkX, chunkZ).getHeightValue(x&15, z&15)-1, z));
 	}
 

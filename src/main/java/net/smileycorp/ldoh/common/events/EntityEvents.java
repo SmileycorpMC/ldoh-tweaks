@@ -6,12 +6,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityHusk;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -108,6 +111,14 @@ public class EntityEvents {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
+			//refund golem materials
+			if (entity instanceof EntityIronGolem) {
+				if (((EntityIronGolem) entity).isPlayerCreated()) {
+					EntityItem drops = new EntityItem(world, entity.posX, entity.posY, entity.posZ, 
+							new ItemStack(Blocks.IRON_BLOCK, 4));
+					world.spawnEntity(drops);
+				}
+			}
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 				if(!entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).isSpawned()) {

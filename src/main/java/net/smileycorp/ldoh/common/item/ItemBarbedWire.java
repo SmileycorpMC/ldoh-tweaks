@@ -22,6 +22,7 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 		String name = "Barbed_Wire";
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
+		setHasSubtypes(true);
 	}
 
 	@Override
