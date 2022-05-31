@@ -114,7 +114,7 @@ public class EntityEvents {
 			//refund golem materials
 			if (entity instanceof EntityIronGolem) {
 				if (((EntityIronGolem) entity).isPlayerCreated()) {
-					EntityItem drops = new EntityItem(world, entity.posX, entity.posY, entity.posZ, 
+					EntityItem drops = new EntityItem(world, entity.posX, entity.posY, entity.posZ,
 							new ItemStack(Blocks.IRON_BLOCK, 4));
 					world.spawnEntity(drops);
 				}
@@ -137,6 +137,10 @@ public class EntityEvents {
 									new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
 						} else if (randInt < 18) {
 							newentity = new EntityZombieFireman(world);
+						} else if (world.getWorldTime() < 240000) {
+							newentity = new EntityDummyZombie2(world);
+						} else if (world.getWorldTime() < 480000) {
+							newentity = new EntityDummyZombie1(world);
 						}
 						//turns zombies into husks in a desert
 						else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {

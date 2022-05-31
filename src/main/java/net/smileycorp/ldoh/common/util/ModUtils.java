@@ -44,6 +44,7 @@ import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
+import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
@@ -240,25 +241,22 @@ public class ModUtils {
 	}
 
 	private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
-		if (rand.nextInt(5) == 0) {
+		if (rand.nextInt(7) == 0) {
 			return new EntityCrawlingZombie(world);
 		}
 		if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
 			int r = rand.nextInt(100);
-			if (r < 10) return new EntityZombie(world);
-			if (r < 20) return new EntityDummyZombie1(world);
-			if (r < 40) return new EntityDummyZombie0(world);
-			if (r == 40) return new EntityZombieNurse(world);
-			else return new EntityDummyZombie2(world);
+			if (r <= 1) return new EntityZombieNurse(world);
+			else if (r <= 3) return new EntityZombieFireman(world);
 		}
 		else {
-			if (rand.nextInt(3) > day/10) {
-				int r = rand.nextInt(10);
-				if (r < 3) return new EntityDummyZombie2(world);
-				else if (r < 5) return new EntityDummyZombie0(world);
-				else if (r == 7) return new EntityDummyZombie1(world);
-			}
+			if (day < 10) return new EntityDummyZombie2(world);
+			else if (day < 20) return new EntityDummyZombie1(world);
 		}
+		int r = rand.nextInt(20);
+		if (r < 5) return new EntityDummyZombie0(world);
+		else if (r < 10) return new EntityDummyZombie1(world);
+		else if (r < 15) return new EntityDummyZombie2(world);
 		return new EntityZombie(world);
 	}
 
