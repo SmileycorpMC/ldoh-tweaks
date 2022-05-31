@@ -2,6 +2,8 @@ package net.smileycorp.ldoh.common.entity;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
@@ -35,8 +37,9 @@ public class EntityZombieFireman extends EntityZombie {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(30.0D);
-		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(14.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(10.0D);}
 
 	@Override
@@ -45,6 +48,15 @@ public class EntityZombieFireman extends EntityZombie {
 		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.FIREMAN_HAT));
 		inventoryArmorDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.1F;
 		inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.1F;
+	}
+
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		if (world.getBlockState(getPosition()).getBlock() == Blocks.FIRE) {
+			world.setBlockState(getPosition(), Blocks.AIR.getDefaultState());
+			playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.75f, 0);
+		}
 	}
 
 	@Override

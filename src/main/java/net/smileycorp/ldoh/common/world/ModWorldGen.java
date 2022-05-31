@@ -3,8 +3,6 @@ package net.smileycorp.ldoh.common.world;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirt;
-import net.minecraft.block.BlockDirt.DirtType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -83,7 +81,7 @@ public class ModWorldGen implements IWorldGenerator {
 			generator.generate(world, rand, blockpos);
 		}
 	}
-	
+
 	private void genSurfaceBlock(World world, Random rand, int chunkX, int chunkZ, IBlockState state1, IBlockState state2) {
 		int x = (chunkX << 4) +rand.nextInt(16);
 		int z = (chunkZ << 4) + rand.nextInt(16);

@@ -86,7 +86,7 @@ public class WorldEvents {
 			if (!safehouse.isMarked()) {
 				safehouse.markPositions(world, spawn.down(), true);
 			}
-			safehouse.generate(world, rand, spawn.down());
+			safehouse.generate(world, rand, world.getSpawnPoint().down());
 			event.setCanceled(true);
 		}
 	}
@@ -144,4 +144,5 @@ public class WorldEvents {
 			}
 		}
 	}
+
 }

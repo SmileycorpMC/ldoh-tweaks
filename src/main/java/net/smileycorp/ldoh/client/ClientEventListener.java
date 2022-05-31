@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -289,6 +291,24 @@ public class ClientEventListener {
 					}
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void renderEntity(RenderLivingEvent.Pre<?> event){
+		EntityLivingBase entity = event.getEntity();
+		if (entity instanceof EntityZombieFireman) {
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.1, 1.1, 1.1);
+		}
+	}
+
+	@SubscribeEvent
+	public void renderEntity(RenderLivingEvent.Post<?> event){
+		EntityLivingBase entity = event.getEntity();
+		if (entity instanceof EntityZombieFireman) {
+			GlStateManager.scale(1, 1, 1);
+			GlStateManager.popMatrix();
 		}
 	}
 

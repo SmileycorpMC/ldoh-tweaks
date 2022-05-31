@@ -41,8 +41,8 @@
 	{
 		"name": "hundreddayz:safehouse_fridge",
 		"rolls": {
-			"min": 8,
-			"max": 12
+			"min": 10,
+			"max": 14
 		},
 		"entries": [ {
 				"type": "item",
@@ -54,7 +54,7 @@
 				"weight": 5
 			}, {
 				"type": "item",
-				"name": "animania:brown_egg",
+				"name": "minecraft:egg",
 				"weight": 7
 			}, {
 				"type": "item",

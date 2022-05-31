@@ -111,7 +111,7 @@ public class ModUtils {
 
 	//checks if a 64/64 area around the position consists of only regular wasteland
 	public static boolean isOnlyWasteland(World world, int x, int z) {
-		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-32, z-32, 64, 64, false)) if (biome!= WastelandWorld.apocalypse) return false;
+		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-64, z-64, 128, 128, false)) if (biome!= WastelandWorld.apocalypse) return false;
 		return true;
 	}
 

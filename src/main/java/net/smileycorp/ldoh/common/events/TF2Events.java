@@ -58,6 +58,7 @@ import rafradek.TF2weapons.item.ItemFromData;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 
 public class TF2Events {
@@ -191,6 +192,9 @@ public class TF2Events {
 				}
 				if (stack.getCount() == 0) item.setDead();
 			}
+			if (merc.isRobot() && merc.isPotionActive(SRPPotions.COTH_E)) {
+				merc.removePotionEffect(SRPPotions.COTH_E);
+			}
 		}
 	}
 
@@ -239,7 +243,7 @@ public class TF2Events {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ })
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();

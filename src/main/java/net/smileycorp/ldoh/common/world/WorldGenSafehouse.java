@@ -76,6 +76,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 	private List<BlockPos> heightmap = new ArrayList<BlockPos>();
 
 	private boolean marked = false;
+	private boolean generated = false;
 
 	public WorldGenSafehouse() {
 		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 17)) isHalloween = true;
@@ -101,20 +102,28 @@ public class WorldGenSafehouse extends WorldGenerator {
 		for (int i = -13; i <= 13; i++) {
 			for (int k = -13; k <= 13; k++) {
 				if (Math.abs(i) == 13 || Math.abs(k) == 13) {
-					BlockPos pos0 = world.getTopSolidOrLiquidBlock(pos.east(i).north(k));
+					BlockPos hpos = world.getTopSolidOrLiquidBlock(pos.east(i).north(k));
+					while (world.getBlockState(hpos).getBlock() != Blocks.STONE)  {
+						hpos = hpos.down();
+					}
+					hpos = hpos.up(2);
 					if (!forced) {
-						if (pos0.getY() >= pos.getY()+5 || pos0.getY() <= pos.getY()-5) {
+						if (hpos.getY() >= pos.getY()+5 || hpos.getY() <= pos.getY()-5) {
 							wallpos.clear();
 							heightmap.clear();
 							return false;
 						}
 					}
-					wallpos.add(pos0);
+					wallpos.add(hpos);
 					if (i == 0 && k == 13) {
-						exitpos = pos0;
+						exitpos = hpos;
 					}
 				} else {
-					heightmap.add(world.getTopSolidOrLiquidBlock(pos.east(i).north(k)));
+					BlockPos hpos = world.getTopSolidOrLiquidBlock(pos.east(i).north(k));
+					while (world.getBlockState(hpos).getBlock() != Blocks.STONE)  {
+						hpos = hpos.down();
+					}
+					heightmap.add(hpos.up(2));
 				}
 			}
 		}
@@ -126,6 +135,10 @@ public class WorldGenSafehouse extends WorldGenerator {
 		return marked;
 	}
 
+	public boolean isGenerated() {
+		return generated;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean generate(World world, Random rand, BlockPos backup) {
@@ -135,7 +148,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 		int wh = basepos.getY()+6;
 		//clear area of structures
 		for (BlockPos pos : heightmap) {
-			for (int j = 0; j <= (wh - pos.getY()); j++) {
+			for (int j = 0; j <= (100 - pos.getY()); j++) {
 				world.setBlockToAir(pos.up(j));
 			}
 		}
@@ -162,6 +175,11 @@ public class WorldGenSafehouse extends WorldGenerator {
 				BlockPos pos = basepos.east(i).south(k);
 				world.setBlockState(pos, BOPBlocks.planks_0.getDefaultState()
 						.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
+				pos = pos.down();
+				while (world.getBlockState(pos).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+					pos = pos.down();
+				}
 			}
 		}
 		for (int i = -1; i >= -5; i--) {
@@ -169,6 +187,11 @@ public class WorldGenSafehouse extends WorldGenerator {
 				BlockPos pos = basepos.east(i).south(k);
 				world.setBlockState(pos, BOPBlocks.planks_0.getDefaultState()
 						.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
+				pos = pos.down();
+				while (world.getBlockState(pos).getBlock() == Blocks.AIR) {
+					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+					pos = pos.down();
+				}
 			}
 		}
 		//south wall
@@ -399,6 +422,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 				world.setBlockState(basepos.up(7).east(i).south(2), Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, EnumType.SPRUCE));
 			}
 		}
+		generated = true;
 		return true;
 	}
 
@@ -502,7 +526,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 
 		//crates
 		placeCrate(world.getHeight(pos.north(2)), world);
-		placeCrate(world.getHeight(pos.north(2).up()), world);
+		placeCrate(world.getHeight(pos.north(2)), world);
 		placeCrate(world.getHeight(pos.north(3)).east(5), world);
 		placeCrate(world.getHeight(pos.north(5)).east(4), world);
 

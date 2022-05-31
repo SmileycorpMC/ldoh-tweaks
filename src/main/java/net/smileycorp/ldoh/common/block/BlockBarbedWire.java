@@ -159,7 +159,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 			spawnAsEntity(world, pos, drop);
 		} else {
 			Item item = mat.getDrop();
-			int count = (int) Math.floor((((TileBarbedWire) te).getDurability() / mat.getDurability()) * 7);
+			int count = (int) ((double)((TileBarbedWire) te).getDurability() / (double)mat.getDurability() * 7d);
 			spawnAsEntity(world, pos, new ItemStack(item, count, 0));
 		}
 	}
