@@ -8,6 +8,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
+import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,8 +19,12 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -162,11 +168,6 @@ public class ModUtils {
 		return false;
 	}
 
-	public static boolean shouldSnore(EntityLivingBase entity) {
-		if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) return entity.getCapability(LDOHCapabilities.EXHAUSTION, null).isSleeping((EntityLiving) entity);
-		return false;
-	}
-
 	public static BlockPos readPosFromNBT(NBTTagCompound nbt) {
 		return new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 	}
@@ -182,7 +183,7 @@ public class ModUtils {
 	}
 
 	public static String getPosString(BlockPos pos) {
-		return pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
+		return "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
 	}
 
 	public static Vec3d getVecFromPathPoint(PathPoint pathPoint) {
@@ -248,16 +249,31 @@ public class ModUtils {
 			int r = rand.nextInt(100);
 			if (r <= 1) return new EntityZombieNurse(world);
 			else if (r <= 3) return new EntityZombieFireman(world);
+			if (day < 10 || r < 25) new EntityDummyZombie2(world);
+			else if (day < 20 || r < 50) return new EntityDummyZombie1(world);
+			else if (r < 75) return new EntityDummyZombie0(world);
 		}
 		else {
 			if (day < 10) return new EntityDummyZombie2(world);
 			else if (day < 20) return new EntityDummyZombie1(world);
 		}
-		int r = rand.nextInt(20);
-		if (r < 5) return new EntityDummyZombie0(world);
-		else if (r < 10) return new EntityDummyZombie1(world);
-		else if (r < 15) return new EntityDummyZombie2(world);
 		return new EntityZombie(world);
+	}
+
+	public static float calculateCrateWeight(ItemStack stack, float weight) {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt = stack.writeToNBT(nbt);
+		NBTTagList items = nbt.getTagList("Items", 10);
+		for (int i = 0; i < items.tagCount(); i++){
+			NBTTagCompound itemTags = items.getCompoundTagAt(i);
+			ItemStack stackInBox = new ItemStack(Item.getByNameOrId(itemTags.getString("id")), itemTags.getByte("Count"), itemTags.getShort("Damage"));
+			Block blockInBox = Block.getBlockFromItem(stackInBox.getItem());
+			if (!blockInBox.equals(Blocks.AIR) && !stack.getItem().equals(Items.AIR))
+				weight += ModuleMovementRestriction.getItemWeight(stackInBox) * stackInBox.getCount();
+			if (weight == 0f)
+				weight = 1f / 64f * stack.getCount();
+		}
+		return weight;
 	}
 
 }

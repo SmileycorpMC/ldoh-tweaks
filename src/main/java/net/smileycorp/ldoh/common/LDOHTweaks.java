@@ -22,7 +22,6 @@ public class LDOHTweaks {
 	@Instance(ModDefinitions.MODID)
 	public static LDOHTweaks INSTANCE;
 
-
 	@SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
 	public static CommonProxy PROXY;
 

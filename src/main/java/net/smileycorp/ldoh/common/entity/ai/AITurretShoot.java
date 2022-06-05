@@ -28,6 +28,7 @@ public class AITurretShoot extends EntityAIBase {
 	protected static final float LENGTH = 0.5f;
 	protected static final float SPEED = 5f;
 	protected Gun fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getModifiedGun(new ItemStack(ModGuns.CHAIN_GUN));
+	protected int idleTimer = 0;
 
 	protected final EntityTurret turret;
 
@@ -46,6 +47,10 @@ public class AITurretShoot extends EntityAIBase {
 		Vec3d pos = turret.getPositionEyes(1f).addVector(dir.x*LENGTH, dir.y*LENGTH, dir.z*LENGTH);
 		EntityLivingBase target = turret.getTarget();
 		if (target.isEntityAlive()) {
+			if (!(turret.getEntitySenses().canSee(target) && turret.getDistance(target) < 100)) {
+				turret.setTarget(null);
+				return;
+			}
 			RayTraceResult ray = ModUtils.rayTrace(turret.world, turret, turret.getDistance(target)+5);
 			if (ray != null) {
 				if (ray.typeOfHit == RayTraceResult.Type.ENTITY) {
@@ -67,10 +72,20 @@ public class AITurretShoot extends EntityAIBase {
 							if(event != null) turret.world.playSound(null, turret.getPosition(), event, SoundCategory.HOSTILE, 5.0F, 0.8F + turret.world.rand.nextFloat() * 0.2F);
 							MessageBullet messageBullet = new MessageBullet(bullet.getEntityId(), bullet.posX, bullet.posY, bullet.posZ, bullet.motionX, bullet.motionY, bullet.motionZ, 0, 0);
 							PacketHandler.INSTANCE.sendToAllAround(messageBullet, new NetworkRegistry.TargetPoint(turret.dimension, turret.posX, turret.posY, turret.posZ, GunConfig.SERVER.network.projectileTrackingRange));
+							if (ray.entityHit != target &! ray.entityHit.isDead) {
+								turret.setTarget((EntityLivingBase) ray.entityHit);
+							}
+							idleTimer = 0;
+							return;
 						}
 					}
 				}
 			}
+			if (idleTimer >= 20) {
+				turret.setTarget(null);
+				idleTimer = 0;
+			}
+			idleTimer++;
 		} else {
 			turret.setTarget(null);
 			return;

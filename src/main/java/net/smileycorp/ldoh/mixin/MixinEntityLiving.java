@@ -5,16 +5,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityLiving.class)
@@ -36,14 +33,5 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
 			}
 		}
 	}
-
-	@Inject(at=@At("HEAD"), method = "playLivingSound", cancellable = true)
-	public void playLivingSound(CallbackInfo callback) {
-		if (ModUtils.shouldSnore(this)) {
-			playSound(new SoundEvent(ModDefinitions.SNORE), getSoundVolume(), getSoundPitch());
-			callback.cancel();
-		}
-	}
-
 
 }

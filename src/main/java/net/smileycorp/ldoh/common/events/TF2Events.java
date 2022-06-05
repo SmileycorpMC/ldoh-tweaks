@@ -35,7 +35,6 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
-import net.smileycorp.ldoh.common.capabilities.IExhaustion;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
@@ -212,13 +211,6 @@ public class TF2Events {
 					if(!((EntityTF2Character) entity).isRobot() &! entity.isPotionActive(HordesInfection.INFECTED)) {
 						entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
 					}
-				}
-			}
-			if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityLiving) {
-				IExhaustion cap = entity.getCapability(LDOHCapabilities.EXHAUSTION, null);
-				if (cap.isSleeping((EntityLiving) entity)) {
-					cap.setSleeping((EntityLiving) entity, false);
-					if (attacker instanceof EntityLivingBase)((EntityLiving) entity).setAttackTarget((EntityLivingBase) attacker);
 				}
 			}
 		}

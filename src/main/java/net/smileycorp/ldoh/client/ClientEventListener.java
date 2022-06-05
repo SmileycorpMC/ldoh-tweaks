@@ -40,7 +40,6 @@ import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.RenderCrawlingZombie;
 import net.smileycorp.ldoh.client.entity.RenderSpecialZombie;
-import net.smileycorp.ldoh.client.entity.RenderTF2CharacterLDOH;
 import net.smileycorp.ldoh.client.entity.RenderTF2Zombie;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.RenderZombieFireman;
@@ -101,7 +100,6 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Character.class, m -> new RenderTF2CharacterLDOH(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, m -> new RenderZombieFireman(m));
 		//handle custom mapping for landmine blockstates
@@ -179,7 +177,7 @@ public class ClientEventListener {
 			if (entity.posY >= 29.2) {
 				RenderManager rm = mc.getRenderManager();
 				//scale renderer base on render distance
-				int size = rm.options == null ? 0 : rm.options.renderDistanceChunks*16;
+				int size = rm.options == null ? 0 : (rm.options.renderDistanceChunks+1)*16;
 				int r = GAS_COLOUR.getRed();
 				int g = GAS_COLOUR.getGreen();
 				int b = GAS_COLOUR.getBlue();

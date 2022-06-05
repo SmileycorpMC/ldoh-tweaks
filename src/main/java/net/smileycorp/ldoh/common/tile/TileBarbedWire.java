@@ -31,12 +31,13 @@ public class TileBarbedWire extends TileEntity {
 	}
 
 	public void causeDamage() {
+		if (cooldown < 0) return;
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
 		for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, bb)) {
+			if (entity.isDead |! entity.isAddedToWorld()) break;
 			if (mat.getDamage()>0) {
-				entity.attackEntityFrom(DamageSource.CACTUS, mat.getDamage());
+				if (entity.attackEntityFrom(DamageSource.CACTUS, mat.getDamage())) durability--;
 			}
-			durability--;
 			cooldown = 5;
 		}
 		sendUpdate();
