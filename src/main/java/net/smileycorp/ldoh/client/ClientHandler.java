@@ -17,7 +17,6 @@ import net.smileycorp.ldoh.common.network.SyncFoodMessage;
 import net.smileycorp.ldoh.common.network.SyncHungerEffectMessage;
 import net.smileycorp.ldoh.common.network.SyncHungerMessage;
 import net.smileycorp.ldoh.common.network.SyncMedicCureMessage;
-import net.smileycorp.ldoh.common.network.SyncSleepMessage;
 import net.smileycorp.ldoh.common.network.SyncSyringesMessage;
 
 public class ClientHandler {
@@ -69,13 +68,6 @@ public class ClientHandler {
 			ICuring curing = entity.getCapability(LDOHCapabilities.CURING, null);
 			curing.setSyringeCount(message.getCount());
 		}
-	}
-
-	//sync entity sleeping to client
-	public static void syncSleeping(SyncSleepMessage message) {
-		Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-		if (entity!=null) if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null))
-			entity.getCapability(LDOHCapabilities.EXHAUSTION, null).setSleeping((EntityLiving) entity, message.isSleeping());
 	}
 
 	//sync medic curing an entity to client

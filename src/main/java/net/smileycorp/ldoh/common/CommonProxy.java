@@ -23,8 +23,6 @@ import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks.BreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.ICuring.Curing;
-import net.smileycorp.ldoh.common.capabilities.IExhaustion;
-import net.smileycorp.ldoh.common.capabilities.IExhaustion.Exhaustion;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IFollowers.Followers;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
@@ -90,7 +88,6 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
-		CapabilityManager.INSTANCE.register(IExhaustion.class, new IExhaustion.Storage(), () -> new Exhaustion());
 		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), () -> new VillageData());
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 

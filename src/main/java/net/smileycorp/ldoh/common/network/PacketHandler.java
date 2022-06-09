@@ -21,7 +21,7 @@ public class PacketHandler {
 		NETWORK_INSTANCE.registerMessage(ClientSyncHunger.class, SyncHungerMessage.class, 2, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientStartEat.class, StartEatingMessage.class, 3, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
-		NETWORK_INSTANCE.registerMessage(ClientSyncSleep.class, SyncSleepMessage.class, 5, Side.CLIENT);
+		//discriminator 5 open from exhaustion code removal
 		NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 6, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncHungerEffect.class, SyncHungerEffectMessage.class, 7, Side.CLIENT);
 	}
@@ -95,21 +95,6 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					ClientHandler.syncSyringes(message);
-				});
-			}
-			return null;
-		}
-	}
-
-	public static class ClientSyncSleep implements IMessageHandler<SyncSleepMessage, IMessage> {
-
-		public ClientSyncSleep() {}
-
-		@Override
-		public IMessage onMessage(SyncSleepMessage message, MessageContext ctx) {
-			if (ctx.side == Side.CLIENT) {
-				Minecraft.getMinecraft().addScheduledTask(() -> {
-					ClientHandler.syncSleeping(message);
 				});
 			}
 			return null;

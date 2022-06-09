@@ -29,9 +29,6 @@ public class LDOHCapabilities {
 	@CapabilityInject(ICuring.class)
 	public final static Capability<ICuring> CURING = null;
 
-	@CapabilityInject(IExhaustion.class)
-	public final static Capability<IExhaustion> EXHAUSTION = null;
-
 	@CapabilityInject(IVillageData.class)
 	public final static Capability<IVillageData> VILLAGE_DATA = null;
 

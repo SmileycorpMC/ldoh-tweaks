@@ -22,7 +22,7 @@ public class ContainerTurret extends Container {
 		playerInv = player.inventory;
 		//turret inventory
 		for (int i = 0; i< inv.getSizeInventory(); i++) {
-			addSlotToContainer(new Slot(turret.getInventory(), i, 8 + i*18, 67));
+			addSlotToContainer(new AmmoSlot(turret.getInventory(), i, 8 + i*18, 67));
 		}
 		//player inventory
 		for (int i = 0; i < 3; ++i) {
@@ -43,28 +43,28 @@ public class ContainerTurret extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = inventorySlots.get(index);
+		ItemStack itemstack = ItemStack.EMPTY;
+		Slot slot = inventorySlots.get(index);
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            if (index < inv.getSizeInventory()) {
-                if (!mergeItemStack(itemstack1, inv.getSizeInventory(), inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!mergeItemStack(itemstack1, 0, inv.getSizeInventory(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            }
-            else {
-                slot.onSlotChanged();
-            }
-        }
+		if (slot != null && slot.getHasStack()) {
+			ItemStack itemstack1 = slot.getStack();
+			itemstack = itemstack1.copy();
+			if (index < inv.getSizeInventory()) {
+				if (!mergeItemStack(itemstack1, inv.getSizeInventory(), inventorySlots.size(), true)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!mergeItemStack(itemstack1, 0, inv.getSizeInventory(), false)) {
+				return ItemStack.EMPTY;
+			}
+			if (itemstack1.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
+			}
+			else {
+				slot.onSlotChanged();
+			}
+		}
 
-        return itemstack;
-    }
+		return itemstack;
+	}
 
 }

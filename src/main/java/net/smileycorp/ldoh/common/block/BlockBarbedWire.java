@@ -17,7 +17,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
@@ -44,8 +43,6 @@ import net.smileycorp.ldoh.common.util.EnumAxis;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import com.mrcrayfish.guns.entity.EntityProjectile;
 
 public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
 
@@ -85,7 +82,6 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		entity.setInWeb();
 		if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
 			TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
-			if (entity instanceof EntityProjectile || entity instanceof IProjectile) te.damage(1);
 			if (te.getOrUpdateCooldown() == 0) {
 				te.causeDamage();
 			}
