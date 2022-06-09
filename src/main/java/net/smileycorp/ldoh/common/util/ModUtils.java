@@ -56,7 +56,6 @@ import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
-import biomesoplenty.api.biome.BOPBiomes;
 
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.legacy.wasteland.world.WastelandWorld;
@@ -104,7 +103,7 @@ public class ModUtils {
 		World world = entity.world;
 		Biome biome = world.getBiome(entity.getPosition());
 		IAttributeInstance speed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-		if (biome == BOPBiomes.wasteland.get()) {
+		if (EnumBiomeType.BADLANDS.matches(biome)) {
 			if (!speed.hasModifier(WASTELAND_MODIFIER)) speed.applyModifier(WASTELAND_MODIFIER);
 		}
 		if (world.getWorldTime()%24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayTimeSpeedModifier(world));
@@ -123,7 +122,7 @@ public class ModUtils {
 	}
 
 	public static boolean isCity(World world, int x, int z) {
-		for (Biome biome : world.getBiomeProvider().getBiomes(null, x<<4, z<<4, 16, 16, false)) if (biome == WastelandWorld.apocalypse_city) return true;
+		for (Biome biome : world.getBiomeProvider().getBiomes(null, x<<4, z<<4, 16, 16, false)) if (EnumBiomeType.CITY.matches(biome)) return true;
 		if (world.getChunkProvider() instanceof ChunkProviderServer) {
 			if (((ChunkProviderServer)world.getChunkProvider()).chunkGenerator instanceof LostCityChunkGenerator) {
 				LostCityChunkGenerator gen = (LostCityChunkGenerator) ((ChunkProviderServer)world.getChunkProvider()).chunkGenerator;
