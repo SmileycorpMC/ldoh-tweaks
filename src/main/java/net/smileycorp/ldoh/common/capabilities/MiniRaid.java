@@ -107,7 +107,6 @@ public class MiniRaid implements IMiniRaid {
 					else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
 					world.spawnEntity(entity);
 					entity.tasks.addTask(1, new AIMiniRaid(entity, player));
-					System.out.println("Spawned " + entity + " at " + entity.getPosition());
 				}
 				HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
 			}
