@@ -46,8 +46,10 @@ import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.VillageManager;
 import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
+import rafradek.TF2weapons.entity.ai.EntityAISpotTarget;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
+import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityMedic;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
@@ -241,6 +243,12 @@ public class TF2Events {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
+			if (entity instanceof EntitySentry) {
+				EntitySentry sentry = (EntitySentry) entity;
+				sentry.targetTasks.taskEntries.clear();
+				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
+						(e) -> ModUtils.canTarget(sentry, e), false, true));
+			}
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
