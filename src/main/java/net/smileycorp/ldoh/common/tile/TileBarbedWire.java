@@ -41,8 +41,10 @@ public class TileBarbedWire extends TileEntity {
 	}
 
 	public void causeDamage() {
+		if (cooldown > 0) return;
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
 		for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, bb)) {
+			if (entity.isDead |! entity.isAddedToWorld()) break;
 			if (mat.getDamage()>0) {
 				float modifier = 1;
 				for (Entry<Enchantment, Integer> entry : enchant_map.entrySet()) {
