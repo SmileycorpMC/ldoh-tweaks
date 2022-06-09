@@ -97,8 +97,9 @@ entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 entity.hundreddayz.Turret.name=Sentry Turret
 
-death.attack.ToxicGas=%1$s choked on toxic gasses
-death.attack.Shrapnel=%1$s stepped on a landmine
+death.attack.ToxicGas=%1$s choked on toxic gas
+death.attack.Shrapnel=%1$s went kaboom
+death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
