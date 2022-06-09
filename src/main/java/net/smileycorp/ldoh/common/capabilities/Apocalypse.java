@@ -32,7 +32,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrol
 
 public class Apocalypse implements IApocalypse {
 
-	private static WeightedOutputs<Class<? extends EntityParasiteBase>> adaptedtable = init();
+	public static WeightedOutputs<Class<? extends EntityParasiteBase>> adaptedtable = init();
 
 	private static WeightedOutputs<Class<? extends EntityParasiteBase>> init() {
 		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<Class<? extends EntityParasiteBase>, Integer>();

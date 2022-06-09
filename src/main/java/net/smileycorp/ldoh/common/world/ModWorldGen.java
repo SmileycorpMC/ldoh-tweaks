@@ -43,8 +43,7 @@ public class ModWorldGen implements IWorldGenerator {
 		if (biome == Biomes.DEEP_OCEAN && rand.nextInt(15) == 0) {
 			genSurfaceBlock(world, rand, chunkX, chunkZ);
 		}
-		genNest(world, rand, chunkX, chunkZ);
-		if(biome == BOPBiomes.wasteland.get()) genNest(world, rand, chunkX, chunkZ);
+		genNest(world, biome, rand, chunkX, chunkZ);
 	}
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){
@@ -80,12 +79,12 @@ public class ModWorldGen implements IWorldGenerator {
 		gen.generate(world, rand, new BlockPos(x, world.getChunkFromChunkCoords(chunkX, chunkZ).getHeightValue(x&15, z&15)-1, z));
 	}
 
-	private void genNest(World world, Random rand, int chunkX, int chunkZ) {
-		if (rand.nextInt(50) == 0) {
+	private void genNest(World world, Biome biome, Random rand, int chunkX, int chunkZ) {
+		if (biome != BOPBiomes.wasteland.get()) return;
+		if (rand.nextInt(160) == 0) {
 			int x = (chunkX << 4) +rand.nextInt(16);
-			int y = rand.nextInt(10)+ 10;
 			int z = (chunkZ << 4) + rand.nextInt(16);
-			new WorldGenNest().generate(world, rand, new BlockPos(x, y, z));
+			new WorldGenNest().generate(world, rand, world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)));
 		}
 	}
 
