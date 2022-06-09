@@ -143,10 +143,14 @@ public class ModelTurret extends ModelBase {
 			if (entity.getTeam()!=null) {
 				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
 				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
+			} else {
+				GlStateManager.color(0.25f, 0.25f, 0.25f);
 			}
-			axel.rotateAngleX = headPitch * 0.0174533f;
-			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
-		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
+			if (entity instanceof EntityTurret) {
+				axel.rotateAngleX = headPitch * 0.0174533f;
+				gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
+			} else gun_middle.rotateAngleZ=(0.0261799388f*age);
+		}
 		base.render(scale);
 		GlStateManager.color(1, 1, 1);
 		axel.render(scale);

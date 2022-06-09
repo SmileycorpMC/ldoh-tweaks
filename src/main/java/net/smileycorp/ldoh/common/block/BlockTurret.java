@@ -142,6 +142,12 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 	}
 
 	@Override
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return NULL_AABB;
+	}
+
+	@Override
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
@@ -167,7 +173,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 		if (willHarvest &! world.isRemote) {
 			if (world.getTileEntity(pos) instanceof TileTurret) {
 				TileTurret tile = (TileTurret) world.getTileEntity(pos);
-				ItemStack stack = new ItemStack((Block) this);
+				ItemStack stack = new ItemStack(this);
 				NBTTagCompound nbt = tile.getDropNBT();
 				stack.setTagCompound(nbt);
 				tile.getEntity().entityDropItem(stack, 0f);

@@ -188,7 +188,7 @@ public class EntityTurret extends EntityLiving {
 		}
 		if (hasTarget()) {
 			EntityLivingBase target = getTarget();
-			getLookHelper().setLookPosition(target.posX, target.posY + (target.height * 0.75), target.posZ, 12, 12);
+			getLookHelper().setLookPosition(target.posX + (target.width*0.5), target.posY + (target.height * 0.75), target.posZ + (target.width*0.5), 10, 80);
 		}
 		if (getCooldown() > 0) {
 			setCooldown(getCooldown()-1);
@@ -219,7 +219,7 @@ public class EntityTurret extends EntityLiving {
 						playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
 						return EnumActionResult.SUCCESS;
 					}
-				} else {
+				} else if (!player.isSneaking()) {
 					BlockPos pos = tile.getPos();
 					player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
 					return EnumActionResult.SUCCESS;
@@ -232,7 +232,7 @@ public class EntityTurret extends EntityLiving {
 	@Override
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
-		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
+		if (!world.isRemote) for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
 		BlockPos pos = dataManager.get(TILE_POS);
 		if (TILE_POS!=null) {
 			world.destroyBlock(pos, false);
@@ -244,6 +244,10 @@ public class EntityTurret extends EntityLiving {
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (source.getTrueSource() instanceof EntityLivingBase) {
 			EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+			if (canTarget(entity)) setTarget(entity);
+		}
+		else if (source.getImmediateSource() instanceof EntityLivingBase) {
+			EntityLivingBase entity = (EntityLivingBase) source.getImmediateSource();
 			if (canTarget(entity)) setTarget(entity);
 		}
 		return super.attackEntityFrom(source, amount);

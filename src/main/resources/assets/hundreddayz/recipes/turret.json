@@ -3,7 +3,7 @@
 	"group": "hundreddayz:turret",
 	"pattern" : [
 		" M ",
-		"IDI",
+		"IOI",
 		"I I"
 	],
     "key" : {
@@ -15,8 +15,8 @@
             "item": "cgm:chain_gun",
 			"data": 0
         },
-		"D" : {
-    		"item": "minecraft:dispenser",
+		"O" : {
+    		"item": "minecraft:observer",
 			"data": 0
         }
 	},

@@ -12,11 +12,11 @@ import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 
 public class TileBarbedWire extends TileEntity {
-	
+
 	protected int durability;
 	protected int cooldown=0;
 	protected EnumBarbedWireMat mat;
-	
+
 	public TileBarbedWire() {
 		this(EnumBarbedWireMat.IRON);
 	}
@@ -25,48 +25,49 @@ public class TileBarbedWire extends TileEntity {
 		mat = material;
 		durability = material.getDurability();
 	}
-	
+
 	public int getOrUpdateCooldown() {
 		return cooldown > 0 ? cooldown-- : 0;
 	}
 
 	public void causeDamage() {
+		if (cooldown < 0) return;
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
 		for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, bb)) {
+			if (entity.isDead |! entity.isAddedToWorld()) break;
 			if (mat.getDamage()>0) {
-				entity.attackEntityFrom(DamageSource.CACTUS, mat.getDamage());
+				if (entity.attackEntityFrom(DamageSource.CACTUS, mat.getDamage())) durability--;
 			}
-			durability--;
 			cooldown = 5;
 		}
 		sendUpdate();
 	}
-	
+
 	public void damage(int damage) {
 		durability -= damage;
 		sendUpdate();
 	}
-	
+
 	private void sendUpdate() {
 		IBlockState state = world.getBlockState(pos);
 		world.markBlockRangeForRenderUpdate(pos, pos);
 		world.notifyBlockUpdate(pos, state, state, 3);
-		world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
+		world.scheduleBlockUpdate(pos,getBlockType(),0,0);
 		markDirty();
 	}
 
 	public int getDurability() {
 		return durability;
 	}
-	
+
 	public float getDamage() {
 		return mat.getDamage();
 	}
-	
+
 	public EnumBarbedWireMat getMaterial() {
 		return world.getBlockState(pos).getValue(BlockBarbedWire.MATERIAL);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		if (compound.hasKey("durability")) {
@@ -75,40 +76,45 @@ public class TileBarbedWire extends TileEntity {
 		if (compound.hasKey("cooldown")) {
 			cooldown = compound.getInteger("cooldown");
 		}
-        super.readFromNBT(compound);
-    }
+		super.readFromNBT(compound);
+	}
 
-    @Override
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    	compound.setInteger("durability", durability);
-        compound.setInteger("cooldown", cooldown);
-        return super.writeToNBT(compound);
-    }
-    
-    @Override
+		compound.setInteger("durability", durability);
+		compound.setInteger("cooldown", cooldown);
+		return super.writeToNBT(compound);
+	}
+
+	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
 	}
-    
-    @Override
+
+	@Override
 	public void onDataPacket(NetworkManager network, SPacketUpdateTileEntity packet) {
 		super.onDataPacket(network, packet);
 		handleUpdateTag(packet.getNbtCompound());
 	}
-    
-    @Override
-   	public NBTTagCompound getUpdateTag() {
-   		NBTTagCompound tag = super.getUpdateTag();
-   		tag.setInteger("durability", durability);
-   		return tag;
-   	}
-   	
-   	@Override
-   	public void handleUpdateTag(NBTTagCompound tag) {
-   		if (tag.hasKey("durability")) {
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tag = super.getUpdateTag();
+		tag.setInteger("durability", durability);
+		return tag;
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		if (tag.hasKey("durability")) {
 			durability = tag.getInteger("durability");
 		}
-   		super.handleUpdateTag(tag);
-   	}
+		super.handleUpdateTag(tag);
+	}
+
+	public void setDurability(int durability) {
+		this.durability = durability;
+		sendUpdate();
+	}
 
 }

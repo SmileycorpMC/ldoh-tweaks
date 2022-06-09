@@ -76,7 +76,7 @@ public class SpawnerEvents {
 						//make sure it's underground and try to prevent spawning in buildings
 						if (y < Math.max(chunk.getLowestHeight(), 30) &! world.canBlockSeeSky(player.getPosition()) && rand.nextInt(Math.max(y, 25)) <= 18) {
 							Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
-							BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+5));
+							BlockPos pos = new BlockPos(player.posX + dir.x*(rand.nextInt(5)+2), player.posY, player.posZ + dir.z*(rand.nextInt(5)+2));
 							//check spawn location is valid
 							if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
 									&& DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {

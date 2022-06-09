@@ -13,8 +13,10 @@ public class LDOHItems {
 	public static final Item GAS_MASK = new ItemGasMask();
 	public static final Item NURSE_HAT = new ItemHat("Nurse_Hat");
 	public static final Item MECHANIC_HAT = new ItemHat("Mechanic_Hat");
-	public static final Item HARDHAT = new ItemHelmet("Hardhat", 100, 2, 0f);
-	public static final Item BONESAW = new ItemWeapon("Bonesaw", 151, 5.5);
+	public static final Item HARDHAT = new ItemHelmet("Hardhat", 132, 2, 0f);
+	public static final Item FIREMAN_HAT = new ItemHelmet("Fire_Hat", 151, 2, 0f);
+	public static final Item BONESAW = new ItemWeapon("Bonesaw", 98, 5.5);
+	public static final Item FIRE_AXE = new ItemWeapon("Fire_Axe", 186, 9, -3.5F, true);
 	public static final Item TF2_PROF_TOKEN = new ItemTF2ProfessionToken();
 	public static final Item INCENDIARY_AMMO = new ItemIncendiaryAmmo();
 

@@ -5,12 +5,17 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityHusk;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -57,6 +62,8 @@ import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
+import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
@@ -64,6 +71,7 @@ import net.smileycorp.ldoh.common.util.IDummyZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.TF2weapons;
+import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
@@ -106,6 +114,14 @@ public class EntityEvents {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
+			//refund golem materials
+			if (entity instanceof EntityIronGolem) {
+				if (((EntityIronGolem) entity).isPlayerCreated()) {
+					EntityItem drops = new EntityItem(world, entity.posX, entity.posY, entity.posZ,
+							new ItemStack(Blocks.IRON_BLOCK, 4));
+					world.spawnEntity(drops);
+				}
+			}
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 				if(!entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).isSpawned()) {
@@ -122,8 +138,12 @@ public class EntityEvents {
 						}  else if (randInt < 15) {
 							newentity = world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert ?
 									new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
+						} else if (randInt < 17) {
+							newentity = new EntityZombieFireman(world);
 						} else if (world.getWorldTime() < 240000) {
-							newentity = rand.nextInt(20) == 0 ? new EntityDummyZombie1(world) : new EntityDummyZombie2(world);
+							newentity = new EntityDummyZombie2(world);
+						} else if (world.getWorldTime() < 480000) {
+							newentity = new EntityDummyZombie1(world);
 						}
 						//turns zombies into husks in a desert
 						else if (world.getBiome(entity.getPosition()) == WastelandWorld.apocalypse_desert) {
@@ -235,6 +255,8 @@ public class EntityEvents {
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
 			}
 		}
+		//fix rare skeleton horse traps from appearing
+		if (entity instanceof EntitySkeletonHorse) event.setCanceled(true);
 	}
 
 	@SubscribeEvent
@@ -312,8 +334,10 @@ public class EntityEvents {
 			}
 		}
 		//toxic gas
-		if (!world.isRemote && (entity instanceof EntityPlayer || entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek)) {
+		if (!world.isRemote &! (entity instanceof EntityParasiteBase || entity.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)) {
 			if (entity.getPosition().getY()<30) {
+				if (entity instanceof EntityBuilding || entity instanceof EntityTurret) return;
+				if (entity instanceof EntityTF2Character) if (((EntityTF2Character) entity).isRobot()) return;
 				ItemStack helm = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 				if (entity.ticksExisted%35==0) {
 					//check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking

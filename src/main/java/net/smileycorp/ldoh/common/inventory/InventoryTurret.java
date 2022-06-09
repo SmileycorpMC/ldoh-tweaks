@@ -17,6 +17,11 @@ public class InventoryTurret extends InventoryBasic {
 		super(ModDefinitions.getName("entity.turret"), false, 9);
 	}
 
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		return isAmmo(stack);
+	}
+
 	public int getAmmoSlot() {
 		for(int i = inventoryContents.size()-1; i >= 0; i--) {
 			if (isAmmo(inventoryContents.get(i))) return i;
@@ -24,7 +29,7 @@ public class InventoryTurret extends InventoryBasic {
 		return -1;
 	}
 
-	private boolean isAmmo(ItemStack stack) {
+	public boolean isAmmo(ItemStack stack) {
 		Item item = stack.getItem();
 		return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
 	}

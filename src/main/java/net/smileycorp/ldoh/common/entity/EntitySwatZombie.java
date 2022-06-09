@@ -1,28 +1,18 @@
 package net.smileycorp.ldoh.common.entity;
 
-import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
 import com.mrcrayfish.guns.init.ModGuns;
 
-public class EntitySwatZombie extends EntityZombie {
+public class EntitySwatZombie extends EntityProfessionZombie {
 
 	private static final ItemStack MACHINE_PISTOL = createGun();
 	private static final ItemStack SHOTGUN = createShotgun();
@@ -33,6 +23,17 @@ public class EntitySwatZombie extends EntityZombie {
 
 	public EntitySwatZombie(World world) {
 		super(world);
+	}
+
+	@Override
+	protected void setEquipment() {
+		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, MACHINE_PISTOL);
+		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.GAS_MASK));
+	}
+
+	@Override
+	protected String getStage() {
+		return "turret_stage";
 	}
 
 	@Override
@@ -47,35 +48,6 @@ public class EntitySwatZombie extends EntityZombie {
 		super.applyEntityAttributes();
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(8.0D);
-	}
-
-	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, MACHINE_PISTOL);
-		setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(LDOHItems.GAS_MASK));
-		inventoryArmorDropChances[EntityEquipmentSlot.MAINHAND.getIndex()] = 0.1F;
-		inventoryArmorDropChances[EntityEquipmentSlot.HEAD.getIndex()] = 0.1F;
-	}
-
-	@Override
-	public void onDeath(DamageSource source) {
-		super.onDeath(source);
-		if (source.getTrueSource() instanceof EntityPlayer) {
-			if (!GameStageHelper.hasStage((EntityPlayer) source.getTrueSource(), "turret_stage")) {
-				Item item = GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation("gamestagebooks", "turret_stage"));
-				if(item!=null) entityDropItem(new ItemStack(item), 0.0F);
-			}
-		}
-	}
-
-	@Override
-	public boolean shouldBurnInDay() {
-		return false;
-	}
-
-	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
-		return ItemSpawner.getEggFor(this);
 	}
 
 	public ItemStack getBackItem() {

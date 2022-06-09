@@ -40,66 +40,65 @@ public class GuiTurret extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2 - 5;
+		int y = (height - ySize) / 2 - 5;
 
-        //draw background texture
-        mc.getTextureManager().bindTexture(TEXTURE);
-        drawTexturedModalRect(x, y, 0, 0, xSize, 184);
+		//draw background texture
+		mc.getTextureManager().bindTexture(TEXTURE);
+		drawTexturedModalRect(x, y, 0, 0, xSize, 184);
 
-        //draw health
-        int health = (int) Math.ceil(turret.getHealth());
-        for (int i = 0; i<=Math.ceil(health/2); i++) {
+		//draw health
+		int health = (int) Math.ceil(turret.getHealth());
+		for (int i = 0; i<=Math.ceil(health/2); i++) {
 			int hx = x + 65 + ((i%10)*10);
 			int hy = y + 49 + ((int)Math.floor(i/10)*10);
 			int u = (i+1)*2>health ? 9 : 0;
 			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 184, 9, 9);
 		}
 
-        //draw gui name
-        String name = I18n.translateToLocal(TRANSLATION_KEY);
-        fontRenderer.drawString(name, x + 88 - fontRenderer.getStringWidth(name) / 2, y + 6, 4210752);
+		//draw gui name
+		String name = I18n.translateToLocal(TRANSLATION_KEY);
+		fontRenderer.drawString(name, x + 88 - fontRenderer.getStringWidth(name) / 2, y + 6, 4210752);
 
-        //draw owner name
-        Team team = turret.getTeam();
-        ITextComponent username = new TextComponentString(owner!=null ? owner : "");
-        if (team!=null) username.setStyle(new Style().setColor(team.getColor()));
-        String text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
-        fontRenderer.drawString(text, x + 65, y + 20, 4210752);
+		//draw owner name
+		Team team = turret.getTeam();
+		ITextComponent username = new TextComponentString(owner!=null ? owner : "");
+		if (team!=null) username.setStyle(new Style().setColor(team.getColor()));
+		String text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
+		fontRenderer.drawString(text, x + 65, y + 20, 4210752);
 
-        //draw target name
-        if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
-        else {
-        	EntityLivingBase target = turret.getTarget();
-        	text = I18n.translateToLocal("gui.turret.text.Target") + ModUtils.getPosString(target.getPosition());
-        	name = target.getDisplayName().getFormattedText();
-        	fontRenderer.drawString(name, x + 65, y + 40, 4210752);
-        }
-        fontRenderer.drawString(text, x + 65, y + 30, 4210752);
+		//draw target name
+		if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
+		else {
+			EntityLivingBase target = turret.getTarget();
+			text = target.getDisplayName().getFormattedText();
+			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 40, 4210752);
+		}
+		fontRenderer.drawString(text, x + 65, y + 30, 4210752);
 
-        //draw turret entity
-        mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.disableCull();
-        GlStateManager.translate(x+36, y+16, 40);
-        GlStateManager.rotate(-30, 1, 0, 0);
-        GlStateManager.rotate(135, 0, 1, 0);
-        turretModel.render(turret, 0, 0, 0, turret.rotationPitch, 0, 2);
-        GlStateManager.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.enableCull();
+		//draw turret entity
+		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		RenderHelper.enableStandardItemLighting();
+		GlStateManager.disableCull();
+		GlStateManager.translate(x+36, y+16, 40);
+		GlStateManager.rotate(-30, 1, 0, 0);
+		GlStateManager.rotate(135, 0, 1, 0);
+		turretModel.render(turret, 0, 0, 0, turret.rotationPitch, 0, 2);
+		GlStateManager.popMatrix();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		GlStateManager.enableCull();
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
-    }
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 
 }

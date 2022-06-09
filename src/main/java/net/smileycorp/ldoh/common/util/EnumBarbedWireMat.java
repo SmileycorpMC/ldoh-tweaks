@@ -8,7 +8,7 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 public enum EnumBarbedWireMat implements IStringSerializable {
 
 	IRON("Iron", 0.5f, 300, Items.IRON_NUGGET),
-	GOLD("Gold", 2f, 100, Items.GOLD_NUGGET),
+	GOLD("Gold", 3f, 100, Items.GOLD_NUGGET),
 	DIAMOND("Diamond", 1f, 900, LDOHItems.DIAMOND_NUGGET);
 
 	final String name;

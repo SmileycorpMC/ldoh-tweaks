@@ -15,16 +15,20 @@ import biomesoplenty.api.block.BOPBlocks;
 
 public class WorldGenSurface extends WorldGenerator {
 
-	protected IBlockState[] states = {Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState(), BOPBlocks.mud.getDefaultState(),
-			Blocks.SOUL_SAND.getDefaultState(), Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND)};
 	/** The number of blocks to generate. */
 	protected final int numberOfBlocks = 100;
+	
+	private final IBlockState state1, state2;
 
 	private Set<BlockPos> positions = new HashSet<BlockPos>();
+	
+	public WorldGenSurface(IBlockState state1, IBlockState state2) {
+		this.state1 = state1;
+		this.state2 = state2;
+	}
 
 	@Override
 	public boolean generate(World world, Random rand, BlockPos center) {
-		IBlockState state = states[rand.nextInt(states.length)];
 		float f = rand.nextFloat() * (float)Math.PI;
 		double d0 = center.getX() + 8 + MathHelper.sin(f) * numberOfBlocks / 8.0F;
 		double d1 = center.getX() + 8 - MathHelper.sin(f) * numberOfBlocks / 8.0F;
@@ -64,12 +68,26 @@ public class WorldGenSurface extends WorldGenerator {
 			}
 		}
 		for (BlockPos pos : positions) {
-			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL) {
+			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL || world.getBlockState(pos).getBlock() == BOPBlocks.dried_sand) {
 				int r = (int) Math.floor(Math.pow(pos.getX() - center.getX(), 2) + Math.pow(pos.getZ() - center.getZ(), 2));
-				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, state, 18);
+				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, world.rand.nextInt(Math.max(r, 1))<35 ? state1 : state2, 18);
 			}
 		}
 		return true;
+	}
+
+	public static enum EnumVariant {
+
+		SOUL_SAND(Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.mud.getDefaultState()),
+		CLAY(Blocks.CLAY.getDefaultState(), BOPBlocks.white_sand.getDefaultState()),
+		TERRACOTTA(Blocks.HARDENED_CLAY.getDefaultState(), Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND));
+
+		protected final IBlockState state1, state2;
+
+		private EnumVariant(IBlockState state1, IBlockState state2) {
+			this.state1 = state1;
+			this.state2 = state2;
+		}
 	}
 
 }
