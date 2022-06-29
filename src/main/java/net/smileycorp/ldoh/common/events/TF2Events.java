@@ -141,10 +141,6 @@ public class TF2Events {
 		if (entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.HUNGER, null).onUpdate((EntityLiving) entity);
 		}
-		//exhaustion tick
-		/*if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
-			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).onUpdate((EntityLiving) entity);
-		}*/
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
 			EnumTFClass tfClass = EnumTFClass.getClass(merc);
@@ -248,6 +244,7 @@ public class TF2Events {
 				sentry.targetTasks.taskEntries.clear();
 				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
 						(e) -> ModUtils.canTarget(sentry, e), false, true));
+				world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
 			}
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
