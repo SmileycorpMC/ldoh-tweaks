@@ -18,6 +18,8 @@ import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.world.WorldGenSurface.EnumVariant;
+import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
+import biomesoplenty.api.biome.BOPBiomes;
 import biomesoplenty.api.block.BOPBlocks;
 import biomesoplenty.common.block.BlockBOPDirt;
 import biomesoplenty.common.block.BlockBOPDirt.BOPDirtType;
@@ -47,9 +49,11 @@ public class ModWorldGen implements IWorldGenerator {
 		if (EnumBiomeType.OCEAN.matches(biome) && rand.nextInt(15) == 0) {
 			EnumVariant variant = EnumVariant.values()[new Random().nextInt(EnumVariant.values().length)];
 			genSurfaceBlock(world, rand, chunkX, chunkZ, variant.state1, variant.state2);
-		} else if (EnumBiomeType.BADLANDS.matches(biome) && rand.nextInt(25) == 0) {
+		} else if (biome == BOPBiomes.wasteland.get() && rand.nextInt(25) == 0) {
 			genSurfaceBlock(world, rand, chunkX, chunkZ, Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.dirt.getDefaultState()
 					.withProperty(BlockBOPDirt.VARIANT, BOPDirtType.LOAMY).withProperty(BlockBOPDirt.COARSE, true));
+		} else if (biome == LDOHWorld.INFERNAL_WASTELAND && rand.nextInt(25) == 0) {
+			genSurfaceBlock(world, rand, chunkX, chunkZ, Blocks.LAVA.getDefaultState(),Blocks.MAGMA.getDefaultState());
 		}
 		genNest(world, rand, chunkX, chunkZ, EnumBiomeType.BADLANDS.matches(biome));
 	}

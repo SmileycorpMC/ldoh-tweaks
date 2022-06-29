@@ -145,6 +145,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 		if (!marked) {
 			markPositions(world, world.getSpawnPoint().down(), true);
 		}
+		if (basepos == null) basepos = backup;
 		int wh = basepos.getY()+6;
 		//clear area of structures
 		for (BlockPos pos : heightmap) {
@@ -176,8 +177,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 				world.setBlockState(pos, BOPBlocks.planks_0.getDefaultState()
 						.withProperty(((BlockBOPPlanks)BOPBlocks.planks_0).variantProperty, BOPWoods.FIR), 18);
 				pos = pos.down();
+				IBlockState topblock = world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0].topBlock;
 				while (world.getBlockState(pos).getBlock() == Blocks.AIR) {
-					world.setBlockState(pos, Blocks.DIRT.getDefaultState());
+					world.setBlockState(pos, topblock);
 					pos = pos.down();
 				}
 			}

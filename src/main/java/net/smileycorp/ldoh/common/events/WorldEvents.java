@@ -15,7 +15,9 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate;
 import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate;
 import net.minecraftforge.event.world.WorldEvent.CreateSpawnPosition;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -23,8 +25,10 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
+import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
 
 import com.legacy.wasteland.world.WastelandWorld;
 
@@ -47,7 +51,7 @@ public class WorldEvents {
 			int z = 0;
 			int tries = 0;
 			while (true) {
-				if (biome== WastelandWorld.apocalypse) {
+				if (EnumBiomeType.WASTELAND.matches(biome)) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					//checks if the safehouse is spawning below y60 or if the structure bounds intersect with a city or another biome
 					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z)) {
@@ -133,16 +137,38 @@ public class WorldEvents {
 
 	//remove coal, iron and gold from generating outside of deserts so we can use our own generation
 	@SubscribeEvent(priority=EventPriority.HIGHEST)
-	public void createDecorator(GenerateMinable event) {
+	public void createOreDecorator(GenerateMinable event) {
 		World world = event.getWorld();
 		BlockPos pos = event.getPos();
 		Biome biome = world.getBiome(pos);
-		if (biome != WastelandWorld.apocalypse_desert) {
+		if (!EnumBiomeType.DESERT.matches(biome)) {
 			GenerateMinable.EventType type = event.getType();
 			if (type == GenerateMinable.EventType.COAL || type == GenerateMinable.EventType.IRON || type == GenerateMinable.EventType.GOLD) {
 				event.setResult(Result.DENY);
 			}
 		}
+	}
+
+	//remove features
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void createDecorator(Decorate event) {
+		Decorate.EventType type = event.getType();
+		World world = event.getWorld();
+		BlockPos pos = event.getPlacementPos();
+		Biome biome = pos == null ? null : world.getBiome(pos);
+		if (type == Decorate.EventType.LAKE_WATER && biome != LDOHWorld.FROZEN_WASTELAND) event.setResult(Result.DENY);
+		if (!EnumBiomeType.DESERT.matches(biome)) {
+			if (type == Decorate.EventType.LAKE_LAVA && biome != LDOHWorld.INFERNAL_WASTELAND) {
+				event.setResult(Result.DENY);
+			}
+		}
+	}
+
+	//remove features
+	@SubscribeEvent(priority=EventPriority.HIGHEST)
+	public void populateChunk(Populate event) {
+		Populate.EventType type = event.getType();
+		if (type == Populate.EventType.DUNGEON ) event.setResult(Result.DENY);
 	}
 
 }

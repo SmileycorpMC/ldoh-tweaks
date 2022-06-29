@@ -67,6 +67,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new TF2Events());
 		MinecraftForge.EVENT_BUS.register(new WorldEvents());
 		MinecraftForge.ORE_GEN_BUS.register(new WorldEvents());
+		MinecraftForge.TERRAIN_GEN_BUS.register(new WorldEvents());
 		RCEventBus.INSTANCE.register(new WorldEvents());
 
 		//Add Safehouse loot tables

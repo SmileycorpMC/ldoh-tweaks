@@ -10,6 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -48,7 +49,7 @@ import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
-import biomesoplenty.api.block.BOPBlocks;
+import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
 
 import com.Fishmod.mod_LavaCow.init.FishItems;
 
@@ -57,6 +58,7 @@ public class RegistryEvents {
 
 	public static final Set<Item> ITEMS = new HashSet<Item>();
 	public static final Set<Block> BLOCKS = new HashSet<Block>();
+	public static final Set<Biome> BIOMES = new HashSet<Biome>();
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -96,6 +98,20 @@ public class RegistryEvents {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
+	}
+
+	@SubscribeEvent
+	public static void registerBiomes(RegistryEvent.Register<Biome> event) {
+		IForgeRegistry<Biome> registry = event.getRegistry();
+		for (Field field : LDOHWorld.class.getDeclaredFields()) {
+			try {
+				Object biome = field.get(null);
+				if (biome instanceof Biome) {
+					registry.register((Biome) biome);
+					BIOMES.add((Biome) biome);
+				}
+			} catch (Exception e) {}
+		}
 	}
 
 	@SubscribeEvent
