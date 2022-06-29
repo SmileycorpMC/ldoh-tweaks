@@ -109,6 +109,10 @@ gui.turret.text.Target=Target:
 jei.category.hundreddayz.Syringe=Syringes
 jei.category.hundreddayz.Intestines=Intestines Loot
 jei.category.hundreddayz.GunWorkbench=Gun Workbench
+jei.category.hundreddayz.OilMill=Oil Mill
+jei.category.hundreddayz.BlastFurnace=Blast Furnace
+jei.category.hundreddayz.BackmixReactor=Backmix Reactor
+jei.category.hundreddayz.SplitTank=Split Tank
 
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches

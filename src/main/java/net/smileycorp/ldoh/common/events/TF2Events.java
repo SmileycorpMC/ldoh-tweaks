@@ -206,8 +206,6 @@ public class TF2Events {
 		World world = entity.world;
 		if (!world.isRemote) {
 			if (InfectionRegister.canCauseInfection(attacker)) {
-				//sets zombie damage to a fixed 1.5 hearts
-				event.setAmount(3f);
 				if (entity instanceof EntityTF2Character) {
 					//gives the infection effect to non-robots
 					if(!((EntityTF2Character) entity).isRobot() &! entity.isPotionActive(HordesInfection.INFECTED)) {

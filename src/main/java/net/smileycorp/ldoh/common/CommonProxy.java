@@ -3,6 +3,7 @@ package net.smileycorp.ldoh.common;
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -51,6 +52,7 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
+import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
 import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.item.ItemAmmo;
@@ -58,6 +60,13 @@ import com.mrcrayfish.guns.item.ItemAmmo;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
+		Item.getItemFromBlock(FurnitureBlocks.CRATE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_SPRUCE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_BIRCH).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_JUNGLE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_ACACIA).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_DARK_OAK).setMaxStackSize(1);
+
 		//Register event listeners
 		MinecraftForge.EVENT_BUS.register(new ApocalypseEvents());
 		MinecraftForge.EVENT_BUS.register(new EntityEvents());

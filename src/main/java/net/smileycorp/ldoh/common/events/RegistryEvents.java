@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.smileycorp.atlas.api.block.FuelHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
@@ -48,9 +49,10 @@ import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
-import biomesoplenty.api.block.BOPBlocks;
 
 import com.Fishmod.mod_LavaCow.init.FishItems;
+
+import de.maxhenkel.car.items.ModItems;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
@@ -102,6 +104,7 @@ public class RegistryEvents {
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		GameRegistry.addSmelting(new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 0), 0.1f);
 		GameRegistry.addSmelting(new ItemStack(Blocks.SOUL_SAND), new ItemStack(Items.QUARTZ, 1, 0), 0.1f);
+		FuelHandler.getInstance().registerFuel(ModItems.RAPECAKE, 50);
 		OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
 		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
 		OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
