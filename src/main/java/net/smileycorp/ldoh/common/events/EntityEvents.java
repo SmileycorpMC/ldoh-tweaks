@@ -79,6 +79,8 @@ import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.animania.api.interfaces.IAnimaniaAnimal;
 import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
+import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
 import com.legacy.wasteland.world.WastelandWorld;
 
 public class EntityEvents {
@@ -267,7 +269,8 @@ public class EntityEvents {
 		if (!world.isRemote) {
 			//replace zombies with vespas if they are in a sky base
 			if (player.getPosition().getY() - event.pos.getY() > 30) {
-				event.entity = new EntityVespa(world);
+				if (entity instanceof EntityParasiteBase) entity = (event.getDay() == 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
+				else entity = new EntityVespa(world);
 				//give the vespas the ability to break blocks
 				if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
 					event.entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);
