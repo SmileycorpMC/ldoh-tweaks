@@ -9,12 +9,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.Enchantments;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
+import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.damage.DamageSourceBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 
@@ -25,6 +28,7 @@ public class TileBarbedWire extends TileEntity {
 	protected int cooldown=0;
 	protected EnumBarbedWireMat mat;
 
+	protected boolean isEnchanted = false;
 	protected Map<Enchantment, Integer> enchant_map = new HashMap<Enchantment, Integer>();
 
 	public TileBarbedWire() {
@@ -50,14 +54,15 @@ public class TileBarbedWire extends TileEntity {
 				for (Entry<Enchantment, Integer> entry : enchant_map.entrySet()) {
 					modifier += entry.getKey().calcDamageByCreature(entry.getValue(), entity.getCreatureAttribute());
 				}
-				entity.attackEntityFrom(new DamageSourceBarbedWire(this), mat.getDamage() * modifier);
+				if (entity.attackEntityFrom(new DamageSourceBarbedWire(this), mat.getDamage() * modifier)) {
+					if (!enchant_map.containsKey(Enchantments.UNBREAKING)) durability--;
+					else if (rand.nextInt(enchant_map.get(Enchantments.UNBREAKING)) <= 0) durability--;
+					cooldown = 5;
+				}
 				if (enchant_map.containsKey(Enchantments.FIRE_ASPECT)) {
 					entity.setFire(enchant_map.get(Enchantments.FIRE_ASPECT) * 4);
 				}
 			}
-			if (!enchant_map.containsKey(Enchantments.UNBREAKING)) durability--;
-			else if (rand.nextInt(enchant_map.get(Enchantments.UNBREAKING) + 1) <= 0) durability--;
-			cooldown = 5;
 		}
 		sendUpdate();
 	}
@@ -135,6 +140,7 @@ public class TileBarbedWire extends TileEntity {
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = super.getUpdateTag();
 		tag.setInteger("durability", durability);
+		tag.setBoolean("isEnchanted", isEnchanted());
 		return tag;
 	}
 
@@ -143,12 +149,19 @@ public class TileBarbedWire extends TileEntity {
 		if (tag.hasKey("durability")) {
 			durability = tag.getInteger("durability");
 		}
+		if (tag.hasKey("isEnchanted")) {
+			isEnchanted = tag.getBoolean("durability");
+		}
 		super.handleUpdateTag(tag);
 	}
 
 	public void setDurability(int durability) {
 		this.durability = durability;
 		sendUpdate();
+	}
+
+	public boolean isEnchanted() {
+		return world.isRemote ? isEnchanted : !enchant_map.isEmpty();
 	}
 
 	public boolean hasEnchantment(Enchantment enchant) {
@@ -169,6 +182,27 @@ public class TileBarbedWire extends TileEntity {
 
 	public void clearEnchantments() {
 		enchant_map.clear();
+	}
+
+	public ItemStack getDrop() {
+		ItemStack drop = new ItemStack(LDOHBlocks.BARBED_WIRE, 1, mat.ordinal());
+		NBTTagCompound nbt = new NBTTagCompound();
+		if (getDurability() < mat.getDurability()) {
+			nbt.setInteger("durability", getDurability());
+			drop.setTagCompound(nbt);
+		}
+		if (isEnchanted()) {
+			NBTTagList enchants = new NBTTagList();
+			for (Entry<Enchantment, Integer> entry : enchant_map.entrySet()) {
+				NBTTagCompound enchant = new NBTTagCompound();
+				enchant.setShort("id", (short) Enchantment.getEnchantmentID(entry.getKey()));
+				enchant.setShort("lvl", entry.getValue().shortValue());
+				enchants.appendTag(enchant);
+			}
+			nbt.setTag("ench", enchants);
+		}
+		if (nbt.getSize() > 0) drop.setTagCompound(nbt);
+		return drop;
 	}
 
 }

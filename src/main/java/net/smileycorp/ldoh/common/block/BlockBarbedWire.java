@@ -13,6 +13,7 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -22,11 +23,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -100,8 +103,16 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		if (stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
-			if (world.getTileEntity(pos) instanceof TileBarbedWire && nbt.hasKey("durability") &! placer.world.isRemote) {
-				((TileBarbedWire) world.getTileEntity(pos)).setDurability(nbt.getInteger("durability"));
+			if (world.getTileEntity(pos) instanceof TileBarbedWire &! placer.world.isRemote) {
+				TileBarbedWire tile = ((TileBarbedWire) world.getTileEntity(pos));
+				if (nbt.hasKey("durability"))tile.setDurability(nbt.getInteger("durability"));
+				if (nbt.hasKey("ench")) {
+					for (NBTBase tag : nbt.getTagList("ench", 10)) {
+						int level = ((NBTTagCompound)tag).getShort("lvl");
+						Enchantment enchant = Enchantment.getEnchantmentByID(((NBTTagCompound)tag).getShort("id"));
+						tile.applyEnchantment(enchant, level);
+					}
+				}
 			}
 		}
 	}
@@ -146,12 +157,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		player.addExhaustion(0.005F);
 		EnumBarbedWireMat mat = state.getValue(MATERIAL);
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
-			ItemStack drop = new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
-			if (((TileBarbedWire) te).getDurability() < mat.getDurability()) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setInteger("durability", ((TileBarbedWire) te).getDurability());
-				drop.setTagCompound(nbt);
-			}
+			ItemStack drop = ((TileBarbedWire) te).getDrop();
 			spawnAsEntity(world, pos, drop);
 		} else {
 			Item item = mat.getDrop();
@@ -199,6 +205,11 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	@Override
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
 		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.DAMAGE_CACTUS : super.getAiPathNodeType(state, world, pos, entity);
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
 	}
 
 }
