@@ -8,9 +8,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -255,8 +257,10 @@ public class EntityEvents {
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
 			}
 		}
-		//fix rare skeleton horse traps from appearing
+		//fix rare skeleton horse traps from appearing as well as skeletons and creepers spawning from fish's undead rising
 		if (entity instanceof EntitySkeletonHorse) event.setCanceled(true);
+		else if (entity instanceof EntitySkeleton) event.setCanceled(true);
+		else if (entity instanceof EntityCreeper) event.setCanceled(true);
 	}
 
 	@SubscribeEvent
@@ -318,7 +322,6 @@ public class EntityEvents {
 			table.addPool(new LootPool(new LootEntryItem[]{eye}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "spider_eye"));
 		}
 	}
-
 
 	//make entities that can break blocks do so
 	@SubscribeEvent

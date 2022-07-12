@@ -87,6 +87,7 @@ entity.hundreddayz.SwatZombie.name=Swat Zombie
 entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieFireman.name=Zombie Fireman
+entity.hundreddayz.LibraryZombie.name=Library Zombie
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie

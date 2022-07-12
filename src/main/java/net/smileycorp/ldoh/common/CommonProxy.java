@@ -98,6 +98,8 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
 		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), () -> new VillageData());
+
+		//register turret gui
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 
 			@Override

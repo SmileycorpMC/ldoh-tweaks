@@ -72,6 +72,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
+@SuppressWarnings("deprecation")
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
 public class ClientEventListener {
 

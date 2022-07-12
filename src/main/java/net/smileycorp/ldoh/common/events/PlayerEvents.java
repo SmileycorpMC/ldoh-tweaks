@@ -56,25 +56,33 @@ public class PlayerEvents {
 	public void fillBucket(FillBucketEvent event) {
 		World world = event.getWorld();
 		RayTraceResult ray = event.getTarget();
-		if (ray != null) {
-			if (ray.typeOfHit == Type.BLOCK) {
-				if (world.getBlockState(ray.getBlockPos()).getMaterial() == Material.LAVA) {
-					//50% chance to break the bucket
-					if (world.rand.nextInt(2) == 0) {
-						event.getEmptyBucket().shrink(1);
-						event.getEntityPlayer().playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
-						event.setCanceled(true);
-						if (!world.isRemote)  {
-							ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_PICKUP_MESSAGE);
-							text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-							event.getEntityPlayer().sendMessage(text);
-							event.getEntityPlayer().attackEntityFrom(DamageSource.LAVA, 3);
+		EntityPlayer player = event.getEntityPlayer();
+		ItemStack stack = event.getEmptyBucket();
+		if (stack.getItem() == Items.LAVA_BUCKET &! player.capabilities.isCreativeMode) {
+			event.setCanceled(true);
+		}
+		else if (stack.getItem() == Items.BUCKET) {
+			if (ray != null) {
+				if (ray.typeOfHit == Type.BLOCK) {
+					if (world.getBlockState(ray.getBlockPos()).getMaterial() == Material.LAVA) {
+						//50% chance to break the bucket
+						if (world.rand.nextInt(2) == 0) {
+							stack.shrink(1);
+							player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
+							event.setCanceled(true);
+							if (!world.isRemote)  {
+								ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_PICKUP_MESSAGE);
+								text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
+								player.sendMessage(text);
+								player.attackEntityFrom(DamageSource.LAVA, 3);
+							}
 						}
 					}
 				}
 			}
 		}
 	}
+
 
 	//Player ticks
 	@SubscribeEvent
@@ -90,9 +98,9 @@ public class PlayerEvents {
 						if (player.ticksExisted%20 == 0 && world.rand.nextInt(5)==0) {
 							//place lava and destroy bucket
 							world.setBlockState(player.getPosition(), Blocks.LAVA.getDefaultState());
-							if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).shrink(1);
+							if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).setCount(0);
 							else for (ItemStack stack : player.inventory.mainInventory) {
-								if (stack.getItem() == Items.LAVA_BUCKET) stack.shrink(1);
+								if (stack.getItem() == Items.LAVA_BUCKET) stack.setCount(0);
 								break;
 							}
 							((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
