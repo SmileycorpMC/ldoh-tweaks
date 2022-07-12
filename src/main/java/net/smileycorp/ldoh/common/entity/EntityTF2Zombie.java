@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common.entity;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -24,6 +25,7 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.item.ItemFromData;
 
 public class EntityTF2Zombie extends EntityZombie {
 
@@ -119,6 +121,33 @@ public class EntityTF2Zombie extends EntityZombie {
 		if (baseentity!=null) {
 			for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 				setItemStackToSlot(slot, ModUtils.cleanTFWeapon(baseentity.getItemStackFromSlot(slot)));
+			}
+		}
+	}
+
+	@Override
+	protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
+		//mostly a copy of EntityLiving$dropEquipment()
+		for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.values()) {
+			ItemStack itemstack = this.getItemStackFromSlot(entityequipmentslot);
+			double d0;
+			switch (entityequipmentslot.getSlotType()) {
+			case HAND:
+				d0 = this.inventoryHandsDropChances[entityequipmentslot.getIndex()];
+				break;
+			case ARMOR:
+				d0 = this.inventoryArmorDropChances[entityequipmentslot.getIndex()];
+				break;
+			default:
+				d0 = 0.0D;
+			}
+			boolean flag = d0 > 1.0D;
+			if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack) && (wasRecentlyHit || flag) && this.rand.nextFloat() - lootingModifier * 0.01F < d0) {
+				//extra check to stop weapons from being damaged
+				if (!flag && itemstack.isItemStackDamageable() &!(itemstack.getItem() instanceof ItemFromData)) {
+					itemstack.setItemDamage(itemstack.getMaxDamage() - this.rand.nextInt(1 + this.rand.nextInt(Math.max(itemstack.getMaxDamage() - 3, 1))));
+				}
+				this.entityDropItem(itemstack, 0.0F);
 			}
 		}
 	}
