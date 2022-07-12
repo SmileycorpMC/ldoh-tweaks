@@ -67,7 +67,7 @@ tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
 tooltip.hundreddayz.BarbedWire.Gold=Has Low durability and high damage.
 tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damage.
-tooltip.hundreddayz.BarbedWire.Durability=Durability:
+tooltip.hundreddayz.BarbedWire.durability=Durability:
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
 tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
@@ -98,8 +98,9 @@ entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 entity.hundreddayz.Turret.name=Sentry Turret
 
-death.attack.ToxicGas=%1$s choked on toxic gasses
-death.attack.Shrapnel=%1$s stepped on a landmine
+death.attack.ToxicGas=%1$s choked on toxic gas
+death.attack.Shrapnel=%1$s went kaboom
+death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
@@ -108,14 +109,7 @@ gui.turret.text.NoTarget=No Target
 gui.turret.text.Target=Target: 
 
 jei.category.hundreddayz.Syringe=Syringes
-jei.category.hundreddayz.Intestines=Intestines Loot
-jei.category.hundreddayz.GunWorkbench=Gun Workbench
-jei.category.hundreddayz.OilMill=Oil Mill
-jei.category.hundreddayz.BlastFurnace=Blast Furnace
-jei.category.hundreddayz.BackmixReactor=Backmix Reactor
-jei.category.hundreddayz.SplitTank=Split Tank
 
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
-hundreddayz.subtitle.snoring=Snoring
