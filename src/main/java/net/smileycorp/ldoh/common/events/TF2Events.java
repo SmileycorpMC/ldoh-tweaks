@@ -244,7 +244,6 @@ public class TF2Events {
 				sentry.targetTasks.taskEntries.clear();
 				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
 						(e) -> ModUtils.canTarget(sentry, e), false, true));
-				world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
 			}
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
