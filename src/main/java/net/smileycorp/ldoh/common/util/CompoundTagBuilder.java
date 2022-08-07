@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common;
+package net.smileycorp.ldoh.common.util;
 
 import java.util.UUID;
 

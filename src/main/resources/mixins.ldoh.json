@@ -5,7 +5,8 @@
   "refmap": "mixins.ldoh.refmap.json",
   "target": "@env(INIT)",
   "mixins": [
-    "MixinEntityLiving"
+    "MixinEntityLiving",
+	"MixinItemBucket"
   ],
   "client": [],
   "server": [],

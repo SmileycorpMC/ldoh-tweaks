@@ -5,17 +5,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.ITextComponent;
@@ -28,6 +24,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -61,6 +59,11 @@ public class PlayerEvents {
 		if (stack.getItem() == Items.LAVA_BUCKET &! player.capabilities.isCreativeMode) {
 			event.setCanceled(true);
 		}
+		if (stack.getItem() instanceof UniversalBucket &! player.capabilities.isCreativeMode) {
+			UniversalBucket bucket = (UniversalBucket) stack.getItem();
+			Fluid fluid = bucket.getFluid(stack).getFluid();
+			if (fluid.getTemperature() >= 450 || fluid.getBlock().getDefaultState().getMaterial() == Material.LAVA) event.setCanceled(true);
+		}
 		else if (stack.getItem() == Items.BUCKET) {
 			if (ray != null) {
 				if (ray.typeOfHit == Type.BLOCK) {
@@ -91,25 +94,6 @@ public class PlayerEvents {
 			EntityPlayer player = event.player;
 			World world = player.world;
 			if (!world.isRemote) {
-				//lava bucket breaking
-				if (!player.isCreative()) {
-					if (player.inventory.hasItemStack(new ItemStack(Items.LAVA_BUCKET))) {
-						//20% chance every second
-						if (player.ticksExisted%20 == 0 && world.rand.nextInt(5)==0) {
-							//place lava and destroy bucket
-							world.setBlockState(player.getPosition(), Blocks.LAVA.getDefaultState());
-							if (player.getHeldItem(EnumHand.OFF_HAND).getItem() == Items.LAVA_BUCKET) player.getHeldItem(EnumHand.OFF_HAND).setCount(0);
-							else for (ItemStack stack : player.inventory.mainInventory) {
-								if (stack.getItem() == Items.LAVA_BUCKET) stack.setCount(0);
-								break;
-							}
-							((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, player.posX, player.posX, player.posX, 1.0F, 1.0F));
-							ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_BREAK_MESSAGE);
-							text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-							player.sendMessage(text);
-						}
-					}
-				}
 				//follower stopping
 				if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
 					IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);

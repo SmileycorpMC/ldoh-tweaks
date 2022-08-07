@@ -135,6 +135,10 @@ public class ItemSpawner extends Item implements IMetaItem {
 					+ "PersistenceRequired:1b, Attributes:[{Base:1.006720000934601d, Name:\"generic.movementSpeed\"}],  "
 					+ "DeathLootTable:\""+ ModDefinitions.getResource("entities/library_zombie") +"\"}");
 			entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.LibraryZombie.name", 0x436C34, 0x00A5A5, libraryNBT));
+			NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"hordes:hordespawn\":\"\",\"hundreddayz:spawnprovider\":{isSpawned:1b}}, "
+					+ "PersistenceRequired:1b, Attributes:[{Base:1.006720000934601d, Name:\"generic.movementSpeed\"}],  "
+					+ "DeathLootTable:\""+ ModDefinitions.getResource("entities/hospital_zombie") +"\"}");
+			entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.HospitalZombie.name", 0x436C34, 0x00A5A5, hospitalNBT));
 		} catch (NBTException e) {
 			e.printStackTrace();
 		}

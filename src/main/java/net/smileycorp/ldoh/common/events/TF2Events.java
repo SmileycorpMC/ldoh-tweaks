@@ -84,10 +84,6 @@ public class TF2Events {
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
 		}
-		//give mercs exhaustion/sleeping
-		/*if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
-			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Exhaustion"), new IExhaustion.Provider());
-		}*/
 		//give mercs home village
 		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
@@ -202,8 +198,6 @@ public class TF2Events {
 		World world = entity.world;
 		if (!world.isRemote) {
 			if (InfectionRegister.canCauseInfection(attacker)) {
-				//temporarily re-add for 1.1.5d
-				event.setAmount(3f);
 				if (entity instanceof EntityTF2Character) {
 					//gives the infection effect to non-robots
 					if(!((EntityTF2Character) entity).isRobot() &! entity.isPotionActive(HordesInfection.INFECTED)) {

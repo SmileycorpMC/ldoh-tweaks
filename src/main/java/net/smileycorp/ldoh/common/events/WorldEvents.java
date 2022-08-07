@@ -22,7 +22,9 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
@@ -47,17 +49,17 @@ public class WorldEvents {
 			int z = 0;
 			int tries = 0;
 			while (true) {
-				if (biome== WastelandWorld.apocalypse) {
+				if (EnumBiomeType.WASTELAND.matches(biome) || ConfigHandler.betaSpawnpoint) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					//checks if the safehouse is spawning below y60 or if the structure bounds intersect with a city or another biome
-					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z)) {
+					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z) &! ConfigHandler.betaSpawnpoint) {
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
 					}
-					else if (y >= 60) {
+					else {
 						//determines if the safehouse can be placed here
-						if (safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) break;
+						if (ConfigHandler.betaSpawnpoint || safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) break;
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
@@ -83,10 +85,12 @@ public class WorldEvents {
 			}
 			BlockPos spawn = new BlockPos(x, y, z);
 			world.getWorldInfo().setSpawn(spawn);
-			if (!safehouse.isMarked()) {
-				safehouse.markPositions(world, spawn.down(), true);
+			if (!ConfigHandler.noSafehouse) {
+				if (!safehouse.isMarked()) {
+					safehouse.markPositions(world, spawn.down(), true);
+				}
+				safehouse.generate(world, rand, world.getSpawnPoint().down());
 			}
-			safehouse.generate(world, rand, world.getSpawnPoint().down());
 			event.setCanceled(true);
 		}
 	}

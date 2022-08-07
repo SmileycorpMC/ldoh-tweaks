@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -60,6 +61,9 @@ import com.mrcrayfish.guns.item.ItemAmmo;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
+		ConfigHandler.config = new Configuration(event.getSuggestedConfigurationFile());
+		ConfigHandler.syncConfig();
+
 		Item.getItemFromBlock(FurnitureBlocks.CRATE).setMaxStackSize(1);
 		Item.getItemFromBlock(FurnitureBlocks.CRATE_SPRUCE).setMaxStackSize(1);
 		Item.getItemFromBlock(FurnitureBlocks.CRATE_BIRCH).setMaxStackSize(1);
@@ -81,7 +85,9 @@ public class CommonProxy {
 		//Add Safehouse loot tables
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CHEST);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CABINET);
+		LootTableList.register(ModDefinitions.SAFEHOUSE_MEDICAL_FRIDGE);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
+		LootTableList.register(ModDefinitions.SAFEHOUSE_CRATE);
 		LootTableList.register(ModDefinitions.NEST_CRATE);
 		//Setup Packets for use
 		PacketHandler.initPackets();

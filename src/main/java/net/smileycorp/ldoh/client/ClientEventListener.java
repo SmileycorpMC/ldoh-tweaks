@@ -15,20 +15,19 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.WorldType;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -134,7 +133,7 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.player;
 		if (player!= null && event.getType() == ElementType.ALL) {
-			if (player.getPosition().getY()<=29.2) {
+			if (player.getPosition().getY()<=29.2 && player.world.getWorldType() != WorldType.FLAT) {
 				int r = GAS_COLOUR.getRed();
 				int g = GAS_COLOUR.getGreen();
 				int b = GAS_COLOUR.getBlue();
@@ -175,7 +174,7 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		Entity entity = mc.getRenderViewEntity();
 		if (entity != null) {
-			if (entity.posY >= 29.2) {
+			if (entity.posY >= 29.2 && entity.world.getWorldType() != WorldType.FLAT) {
 				RenderManager rm = mc.getRenderManager();
 				//scale renderer base on render distance
 				int size = rm.options == null ? 0 : (rm.options.renderDistanceChunks+1)*16;
@@ -290,24 +289,6 @@ public class ClientEventListener {
 					}
 				}
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void renderEntity(RenderLivingEvent.Pre<?> event){
-		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof EntityZombieFireman) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(1.1, 1.1, 1.1);
-		}
-	}
-
-	@SubscribeEvent
-	public void renderEntity(RenderLivingEvent.Post<?> event){
-		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof EntityZombieFireman) {
-			GlStateManager.scale(1, 1, 1);
-			GlStateManager.popMatrix();
 		}
 	}
 

@@ -27,6 +27,7 @@ import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemFromData;
 
+@SuppressWarnings("deprecation")
 public class EntityTF2Zombie extends EntityZombie {
 
 	protected static final DataParameter<Byte> TF_TEAM = EntityDataManager.createKey(EntityTF2Zombie.class, DataSerializers.BYTE);

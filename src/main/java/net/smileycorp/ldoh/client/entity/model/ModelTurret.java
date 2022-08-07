@@ -142,7 +142,7 @@ public class ModelTurret extends ModelBase {
 		if (entity != null) {
 			if (entity.getTeam()!=null) {
 				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
-				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
+				GlStateManager.color((colour >> 16) / 255.0F, (colour >> 8 & 255) / 255.0F, (colour & 255) / 255.0F);
 			} else {
 				GlStateManager.color(0.25f, 0.25f, 0.25f);
 			}

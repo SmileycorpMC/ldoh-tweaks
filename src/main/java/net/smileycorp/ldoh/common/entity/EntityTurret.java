@@ -34,6 +34,7 @@ import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 public class EntityTurret extends EntityLiving {
 
@@ -184,6 +185,8 @@ public class EntityTurret extends EntityLiving {
 				} else if (dataManager.get(TEAM) != "") {
 					dataManager.set(TEAM,"");
 				}
+			} else if (getTeam() == null) {
+				dataManager.set(TEAM, "GREEN");
 			}
 		}
 		if (hasTarget()) {
@@ -298,6 +301,12 @@ public class EntityTurret extends EntityLiving {
 
 	public boolean canTarget(EntityLivingBase entity) {
 		if (getDistance(entity) > 50) return false;
+		if (getOwnerUUID() == null) {
+			if (entity instanceof EntityPlayer) return ((EntityPlayer) target).isSpectator() ? false : true;
+			if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
+				if (!entity.getTeam().getName().equals("GREEN"));
+			}
+		}
 		return ModUtils.canTarget(this, entity);
 	}
 
