@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.client;
 
 import java.awt.Color;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -16,10 +17,12 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -30,6 +33,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -68,6 +72,8 @@ import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
+import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
@@ -288,6 +294,20 @@ public class ClientEventListener {
 						gui.renderToolTip(new ItemStack(LDOHItems.SYRINGE, count, 2), mouseX, mouseY);
 					}
 				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void addInformation(ItemTooltipEvent event) {
+		ItemStack stack = event.getItemStack();
+		Item item = stack.getItem();
+		if (item == FurnitureItems.CROWBAR) {
+			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.Crowbar").getFormattedText());
+		} else if (item instanceof ItemBlock) {
+			Block block = ((ItemBlock) item).getBlock();
+			if (block == RealisticTorchesBlocks.torchUnlit) {
+				event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.UnlitTorch").getFormattedText());
 			}
 		}
 	}

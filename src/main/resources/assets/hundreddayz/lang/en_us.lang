@@ -20,6 +20,8 @@ message.hundreddayz.VillagerMessage0=Word has been spread among the surviving ci
 message.hundreddayz.VillagerMessage.Survivor=Survivor
 message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
 
+message.hundreddayz.SealedCrate=Right click with a Crow Bar to open sealed crates
+
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
 commands.hundreddayz.SpawnRaid.usage=/spawnRaid <raid type> <level>
@@ -88,6 +90,7 @@ entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieFireman.name=Zombie Fireman
 entity.hundreddayz.LibraryZombie.name=Library Zombie
+entity.hundreddayz.HospitalZombie.name=Hospital Zombie
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie
@@ -113,3 +116,6 @@ jei.category.hundreddayz.Syringe=Syringes
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
+
+tooltip.hundreddayz.Crowbar=Right click to open sealed crates
+tooltip.hundreddayz.UnlitTorch=Use a matchbox to light

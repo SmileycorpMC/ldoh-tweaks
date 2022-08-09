@@ -62,20 +62,24 @@
 			"entries": [{
                     "type": "item",
                     "name": "minecraft:splash_potion",
-                    "weight": 1,
-                    "functions": [{
-						"function": "set_nbt",
-						"tag": "{Potion: \"minecraft:strong_healing\"}"
+					"function": "random_function",
+                    "functions": [
+					{
+						"weight": 1,
+						"functions": [{
+							"function": "set_nbt",
+							"tag": "{Potion: \"minecraft:strong_healing\"}"
+						}]
 					},
 					{
-                    "type": "item",
-                    "name": "minecraft:splash_potion",
-                    "weight": 1,
-                    "functions": [{
-						"function": "set_nbt",
-						"tag": "{Potion: \"minecraft:healing\"}"
-					}]
-                }
+						"weight": 1,
+						"functions": [{
+							"function": "set_nbt",
+							"tag": "{Potion: \"minecraft:healing\"}"
+						}]
+					}
+					]
+				}
 			]
 		}
 	]

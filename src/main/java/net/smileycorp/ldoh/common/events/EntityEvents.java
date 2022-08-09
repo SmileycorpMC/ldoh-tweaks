@@ -247,7 +247,7 @@ public class EntityEvents {
 							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 						}
 					} else if (entity instanceof EntityZombieMushroom) {
-						if (EnumBiomeType.BADLANDS.matches(world.getBiome(entity.getPosition()))) ((EntityZombieMushroom)entity).setGlowing(true);
+						if (EnumBiomeType.BADLANDS.matches(world.getBiome(entity.getPosition()))) ((EntityZombieMushroom)entity).setSkin(1);
 						entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
 					}
 				}

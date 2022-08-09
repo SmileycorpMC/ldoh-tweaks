@@ -22,6 +22,7 @@ public abstract class MixinItemBucket {
 	@Inject(at=@At("HEAD"), method = "tryPlaceContainedLiquid(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true)
 	public void tryPlaceContainedLiquid(EntityPlayer player, World world, BlockPos pos, CallbackInfoReturnable<Boolean> callback) {
 		if (containedBlock == Blocks.FLOWING_LAVA) {
+			if (player != null) if (player.capabilities.isCreativeMode) return;
 			callback.setReturnValue(false);
 			callback.cancel();
 		}

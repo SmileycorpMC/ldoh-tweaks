@@ -6,14 +6,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -37,6 +35,8 @@ import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.tangotek.tektopia.ModItems;
 
+import com.mrcrayfish.furniture.tileentity.TileEntityCrate;
+
 public class PlayerEvents {
 
 	//capability manager
@@ -52,8 +52,6 @@ public class PlayerEvents {
 	//randomly prevent picking up lava
 	@SubscribeEvent
 	public void fillBucket(FillBucketEvent event) {
-		World world = event.getWorld();
-		RayTraceResult ray = event.getTarget();
 		EntityPlayer player = event.getEntityPlayer();
 		ItemStack stack = event.getEmptyBucket();
 		if (stack.getItem() == Items.LAVA_BUCKET &! player.capabilities.isCreativeMode) {
@@ -63,26 +61,6 @@ public class PlayerEvents {
 			UniversalBucket bucket = (UniversalBucket) stack.getItem();
 			Fluid fluid = bucket.getFluid(stack).getFluid();
 			if (fluid.getTemperature() >= 450 || fluid.getBlock().getDefaultState().getMaterial() == Material.LAVA) event.setCanceled(true);
-		}
-		else if (stack.getItem() == Items.BUCKET) {
-			if (ray != null) {
-				if (ray.typeOfHit == Type.BLOCK) {
-					if (world.getBlockState(ray.getBlockPos()).getMaterial() == Material.LAVA) {
-						//50% chance to break the bucket
-						if (world.rand.nextInt(2) == 0) {
-							stack.shrink(1);
-							player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
-							event.setCanceled(true);
-							if (!world.isRemote)  {
-								ITextComponent text = new TextComponentTranslation(ModDefinitions.LAVA_PICKUP_MESSAGE);
-								text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-								player.sendMessage(text);
-								player.attackEntityFrom(DamageSource.LAVA, 3);
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -178,6 +156,20 @@ public class PlayerEvents {
 						event.setCanceled(true);
 					}
 				}
+			}
+		}
+	}
+
+	//activate when a player right clicks a block
+	@SubscribeEvent
+	public void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
+		EntityPlayer player = event.getEntityPlayer();
+		World world = player.world;
+		if (!world.isRemote) {
+			BlockPos pos = event.getPos();
+			TileEntity tile = world.getTileEntity(pos);
+			if (tile instanceof TileEntityCrate) {
+				if (((TileEntityCrate) tile).sealed) player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
 			}
 		}
 	}

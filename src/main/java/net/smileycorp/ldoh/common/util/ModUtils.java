@@ -21,6 +21,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,7 +60,9 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.google.common.collect.Multimap;
 import com.legacy.wasteland.world.WastelandWorld;
+import com.mrcrayfish.furniture.init.FurnitureItems;
 
 public class ModUtils {
 
@@ -68,6 +71,9 @@ public class ModUtils {
 	public static final AttributeModifier WASTELAND_MODIFIER = new AttributeModifier(UUID.fromString("22f4fa64-de73-4b45-9bb2-aae297639594"), "wasteland", 0.5, 2);
 	public static final AttributeModifier FOLLOW_MODIFIER = new AttributeModifier(UUID.fromString("3dc892c7-0def-42d5-8e7f-bb9f00136ad9"), "follow", -1, 2);
 	public static final AttributeModifier TIRED_MODIFIER = new AttributeModifier(UUID.fromString("d92e0875-9115-4d73-947d-905957cd4a72"), "tired", -0.5, 2);
+
+	public static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+	public static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
 	//sets player team and prints according message
 	public static void addPlayerToTeam(EntityPlayer player, String team) {
@@ -279,6 +285,13 @@ public class ModUtils {
 				weight = 1f / 64f * stack.getCount();
 		}
 		return weight;
+	}
+
+	public static void getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack, Multimap<String, AttributeModifier> map) {
+		if (stack.getItem() == FurnitureItems.CROWBAR && slot == EntityEquipmentSlot.MAINHAND) {
+			map.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3d, 0));
+			map.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
+		}
 	}
 
 }
