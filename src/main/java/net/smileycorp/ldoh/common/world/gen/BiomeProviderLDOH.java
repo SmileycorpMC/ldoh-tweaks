@@ -8,13 +8,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.ChunkGeneratorSettings;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerAddIsland;
-import net.minecraft.world.gen.layer.GenLayerAddSnow;
-import net.minecraft.world.gen.layer.GenLayerEdge;
-import net.minecraft.world.gen.layer.GenLayerFuzzyZoom;
 import net.minecraft.world.gen.layer.GenLayerIsland;
-import net.minecraft.world.gen.layer.GenLayerRemoveTooMuchOcean;
-import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 
 public class BiomeProviderLDOH extends BiomeProvider {
@@ -23,7 +17,7 @@ public class BiomeProviderLDOH extends BiomeProvider {
 		super();
 		long seed = world.getSeed();
 
-		GenLayer genlayer = new GenLayerIsland(1L);
+		/*GenLayer genlayer = new GenLayerIsland(1L);
 		genlayer = new GenLayerFuzzyZoom(2000L, genlayer);
 		GenLayer genlayeraddisland = new GenLayerAddIsland(1L, genlayer);
 		GenLayer genlayerzoom = new GenLayerZoom(2001L, genlayeraddisland);
@@ -37,16 +31,16 @@ public class BiomeProviderLDOH extends BiomeProvider {
 		genlayeredge = new GenLayerEdge(2L, genlayeredge, GenLayerEdge.Mode.HEAT_ICE);
 		genlayeredge = new GenLayerEdge(3L, genlayeredge, GenLayerEdge.Mode.SPECIAL);
 		GenLayer genlayerzoom1 = new GenLayerZoom(2002L, genlayeredge);
-		genlayerzoom1 = new GenLayerZoom(2003L, genlayerzoom1);
+		genlayerzoom1 = new GenLayerZoom(2003L, genlayerzoom1);*/
 
-		GenLayer genlayerLDOH = LDOHWorld.LDOH_WASTELAND.getBiomeLayer(seed, genlayerzoom1, new ChunkGeneratorSettings.Factory().build());
+		GenLayer genlayerLDOH = LDOHWorld.LDOH_WASTELAND.getBiomeLayer(seed, new GenLayerIsland(1L), new ChunkGeneratorSettings.Factory().build());
 
 		//GenLayer genlayersmooth1 = new GenLayerSmooth(1000L, genlayerLDOH);
 		//GenLayer genlayer3 = new GenLayerVoronoiZoom(10L, genlayersmooth1);
 		//genlayer3.initWorldGenSeed(seed);
 
 		genBiomes = genlayerLDOH;
-		biomeIndexLayer = genlayerzoom1;
+		biomeIndexLayer = genlayerLDOH;
 	}
 
 	@Override

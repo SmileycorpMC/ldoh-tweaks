@@ -34,12 +34,12 @@ public class WorldTypeLDOH extends WorldType {
 	@Override
 	public GenLayer getBiomeLayer(long worldSeed, GenLayer parent, ChunkGeneratorSettings chunkSettings) {
 		GenLayer layer = new GenLayerLDOHWasteland(200L, parent);
-		layer = new GenLayerLDOHRareBiome(1000L, parent, layer, 8, EnumBiomeType.DESERT);
-		layer = new GenLayerLDOHRareBiome(1001L, parent, layer, 15, EnumBiomeType.OCEAN);
-		layer = new GenLayerLDOHRareBiome(1002L, parent, layer, 25, EnumBiomeType.BADLANDS);
-		//layer = new GenLayerLDOHRareBiome(1003L, parent, layer, 30, EnumBiomeType.BADLANDS);
+		layer = new GenLayerLDOHRareBiome(1000L, parent, layer, 3, EnumBiomeType.DESERT);
+		layer = new GenLayerLDOHRareBiome(1001L, parent, layer, 5, EnumBiomeType.OCEAN);
+		layer = new GenLayerLDOHRareBiome(1002L, parent, layer, 7, EnumBiomeType.BADLANDS);
+		//layer = new GenLayerLDOHRareBiome(1003L, parent, layer, 14, 1, EnumBiomeType.CITY);
 		GenLayer ret3 = new GenLayerBiomeEdge(1000L, layer);
-		ret3 = GenLayerZoom.magnify(1000L, ret3, 6);
+		ret3 = GenLayerZoom.magnify(1000L, ret3, 7);
 		return ret3;
 	}
 
