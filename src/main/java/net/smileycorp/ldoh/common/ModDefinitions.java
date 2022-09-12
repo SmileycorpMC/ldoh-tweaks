@@ -43,6 +43,10 @@ public class ModDefinitions {
 	public static final ResourceLocation SAFEHOUSE_MEDICAL_FRIDGE = getResource("chests/safehouse_medical_fridge");
 	public static final ResourceLocation SAFEHOUSE_CRATE = getResource("chests/safehouse_crate");
 	public static final ResourceLocation NEST_CRATE = getResource("chests/nest_crate");
+	public static final ResourceLocation MILITARY_CRATE = getResource("chests/military_crate");
+	public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
+	public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
+
 	//helper methods
 	public static String getName(String name) {
 		return MODID + "." + name.replace("_", "");

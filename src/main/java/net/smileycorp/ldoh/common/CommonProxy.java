@@ -1,5 +1,11 @@
 package net.smileycorp.ldoh.common;
 
+import com.mrcrayfish.furniture.init.FurnitureBlocks;
+import com.mrcrayfish.furniture.init.FurnitureItems;
+import com.mrcrayfish.guns.common.WorkbenchRegistry;
+import com.mrcrayfish.guns.item.AmmoRegistry;
+import com.mrcrayfish.guns.item.ItemAmmo;
+
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -53,12 +59,6 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
-import com.mrcrayfish.furniture.init.FurnitureBlocks;
-import com.mrcrayfish.furniture.init.FurnitureItems;
-import com.mrcrayfish.guns.common.WorkbenchRegistry;
-import com.mrcrayfish.guns.item.AmmoRegistry;
-import com.mrcrayfish.guns.item.ItemAmmo;
-
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
@@ -83,6 +83,10 @@ public class CommonProxy {
 		LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CRATE);
 		LootTableList.register(ModDefinitions.NEST_CRATE);
+		LootTableList.register(ModDefinitions.MILITARY_CRATE);
+		LootTableList.register(ModDefinitions.MILITARY_AMMO);
+		LootTableList.register(ModDefinitions.MILITARY_TREASURE);
+
 		//Setup Packets for use
 		PacketHandler.initPackets();
 	}

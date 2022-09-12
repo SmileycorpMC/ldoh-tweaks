@@ -2,6 +2,13 @@ package net.smileycorp.ldoh.client;
 
 import java.awt.Color;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
+import com.mrcrayfish.furniture.init.FurnitureItems;
+import com.mrcrayfish.guns.client.gui.DisplayProperty;
+import com.mrcrayfish.guns.client.gui.GuiWorkbench;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -66,16 +73,8 @@ import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
-import com.mrcrayfish.furniture.init.FurnitureItems;
-import com.mrcrayfish.guns.client.gui.DisplayProperty;
-import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
 @SuppressWarnings("deprecation")
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
@@ -103,9 +102,9 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, m -> new RenderTF2Zombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, m -> new RenderZombieFireman(m));
 		//handle custom mapping for landmine blockstates

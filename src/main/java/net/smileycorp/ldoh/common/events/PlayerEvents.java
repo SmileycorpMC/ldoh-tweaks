@@ -1,5 +1,8 @@
 package net.smileycorp.ldoh.common.events;
 
+import com.mrcrayfish.furniture.init.FurnitureItems;
+import com.mrcrayfish.furniture.tileentity.TileEntityCrate;
+
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -34,8 +37,6 @@ import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.tangotek.tektopia.ModItems;
-
-import com.mrcrayfish.furniture.tileentity.TileEntityCrate;
 
 public class PlayerEvents {
 
@@ -169,7 +170,9 @@ public class PlayerEvents {
 			BlockPos pos = event.getPos();
 			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof TileEntityCrate) {
-				if (((TileEntityCrate) tile).sealed) player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
+				if (((TileEntityCrate) tile).sealed) {
+					if (event.getItemStack().getItem() != FurnitureItems.CROWBAR) player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
+				}
 			}
 		}
 	}

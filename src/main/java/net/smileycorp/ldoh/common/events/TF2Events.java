@@ -3,6 +3,11 @@ package net.smileycorp.ldoh.common.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.init.SRPPotions;
+import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
+
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -57,11 +62,6 @@ import rafradek.TF2weapons.inventory.InventoryLoadout;
 import rafradek.TF2weapons.item.ItemAmmo;
 import rafradek.TF2weapons.item.ItemFromData;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.init.SRPPotions;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-
 public class TF2Events {
 
 	//capability manager
@@ -71,14 +71,6 @@ public class TF2Events {
 		//gives tf2 mercs hunger
 		if (!entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
-		}
-		//give spies baguettes
-		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
-			if (!((EntitySpy)entity).isRobot())  event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
-		}
-		//give engineer buildings persistence
-		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityBuilding) {
-			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
 		//give medics ability to cure
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
@@ -242,7 +234,7 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
-				merc.tasks.addTask(3, new EntityAIAvoidEntity<EntityMob>(merc, EntityMob.class, (e)->ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
+				merc.tasks.addTask(3, new EntityAIAvoidEntity<>(merc, EntityMob.class, (e)->ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
 				if (entity instanceof EntityMedic) {
@@ -269,7 +261,7 @@ public class TF2Events {
 						tracker.setSpawned(true);
 					}
 				} else if (entity instanceof EntityMedic) {
-					List<EntityAIBase> tasks = new ArrayList<EntityAIBase>();
+					List<EntityAIBase> tasks = new ArrayList<>();
 					for (EntityAITaskEntry task : ((EntityTF2Character) entity).tasks.taskEntries) {
 						EntityAIBase ai = task.action;
 						if (ai instanceof EntityAIUseMedigun &!(ai instanceof AIModifiedMedigun)) tasks.add(ai);

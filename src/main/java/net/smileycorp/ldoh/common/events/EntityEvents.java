@@ -3,6 +3,14 @@ package net.smileycorp.ldoh.common.events;
 import java.util.Collection;
 import java.util.Random;
 
+import com.Fishmod.mod_LavaCow.entities.EntityBanshee;
+import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
+import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -18,6 +26,7 @@ import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -78,19 +87,12 @@ import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
-import net.smileycorp.ldoh.common.util.IDummyZombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
-import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
-import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 
 public class EntityEvents {
 
@@ -99,7 +101,7 @@ public class EntityEvents {
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
 		//track whether zombies or crawling zombies were loaded from world data or not
-		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && (entity.getClass() == EntityZombie.class || entity instanceof IDummyZombie)) {
+		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityLiving) {
 			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
 		}
 		//lets entities break blocks if the capability is set to enabled
@@ -135,7 +137,8 @@ public class EntityEvents {
 			}
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
-				if(!entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).isSpawned()) {
+				ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
+				if(!tracker.isSpawned()) {
 					if (entity.getClass() == EntityZombie.class) {
 						EntityZombie zombie = (EntityZombie) entity;
 						EntityMob newentity = null;
@@ -178,7 +181,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed(newentity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+							tracker.setSpawned(true);
 						}
 						//replace crawling zombies with their husk counterpart in deserts
 					} else if (entity.getClass() == EntityCrawlingZombie.class) {
@@ -195,7 +198,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+							tracker.setSpawned(true);
 						}
 					}
 					else if (entity.getClass() == EntityDummyZombie0.class) {
@@ -212,7 +215,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+							tracker.setSpawned(true);
 						}
 					} else if (entity.getClass() == EntityDummyZombie1.class) {
 						if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
@@ -228,7 +231,7 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+							tracker.setSpawned(true);
 						}
 					} else if (entity.getClass() == EntityDummyZombie2.class) {
 						if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
@@ -244,12 +247,13 @@ public class EntityEvents {
 							ModUtils.setEntitySpeed((EntityMob) entity);
 						} else {
 							ModUtils.setEntitySpeed((EntityMob) entity);
-							entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+							tracker.setSpawned(true);
 						}
 					} else if (entity instanceof EntityZombieMushroom) {
 						if (EnumBiomeType.BADLANDS.matches(world.getBiome(entity.getPosition()))) ((EntityZombieMushroom)entity).setSkin(1);
-						entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null).setSpawned(true);
+						tracker.setSpawned(true);
 					}
+					if(!tracker.isSpawned()) tracker.setSpawned(true);
 				}
 			}
 			if (entity instanceof EntityZombie) {
@@ -257,7 +261,7 @@ public class EntityEvents {
 				EntityZombie zombie = (EntityZombie) entity;
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, IAnimaniaAnimal.class, false));
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityVillagerTek.class, false));
 			}
 			//makes the vespa hostile to the player and other mobs
@@ -265,7 +269,7 @@ public class EntityEvents {
 				EntityVespa vespa = (EntityVespa) entity;
 				vespa.targetTasks.addTask(2, new EntityAINearestAttackableTarget(vespa, EntityPlayer.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityTF2Character.class, false));
-				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, IAnimaniaAnimal.class, false));
+				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityAnimal.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityVillagerTek.class, false));
 			}
 			//makes the sludge lord hostile to the player
@@ -273,6 +277,32 @@ public class EntityEvents {
 				EntitySludgeLord slord = (EntitySludgeLord) entity;
 				slord.targetTasks.addTask(2, new EntityAINearestAttackableTarget(slord, EntityPlayer.class, false));
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
+				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityAnimal.class, false));
+				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityVillagerTek.class, false));
+			}
+			//makes the weta hostile to the player
+			else if (entity instanceof EntityWeta) {
+				EntityWeta weta = (EntityWeta) entity;
+				weta.targetTasks.addTask(2, new EntityAINearestAttackableTarget(weta, EntityPlayer.class, false));
+				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityTF2Character.class, false));
+				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, false));
+				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityVillagerTek.class, false));
+			}
+			//makes the ptera hostile to the player
+			else if (entity instanceof EntityPtera) {
+				EntityPtera ptera = (EntityPtera) entity;
+				ptera.targetTasks.addTask(2, new EntityAINearestAttackableTarget(ptera, EntityPlayer.class, false));
+				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityTF2Character.class, false));
+				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, false));
+				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityVillagerTek.class, false));
+			}
+			//makes the banshee hostile to the player
+			else if (entity instanceof EntityBanshee) {
+				EntityBanshee banshee = (EntityBanshee) entity;
+				banshee.targetTasks.addTask(2, new EntityAINearestAttackableTarget(banshee, EntityPlayer.class, false));
+				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityTF2Character.class, false));
+				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, false));
+				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityVillagerTek.class, false));
 			}
 		}
 		//fix rare skeleton horse traps from appearing as well as skeletons and creepers spawning from fish's undead rising
