@@ -20,7 +20,7 @@ public class GenLayerLDOHWasteland extends GenLayer {
 
 		for (int i = 0; i < areaWidth; ++i) {
 			for (int k = 0; k < areaHeight; ++k) {
-				aint[i + k * areaWidth] = getBiome(i, k, base[i + k * areaWidth]);
+				aint[i + k * areaWidth] = getBiome(i, k, aint[i + k * areaWidth]);
 			}
 		}
 
@@ -33,8 +33,7 @@ public class GenLayerLDOHWasteland extends GenLayer {
 			initChunkSeed(rX, rZ);
 
 			int size = EnumBiomeType.WASTELAND.getBiomes().size();
-			int i = nextInt(size);
-			return Biome.getIdForBiome(EnumBiomeType.WASTELAND.getBiomes().get((seed + i) % size));
+			return Biome.getIdForBiome(EnumBiomeType.WASTELAND.getBiomes().get(seed % size));
 	}
 
 }

@@ -29,7 +29,7 @@ public class GenLayerLDOHRareBiome extends GenLayer {
 		for (int i = 0; i < areaWidth; ++i) {
 			for (int k = 0; k < areaHeight; ++k) {
 				initChunkSeed(i + areaX, k + areaZ);
-				aint[i + k * areaWidth] =  nextInt(chance) == 0 ? getBiome(i, k, parent[i + k * areaWidth]) : base[i + k * areaWidth];
+				aint[i + k * areaWidth] =  nextInt(chance) == 0 ? getBiome(i, k, aint[i + k * areaWidth] = getBiome(i, k, aint[i + k * areaWidth])) : base[i + k * areaWidth];
 			}
 		}
 
@@ -42,8 +42,8 @@ public class GenLayerLDOHRareBiome extends GenLayer {
 			initChunkSeed(rX, rZ);
 
 			int size = type.getBiomes().size();
-			int i = seed + nextInt(size);
-			return Biome.getIdForBiome(type.getBiomes().get(i % size));
+			int i = seed;
+			return Biome.getIdForBiome(type.getBiomes().get((i % (size*chance)/size)));
 	}
 
 }
