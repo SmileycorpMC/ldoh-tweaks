@@ -150,7 +150,7 @@ public class TileBarbedWire extends TileEntity {
 			durability = tag.getInteger("durability");
 		}
 		if (tag.hasKey("isEnchanted")) {
-			isEnchanted = tag.getBoolean("durability");
+			isEnchanted = tag.getBoolean("isEnchanted");
 		}
 		super.handleUpdateTag(tag);
 	}

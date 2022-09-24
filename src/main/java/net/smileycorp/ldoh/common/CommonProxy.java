@@ -40,6 +40,7 @@ import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.events.ApocalypseEvents;
+import net.smileycorp.ldoh.common.events.DefenseEvents;
 import net.smileycorp.ldoh.common.events.EntityEvents;
 import net.smileycorp.ldoh.common.events.PlayerEvents;
 import net.smileycorp.ldoh.common.events.SpawnerEvents;
@@ -67,6 +68,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new TF2Events());
 		MinecraftForge.EVENT_BUS.register(new WorldEvents());
 		MinecraftForge.ORE_GEN_BUS.register(new WorldEvents());
+		MinecraftForge.EVENT_BUS.register(new DefenseEvents());
 		RCEventBus.INSTANCE.register(new WorldEvents());
 
 		//Add Safehouse loot tables

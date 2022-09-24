@@ -1,7 +1,10 @@
 package net.smileycorp.ldoh.client;
 
 import java.awt.Color;
+import java.util.Map.Entry;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -46,6 +49,7 @@ import net.smileycorp.ldoh.client.entity.RenderZombieFireman;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
+import net.smileycorp.ldoh.client.tesr.TESRTurretItem.WrappedBakedModel;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
@@ -72,6 +76,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
+@SuppressWarnings("deprecation")
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
 public class ClientEventListener {
 
@@ -125,6 +130,9 @@ public class ClientEventListener {
 		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
 		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
 		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
+		for (IBlockState state : LDOHBlocks.BARBED_WIRE.getBlockState().getValidStates()) {
+			RenderingUtils.replaceRegisteredModel(getModelLocation(state), registry, BakedModelBarbedWire.class);
+		}
 	}
 
 	//Render Gas Overlay when below gas level
@@ -308,6 +316,22 @@ public class ClientEventListener {
 			GlStateManager.scale(1, 1, 1);
 			GlStateManager.popMatrix();
 		}
+	}
+
+	public static ModelResourceLocation getModelLocation(IBlockState state) {
+		String property = "";
+
+		for (Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet()){
+			if (property.length()>0) {
+				property += ",";
+			}
+
+			property += entry.getKey().getName();
+			property += "=";
+			property += entry.getValue().toString();
+		}
+
+		return new ModelResourceLocation(ModDefinitions.getResource(state.getBlock().getRegistryName().getResourcePath()), property);
 	}
 
 }

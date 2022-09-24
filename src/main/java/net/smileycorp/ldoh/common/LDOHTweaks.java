@@ -1,5 +1,8 @@
 package net.smileycorp.ldoh.common;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -24,6 +27,8 @@ public class LDOHTweaks {
 
 	@SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
 	public static CommonProxy PROXY;
+
+	public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");

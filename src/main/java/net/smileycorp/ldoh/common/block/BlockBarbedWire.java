@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
@@ -29,7 +30,6 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -38,6 +38,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
@@ -51,6 +55,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
 	public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
+	public static Properties.PropertyAdapter<Boolean> IS_ENCHANTED = new Properties.PropertyAdapter<Boolean>(PropertyBool.create("is_enchanted"));
 
 	public static final AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
 
@@ -96,7 +101,16 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{MATERIAL, AXIS});
+		return new ExtendedBlockState(this, new IProperty[]{MATERIAL, AXIS}, new IUnlistedProperty[]{IS_ENCHANTED});
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+		if(te != null && te instanceof TileBarbedWire) {
+			return ((IExtendedBlockState)state).withProperty(IS_ENCHANTED,((TileBarbedWire) te).isEnchanted());
+		}
+		return ((IExtendedBlockState)state).withProperty(IS_ENCHANTED, false);
 	}
 
 	@Override
@@ -205,11 +219,6 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 	@Override
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
 		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.DAMAGE_CACTUS : super.getAiPathNodeType(state, world, pos, entity);
-	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.INVISIBLE;
 	}
 
 }
