@@ -10,7 +10,9 @@
 	"MixinItem"
   ],
   "client": [],
-  "server": [],
+  "server": [
+	"MixinWorldServer"
+  ],
    "injectors": {
     "maxShiftBy": 10
   }
