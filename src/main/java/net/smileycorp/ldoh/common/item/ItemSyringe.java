@@ -24,6 +24,7 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
+@SuppressWarnings("deprecation")
 public class ItemSyringe extends Item implements IMetaItem {
 
 	String name = "Syringe";
@@ -83,7 +84,7 @@ public class ItemSyringe extends Item implements IMetaItem {
 			player.setActiveHand(hand);
 			action = EnumActionResult.SUCCESS;
 		}
-		return new ActionResult<ItemStack>(action, stack);
+		return new ActionResult<>(action, stack);
 	}
 
 	@Override

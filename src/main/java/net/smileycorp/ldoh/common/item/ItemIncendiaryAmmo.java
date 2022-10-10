@@ -2,6 +2,8 @@ package net.smileycorp.ldoh.common.item;
 
 import java.util.List;
 
+import com.mrcrayfish.guns.item.ItemAmmo;
+
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
@@ -9,8 +11,7 @@ import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
-import com.mrcrayfish.guns.item.ItemAmmo;
-
+@SuppressWarnings("deprecation")
 public class ItemIncendiaryAmmo extends ItemAmmo {
 
 	public ItemIncendiaryAmmo() {

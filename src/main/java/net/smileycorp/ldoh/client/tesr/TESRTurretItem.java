@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,8 +24,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.model.ModelTurret;
 import net.smileycorp.ldoh.common.ModDefinitions;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class TESRTurretItem extends TileEntityItemStackRenderer {
 
@@ -67,6 +67,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public ItemCameraTransforms getItemCameraTransforms() {
 			return original.getItemCameraTransforms();
 		}
