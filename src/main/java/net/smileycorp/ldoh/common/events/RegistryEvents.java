@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.Fishmod.mod_LavaCow.init.FishItems;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -48,15 +50,12 @@ import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
-import biomesoplenty.api.block.BOPBlocks;
-
-import com.Fishmod.mod_LavaCow.init.FishItems;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
 
-	public static final Set<Item> ITEMS = new HashSet<Item>();
-	public static final Set<Block> BLOCKS = new HashSet<Block>();
+	public static final Set<Item> ITEMS = new HashSet<>();
+	public static final Set<Block> BLOCKS = new HashSet<>();
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {

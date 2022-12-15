@@ -16,10 +16,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAda
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSIV;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -33,11 +30,9 @@ import net.minecraft.world.World;
 import net.smileycorp.atlas.api.recipe.WeightedOutputs;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 
-public class Apocalypse implements IApocalypse {
+public class LegacyApocalypse implements IApocalypse {
 
 	public static WeightedOutputs<Class<? extends EntityParasiteBase>> adaptedtable = init();
-
-	protected Entity boss;
 
 	private static WeightedOutputs<Class<? extends EntityParasiteBase>> init() {
 		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<>();
@@ -51,32 +46,33 @@ public class Apocalypse implements IApocalypse {
 		return new WeightedOutputs<>(adaptedmap);
 	}
 
+	private int timer = 0;
 	private EntityPlayer player;
 	private int wave = 0;
 	private boolean started = false;
 
-	public Apocalypse(EntityPlayer player) {
+	public LegacyApocalypse(EntityPlayer player) {
 		this.player=player;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+		if (nbt.hasKey("timer")) {
+			timer = nbt.getInteger("timer");
+		}
 		if (nbt.hasKey("wave")) {
 			wave = nbt.getInteger("wave");
 		}
 		if (nbt.hasKey("started")) {
 			started = nbt.getBoolean("started");
 		}
-		if (nbt.hasKey("boss") && player != null) {
-			boss = player.world.getEntityByID(nbt.getInteger("boss"));
-		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setInteger("timer", timer);
 		nbt.setInteger("wave", wave);
 		nbt.setBoolean("started", started);
-		if (boss != null) nbt.setInteger("boss", boss.getEntityId());
 		return nbt;
 	}
 
@@ -84,29 +80,18 @@ public class Apocalypse implements IApocalypse {
 	public void update(World world) {
 		if (!world.isRemote) {
 			if (isActive(world)) {
-				Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-				BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
-				EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
-				world.spawnEntity(bolt);
-				if (boss != null) {
-					if (boss.isDead || ((EntityLivingBase) boss).getHealth() <= 0) {
-						world.setWorldTime(world.getWorldTime() + 1500);
-						boss = null;
-						if (wave==4) {
-							world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
-							player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
-							return;
-						}
-						spawnWave(world);
-					}
+				if ((timer == 0)) {
+					spawnWave(world);
+					if (wave==7) player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
 				}
+				timer--;
 			}
 		}
 	}
 
 	@Override
 	public boolean isActive(World world) {
-		return player != null && wave > 0 && wave < 4;
+		return player != null && wave  > 0 && wave < 7;
 	}
 
 	@Override
@@ -127,48 +112,51 @@ public class Apocalypse implements IApocalypse {
 	@Override
 	public void startEvent() {
 		if (player!=null) {
-			player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
+			wave = 1;
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
 			started = true;
-			spawnWave(player.world);
 		}
 	}
 
 	@Override
 	public void spawnWave(World world) {
-		for (Class<? extends EntityParasiteBase> clazz :  getSpawnsForWave(wave, world.rand)) {
+		for (Class<? extends EntityParasiteBase> clazz : getSpawnsForWave(wave, world.rand)) {
+			Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
+			BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
+			EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
+			world.spawnEntity(bolt);
 			try {
-				spawnEntity(world, clazz.getConstructor(World.class).newInstance(world));
-			} catch (Exception e) {}
-		}
-		boss = spawnEntity(world, new EntityOronco(world));
-		wave++;
-	}
+				EntityParasiteBase entity = clazz.getConstructor(World.class).newInstance(world);
+				entity.onAddedToWorld();
+				entity.setPosition(localpos.getX(), localpos.getY(), localpos.getZ());
+				world.spawnEntity(entity);
+				entity.targetTasks.taskEntries.clear();
+				entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, new Class[] {EntityParasiteBase.class}));
+				entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(entity, EntityPlayer.class, false));
+				entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
+			} catch (Exception e) {
 
-	private EntityParasiteBase spawnEntity(World world, EntityParasiteBase entity) {
-		Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-		BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
-		entity.onAddedToWorld();
-		entity.setPosition(localpos.getX(), localpos.getY(), localpos.getZ());
-		entity.enablePersistence();
-		world.spawnEntity(entity);
-		entity.targetTasks.taskEntries.clear();
-		entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, new Class[] {EntityParasiteBase.class}));
-		entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(entity, EntityPlayer.class, false));
-		entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
-		return entity;
+			}
+		}
+		timer = 1000;
+		wave++;
 	}
 
 	private List<Class<? extends EntityParasiteBase>> getSpawnsForWave(int wave, Random rand) {
 		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<>();
-		for (int i = 0; i < 3 + Math.round(wave*2.4); i++) {
-			spawnlist.add(EntityVenkrolSIV.class);
+		if (wave % 1 == 0) {
+			spawnlist.add(EntityOronco.class);
+			for (int i = 0; i < 3 + Math.round(wave*0.3); i++) {
+				spawnlist.addAll(adaptedtable.getResults(rand));
+			}
+			if (wave == 6) {
+				spawnlist.add(EntityOronco.class);
+			}
 		}
-		for (int i = 0; i < 3 + Math.round(wave); i++) {
-			spawnlist.addAll(adaptedtable.getResults(rand));
-		}
-		if (wave == 3) {
-			for (int i = 0; i<13; i++) spawnlist.add(EntityButhol.class);
+		else if (wave % 1 == 1) {
+			for (int i = 0; i < 3 + Math.round(wave*1.4); i++) {
+				spawnlist.add(EntityVenkrolSIV.class);
+			}
 		}
 		return spawnlist;
 	}

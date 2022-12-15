@@ -1,5 +1,9 @@
 package net.smileycorp.ldoh.common.events;
 
+import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
+import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -21,13 +25,8 @@ import net.tangotek.tektopia.entities.EntityNecromancer;
 import net.tangotek.tektopia.entities.EntityTradesman;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-
 public class TektopiaEvents {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
