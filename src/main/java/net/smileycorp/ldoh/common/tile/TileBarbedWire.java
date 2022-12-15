@@ -29,7 +29,7 @@ public class TileBarbedWire extends TileEntity {
 	protected EnumBarbedWireMat mat;
 
 	protected boolean isEnchanted = false;
-	protected Map<Enchantment, Integer> enchant_map = new HashMap<Enchantment, Integer>();
+	protected Map<Enchantment, Integer> enchant_map = new HashMap<>();
 
 	public TileBarbedWire() {
 		this(EnumBarbedWireMat.IRON);
@@ -141,6 +141,7 @@ public class TileBarbedWire extends TileEntity {
 		NBTTagCompound tag = super.getUpdateTag();
 		tag.setInteger("durability", durability);
 		tag.setBoolean("isEnchanted", isEnchanted());
+		tag.setInteger("material", mat.ordinal());
 		return tag;
 	}
 
@@ -151,6 +152,9 @@ public class TileBarbedWire extends TileEntity {
 		}
 		if (tag.hasKey("isEnchanted")) {
 			isEnchanted = tag.getBoolean("isEnchanted");
+		}
+		if (tag.hasKey("material")) {
+			mat = EnumBarbedWireMat.byMeta(tag.getInteger("material"));
 		}
 		super.handleUpdateTag(tag);
 	}

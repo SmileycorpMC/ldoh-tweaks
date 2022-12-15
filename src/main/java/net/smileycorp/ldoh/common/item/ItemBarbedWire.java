@@ -3,6 +3,8 @@ package net.smileycorp.ldoh.common.item;
 import java.util.List;
 
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,4 +54,21 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 		}
 
 	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public int getItemEnchantability(ItemStack stack) {
+		return EnumBarbedWireMat.byMeta(stack.getMetadata()).getEnchantability();
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return enchantment.type.canEnchantItem(Items.IRON_SWORD);
+	}
+
+
 }

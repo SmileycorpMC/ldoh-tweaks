@@ -4,18 +4,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableMap;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.smileycorp.atlas.api.client.RenderingUtils;
-import net.smileycorp.ldoh.common.block.BlockBarbedWire;
-
-import com.google.common.collect.ImmutableMap;
 
 public class BakedModelBarbedWire extends BakedModelWrapper<IBakedModel> {
 
@@ -31,7 +27,7 @@ public class BakedModelBarbedWire extends BakedModelWrapper<IBakedModel> {
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing facing, long rand) {
 		List<BakedQuad> quads = originalModel.getQuads(state, facing, rand);
-		System.out.println(base.getTextures());
+		/*System.out.println(base.getTextures());
 		try {
 			if (state instanceof IExtendedBlockState && ((IExtendedBlockState) state).getUnlistedNames().contains(BlockBarbedWire.IS_ENCHANTED)) {
 				if (((IExtendedBlockState) state).getValue(BlockBarbedWire.IS_ENCHANTED)) {
@@ -42,7 +38,7 @@ public class BakedModelBarbedWire extends BakedModelWrapper<IBakedModel> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		return quads;
 	}
 

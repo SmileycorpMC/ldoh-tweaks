@@ -3,6 +3,11 @@ package net.smileycorp.ldoh.client;
 import java.awt.Color;
 import java.util.Map.Entry;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import com.mrcrayfish.guns.client.gui.DisplayProperty;
+import com.mrcrayfish.guns.client.gui.GuiWorkbench;
+
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -49,7 +54,6 @@ import net.smileycorp.ldoh.client.entity.RenderZombieFireman;
 import net.smileycorp.ldoh.client.entity.RenderZombieNurse;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
-import net.smileycorp.ldoh.client.tesr.TESRTurretItem.WrappedBakedModel;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
@@ -67,14 +71,8 @@ import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import com.mrcrayfish.guns.client.gui.DisplayProperty;
-import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
 @SuppressWarnings("deprecation")
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
@@ -102,9 +100,9 @@ public class ClientEventListener {
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, m -> new RenderTF2Zombie(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<EntitySwatZombie>(m, "swat_zombie"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<EntityZombieMechanic>(m, "zombie_mechanic"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<EntityZombieTechnician>(m, "zombie_technician"));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, m -> new RenderZombieFireman(m));
 		//handle custom mapping for landmine blockstates
@@ -130,9 +128,9 @@ public class ClientEventListener {
 		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
 		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
 		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
-		for (IBlockState state : LDOHBlocks.BARBED_WIRE.getBlockState().getValidStates()) {
+		/*for (IBlockState state : LDOHBlocks.BARBED_WIRE.getBlockState().getValidStates()) {
 			RenderingUtils.replaceRegisteredModel(getModelLocation(state), registry, BakedModelBarbedWire.class);
-		}
+		}*/
 	}
 
 	//Render Gas Overlay when below gas level
