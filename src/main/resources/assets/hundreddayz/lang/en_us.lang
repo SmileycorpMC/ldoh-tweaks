@@ -64,6 +64,7 @@ tile.hundreddayz.Landmine.name=Landmine
 tile.hundreddayz.Turret.name=Sentry Turret
 tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
+tile.hundreddayz.Cache.name=Item Cache
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
@@ -80,6 +81,7 @@ tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
+tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler

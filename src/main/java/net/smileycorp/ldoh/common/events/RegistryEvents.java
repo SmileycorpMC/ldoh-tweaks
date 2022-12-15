@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.Fishmod.mod_LavaCow.init.FishItems;
+
+import de.maxhenkel.car.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -45,20 +48,17 @@ import net.smileycorp.ldoh.common.item.ItemBlockTooltip;
 import net.smileycorp.ldoh.common.item.ItemTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
+import net.smileycorp.ldoh.common.tile.TileCache;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 
-import com.Fishmod.mod_LavaCow.init.FishItems;
-
-import de.maxhenkel.car.items.ModItems;
-
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
 
-	public static final Set<Item> ITEMS = new HashSet<Item>();
-	public static final Set<Block> BLOCKS = new HashSet<Block>();
+	public static final Set<Item> ITEMS = new HashSet<>();
+	public static final Set<Block> BLOCKS = new HashSet<>();
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -74,6 +74,7 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
+		//registerItem(registry, new ItemBlockTooltip(LDOHBlocks.CACHE));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 
@@ -98,6 +99,7 @@ public class RegistryEvents {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
+		GameRegistry.registerTileEntity(TileCache.class, ModDefinitions.getResource("cache"));
 	}
 
 	@SubscribeEvent

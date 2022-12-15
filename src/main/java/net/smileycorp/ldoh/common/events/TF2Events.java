@@ -3,7 +3,7 @@ package net.smileycorp.ldoh.common.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
@@ -229,17 +229,17 @@ public class TF2Events {
 				EntitySentry sentry = (EntitySentry) entity;
 				sentry.targetTasks.taskEntries.clear();
 				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
-						(e) -> ModUtils.canTarget(sentry, e), false, true));
+						e -> ModUtils.canTarget(sentry, e), false, true));
 			}
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
-				merc.tasks.addTask(3, new EntityAIAvoidEntity<>(merc, EntityMob.class, (e)->ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
+				merc.tasks.addTask(3, new EntityAIAvoidEntity<>(merc, EntityMob.class, e -> ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
 				if (entity instanceof EntityMedic) {
 					//medic heal targeting
-					EntityAIBase ai = new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.shouldHeal(merc, e), false, true) {
+					EntityAIBase ai = new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.shouldHeal(merc, e), false, true) {
 						@Override
 						public boolean shouldExecute() {
 							return ModUtils.shouldHeal(merc, targetEntity);
@@ -247,10 +247,10 @@ public class TF2Events {
 					};
 					merc.targetTasks.addTask(1, ai);
 					merc.targetTasks.addTask(2, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));
+					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
 				} else {
 					merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, (e) -> ModUtils.canTarget(merc, e), true, false));
+					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
 				}
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
