@@ -10,7 +10,7 @@ public class LDOHBlocks {
 	public static final Block TURRET = new BlockTurret();
 
 	// utility or storage
-	public static final Block CACHE = new BlockCache();
+	//public static final Block CACHE = new BlockCache();
 
 	// functional
 	public static final Block HORDE_SPAWNER = new BlockHordeSpawner();

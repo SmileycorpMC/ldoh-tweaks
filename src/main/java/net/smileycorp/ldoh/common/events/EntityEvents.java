@@ -12,6 +12,7 @@ import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfDragonE;
 
+import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -21,10 +22,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityHusk;
-import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
@@ -32,7 +31,6 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -86,7 +84,6 @@ import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
-import net.smileycorp.ldoh.common.entity.ai.AIBreakEgg;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
@@ -130,14 +127,6 @@ public class EntityEvents {
 		World world = event.getWorld();
 		Entity entity = event.getEntity();
 		if (!world.isRemote) {
-			//refund golem materials
-			if (entity instanceof EntityIronGolem) {
-				if (((EntityIronGolem) entity).isPlayerCreated()) {
-					EntityItem drops = new EntityItem(world, entity.posX, entity.posY, entity.posZ,
-							new ItemStack(Blocks.IRON_BLOCK, 4));
-					world.spawnEntity(drops);
-				}
-			}
 			//replacing zombies with rare spawns
 			if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 				ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
@@ -266,7 +255,7 @@ public class EntityEvents {
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityVillagerTek.class, false));
-				zombie.tasks.addTask(3, new AIBreakEgg(zombie));
+				zombie.tasks.addTask(3, new ESM_EntityAIGrief(zombie));
 			}
 			//makes the vespa hostile to the player and other mobs
 			else if (entity instanceof EntityVespa) {
@@ -291,7 +280,7 @@ public class EntityEvents {
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityTF2Character.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityVillagerTek.class, false));
-				weta.tasks.addTask(3, new AIBreakEgg(weta));
+				//weta.tasks.addTask(3, new AIBreakEgg(weta));
 			}
 			//makes the ptera hostile to the player
 			else if (entity instanceof EntityPtera) {
@@ -300,7 +289,7 @@ public class EntityEvents {
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityTF2Character.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityVillagerTek.class, false));
-				ptera.tasks.addTask(3, new AIBreakEgg(ptera));
+				//ptera.tasks.addTask(3, new AIBreakEgg(ptera));
 			}
 			//makes the banshee hostile to the player
 			else if (entity instanceof EntityBanshee) {
@@ -309,7 +298,7 @@ public class EntityEvents {
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityTF2Character.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityVillagerTek.class, false));
-				banshee.tasks.addTask(3, new AIBreakEgg(banshee));
+				//banshee.tasks.addTask(3, new AIBreakEgg(banshee));
 			}
 			//replace ender dragon with parasite
 			else if (entity instanceof EntityDragon) {

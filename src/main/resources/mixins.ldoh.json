@@ -7,7 +7,8 @@
   "mixins": [
     "MixinEntityLiving",
 	"MixinItemBucket",
-	"MixinItem"
+	"MixinItem",
+	"MixinBlockPumpkin"
   ],
   "client": [],
   "server": [

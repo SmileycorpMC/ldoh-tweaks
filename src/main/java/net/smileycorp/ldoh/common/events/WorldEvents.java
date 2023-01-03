@@ -76,7 +76,7 @@ public class WorldEvents {
 				tries++;
 
 				//cancel after 3000 tries to not lock the game in an infinite loop
-				if (tries >= 3000) {
+				if (tries >= 5000) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					System.out.println("Found no suitable location for spawn");
 					break;

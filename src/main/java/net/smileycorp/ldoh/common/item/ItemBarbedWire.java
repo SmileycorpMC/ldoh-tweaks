@@ -13,7 +13,6 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 
-@SuppressWarnings("deprecation")
 public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 
 	private final String TOOLTIP = "tooltip." + ModDefinitions.MODID + ".BarbedWire";

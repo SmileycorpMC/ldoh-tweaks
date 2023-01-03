@@ -7,6 +7,7 @@ import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.item.ItemAmmo;
 
 import ivorius.reccomplex.events.RCEventBus;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -93,15 +94,15 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {
 		//Register Capabilities
-		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), () -> new SpawnTracker());
+		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), SpawnTracker::new);
 		CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));
 		CapabilityManager.INSTANCE.register(IUnburiedSpawner.class, new IUnburiedSpawner.Storage(), () -> new UnburiedSpawner(null));
-		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), () -> new MiniRaid());
-		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), () -> new Hunger());
+		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), MiniRaid::new);
+		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), Hunger::new);
 		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
-		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
-		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
-		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), () -> new VillageData());
+		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), Followers::new);
+		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), Curing::new);
+		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), VillageData::new);
 
 		//register turret gui
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
@@ -138,6 +139,7 @@ public class CommonProxy {
 		Item.getItemFromBlock(FurnitureBlocks.CRATE_ACACIA).setMaxStackSize(1);
 		Item.getItemFromBlock(FurnitureBlocks.CRATE_DARK_OAK).setMaxStackSize(1);
 		FurnitureItems.CROWBAR.setMaxStackSize(1);
+		Material.DRAGON_EGG.setRequiresTool();
 
 		//add incendiary ammo
 		AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);

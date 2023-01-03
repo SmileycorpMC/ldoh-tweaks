@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
-@SuppressWarnings("deprecation")
 public class ItemIncendiaryAmmo extends ItemAmmo {
 
 	public ItemIncendiaryAmmo() {

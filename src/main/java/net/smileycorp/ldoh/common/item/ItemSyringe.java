@@ -24,7 +24,6 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
-@SuppressWarnings("deprecation")
 public class ItemSyringe extends Item implements IMetaItem {
 
 	String name = "Syringe";

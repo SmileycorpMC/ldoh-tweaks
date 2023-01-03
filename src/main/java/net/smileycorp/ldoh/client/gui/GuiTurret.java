@@ -20,7 +20,6 @@ import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
-@SuppressWarnings("deprecation")
 public class GuiTurret extends GuiContainer {
 
 	public static ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/turret.png");

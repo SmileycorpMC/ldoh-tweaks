@@ -12,7 +12,6 @@ import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-@SuppressWarnings("deprecation")
 public class ModMobEntry {
 
 	protected EnumTFClass tfclass = null;
