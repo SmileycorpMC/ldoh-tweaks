@@ -307,6 +307,8 @@ public class ClientEventListener {
 			if (block == RealisticTorchesBlocks.torchUnlit) {
 				event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.UnlitTorch").getFormattedText());
 			}
+		} else if (item == Items.EXPERIENCE_BOTTLE) {
+			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.ExpBottle").getFormattedText());
 		}
 	}
 
