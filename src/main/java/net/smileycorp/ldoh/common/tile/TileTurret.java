@@ -18,6 +18,7 @@ public class TileTurret extends TileEntity implements IInventory  {
 		Vec3d pos = new Vec3d(this.pos.getX() + 0.5, this.pos.getY() + 0.25, this.pos.getZ() + 0.5);
 		entity.setPosition(pos.x, pos.y, pos.z);
 		NBTTagCompound entityData = nbt.hasKey("entity") ? (NBTTagCompound) nbt.getCompoundTag(("entity")) : new NBTTagCompound();
+		if (nbt.hasKey("isEnemy")) entityData.setBoolean("isEnemy", nbt.getBoolean("isEnemy"));
 		entity.readFromTile(owner, this, entityData, facing);
 		world.spawnEntity(entity);
 	}

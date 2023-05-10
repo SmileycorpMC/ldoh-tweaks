@@ -1,5 +1,8 @@
 package net.smileycorp.ldoh.common.events;
 
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.mrcrayfish.guns.entity.EntityProjectile;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,9 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.ldoh.common.damage.DamageSourceBarbedWire;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.mrcrayfish.guns.entity.EntityProjectile;
 
 public class DefenseEvents {
 

@@ -36,7 +36,7 @@ import net.smileycorp.ldoh.common.tile.TileTurret;
 public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
 
 	private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.7, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.3, 1),
-		new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
+			new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
 
 	public BlockTurret() {
 		super(Material.IRON);
@@ -173,6 +173,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 		if (willHarvest &! world.isRemote) {
 			if (world.getTileEntity(pos) instanceof TileTurret) {
 				TileTurret tile = (TileTurret) world.getTileEntity(pos);
+				if (tile.getEntity() != null) if (tile.getEntity().isEnemy()) return true;
 				ItemStack stack = new ItemStack(this);
 				NBTTagCompound nbt = tile.getDropNBT();
 				stack.setTagCompound(nbt);

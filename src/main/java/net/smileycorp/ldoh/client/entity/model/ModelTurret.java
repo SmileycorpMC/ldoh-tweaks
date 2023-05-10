@@ -1,11 +1,15 @@
 package net.smileycorp.ldoh.client.entity.model;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 
 /**
  * turret - Undefined
@@ -139,18 +143,25 @@ public class ModelTurret extends ModelBase {
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
-		if (entity != null) {
-			if (entity.getTeam()!=null) {
-				int colour = Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode);
-				GlStateManager.color((float)(colour >> 16) / 255.0F, (float)(colour >> 8 & 255) / 255.0F, (float)(colour & 255) / 255.0F);
-			} else {
-				GlStateManager.color(0.25f, 0.25f, 0.25f);
+		if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
+		else {
+			Color colour = null;
+			if (entity instanceof IEnemyMachine) {
+				if (((IEnemyMachine) entity).isEnemy()) colour = new Color(0x2C3811);
+			} else if (entity instanceof EntityPlayer) colour = new Color(0x2C3811);
+			if (colour == null) {
+				if (entity.getTeam() != null) {
+					colour = new Color(Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode));
+				} else {
+					colour = new Color(0x404040);
+				}
 			}
-			if (entity instanceof EntityTurret) {
-				axel.rotateAngleX = headPitch * 0.0174533f;
-				gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
-			} else gun_middle.rotateAngleZ=(0.0261799388f*age);
+			GlStateManager.color(colour.getRed()/255f, colour.getGreen()/255f, colour.getBlue()/255f);
 		}
+		if (entity instanceof EntityTurret) {
+			axel.rotateAngleX = headPitch * 0.0174533f;
+			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
+		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
 		base.render(scale);
 		GlStateManager.color(1, 1, 1);
 		axel.render(scale);

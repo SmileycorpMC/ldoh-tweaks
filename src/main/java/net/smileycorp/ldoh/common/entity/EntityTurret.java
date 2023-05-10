@@ -2,6 +2,8 @@ package net.smileycorp.ldoh.common.entity;
 
 import java.util.UUID;
 
+import com.mrcrayfish.guns.init.ModGuns;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,9 +37,10 @@ import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
-public class EntityTurret extends EntityLiving {
+public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
+	protected static final DataParameter<Boolean> IS_ENEMY = EntityDataManager.<Boolean>createKey(EntityTurret.class, DataSerializers.BOOLEAN);
 	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
 	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
 	protected static final DataParameter<Float> SPIN = EntityDataManager.<Float>createKey(EntityTurret.class, DataSerializers.FLOAT);
@@ -64,6 +67,7 @@ public class EntityTurret extends EntityLiving {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(TEAM, "");
+		dataManager.register(IS_ENEMY, false);
 		dataManager.register(FACING, EnumFacing.UP);
 		dataManager.register(COOLDOWN, 0);
 		dataManager.register(SPIN, 0f);
@@ -90,7 +94,8 @@ public class EntityTurret extends EntityLiving {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
-		if (nbt.hasKey("owner")) dataManager.set(OWNER_UUID, nbt.getString("owner"));
+		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+		if (!isEnemy() && nbt.hasKey("owner")) dataManager.set(OWNER_UUID, nbt.getString("owner"));
 		if (nbt.hasKey("tilePos")) {
 			NBTTagCompound pos = nbt.getCompoundTag("tilePos");
 			dataManager.set(TILE_POS, new BlockPos(pos.getInteger("x"), pos.getInteger("y"), pos.getInteger("z")));
@@ -106,6 +111,7 @@ public class EntityTurret extends EntityLiving {
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setTag("inventory", inventory.writeToNBT());
+		nbt.setBoolean("isEnemy", isEnemy());
 		if (owner!=null) nbt.setString("owner", dataManager.get(OWNER_UUID));
 		if (TILE_POS != null) {
 			NBTTagCompound pos = new NBTTagCompound();
@@ -121,10 +127,13 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
-		dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
-		this.owner = owner;
-		if (owner.getTeam() != null) {
-			dataManager.set(TEAM, owner.getTeam().getName());
+		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+		if (!isEnemy()) {
+			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
+			this.owner = owner;
+			if (owner.getTeam() != null) {
+				dataManager.set(TEAM, owner.getTeam().getName());
+			}
 		}
 		dataManager.set(TILE_POS, tile.getPos());
 		dataManager.set(FACING, facing);
@@ -134,6 +143,7 @@ public class EntityTurret extends EntityLiving {
 
 	public NBTTagCompound saveToTile() {
 		NBTTagCompound nbt = new NBTTagCompound();
+		if (isEnemy()) nbt.setBoolean("isEnemy", isEnemy());
 		nbt.setTag("inventory", inventory.writeToNBT());
 		nbt.setFloat("health", getHealth());
 		return nbt;
@@ -162,7 +172,7 @@ public class EntityTurret extends EntityLiving {
 				((TileTurret) tile).setEntity(this);
 			}
 		}
-		if (ticksExisted%5 == 0) {
+		if (ticksExisted%5 == 0 &! isEnemy()) {
 			if (world.isRemote && username == null) {
 				String uuidString = dataManager.get(OWNER_UUID);
 				if (DataUtils.isValidUUID(uuidString)) {
@@ -286,12 +296,22 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	@Override
+	public boolean isEnemy() {
+		return dataManager.get(IS_ENEMY);
+	}
+
+	@Override
 	public Team getTeam() {
+		if (isEnemy()) return null;
 		String team = dataManager.get(TEAM);
 		return team.isEmpty() ? null : world.getScoreboard().getTeam(team);
 	}
 
 	public boolean isSameTeam(Entity entity) {
+		if (isEnemy()) {
+			if (entity instanceof IEnemyMachine) return (((IEnemyMachine) entity).isEnemy());
+			return false;
+		}
 		if (getTeam() == null) return entity.getTeam() == null;
 		return getTeam().equals(entity.getTeam());
 	}
@@ -302,10 +322,11 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public EntityPlayer getOwner() {
-		return owner;
+		return isEnemy() ? null : owner;
 	}
 
 	public UUID getOwnerUUID() {
+		if (isEnemy()) return null;
 		String uuidString = dataManager.get(OWNER_UUID);
 		return DataUtils.isValidUUID(uuidString) ? UUID.fromString(uuidString) : null;
 	}
@@ -339,7 +360,7 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public ItemStack getAmmo() {
-		return inventory.getAmmo();
+		return isEnemy() ? new ItemStack(ModGuns.BASIC_AMMO) : inventory.getAmmo();
 	}
 
 	@SideOnly(Side.CLIENT)

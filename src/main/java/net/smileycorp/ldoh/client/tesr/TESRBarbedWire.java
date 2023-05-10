@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.client.tesr;
 
-import java.awt.Color;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -11,7 +9,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -48,24 +45,30 @@ public class TESRBarbedWire extends TileEntitySpecialRenderer<TileBarbedWire> {
 			GlStateManager.depthFunc(514);
 			GlStateManager.disableLighting();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
-			bindTexture(RES_ITEM_GLINT);
+			mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
 			GlStateManager.matrixMode(5890);
 			GlStateManager.pushMatrix();
-			buffer.begin(7, DefaultVertexFormats.BLOCK);
-			buffer.setTranslation(x - (double)pos.getX(), y - (double)pos.getY(), z - (double)pos.getZ());
-			dispatcher.getBlockModelRenderer().renderModel(world, model, state, pos, buffer, false);
-			buffer.setTranslation(0.0D, 0.0D, 0.0D);
-			Color colour = new Color(-8372020);
-			GlStateManager.color(colour.getRed(), colour.getGreen(), colour.getBlue(), 0.75f);
-			tessellator.draw();
-			GlStateManager.color(1, 1, 1, 1);
+			//GlStateManager.scale(8.0F, 8.0F, 8.0F);
+			float f = Minecraft.getSystemTime() % 3000L / 3000.0F / 8.0F;
+			//GlStateManager.translate(f, 0.0F, 0.0F);
+			//GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
+			dispatcher.getBlockModelRenderer().renderModelSmooth(world, dispatcher.getModelForState(state), state, pos, buffer, false, -8372020);
+			//this.renderModel(model, -8372020);
+			GlStateManager.popMatrix();
+			GlStateManager.pushMatrix();
+			//GlStateManager.scale(8.0F, 8.0F, 8.0F);
+			float f1 = Minecraft.getSystemTime() % 4873L / 4873.0F / 8.0F;
+			//GlStateManager.translate(-f1, 0.0F, 0.0F);
+			//GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
+			dispatcher.getBlockModelRenderer().renderModelSmooth(world, dispatcher.getModelForState(state), state, pos, buffer, false, -8372020);
+			//this.renderModel(model, -8372020);
 			GlStateManager.popMatrix();
 			GlStateManager.matrixMode(5888);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.enableLighting();
 			GlStateManager.depthFunc(515);
 			GlStateManager.depthMask(true);
-			bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		}
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 	}

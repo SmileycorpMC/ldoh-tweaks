@@ -2,6 +2,12 @@ package net.smileycorp.ldoh.common.events;
 
 import java.util.Random;
 
+import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.animania.api.interfaces.IAnimaniaAnimal;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.legacy.wasteland.world.WastelandWorld;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -73,12 +79,6 @@ import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
-import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.legacy.wasteland.world.WastelandWorld;
 
 public class EntityEvents {
 
