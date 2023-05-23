@@ -6,6 +6,9 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.legacy.wasteland.world.WastelandWorld;
+
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
@@ -54,15 +57,11 @@ import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
 import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
 import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
+import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
-
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.google.common.collect.Multimap;
-import com.legacy.wasteland.world.WastelandWorld;
-import com.mrcrayfish.furniture.init.FurnitureItems;
 
 public class ModUtils {
 
@@ -157,7 +156,8 @@ public class ModUtils {
 	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
-			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
+			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator() || ((EntityPlayer) target).isCreative()) return false;
+			if (entity instanceof IEnemyMachine) if (((IEnemyMachine) entity).isEnemy() && (target instanceof EntityPlayer || target instanceof EntityMob)) return true;
 			if (entity.getTeam() != null) { if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());
 			} else return target instanceof EntityMob &!(target instanceof EntityTF2Character);
 		}

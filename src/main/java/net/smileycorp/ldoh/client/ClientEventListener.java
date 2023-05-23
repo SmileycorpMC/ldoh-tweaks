@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.client;
 
 import java.awt.Color;
+import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -9,6 +10,8 @@ import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -76,6 +79,7 @@ import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+@SuppressWarnings("deprecation")
 @EventBusSubscriber(modid=ModDefinitions.MODID, value=Side.CLIENT)
 public class ClientEventListener {
 
@@ -129,6 +133,9 @@ public class ClientEventListener {
 		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
 		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
 		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
+		/*for (IBlockState state : LDOHBlocks.BARBED_WIRE.getBlockState().getValidStates()) {
+			RenderingUtils.replaceRegisteredModel(getModelLocation(state), registry, BakedModelBarbedWire.class);
+		}*/
 	}
 
 	//Render Gas Overlay when below gas level
@@ -310,6 +317,22 @@ public class ClientEventListener {
 		} else if (item == Items.EXPERIENCE_BOTTLE) {
 			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.ExpBottle").getFormattedText());
 		}
+	}
+
+	public static ModelResourceLocation getModelLocation(IBlockState state) {
+		String property = "";
+
+		for (Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet()){
+			if (property.length()>0) {
+				property += ",";
+			}
+
+			property += entry.getKey().getName();
+			property += "=";
+			property += entry.getValue().toString();
+		}
+
+		return new ModelResourceLocation(ModDefinitions.getResource(state.getBlock().getRegistryName().getResourcePath()), property);
 	}
 
 }

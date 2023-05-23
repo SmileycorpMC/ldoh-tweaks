@@ -1,5 +1,16 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
+import com.mrcrayfish.guns.GunConfig;
+import com.mrcrayfish.guns.common.ProjectileFactory;
+import com.mrcrayfish.guns.entity.EntityProjectile;
+import com.mrcrayfish.guns.init.ModGuns;
+import com.mrcrayfish.guns.init.ModSounds;
+import com.mrcrayfish.guns.item.AmmoRegistry;
+import com.mrcrayfish.guns.item.ItemGun;
+import com.mrcrayfish.guns.network.PacketHandler;
+import com.mrcrayfish.guns.network.message.MessageBullet;
+import com.mrcrayfish.guns.object.Gun;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
@@ -11,17 +22,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
-
-import com.mrcrayfish.guns.GunConfig;
-import com.mrcrayfish.guns.common.ProjectileFactory;
-import com.mrcrayfish.guns.entity.EntityProjectile;
-import com.mrcrayfish.guns.init.ModGuns;
-import com.mrcrayfish.guns.init.ModSounds;
-import com.mrcrayfish.guns.item.AmmoRegistry;
-import com.mrcrayfish.guns.item.ItemGun;
-import com.mrcrayfish.guns.network.PacketHandler;
-import com.mrcrayfish.guns.network.message.MessageBullet;
-import com.mrcrayfish.guns.object.Gun;
 
 public class AITurretShoot extends EntityAIBase {
 
@@ -38,7 +38,7 @@ public class AITurretShoot extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		return turret.hasTarget() && turret.getCooldown() == 0 && turret.hasAmmo();
+		return turret.hasTarget() && turret.getCooldown() == 0 && (turret.hasAmmo() || turret.isEnemy());
 	}
 
 	@Override
