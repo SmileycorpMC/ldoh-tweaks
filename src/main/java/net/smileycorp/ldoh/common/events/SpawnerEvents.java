@@ -25,7 +25,7 @@ import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
 import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
-import net.smileycorp.hordes.common.hordeevent.HordeSpawnEntry;
+import net.smileycorp.hordes.hordeevent.HordeSpawnEntry;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;

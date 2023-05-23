@@ -7,16 +7,9 @@ import java.util.Map;
 import java.util.Random;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityBanoAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityCanraAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityHullAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityNoglaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIV;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;

@@ -7,8 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.google.common.collect.Multimap;
 import com.legacy.wasteland.world.WastelandWorld;
 
+import com.mrcrayfish.furniture.init.FurnitureItems;
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;

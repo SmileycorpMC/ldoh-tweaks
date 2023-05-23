@@ -3,6 +3,7 @@ package net.smileycorp.ldoh.client;
 import java.awt.Color;
 import java.util.Map.Entry;
 
+import net.minecraft.init.Items;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;

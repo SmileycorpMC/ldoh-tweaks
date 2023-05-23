@@ -68,7 +68,6 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 			return original.getParticleTexture();
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		@SuppressWarnings("deprecation")
 		public ItemCameraTransforms getItemCameraTransforms() {
