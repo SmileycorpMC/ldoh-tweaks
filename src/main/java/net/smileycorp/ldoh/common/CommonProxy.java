@@ -1,5 +1,9 @@
 package net.smileycorp.ldoh.common;
 
+import com.mrcrayfish.guns.common.WorkbenchRegistry;
+import com.mrcrayfish.guns.item.AmmoRegistry;
+import com.mrcrayfish.guns.item.ItemAmmo;
+
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -36,6 +40,7 @@ import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
 import net.smileycorp.ldoh.common.capabilities.MiniRaid;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
+import net.smileycorp.ldoh.common.command.CommandHandDebug;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
 import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
@@ -51,10 +56,6 @@ import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
-
-import com.mrcrayfish.guns.common.WorkbenchRegistry;
-import com.mrcrayfish.guns.item.AmmoRegistry;
-import com.mrcrayfish.guns.item.ItemAmmo;
 
 public class CommonProxy {
 
@@ -82,15 +83,15 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {
 		//Register Capabilities
-		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), () -> new SpawnTracker());
+		CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), SpawnTracker::new);
 		CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));
 		CapabilityManager.INSTANCE.register(IUnburiedSpawner.class, new IUnburiedSpawner.Storage(), () -> new UnburiedSpawner(null));
-		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), () -> new MiniRaid());
-		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), () -> new Hunger());
+		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), MiniRaid::new);
+		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), Hunger::new);
 		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
-		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), () -> new Followers());
-		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), () -> new Curing());
-		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), () -> new VillageData());
+		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), Followers::new);
+		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), Curing::new);
+		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), VillageData::new);
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 
 			@Override
@@ -133,6 +134,8 @@ public class CommonProxy {
 		event.registerServerCommand(new CommandBossEvent());
 		//Register mini raids command
 		event.registerServerCommand(new CommandSpawnRaid());
+
+		event.registerServerCommand(new CommandHandDebug());
 	}
 
 }

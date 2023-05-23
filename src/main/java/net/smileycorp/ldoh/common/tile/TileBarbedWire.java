@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.UUID;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,8 +27,10 @@ public class TileBarbedWire extends TileEntity {
 
 	protected Random rand = new Random();
 	protected int durability;
-	protected int cooldown=0;
+	protected int cooldown = 0;
 	protected EnumBarbedWireMat mat;
+	protected EntityPlayer owner;
+	protected UUID id;
 
 	protected boolean isEnchanted = false;
 	protected Map<Enchantment, Integer> enchant_map = new HashMap<>();
@@ -46,9 +50,15 @@ public class TileBarbedWire extends TileEntity {
 
 	public void causeDamage() {
 		if (cooldown > 0) return;
+		if (owner == null && id != null) {
+			EntityPlayer player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(id);
+			if (player != null) owner = player;
+		}
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
-		for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, bb)) {
+		for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, bb)) {
 			if (entity.isDead |! entity.isAddedToWorld()) break;
+			if (entity == owner) return;
+			if (owner != null && owner.getTeam() != null && owner.getTeam().equals(entity.getTeam())) return;
 			if (mat.getDamage()>0) {
 				float modifier = 1;
 				for (Entry<Enchantment, Integer> entry : enchant_map.entrySet()) {
@@ -109,6 +119,11 @@ public class TileBarbedWire extends TileEntity {
 				} catch (Exception e) {}
 			}
 		}
+		if (compound.hasKey("owner")) {
+			try {
+				id = UUID.fromString(compound.getString("owner"));
+			} catch (Exception e) {}
+		}
 		super.readFromNBT(compound);
 	}
 
@@ -122,6 +137,7 @@ public class TileBarbedWire extends TileEntity {
 				enchants.setInteger(entry.getKey().getRegistryName().toString(), entry.getValue());
 			compound.setTag("enchantments", enchants);
 		}
+		if (id != null) compound.setString("owner", id.toString());
 		return super.writeToNBT(compound);
 	}
 
@@ -207,6 +223,16 @@ public class TileBarbedWire extends TileEntity {
 		}
 		if (nbt.getSize() > 0) drop.setTagCompound(nbt);
 		return drop;
+	}
+
+	public void setOwner(EntityPlayer player) {
+		if (player != null) {
+			owner = player;
+			id = EntityPlayer.getUUID(player.getGameProfile());
+		} else {
+			owner = null;
+			id = null;
+		}
 	}
 
 }

@@ -55,7 +55,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
 	public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
-	public static Properties.PropertyAdapter<Boolean> IS_ENCHANTED = new Properties.PropertyAdapter<Boolean>(PropertyBool.create("is_enchanted"));
+	public static Properties.PropertyAdapter<Boolean> IS_ENCHANTED = new Properties.PropertyAdapter<>(PropertyBool.create("is_enchanted"));
 
 	public static final AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
 
@@ -127,6 +127,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 						tile.applyEnchantment(enchant, level);
 					}
 				}
+				if (placer instanceof EntityPlayer) tile.setOwner((EntityPlayer) placer);
 			}
 		}
 	}

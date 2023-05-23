@@ -98,6 +98,7 @@ entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 entity.hundreddayz.Turret.name=Sentry Turret
+entity.hundreddayz.EnemyTurret.name=Enemy Turret
 
 death.attack.ToxicGas=%1$s choked on toxic gas
 death.attack.Shrapnel=%1$s went kaboom

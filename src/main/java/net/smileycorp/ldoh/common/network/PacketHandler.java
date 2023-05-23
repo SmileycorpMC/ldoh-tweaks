@@ -24,6 +24,7 @@ public class PacketHandler {
 		//discriminator 5 open from exhaustion code removal
 		NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 6, Side.CLIENT);
 		NETWORK_INSTANCE.registerMessage(ClientSyncHungerEffect.class, SyncHungerEffectMessage.class, 7, Side.CLIENT);
+		NETWORK_INSTANCE.registerMessage(MessageBurstShoot.class, MessageBurstShoot.class, 9, Side.SERVER);
 	}
 
 	public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {

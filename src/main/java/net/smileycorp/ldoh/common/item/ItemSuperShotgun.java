@@ -16,7 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.network.MessageSuperShotgunShoot;
+import net.smileycorp.ldoh.common.network.MessageBurstShoot;
 
 import com.mrcrayfish.guns.ItemStackUtil;
 import com.mrcrayfish.guns.MrCrayfishGunMod;
@@ -51,7 +51,7 @@ public class ItemSuperShotgun extends ItemGun {
 				if(!tracker.hasCooldown(heldItem.getItem())) {
 					tracker.setCooldown(heldItem.getItem(), modifiedGun.general.rate);
 					System.out.println("morbus");
-					PacketHandler.INSTANCE.sendToServer(new MessageSuperShotgunShoot());
+					PacketHandler.INSTANCE.sendToServer(new MessageBurstShoot());
 				}
 			}
 			else {

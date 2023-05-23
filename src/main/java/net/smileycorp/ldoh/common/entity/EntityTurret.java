@@ -24,6 +24,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -37,6 +38,7 @@ import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
+@SuppressWarnings("deprecation")
 public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
@@ -366,6 +368,11 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@SideOnly(Side.CLIENT)
 	public String getOwnerUsername() {
 		return username;
+	}
+
+	@Override
+	public String getName() {
+		return I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name");
 	}
 
 }

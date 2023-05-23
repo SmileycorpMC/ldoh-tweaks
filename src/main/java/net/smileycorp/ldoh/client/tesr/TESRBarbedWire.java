@@ -3,11 +3,8 @@ package net.smileycorp.ldoh.client.tesr;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -33,42 +30,29 @@ public class TESRBarbedWire extends TileEntitySpecialRenderer<TileBarbedWire> {
 			}
 		}
 		if (te.isEnchanted()) {
-			System.out.println("enchanted");
+			//System.out.println("enchanted");
+			float f = mc.player.ticksExisted +partialTicks;
 			BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 			World world = getWorld();
 			BlockPos pos = te.getPos();
 			IBlockState state = world.getBlockState(pos);
 			IBakedModel model = dispatcher.getModelForState(state);
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-			GlStateManager.depthMask(false);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x, y, z);
+			Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+			GlStateManager.enableBlend();
 			GlStateManager.depthFunc(514);
-			GlStateManager.disableLighting();
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
-			mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
+			GlStateManager.depthMask(false);
+			mc.getRenderItem().renderEffect(model);
+			GlStateManager.translate(0, 0, 0);
+			GlStateManager.popMatrix();
 			GlStateManager.matrixMode(5890);
-			GlStateManager.pushMatrix();
-			//GlStateManager.scale(8.0F, 8.0F, 8.0F);
-			float f = Minecraft.getSystemTime() % 3000L / 3000.0F / 8.0F;
-			//GlStateManager.translate(f, 0.0F, 0.0F);
-			//GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
-			dispatcher.getBlockModelRenderer().renderModelSmooth(world, dispatcher.getModelForState(state), state, pos, buffer, false, -8372020);
-			//this.renderModel(model, -8372020);
-			GlStateManager.popMatrix();
-			GlStateManager.pushMatrix();
-			//GlStateManager.scale(8.0F, 8.0F, 8.0F);
-			float f1 = Minecraft.getSystemTime() % 4873L / 4873.0F / 8.0F;
-			//GlStateManager.translate(-f1, 0.0F, 0.0F);
-			//GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
-			dispatcher.getBlockModelRenderer().renderModelSmooth(world, dispatcher.getModelForState(state), state, pos, buffer, false, -8372020);
-			//this.renderModel(model, -8372020);
-			GlStateManager.popMatrix();
+			GlStateManager.loadIdentity();
 			GlStateManager.matrixMode(5888);
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.enableLighting();
-			GlStateManager.depthFunc(515);
 			GlStateManager.depthMask(true);
-			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			GlStateManager.depthFunc(515);
+			GlStateManager.disableBlend();
 		}
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 	}

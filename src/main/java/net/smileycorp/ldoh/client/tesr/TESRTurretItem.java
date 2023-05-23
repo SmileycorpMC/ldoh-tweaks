@@ -68,6 +68,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 			return original.getParticleTexture();
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() {
 			return original.getItemCameraTransforms();
@@ -132,7 +133,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -0.9, 0);
-		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt = stack.getTagCompound();
 		Entity entity = null;
 		if (nbt != null) {
 			if (nbt.hasKey("isEnemy")) {
