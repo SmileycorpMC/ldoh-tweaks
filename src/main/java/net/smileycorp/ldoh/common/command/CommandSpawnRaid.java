@@ -48,7 +48,7 @@ public class CommandSpawnRaid extends CommandBase {
 			if (type == null || type == RaidType.NONE) throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.invalidValue", new Object[] {new TextComponentTranslation(args[0])});
 			if (type == RaidType.ALLY || type == RaidType.ENEMY) {
 				if (entity.getTeam() == null) throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
-				else if (!(entity.getTeam().getName() == "RED" || entity.getTeam().getName() == "BLU"))
+				else if (!(entity.getTeam().getName().equals("RED") || entity.getTeam().getName().equals("BLU")))
 					throw new CommandException("commands."+ModDefinitions.MODID+".SpawnRaid.teamFail", new Object[] {new TextComponentTranslation(args[0])});
 			}
 			int level = parseInt(args[1]);

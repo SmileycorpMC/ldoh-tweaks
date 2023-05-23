@@ -23,9 +23,9 @@ public class ItemBlockTooltip extends ItemBlockLDOH {
 		this.lines = lines;
 	}
 
-    @Override
+	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-	    if(lines==1) tooltip.add(I18n.translateToLocal(tooltipName));
-	    else for (int i = 0; i < lines; i++) tooltip.add(I18n.translateToLocal(tooltipName + i));
+		if(lines==1) tooltip.add(I18n.translateToLocal(tooltipName));
+		else for (int i = 0; i < lines; i++) tooltip.add(I18n.translateToLocal(tooltipName + i));
 	}
 }

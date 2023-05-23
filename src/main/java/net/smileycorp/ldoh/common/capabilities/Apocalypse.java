@@ -122,7 +122,7 @@ public class Apocalypse implements IApocalypse {
 	public void spawnWave(World world) {
 		for (Class<? extends EntityParasiteBase> clazz : getSpawnsForWave(wave, world.rand)) {
 			Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-			BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
+			BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 65);
 			EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
 			world.spawnEntity(bolt);
 			try {

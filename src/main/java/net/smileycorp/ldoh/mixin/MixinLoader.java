@@ -42,7 +42,6 @@ public class MixinLoader {
 			transformerField.setAccessible(true);
 			IMixinTransformer transformer = (IMixinTransformer) transformerField.get(mixinProxy);
 			transformer.reload(MixinModuleMovementRestriction.class.getName(), new ClassNode(ASM.API_VERSION));
-			System.out.println("reloaded mixins");
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}

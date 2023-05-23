@@ -24,6 +24,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,6 +47,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
+import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
@@ -68,6 +70,9 @@ public class ModUtils {
 	public static final AttributeModifier WASTELAND_MODIFIER = new AttributeModifier(UUID.fromString("22f4fa64-de73-4b45-9bb2-aae297639594"), "wasteland", 0.5, 2);
 	public static final AttributeModifier FOLLOW_MODIFIER = new AttributeModifier(UUID.fromString("3dc892c7-0def-42d5-8e7f-bb9f00136ad9"), "follow", -1, 2);
 	public static final AttributeModifier TIRED_MODIFIER = new AttributeModifier(UUID.fromString("d92e0875-9115-4d73-947d-905957cd4a72"), "tired", -0.5, 2);
+
+	public static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+	public static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
 	//sets player team and prints according message
 	public static void addPlayerToTeam(EntityPlayer player, String team) {
@@ -107,7 +112,9 @@ public class ModUtils {
 		if (EnumBiomeType.BADLANDS.matches(biome)) {
 			if (!speed.hasModifier(WASTELAND_MODIFIER)) speed.applyModifier(WASTELAND_MODIFIER);
 		}
-		if (world.getWorldTime()%24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayTimeSpeedModifier(world));
+		if (!ConfigHandler.noDaySlowdown)
+			if (world.getWorldTime()%24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null)
+				speed.applyModifier(new DayTimeSpeedModifier(world));
 	}
 
 	//gets the cost of an item for a particular tektopia village
@@ -118,7 +125,8 @@ public class ModUtils {
 
 	//checks if a 64/64 area around the position consists of only regular wasteland
 	public static boolean isOnlyWasteland(World world, int x, int z) {
-		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-64, z-64, 128, 128, false)) if (biome!= WastelandWorld.apocalypse) return false;
+		if (ConfigHandler.betaSpawnpoint) return true;
+		for (Biome biome : world.getBiomeProvider().getBiomes(null, x-64, z-64, 128, 128, false)) if (!EnumBiomeType.WASTELAND.matches(biome)) return false;
 		return true;
 	}
 
@@ -243,20 +251,22 @@ public class ModUtils {
 	}
 
 	private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
-		if (rand.nextInt(7) == 0) {
-			return new EntityCrawlingZombie(world);
-		}
-		if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
-			int r = rand.nextInt(100);
-			if (r <= 1) return new EntityZombieNurse(world);
-			else if (r <= 3) return new EntityZombieFireman(world);
-			if (day < 10 || r < 25) new EntityDummyZombie2(world);
-			else if (day < 20 || r < 50) return new EntityDummyZombie1(world);
-			else if (r < 75) return new EntityDummyZombie0(world);
-		}
-		else {
-			if (day < 10) return new EntityDummyZombie2(world);
-			else if (day < 20) return new EntityDummyZombie1(world);
+		if (!ConfigHandler.legacySpawns) {
+			if (rand.nextInt(7) == 0) {
+				return new EntityCrawlingZombie(world);
+			}
+			if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
+				int r = rand.nextInt(100);
+				if (r <= 1) return new EntityZombieNurse(world);
+				else if (r <= 3) return new EntityZombieFireman(world);
+				if (day < 10 || r < 25) new EntityDummyZombie2(world);
+				else if (day < 20 || r < 50) return new EntityDummyZombie1(world);
+				else if (r < 75) return new EntityDummyZombie0(world);
+			}
+			else {
+				if (day < 10) return new EntityDummyZombie2(world);
+				else if (day < 20) return new EntityDummyZombie1(world);
+			}
 		}
 		return new EntityZombie(world);
 	}
@@ -275,6 +285,13 @@ public class ModUtils {
 				weight = 1f / 64f * stack.getCount();
 		}
 		return weight;
+	}
+
+	public static void getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack, Multimap<String, AttributeModifier> map) {
+		if (stack.getItem() == FurnitureItems.CROWBAR && slot == EntityEquipmentSlot.MAINHAND) {
+			map.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 3d, 0));
+			map.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
+		}
 	}
 
 }

@@ -7,7 +7,7 @@ public class ModDefinitions {
 	//mod constants
 	public static final String MODID = "hundreddayz";
 	public static final String NAME = "LDoH Tweaks";
-	public static final String VERSIONS = "1.1.5c";
+	public static final String VERSION = "1.1.8";
 	public static final String DEPENDENCIES = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
 			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"
@@ -35,8 +35,6 @@ public class ModDefinitions {
 	public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
 	public static final ResourceLocation TF_ALLY_SOUND = getResource("tf_ally");
 	public static final ResourceLocation LANDMINE_BEEP = getResource("landmine_beep");
-	public static final ResourceLocation SNORE = getResource("snore");
-
 
 	//loot tables
 	public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");
@@ -45,6 +43,10 @@ public class ModDefinitions {
 	public static final ResourceLocation SAFEHOUSE_MEDICAL_FRIDGE = getResource("chests/safehouse_medical_fridge");
 	public static final ResourceLocation SAFEHOUSE_CRATE = getResource("chests/safehouse_crate");
 	public static final ResourceLocation NEST_CRATE = getResource("chests/nest_crate");
+	public static final ResourceLocation MILITARY_CRATE = getResource("chests/military_crate");
+	public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
+	public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
+
 	//helper methods
 	public static String getName(String name) {
 		return MODID + "." + name.replace("_", "");

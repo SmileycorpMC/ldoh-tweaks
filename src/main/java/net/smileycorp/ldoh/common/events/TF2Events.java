@@ -72,22 +72,10 @@ public class TF2Events {
 		if (!entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
 		}
-		//give spies baguettes
-		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntitySpy) {
-			if (!((EntitySpy)entity).isRobot())  event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
-		}
-		//give engineer buildings persistence
-		if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityBuilding) {
-			event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
-		}
 		//give medics ability to cure
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
 		}
-		//give mercs exhaustion/sleeping
-		/*if (!entity.hasCapability(LDOHCapabilities.EXHAUSTION, null) && entity instanceof EntityTF2Character) {
-			if (!((EntityTF2Character)entity).isRobot()) event.addCapability(ModDefinitions.getResource("Exhaustion"), new IExhaustion.Provider());
-		}*/
 		//give mercs home village
 		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
 			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
@@ -141,10 +129,6 @@ public class TF2Events {
 		if (entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
 			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.HUNGER, null).onUpdate((EntityLiving) entity);
 		}
-		//exhaustion tick
-		/*if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) {
-			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).onUpdate((EntityLiving) entity);
-		}*/
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
 			EnumTFClass tfClass = EnumTFClass.getClass(merc);
@@ -206,8 +190,6 @@ public class TF2Events {
 		World world = entity.world;
 		if (!world.isRemote) {
 			if (InfectionRegister.canCauseInfection(attacker)) {
-				//sets zombie damage to a fixed 1.5 hearts
-				event.setAmount(3f);
 				if (entity instanceof EntityTF2Character) {
 					//gives the infection effect to non-robots
 					if(!((EntityTF2Character) entity).isRobot() &! entity.isPotionActive(HordesInfection.INFECTED)) {
@@ -245,6 +227,7 @@ public class TF2Events {
 		if (!world.isRemote) {
 			if (entity instanceof EntitySentry) {
 				EntitySentry sentry = (EntitySentry) entity;
+				world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
 				sentry.targetTasks.taskEntries.clear();
 				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
 						e -> ModUtils.canTarget(sentry, e), false, true));
@@ -252,7 +235,6 @@ public class TF2Events {
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
-				//merc.tasks.addTask(1, new EntityAIStayInVillage(merc));
 				merc.tasks.addTask(3, new EntityAIAvoidEntity<>(merc, EntityMob.class, e -> ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
@@ -322,7 +304,6 @@ public class TF2Events {
 			EntityLiving entity = (EntityLiving) event.getTarget();
 			if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) entity.getCapability(LDOHCapabilities.HUNGER, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 			if (entity.hasCapability(LDOHCapabilities.CURING, null)) entity.getCapability(LDOHCapabilities.CURING, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
-			//if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClient(entity, (EntityPlayerMP) event.getEntityPlayer());
 		}
 	}
 

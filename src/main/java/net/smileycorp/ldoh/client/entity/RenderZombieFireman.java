@@ -11,7 +11,7 @@ import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 public class RenderZombieFireman extends RenderBiped<EntityZombieFireman> {
 
 	public RenderZombieFireman(RenderManager rendermanager) {
-		super(rendermanager, new ModelZombie(), 0.55F);
+		super(rendermanager, new ModelZombie(), 0.6F);
 		LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
 		{
 			@Override

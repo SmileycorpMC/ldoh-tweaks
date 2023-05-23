@@ -27,7 +27,6 @@ import net.tangotek.tektopia.entities.EntityVillagerTek;
 
 public class TektopiaEvents {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		World world = event.getWorld();
@@ -93,8 +92,6 @@ public class TektopiaEvents {
 		World world = entity.world;
 		if (!world.isRemote) {
 			if (InfectionRegister.canCauseInfection(attacker)) {
-				//sets zombie damage to a fixed 1.5 hearts
-				event.setAmount(3f);
 				if (entity instanceof EntityVillagerTek) {
 					//gives the infection effect
 					entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));

@@ -1,12 +1,16 @@
 package net.smileycorp.ldoh.common;
 
+import com.mrcrayfish.furniture.init.FurnitureBlocks;
+import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
 import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.item.ItemAmmo;
 
 import ivorius.reccomplex.events.RCEventBus;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -60,6 +65,9 @@ import net.smileycorp.ldoh.common.tile.TileTurret;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
+		ConfigHandler.config = new Configuration(event.getSuggestedConfigurationFile());
+		ConfigHandler.syncConfig();
+
 		//Register event listeners
 		MinecraftForge.EVENT_BUS.register(new ApocalypseEvents());
 		MinecraftForge.EVENT_BUS.register(new EntityEvents());
@@ -75,8 +83,14 @@ public class CommonProxy {
 		//Add Safehouse loot tables
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CHEST);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CABINET);
+		LootTableList.register(ModDefinitions.SAFEHOUSE_MEDICAL_FRIDGE);
 		LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
+		LootTableList.register(ModDefinitions.SAFEHOUSE_CRATE);
 		LootTableList.register(ModDefinitions.NEST_CRATE);
+		LootTableList.register(ModDefinitions.MILITARY_CRATE);
+		LootTableList.register(ModDefinitions.MILITARY_AMMO);
+		LootTableList.register(ModDefinitions.MILITARY_TREASURE);
+
 		//Setup Packets for use
 		PacketHandler.initPackets();
 	}
@@ -92,6 +106,8 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), Followers::new);
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), Curing::new);
 		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), VillageData::new);
+
+		//register turret gui
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {
 
 			@Override
@@ -119,6 +135,15 @@ public class CommonProxy {
 			}
 
 		});
+		Item.getItemFromBlock(FurnitureBlocks.CRATE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_SPRUCE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_BIRCH).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_JUNGLE).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_ACACIA).setMaxStackSize(1);
+		Item.getItemFromBlock(FurnitureBlocks.CRATE_DARK_OAK).setMaxStackSize(1);
+		FurnitureItems.CROWBAR.setMaxStackSize(1);
+		Material.DRAGON_EGG.setRequiresTool();
+
 		//add incendiary ammo
 		AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);
 		WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),

@@ -123,6 +123,14 @@ public class EntityTF2Zombie extends EntityZombie {
 		}
 	}
 
+	@Override
+	protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
+		for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.values()) {
+			ItemStack itemstack = getItemStackFromSlot(entityequipmentslot);
+			if (!itemstack.isEmpty() && rand.nextFloat() - lootingModifier * 0.01f < 0.15f) entityDropItem(itemstack, 0.0F);
+		}
+	}
+
 	private void setRandomTeam() {
 		setTFTeam(getTeam(rand.nextInt(2)));
 	}

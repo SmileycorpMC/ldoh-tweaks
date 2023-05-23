@@ -5,11 +5,14 @@ import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
+import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,22 +26,24 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.WorldType;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -98,13 +103,13 @@ public class ClientEventListener {
 		//register entity renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/zombie.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, m -> new RenderTF2Zombie(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, m -> new RenderZombieNurse(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, RenderTF2Zombie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, RenderZombieNurse::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, m -> new RenderTurret(m));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, m -> new RenderZombieFireman(m));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, RenderTurret::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
 		//handle custom mapping for landmine blockstates
 		ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
 		//register item models
@@ -139,7 +144,7 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.player;
 		if (player!= null && event.getType() == ElementType.ALL) {
-			if (player.getPosition().getY()<=29.2) {
+			if (player.getPosition().getY()<=29.2 && player.world.getWorldType() != WorldType.FLAT) {
 				int r = GAS_COLOUR.getRed();
 				int g = GAS_COLOUR.getGreen();
 				int b = GAS_COLOUR.getBlue();
@@ -180,7 +185,7 @@ public class ClientEventListener {
 		Minecraft mc = Minecraft.getMinecraft();
 		Entity entity = mc.getRenderViewEntity();
 		if (entity != null) {
-			if (entity.posY >= 29.2) {
+			if (entity.posY >= 29.2 && entity.world.getWorldType() != WorldType.FLAT) {
 				RenderManager rm = mc.getRenderManager();
 				//scale renderer base on render distance
 				int size = rm.options == null ? 0 : (rm.options.renderDistanceChunks+1)*16;
@@ -299,20 +304,18 @@ public class ClientEventListener {
 	}
 
 	@SubscribeEvent
-	public void renderEntity(RenderLivingEvent.Pre<?> event){
-		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof EntityZombieFireman) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(1.1, 1.1, 1.1);
-		}
-	}
-
-	@SubscribeEvent
-	public void renderEntity(RenderLivingEvent.Post<?> event){
-		EntityLivingBase entity = event.getEntity();
-		if (entity instanceof EntityZombieFireman) {
-			GlStateManager.scale(1, 1, 1);
-			GlStateManager.popMatrix();
+	public static void addInformation(ItemTooltipEvent event) {
+		ItemStack stack = event.getItemStack();
+		Item item = stack.getItem();
+		if (item == FurnitureItems.CROWBAR) {
+			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.Crowbar").getFormattedText());
+		} else if (item instanceof ItemBlock) {
+			Block block = ((ItemBlock) item).getBlock();
+			if (block == RealisticTorchesBlocks.torchUnlit) {
+				event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.UnlitTorch").getFormattedText());
+			}
+		} else if (item == Items.EXPERIENCE_BOTTLE) {
+			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.ExpBottle").getFormattedText());
 		}
 	}
 

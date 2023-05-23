@@ -70,6 +70,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 
 		@SuppressWarnings("deprecation")
 		@Override
+		@SuppressWarnings("deprecation")
 		public ItemCameraTransforms getItemCameraTransforms() {
 			return original.getItemCameraTransforms();
 		}

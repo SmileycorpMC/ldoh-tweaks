@@ -20,6 +20,8 @@ message.hundreddayz.VillagerMessage0=Word has been spread among the surviving ci
 message.hundreddayz.VillagerMessage.Survivor=Survivor
 message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
 
+message.hundreddayz.SealedCrate=Right click with a Crow Bar to open sealed crates
+
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
 commands.hundreddayz.SpawnRaid.usage=/spawnRaid <raid type> <level>
@@ -63,6 +65,7 @@ tile.hundreddayz.Turret.name=Sentry Turret
 tile.hundreddayz.EnemyTurret.name=Enemy Turret
 tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
+tile.hundreddayz.Cache.name=Item Cache
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
@@ -80,6 +83,7 @@ tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
+tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler
@@ -89,6 +93,8 @@ entity.hundreddayz.SwatZombie.name=Swat Zombie
 entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieFireman.name=Zombie Fireman
+entity.hundreddayz.LibraryZombie.name=Library Zombie
+entity.hundreddayz.HospitalZombie.name=Hospital Zombie
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie
@@ -111,10 +117,10 @@ gui.turret.text.NoTarget=No Target
 gui.turret.text.Target=Target: 
 
 jei.category.hundreddayz.Syringe=Syringes
-jei.category.hundreddayz.Intestines=Intestines Loot
-jei.category.hundreddayz.GunWorkbench=Gun Workbench
 
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
-hundreddayz.subtitle.snoring=Snoring
+
+tooltip.hundreddayz.Crowbar=Right click to open sealed crates
+tooltip.hundreddayz.UnlitTorch=Use a matchbox to light

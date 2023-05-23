@@ -83,7 +83,7 @@ public class ItemSyringe extends Item implements IMetaItem {
 			player.setActiveHand(hand);
 			action = EnumActionResult.SUCCESS;
 		}
-		return new ActionResult<ItemStack>(action, stack);
+		return new ActionResult<>(action, stack);
 	}
 
 	@Override
