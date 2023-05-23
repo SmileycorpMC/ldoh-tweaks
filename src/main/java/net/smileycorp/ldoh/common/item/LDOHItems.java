@@ -1,10 +1,6 @@
 package net.smileycorp.ldoh.common.item;
 
-import com.mrcrayfish.guns.item.ItemGun;
-
 import net.minecraft.item.Item;
-import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class LDOHItems {
 
@@ -23,9 +19,5 @@ public class LDOHItems {
 	public static final Item FIRE_AXE = new ItemWeapon("Fire_Axe", 186, 9, -3.5F, true);
 	public static final Item TF2_PROF_TOKEN = new ItemTF2ProfessionToken();
 	public static final Item INCENDIARY_AMMO = new ItemIncendiaryAmmo();
-	public static final Item AUTO_SHOTGUN = new ItemGun(ModDefinitions.getResource("auto_shotgun")).setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-	public static final Item SUPER_SHOTGUN = new ItemBurstGun(ModDefinitions.getResource("super_shotgun"), 2, 1);
-	public static final Item BURST_RIFLE = new ItemBurstGun(ModDefinitions.getResource("burst_rifle"), 3, 20);
-	public static final Item REVOLVER = new ItemGun(ModDefinitions.getResource("revolver")).setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 
 }
