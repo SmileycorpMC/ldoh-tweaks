@@ -1,18 +1,16 @@
 package net.smileycorp.ldoh.common.block;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -22,6 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.stats.StatList;
@@ -35,6 +34,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.property.Properties;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
@@ -44,10 +47,14 @@ import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+import javax.annotation.Nullable;
+import java.util.Random;
+
 public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
 
 	public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
 	public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
+	public static Properties.PropertyAdapter<Boolean> IS_ENCHANTED = new Properties.PropertyAdapter<>(PropertyBool.create("is_enchanted"));
 
 	public static final AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
 
@@ -93,16 +100,34 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{MATERIAL, AXIS});
+		return new ExtendedBlockState(this, new IProperty[]{MATERIAL, AXIS}, new IUnlistedProperty[]{IS_ENCHANTED});
+	}
+
+	@Override
+	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+		if(te != null && te instanceof TileBarbedWire) {
+			return ((IExtendedBlockState)state).withProperty(IS_ENCHANTED,((TileBarbedWire) te).isEnchanted());
+		}
+		return ((IExtendedBlockState)state).withProperty(IS_ENCHANTED, false);
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		if (stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			if (world.getTileEntity(pos) instanceof TileBarbedWire && nbt.hasKey("durability") &! placer.world.isRemote) {
-				((TileBarbedWire) world.getTileEntity(pos)).setDurability(nbt.getInteger("durability"));
+		if (world.getTileEntity(pos) instanceof TileBarbedWire &! placer.world.isRemote) {
+			TileBarbedWire tile = ((TileBarbedWire) world.getTileEntity(pos));
+			if (stack.hasTagCompound()) {
+				NBTTagCompound nbt = stack.getTagCompound();
+				if (nbt.hasKey("durability"))tile.setDurability(nbt.getInteger("durability"));
+				if (nbt.hasKey("ench")) {
+					for (NBTBase tag : nbt.getTagList("ench", 10)) {
+						int level = ((NBTTagCompound)tag).getShort("lvl");
+						Enchantment enchant = Enchantment.getEnchantmentByID(((NBTTagCompound)tag).getShort("id"));
+						tile.applyEnchantment(enchant, level);
+					}
+				}
 			}
+			if (placer instanceof EntityPlayer) tile.setOwner((EntityPlayer) placer);
 		}
 	}
 
@@ -146,12 +171,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		player.addExhaustion(0.005F);
 		EnumBarbedWireMat mat = state.getValue(MATERIAL);
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
-			ItemStack drop = new ItemStack(this, 1, state.getValue(MATERIAL).ordinal());
-			if (((TileBarbedWire) te).getDurability() < mat.getDurability()) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt.setInteger("durability", ((TileBarbedWire) te).getDurability());
-				drop.setTagCompound(nbt);
-			}
+			ItemStack drop = ((TileBarbedWire) te).getDrop();
 			spawnAsEntity(world, pos, drop);
 		} else {
 			Item item = mat.getDrop();

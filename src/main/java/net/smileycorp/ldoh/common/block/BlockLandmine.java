@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -29,6 +27,8 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import javax.annotation.Nullable;
 
 public class BlockLandmine extends Block implements IBlockProperties, ITileEntityProvider {
 

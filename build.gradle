@@ -4,34 +4,34 @@ buildscript {
 		maven { url "https://repo.spongepowered.org/repository/maven-public/" }
         jcenter()
         mavenCentral()
+		gradlePluginPortal()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
+
+repositories {
+	maven {
+        url "https://www.cursemaven.com"
+    }
+}
         
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
 
-version = '1.12.2-1.1.5c'
+version = '1.12.2-1.1.8'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    //mappings channel: 'snapshot', version: '20171003-1.12'
     mappings channel: 'snapshot', version: '20171003-1.12'
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     accessTransformer = file('src/main/resources/META-INF/ldoh_at.cfg')
 
@@ -73,40 +73,41 @@ configurations {
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
-	embed("org.spongepowered:mixin:0.8") {
-        exclude module: "asm-commons"
-        exclude module: "asm-tree"
-        exclude module: "launchwrapper"
-        exclude module: "guava"
-        exclude module: "log4j-core"
-        exclude module: "gson"
-        exclude module: "commons-io"
-    }
+	implementation "org.spongepowered:mixin:0.8"
+	implementation "curse.maven:atlas-463826:3816069"
+	implementation "curse.maven:jei-238222:4393461"
+	implementation "curse.maven:bibliocraft-228027:3647708"
+	implementation "curse.maven:bop-220318:3558882"
+	implementation "curse.maven:buildcraft-61811:3204475"
+	implementation "curse.maven:ultimate-car-mod-267458:2626135"
+	implementation "curse.maven:cgm-289479:2854400"
+	implementation "curse.maven:cookingforblockheads-231484:2464472"
+	implementation "curse.maven:epicsiege-229449:2874756"
+	implementation "curse.maven:exoticbirds-242830:2987034"
+	implementation "curse.maven:firstaid-276837:4414252"
+	implementation "curse.maven:fishsundead-321139:4017095"
+	implementation "curse.maven:followme-463841:3520547"
+	implementation "curse.maven:ftbquests-289412:3156637"
+	implementation "curse.maven:cfm-55438:3865259"
+	implementation "curse.maven:gamestages-268655:2951840"
+	implementation "curse.maven:hordes-485779:4534908"
+	implementation "curse.maven:iguanatweaks-285690:3283799"
+	implementation "curse.maven:mobends-231347:3573346"
+	implementation "curse.maven:realistictorches-235729:3152820"
+	implementation "curse.maven:recurrentcomplex-223150:4356582"
+	implementation "curse.maven:lostcities-269024:2861574"
+	implementation "curse.maven:tektopia-333029:2763046"
+	implementation "curse.maven:craftstudio-268704:2661859"
+	implementation "curse.maven:tf2stuffreloaded-859794:4530677"
+	implementation "curse.maven:wasteland-284582:3573228"
+	implementation "curse.maven:xlfood-247217:2740774"
+	//needed to load scape and run parasites, as it blocks cursemaven
+	implementation files('libs/SRParasites-1.12.2v1.9.12.jar')
+    //
 	
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+	//required by cooking for blockheads to build
+	implementation "curse.maven:quark-243121:2924091"
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -130,18 +131,15 @@ jar {
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar') 
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
+reobf {
+}
+
+build.dependsOn(reobf)
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", "1.12.2"
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
@@ -152,18 +150,5 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
     }
 }

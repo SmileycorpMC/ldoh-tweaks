@@ -1,9 +1,8 @@
 package net.smileycorp.ldoh.common.events;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -92,8 +91,6 @@ public class TektopiaEvents {
 		World world = entity.world;
 		if (!world.isRemote) {
 			if (InfectionRegister.canCauseInfection(attacker)) {
-				//sets zombie damage to a fixed 1.5 hearts
-				event.setAmount(3f);
 				if (entity instanceof EntityVillagerTek) {
 					//gives the infection effect
 					entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));

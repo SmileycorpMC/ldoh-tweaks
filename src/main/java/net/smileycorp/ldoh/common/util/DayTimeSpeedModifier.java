@@ -1,9 +1,9 @@
 package net.smileycorp.ldoh.common.util;
 
-import java.util.UUID;
-
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class DayTimeSpeedModifier extends AttributeModifier {
 	

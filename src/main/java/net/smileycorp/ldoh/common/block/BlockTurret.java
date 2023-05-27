@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
@@ -15,13 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,10 +25,12 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
+import javax.annotation.Nullable;
+
 public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
 
 	private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.7, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.3, 1),
-		new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
+			new AxisAlignedBB(0, 0, 0.7, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1),  new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
 
 	public BlockTurret() {
 		super(Material.IRON);
@@ -173,6 +167,7 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
 		if (willHarvest &! world.isRemote) {
 			if (world.getTileEntity(pos) instanceof TileTurret) {
 				TileTurret tile = (TileTurret) world.getTileEntity(pos);
+				if (tile.getEntity() != null) if (tile.getEntity().isEnemy()) return true;
 				ItemStack stack = new ItemStack(this);
 				NBTTagCompound nbt = tile.getDropNBT();
 				stack.setTagCompound(nbt);

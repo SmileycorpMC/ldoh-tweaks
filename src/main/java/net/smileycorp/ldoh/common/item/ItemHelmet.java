@@ -1,13 +1,11 @@
 package net.smileycorp.ldoh.common.item;
 
+
 import java.util.UUID;
-
 import com.google.common.collect.Multimap;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
-
 
 public class ItemHelmet extends ItemHat {
 
@@ -25,8 +23,7 @@ public class ItemHelmet extends ItemHat {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
-	{
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
 		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
 
 		if (equipmentSlot == EntityEquipmentSlot.HEAD) {

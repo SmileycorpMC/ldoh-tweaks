@@ -1,11 +1,10 @@
 package net.smileycorp.ldoh.common.util;
 
-import net.minecraft.init.Biomes;
-import net.minecraft.world.biome.Biome;
 import biomesoplenty.api.biome.BOPBiomes;
-
 import com.google.common.base.Optional;
 import com.legacy.wasteland.world.WastelandWorld;
+import net.minecraft.init.Biomes;
+import net.minecraft.world.biome.Biome;
 
 @SuppressWarnings("unchecked")
 public enum EnumBiomeType {

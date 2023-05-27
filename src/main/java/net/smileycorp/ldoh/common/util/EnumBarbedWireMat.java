@@ -7,19 +7,21 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 
 public enum EnumBarbedWireMat implements IStringSerializable {
 
-	IRON("Iron", 0.5f, 300, Items.IRON_NUGGET),
-	GOLD("Gold", 3f, 100, Items.GOLD_NUGGET),
-	DIAMOND("Diamond", 1f, 900, LDOHItems.DIAMOND_NUGGET);
+	IRON("Iron", 0.5f, 300, 14, Items.IRON_NUGGET),
+	GOLD("Gold", 3f, 100, 22, Items.GOLD_NUGGET),
+	DIAMOND("Diamond", 1f, 900, 10, LDOHItems.DIAMOND_NUGGET);
 
 	final String name;
 	final float damage;
 	final int durability;
+	final int enchantability;
 	final Item drop;
 
-	EnumBarbedWireMat(String name, float damage, int durability, Item drop) {
+	EnumBarbedWireMat(String name, float damage, int durability, int enchantability, Item drop) {
 		this.name = name;
 		this.damage = damage;
 		this.durability = durability;
+		this.enchantability = enchantability;
 		this.drop = drop;
 	}
 
@@ -48,6 +50,10 @@ public enum EnumBarbedWireMat implements IStringSerializable {
 
 	public Item getDrop() {
 		return drop;
+	}
+
+	public int getEnchantability() {
+		return enchantability;
 	}
 
 }

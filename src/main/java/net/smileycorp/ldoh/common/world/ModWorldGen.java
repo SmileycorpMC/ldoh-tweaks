@@ -1,7 +1,8 @@
 package net.smileycorp.ldoh.common.world;
 
-import java.util.Random;
-
+import biomesoplenty.api.block.BOPBlocks;
+import biomesoplenty.common.block.BlockBOPDirt;
+import biomesoplenty.common.block.BlockBOPDirt.BOPDirtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -18,9 +19,8 @@ import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.world.WorldGenSurface.EnumVariant;
-import biomesoplenty.api.block.BOPBlocks;
-import biomesoplenty.common.block.BlockBOPDirt;
-import biomesoplenty.common.block.BlockBOPDirt.BOPDirtType;
+
+import java.util.Random;
 
 public class ModWorldGen implements IWorldGenerator {
 
@@ -51,7 +51,7 @@ public class ModWorldGen implements IWorldGenerator {
 			genSurfaceBlock(world, rand, chunkX, chunkZ, Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.dirt.getDefaultState()
 					.withProperty(BlockBOPDirt.VARIANT, BOPDirtType.LOAMY).withProperty(BlockBOPDirt.COARSE, true));
 		}
-		genNest(world, biome, rand, chunkX, chunkZ);
+		genNest(world, rand, chunkX, chunkZ, EnumBiomeType.BADLANDS.matches(biome));
 	}
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){

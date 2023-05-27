@@ -1,9 +1,5 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,8 +19,11 @@ import net.smileycorp.followme.common.ai.AIFollowPlayer;
 import net.smileycorp.followme.common.network.FollowSyncMessage;
 import net.smileycorp.followme.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.ModUtils;
-
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface IFollowers {
 

@@ -1,7 +1,10 @@
 package net.smileycorp.ldoh.common.world;
 
-import java.util.Random;
-
+import biomesoplenty.api.block.BOPBlocks;
+import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
+import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
+import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
+import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityLockableLoot;
@@ -21,6 +24,8 @@ import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
+
+import java.util.Random;
 
 public class WorldGenNest extends WorldGenerator {
 

@@ -1,9 +1,7 @@
 package net.smileycorp.ldoh.common.events;
 
+import com.legacy.wasteland.world.WastelandWorld;
 import ivorius.reccomplex.events.StructureGenerationEvent;
-
-import java.util.Random;
-
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +20,13 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
-import com.legacy.wasteland.world.WastelandWorld;
+import java.util.Random;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class WorldEvents {
@@ -47,17 +47,17 @@ public class WorldEvents {
 			int z = 0;
 			int tries = 0;
 			while (true) {
-				if (biome== WastelandWorld.apocalypse) {
+				if (EnumBiomeType.WASTELAND.matches(biome) || ConfigHandler.betaSpawnpoint) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					//checks if the safehouse is spawning below y60 or if the structure bounds intersect with a city or another biome
-					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z)) {
+					if (y <= 60 || !ModUtils.isOnlyWasteland(world, x, z) &! ConfigHandler.betaSpawnpoint) {
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
 					}
-					else if (y >= 60) {
+					else {
 						//determines if the safehouse can be placed here
-						if (safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) break;
+						if (ConfigHandler.betaSpawnpoint || safehouse.markPositions(world, new BlockPos(x, y-1, z), false)) break;
 						y = 0;
 						x += rand.nextInt(32) - rand.nextInt(32);
 						z += rand.nextInt(32) - rand.nextInt(32);
@@ -74,8 +74,8 @@ public class WorldEvents {
 				biome = world.getBiomeProvider().getBiomes(null, x, z, 1, 1, false)[0];
 				tries++;
 
-				//cancel after 1000 tries to not lock the game in an infinite loop
-				if (tries >= 1000) {
+				//cancel after 3000 tries to not lock the game in an infinite loop
+				if (tries >= 5000) {
 					y = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)).getY();
 					System.out.println("Found no suitable location for spawn");
 					break;
@@ -83,10 +83,12 @@ public class WorldEvents {
 			}
 			BlockPos spawn = new BlockPos(x, y, z);
 			world.getWorldInfo().setSpawn(spawn);
-			if (!safehouse.isMarked()) {
-				safehouse.markPositions(world, spawn.down(), true);
+			if (!ConfigHandler.noSafehouse) {
+				if (!safehouse.isMarked()) {
+					safehouse.markPositions(world, spawn.down(), true);
+				}
+				safehouse.generate(world, rand, world.getSpawnPoint().down());
 			}
-			safehouse.generate(world, rand, world.getSpawnPoint().down());
 			event.setCanceled(true);
 		}
 	}

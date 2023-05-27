@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.entity;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -24,6 +22,8 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import javax.annotation.Nullable;
 
 public class EntityTF2Zombie extends EntityZombie {
 
@@ -120,6 +120,14 @@ public class EntityTF2Zombie extends EntityZombie {
 			for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 				setItemStackToSlot(slot, ModUtils.cleanTFWeapon(baseentity.getItemStackFromSlot(slot)));
 			}
+		}
+	}
+
+	@Override
+	protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier) {
+		for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.values()) {
+			ItemStack itemstack = getItemStackFromSlot(entityequipmentslot);
+			if (!itemstack.isEmpty() && rand.nextFloat() - lootingModifier * 0.01f < 0.15f) entityDropItem(itemstack, 0.0F);
 		}
 	}
 

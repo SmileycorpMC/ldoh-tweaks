@@ -20,6 +20,8 @@ message.hundreddayz.VillagerMessage0=Word has been spread among the surviving ci
 message.hundreddayz.VillagerMessage.Survivor=Survivor
 message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
 
+message.hundreddayz.SealedCrate=Right click with a Crow Bar to open sealed crates
+
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
 commands.hundreddayz.SpawnRaid.usage=/spawnRaid <raid type> <level>
@@ -60,24 +62,28 @@ tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
 tile.hundreddayz.Landmine.name=Landmine
 tile.hundreddayz.Turret.name=Sentry Turret
+tile.hundreddayz.EnemyTurret.name=Enemy Turret
 tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
+tile.hundreddayz.Cache.name=Item Cache
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
 tooltip.hundreddayz.BarbedWire.Gold=Has Low durability and high damage.
 tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damage.
-tooltip.hundreddayz.BarbedWire.Durability=Durability:
+tooltip.hundreddayz.BarbedWire.durability=Durability:
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
 tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
 tooltip.hundreddayz.Turret1=Uses basic or incendiary ammo ammo.
 tooltip.hundreddayz.Turret2=Repair with iron.
+tooltip.hundreddayz.EnemyTurret=Hostile.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
+tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler
@@ -87,6 +93,8 @@ entity.hundreddayz.SwatZombie.name=Swat Zombie
 entity.hundreddayz.ZombieMechanic.name=Zombie Mechanic
 entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieFireman.name=Zombie Fireman
+entity.hundreddayz.LibraryZombie.name=Library Zombie
+entity.hundreddayz.HospitalZombie.name=Hospital Zombie
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie
@@ -96,9 +104,11 @@ entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 entity.hundreddayz.Turret.name=Sentry Turret
+entity.hundreddayz.EnemyTurret.name=Enemy Turret
 
-death.attack.ToxicGas=%1$s choked on toxic gasses
-death.attack.Shrapnel=%1$s stepped on a landmine
+death.attack.ToxicGas=%1$s choked on toxic gas
+death.attack.Shrapnel=%1$s went kaboom
+death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
@@ -107,10 +117,10 @@ gui.turret.text.NoTarget=No Target
 gui.turret.text.Target=Target: 
 
 jei.category.hundreddayz.Syringe=Syringes
-jei.category.hundreddayz.Intestines=Intestines Loot
-jei.category.hundreddayz.GunWorkbench=Gun Workbench
 
 hundreddayz.subtitle.tf.enemy=Enemy Team Approaches
 hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
-hundreddayz.subtitle.snoring=Snoring
+
+tooltip.hundreddayz.Crowbar=Right click to open sealed crates
+tooltip.hundreddayz.UnlitTorch=Use a matchbox to light

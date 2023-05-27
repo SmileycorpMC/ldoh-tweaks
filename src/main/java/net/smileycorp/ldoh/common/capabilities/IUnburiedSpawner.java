@@ -1,9 +1,6 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -15,7 +12,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
-import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface IUnburiedSpawner {
 

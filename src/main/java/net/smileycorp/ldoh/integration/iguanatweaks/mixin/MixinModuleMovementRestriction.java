@@ -1,16 +1,14 @@
 package net.smileycorp.ldoh.integration.iguanatweaks.mixin;
 
+import com.mrcrayfish.furniture.items.ItemCrate;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.smileycorp.ldoh.common.util.ModUtils;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import com.mrcrayfish.furniture.items.ItemCrate;
 
 
 @Mixin(value = ModuleMovementRestriction.class)

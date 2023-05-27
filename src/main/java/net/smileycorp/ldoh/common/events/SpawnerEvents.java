@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityCrux;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityHeed;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
@@ -17,7 +16,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfPig;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfSheep;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityGanro;
-
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,13 +37,15 @@ import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
 import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
-import net.smileycorp.hordes.common.hordeevent.HordeSpawnEntry;
+import net.smileycorp.hordes.hordeevent.HordeSpawnEntry;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
+
+import java.util.Random;
 
 public class SpawnerEvents {
 

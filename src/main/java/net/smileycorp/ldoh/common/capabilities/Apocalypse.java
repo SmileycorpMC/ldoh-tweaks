@@ -1,25 +1,9 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityBanoAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityCanraAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityHullAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityNoglaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
-import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSIV;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIV;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -32,6 +16,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.recipe.WeightedOutputs;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+
+import java.util.*;
 
 public class Apocalypse implements IApocalypse {
 
@@ -137,6 +123,10 @@ public class Apocalypse implements IApocalypse {
 	@Override
 	public void spawnWave(World world) {
 		for (Class<? extends EntityParasiteBase> clazz :  getSpawnsForWave(wave, world.rand)) {
+			Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
+			BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 65);
+			EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
+			world.spawnEntity(bolt);
 			try {
 				spawnEntity(world, clazz.getConstructor(World.class).newInstance(world));
 			} catch (Exception e) {}

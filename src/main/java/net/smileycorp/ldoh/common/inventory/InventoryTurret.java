@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.inventory;
 
+import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -8,8 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-
-import com.mrcrayfish.guns.init.ModGuns;
 
 public class InventoryTurret extends InventoryBasic {
 

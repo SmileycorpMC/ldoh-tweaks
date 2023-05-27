@@ -1,9 +1,7 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.entity.monster.primitive.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,8 +16,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.Hordes;
-import net.smileycorp.hordes.common.hordeevent.HordeEventPacketHandler;
-import net.smileycorp.hordes.common.hordeevent.HordeSoundMessage;
+import net.smileycorp.hordes.hordeevent.HordeEventPacketHandler;
+import net.smileycorp.hordes.hordeevent.HordeSoundMessage;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
@@ -29,14 +27,9 @@ import net.smileycorp.ldoh.common.entity.ai.AIMiniRaid;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityBano;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityCanra;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityHull;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityNogla;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityRanrac;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityShyco;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MiniRaid implements IMiniRaid {
 
@@ -103,9 +96,9 @@ public class MiniRaid implements IMiniRaid {
 					entity.setPosition(x+rand.nextFloat(), y, z+rand.nextFloat());
 					entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
 					entity.enablePersistence();
+					world.spawnEntity(entity);
 					if (type == RaidType.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
 					else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
-					world.spawnEntity(entity);
 					entity.tasks.addTask(1, new AIMiniRaid(entity, player));
 				}
 				HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
@@ -119,7 +112,7 @@ public class MiniRaid implements IMiniRaid {
 		if (type == RaidType.ALLY || type == RaidType.ENEMY) {
 			if (player.getTeam() == null) {
 				return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
-			} else if (!(player.getTeam().getName() == "RED" || player.getTeam().getName() == "BLU")) {
+			} else if (!(player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU"))) {
 				return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
 			}
 		}
@@ -136,7 +129,7 @@ public class MiniRaid implements IMiniRaid {
 				try {
 					EntityTF2Character entity = EnumTFClass.getRandomClass((c)->c!=EnumTFClass.SPY).createEntity(world);
 					world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName());
-					entity.setEntTeam(player.getTeam().getName() == "RED" ? 0 : 1);
+					entity.setEntTeam(player.getTeam().getName().equals("RED") ? 0 : 1);
 					spawnlist.add(entity);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -146,8 +139,8 @@ public class MiniRaid implements IMiniRaid {
 			for (int i = 0; i < (phase+1) * 2.5; i++)
 				try {
 					EntityTF2Character entity = EnumTFClass.getRandomClass((c)->c!=EnumTFClass.SPY).createEntity(world);
-					world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName() == "RED" ? "BLU" : "RED");
-					entity.setEntTeam(player.getTeam().getName() == "RED" ? 1 : 0);
+					world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName().equals("RED") ? "BLU" : "RED");
+					entity.setEntTeam(player.getTeam().getName().equals("RED") ? 1 : 0);
 					spawnlist.add(entity);
 				} catch (Exception e) {
 					e.printStackTrace();

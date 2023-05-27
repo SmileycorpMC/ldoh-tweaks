@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.util.Random;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,11 +24,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.ldoh.common.network.PacketHandler;
-import net.smileycorp.ldoh.common.network.StartEatingMessage;
-import net.smileycorp.ldoh.common.network.SyncFoodMessage;
-import net.smileycorp.ldoh.common.network.SyncHungerEffectMessage;
-import net.smileycorp.ldoh.common.network.SyncHungerMessage;
+import net.smileycorp.ldoh.common.network.*;
+
+import java.util.Random;
 
 public interface IHunger {
 

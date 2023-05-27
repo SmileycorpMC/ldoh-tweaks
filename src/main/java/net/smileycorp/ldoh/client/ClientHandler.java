@@ -12,12 +12,7 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.network.StartEatingMessage;
-import net.smileycorp.ldoh.common.network.SyncFoodMessage;
-import net.smileycorp.ldoh.common.network.SyncHungerEffectMessage;
-import net.smileycorp.ldoh.common.network.SyncHungerMessage;
-import net.smileycorp.ldoh.common.network.SyncMedicCureMessage;
-import net.smileycorp.ldoh.common.network.SyncSyringesMessage;
+import net.smileycorp.ldoh.common.network.*;
 
 public class ClientHandler {
 

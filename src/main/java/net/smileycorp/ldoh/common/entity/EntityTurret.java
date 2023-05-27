@@ -1,7 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
-import java.util.UUID;
-
+import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -34,10 +34,15 @@ import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-public class EntityTurret extends EntityLiving {
+import java.util.UUID;
+
+@SuppressWarnings("deprecation")
+public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
+	protected static final DataParameter<Boolean> IS_ENEMY = EntityDataManager.<Boolean>createKey(EntityTurret.class, DataSerializers.BOOLEAN);
 	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
 	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
 	protected static final DataParameter<Float> SPIN = EntityDataManager.<Float>createKey(EntityTurret.class, DataSerializers.FLOAT);
@@ -64,6 +69,7 @@ public class EntityTurret extends EntityLiving {
 	protected void entityInit() {
 		super.entityInit();
 		dataManager.register(TEAM, "");
+		dataManager.register(IS_ENEMY, false);
 		dataManager.register(FACING, EnumFacing.UP);
 		dataManager.register(COOLDOWN, 0);
 		dataManager.register(SPIN, 0f);
@@ -90,7 +96,8 @@ public class EntityTurret extends EntityLiving {
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
-		if (nbt.hasKey("owner")) dataManager.set(OWNER_UUID, nbt.getString("owner"));
+		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+		if (!isEnemy() && nbt.hasKey("owner")) dataManager.set(OWNER_UUID, nbt.getString("owner"));
 		if (nbt.hasKey("tilePos")) {
 			NBTTagCompound pos = nbt.getCompoundTag("tilePos");
 			dataManager.set(TILE_POS, new BlockPos(pos.getInteger("x"), pos.getInteger("y"), pos.getInteger("z")));
@@ -106,6 +113,7 @@ public class EntityTurret extends EntityLiving {
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setTag("inventory", inventory.writeToNBT());
+		nbt.setBoolean("isEnemy", isEnemy());
 		if (owner!=null) nbt.setString("owner", dataManager.get(OWNER_UUID));
 		if (TILE_POS != null) {
 			NBTTagCompound pos = new NBTTagCompound();
@@ -121,10 +129,13 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
-		dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
-		this.owner = owner;
-		if (owner.getTeam() != null) {
-			dataManager.set(TEAM, owner.getTeam().getName());
+		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+		if (!isEnemy()) {
+			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
+			this.owner = owner;
+			if (owner.getTeam() != null) {
+				dataManager.set(TEAM, owner.getTeam().getName());
+			}
 		}
 		dataManager.set(TILE_POS, tile.getPos());
 		dataManager.set(FACING, facing);
@@ -134,6 +145,7 @@ public class EntityTurret extends EntityLiving {
 
 	public NBTTagCompound saveToTile() {
 		NBTTagCompound nbt = new NBTTagCompound();
+		if (isEnemy()) nbt.setBoolean("isEnemy", isEnemy());
 		nbt.setTag("inventory", inventory.writeToNBT());
 		nbt.setFloat("health", getHealth());
 		return nbt;
@@ -162,7 +174,7 @@ public class EntityTurret extends EntityLiving {
 				((TileTurret) tile).setEntity(this);
 			}
 		}
-		if (ticksExisted%5 == 0) {
+		if (ticksExisted%5 == 0 &! isEnemy()) {
 			if (world.isRemote && username == null) {
 				String uuidString = dataManager.get(OWNER_UUID);
 				if (DataUtils.isValidUUID(uuidString)) {
@@ -184,6 +196,8 @@ public class EntityTurret extends EntityLiving {
 				} else if (dataManager.get(TEAM) != "") {
 					dataManager.set(TEAM,"");
 				}
+			} else if (getTeam() == null) {
+				dataManager.set(TEAM, "GREEN");
 			}
 		}
 		if (hasTarget()) {
@@ -286,26 +300,43 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	@Override
+	public boolean isEnemy() {
+		return dataManager.get(IS_ENEMY);
+	}
+
+	@Override
 	public Team getTeam() {
+		if (isEnemy()) return null;
 		String team = dataManager.get(TEAM);
 		return team.isEmpty() ? null : world.getScoreboard().getTeam(team);
 	}
 
 	public boolean isSameTeam(Entity entity) {
+		if (isEnemy()) {
+			if (entity instanceof IEnemyMachine) return (((IEnemyMachine) entity).isEnemy());
+			return false;
+		}
 		if (getTeam() == null) return entity.getTeam() == null;
 		return getTeam().equals(entity.getTeam());
 	}
 
 	public boolean canTarget(EntityLivingBase entity) {
 		if (getDistance(entity) > 50) return false;
+		if (getOwnerUUID() == null) {
+			if (entity instanceof EntityPlayer) return ((EntityPlayer) target).isSpectator() ? false : true;
+			if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
+				if (!entity.getTeam().getName().equals("GREEN"));
+			}
+		}
 		return ModUtils.canTarget(this, entity);
 	}
 
 	public EntityPlayer getOwner() {
-		return owner;
+		return isEnemy() ? null : owner;
 	}
 
 	public UUID getOwnerUUID() {
+		if (isEnemy()) return null;
 		String uuidString = dataManager.get(OWNER_UUID);
 		return DataUtils.isValidUUID(uuidString) ? UUID.fromString(uuidString) : null;
 	}
@@ -339,12 +370,17 @@ public class EntityTurret extends EntityLiving {
 	}
 
 	public ItemStack getAmmo() {
-		return inventory.getAmmo();
+		return isEnemy() ? new ItemStack(ModGuns.BASIC_AMMO) : inventory.getAmmo();
 	}
 
 	@SideOnly(Side.CLIENT)
 	public String getOwnerUsername() {
 		return username;
+	}
+
+	@Override
+	public String getName() {
+		return I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name");
 	}
 
 }

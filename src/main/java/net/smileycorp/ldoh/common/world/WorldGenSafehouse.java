@@ -1,29 +1,23 @@
 package net.smileycorp.ldoh.common.world;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import biomesoplenty.api.block.BOPBlocks;
+import biomesoplenty.api.enums.BOPWoods;
+import biomesoplenty.common.block.BlockBOPLog;
+import biomesoplenty.common.block.BlockBOPPlanks;
+import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
+import com.mrcrayfish.furniture.blocks.BlockFurniture;
+import com.mrcrayfish.furniture.init.FurnitureBlocks;
+import com.mrcrayfish.furniture.tileentity.TileEntityTree;
+import com.mrcrayfish.guns.block.BlockWorkbench;
 import jds.bibliocraft.blocks.BiblioWoodBlock.EnumWoodType;
 import jds.bibliocraft.blocks.BlockSeat;
 import mariot7.xlfoodmod.init.BlockListxlfoodmod;
 import net.blay09.mods.cookingforblockheads.block.BlockFridge;
 import net.blay09.mods.cookingforblockheads.tile.TileFridge;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockButton;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.*;
 import net.minecraft.block.BlockPlanks.EnumType;
-import net.minecraft.block.BlockSkull;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.BlockStairs.EnumShape;
-import net.minecraft.block.BlockStoneBrick;
-import net.minecraft.block.BlockTorch;
-import net.minecraft.block.BlockWoodSlab;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.init.Blocks;
@@ -47,16 +41,12 @@ import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumAxis;
-import biomesoplenty.api.block.BOPBlocks;
-import biomesoplenty.api.enums.BOPWoods;
-import biomesoplenty.common.block.BlockBOPLog;
-import biomesoplenty.common.block.BlockBOPPlanks;
 
-import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
-import com.mrcrayfish.furniture.blocks.BlockFurniture;
-import com.mrcrayfish.furniture.init.FurnitureBlocks;
-import com.mrcrayfish.furniture.tileentity.TileEntityTree;
-import com.mrcrayfish.guns.block.BlockWorkbench;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class WorldGenSafehouse extends WorldGenerator {
 
