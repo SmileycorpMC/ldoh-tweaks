@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.smileycorp.ldoh.common.ModDefinitions;
-
 import org.lwjgl.opengl.GL11;
 
 public class ItemGasMask extends ItemHat {

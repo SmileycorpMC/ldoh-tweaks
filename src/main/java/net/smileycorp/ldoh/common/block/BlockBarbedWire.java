@@ -1,9 +1,5 @@
 package net.smileycorp.ldoh.common.block;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -50,6 +46,9 @@ import net.smileycorp.ldoh.common.util.EnumAxis;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
 
@@ -115,10 +114,10 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		if (stack.hasTagCompound()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			if (world.getTileEntity(pos) instanceof TileBarbedWire &! placer.world.isRemote) {
-				TileBarbedWire tile = ((TileBarbedWire) world.getTileEntity(pos));
+		if (world.getTileEntity(pos) instanceof TileBarbedWire &! placer.world.isRemote) {
+			TileBarbedWire tile = ((TileBarbedWire) world.getTileEntity(pos));
+			if (stack.hasTagCompound()) {
+				NBTTagCompound nbt = stack.getTagCompound();
 				if (nbt.hasKey("durability"))tile.setDurability(nbt.getInteger("durability"));
 				if (nbt.hasKey("ench")) {
 					for (NBTBase tag : nbt.getTagList("ench", 10)) {
@@ -127,8 +126,8 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 						tile.applyEnchantment(enchant, level);
 					}
 				}
-				if (placer instanceof EntityPlayer) tile.setOwner((EntityPlayer) placer);
 			}
+			if (placer instanceof EntityPlayer) tile.setOwner((EntityPlayer) placer);
 		}
 	}
 

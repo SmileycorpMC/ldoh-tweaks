@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.item;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -10,6 +8,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
+
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class ItemTurret extends ItemBlockTooltip {

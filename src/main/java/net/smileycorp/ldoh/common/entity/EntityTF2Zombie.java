@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.entity;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -24,6 +22,8 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import javax.annotation.Nullable;
 
 public class EntityTF2Zombie extends EntityZombie {
 

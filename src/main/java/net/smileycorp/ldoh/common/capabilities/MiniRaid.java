@@ -1,9 +1,7 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.dhanantry.scapeandrunparasites.entity.monster.primitive.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,14 +27,9 @@ import net.smileycorp.ldoh.common.entity.ai.AIMiniRaid;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityBano;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityCanra;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityHull;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityNogla;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityRanrac;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityShyco;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MiniRaid implements IMiniRaid {
 

@@ -12,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
 import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.ldoh.client.ClientEventListener;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

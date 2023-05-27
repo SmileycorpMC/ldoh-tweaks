@@ -1,5 +1,7 @@
 package net.smileycorp.ldoh.common.entity;
 
+import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
+import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
@@ -14,8 +16,6 @@ import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 
 public class EntityZombieFireman extends EntityZombie {
 

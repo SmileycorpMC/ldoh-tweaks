@@ -1,11 +1,5 @@
 package net.smileycorp.ldoh.common.tile;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +16,12 @@ import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.damage.DamageSourceBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.UUID;
 
 public class TileBarbedWire extends TileEntity {
 
@@ -110,6 +110,9 @@ public class TileBarbedWire extends TileEntity {
 		if (compound.hasKey("cooldown")) {
 			cooldown = compound.getInteger("cooldown");
 		}
+		if (compound.hasKey("durability")) {
+			durability = compound.getInteger("durability");
+		}
 		if (compound.hasKey("enchantments")) {
 			NBTTagCompound enchants = compound.getCompoundTag("enchantments");
 			for (String name : enchants.getKeySet()) {
@@ -131,6 +134,7 @@ public class TileBarbedWire extends TileEntity {
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("durability", durability);
 		compound.setInteger("cooldown", cooldown);
+		compound.setInteger("material", mat.ordinal());
 		if (!enchant_map.isEmpty()) {
 			NBTTagCompound enchants = new NBTTagCompound();
 			for (Entry<Enchantment, Integer> entry : enchant_map.entrySet())

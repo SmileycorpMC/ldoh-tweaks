@@ -1,9 +1,6 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.util.Random;
-
 import com.legacy.wasteland.world.WastelandWorld;
-
 import ivorius.reccomplex.events.StructureGenerationEvent;
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
@@ -28,6 +25,8 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
+
+import java.util.Random;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class WorldEvents {

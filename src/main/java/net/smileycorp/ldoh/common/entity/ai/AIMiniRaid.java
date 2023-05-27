@@ -1,11 +1,11 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
-import java.util.concurrent.TimeUnit;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.smileycorp.atlas.api.entity.ai.EntityAIGoToEntityPos;
 import net.smileycorp.ldoh.common.util.ModUtils;
+
+import java.util.concurrent.TimeUnit;
 
 public class AIMiniRaid extends EntityAIGoToEntityPos {
 

@@ -1,14 +1,10 @@
 package net.smileycorp.ldoh.mixin;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModClassLoader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.smileycorp.ldoh.integration.iguanatweaks.mixin.MixinModuleMovementRestriction;
-
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mixins;
@@ -19,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.transformer.IMixinTransformer;
 import org.spongepowered.asm.mixin.transformer.Proxy;
 import org.spongepowered.asm.util.asm.ASM;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 @Mixin(Loader.class)
 public class MixinLoader {

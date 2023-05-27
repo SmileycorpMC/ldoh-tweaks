@@ -1,11 +1,10 @@
 package net.smileycorp.ldoh.common.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.World;
-
 import com.mrcrayfish.guns.entity.EntityProjectile;
 import com.mrcrayfish.guns.item.ItemGun;
 import com.mrcrayfish.guns.object.Gun;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 
 public class EntityIncendiaryProjectile extends EntityProjectile {
 

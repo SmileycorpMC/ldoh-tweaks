@@ -1,11 +1,6 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.Fishmod.mod_LavaCow.init.FishItems;
-
 import de.maxhenkel.car.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -24,35 +19,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.atlas.api.block.FuelHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk0;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk1;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
-import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
-import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
-import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
-import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
-import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
-import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
-import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
-import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
-import net.smileycorp.ldoh.common.item.ItemBarbedWire;
-import net.smileycorp.ldoh.common.item.ItemBlockLDOH;
-import net.smileycorp.ldoh.common.item.ItemBlockTooltip;
-import net.smileycorp.ldoh.common.item.ItemTurret;
-import net.smileycorp.ldoh.common.item.LDOHItems;
-import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-import net.smileycorp.ldoh.common.tile.TileCache;
-import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
-import net.smileycorp.ldoh.common.tile.TileLandmine;
-import net.smileycorp.ldoh.common.tile.TileTurret;
+import net.smileycorp.ldoh.common.entity.*;
+import net.smileycorp.ldoh.common.item.*;
+import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
+
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {

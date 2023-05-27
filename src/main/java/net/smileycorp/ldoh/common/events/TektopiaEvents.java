@@ -3,7 +3,6 @@ package net.smileycorp.ldoh.common.events;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;

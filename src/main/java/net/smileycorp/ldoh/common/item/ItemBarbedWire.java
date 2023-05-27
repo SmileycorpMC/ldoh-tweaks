@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.item;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
@@ -14,6 +12,8 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
+
+import java.util.List;
 
 public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 

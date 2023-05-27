@@ -5,10 +5,11 @@
   "refmap": "mixins.ldoh.refmap.json",
   "target": "@env(INIT)",
   "mixins": [
+    "MixinBlockPumpkin",
     "MixinEntityLiving",
-	"MixinItemBucket",
-	"MixinItem",
-	"MixinBlockPumpkin"
+	"MixinEntityLivingBase",
+    "MixinItem",
+    "MixinItemBucket"
   ],
   "client": [],
   "server": [

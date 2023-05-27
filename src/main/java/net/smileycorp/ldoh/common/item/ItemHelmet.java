@@ -1,12 +1,11 @@
 package net.smileycorp.ldoh.common.item;
 
-import java.util.UUID;
-
 import com.google.common.collect.Multimap;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
+
+import java.util.UUID;
 
 
 public class ItemHelmet extends ItemHat {

@@ -1,9 +1,9 @@
 package net.smileycorp.ldoh.common.util;
 
-import java.util.UUID;
-
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.UUID;
 
 public class CompoundTagBuilder {
 

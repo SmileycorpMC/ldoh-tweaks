@@ -1,11 +1,6 @@
 package net.smileycorp.ldoh.client;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableMap;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -16,6 +11,9 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BakedModelBarbedWire extends BakedModelWrapper<IBakedModel> {
 

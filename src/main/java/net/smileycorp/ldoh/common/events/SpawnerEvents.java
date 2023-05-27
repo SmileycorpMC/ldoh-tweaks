@@ -1,10 +1,7 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.util.Random;
-
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +28,8 @@ import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
+
+import java.util.Random;
 
 public class SpawnerEvents {
 

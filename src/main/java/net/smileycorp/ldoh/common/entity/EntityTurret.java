@@ -1,9 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
-import java.util.UUID;
-
 import com.mrcrayfish.guns.init.ModGuns;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +35,8 @@ import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class EntityTurret extends EntityLiving implements IEnemyMachine {

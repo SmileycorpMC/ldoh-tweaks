@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common.tile;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -13,6 +11,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.smileycorp.atlas.api.util.RecipeUtils;
+
+import javax.annotation.Nullable;
 
 public class TileCache extends TileEntity implements IInventory {
 
