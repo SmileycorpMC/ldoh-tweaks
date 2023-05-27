@@ -11,7 +11,7 @@ public class AmmoSlot extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		return ((InventoryTurret) this.inventory).isAmmo(stack);
+		return ((InventoryTurret) this.inventory).isAmmo(stack, null);
 	}
 
 }

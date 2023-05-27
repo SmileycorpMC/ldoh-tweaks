@@ -54,8 +54,9 @@ public class AITurretShoot extends EntityAIBase {
 			if (ray != null) {
 				if (ray.typeOfHit == RayTraceResult.Type.ENTITY) {
 					if (ray.entityHit instanceof EntityLivingBase) {
-						if (ModUtils.canTarget(turret, (EntityLivingBase) ray.entityHit)) {
-							ItemStack ammo = turret.getAmmo();
+						EntityLivingBase entity = (EntityLivingBase) ray.entityHit;
+						if (turret.canTarget(entity)) {
+							ItemStack ammo = turret.getAmmo(entity);
 							ProjectileFactory factory = AmmoRegistry.getInstance().getFactory(ammo.getItem().getRegistryName());
 							EntityProjectile bullet = factory.create(turret.world, turret, (ItemGun) ModGuns.CHAIN_GUN, fakegun);
 							bullet.setPosition(pos.x, pos.y, pos.z);

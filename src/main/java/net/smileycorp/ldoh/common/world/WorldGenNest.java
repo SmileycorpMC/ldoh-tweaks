@@ -1,10 +1,15 @@
 package net.smileycorp.ldoh.common.world;
 
 import biomesoplenty.api.block.BOPBlocks;
+import biomesoplenty.common.block.BlockBOPDoubleDecoration.Half;
+import biomesoplenty.common.block.BlockBOPDoublePlant;
+import biomesoplenty.common.block.BlockBOPDoublePlant.DoublePlantType;
+import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush;
+import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush.EnumType;
 import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
-import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityLockableLoot;
@@ -13,17 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import biomesoplenty.api.block.BOPBlocks;
-import biomesoplenty.common.block.BlockBOPDoubleDecoration.Half;
-import biomesoplenty.common.block.BlockBOPDoublePlant;
-import biomesoplenty.common.block.BlockBOPDoublePlant.DoublePlantType;
-
-import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush;
-import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush.EnumType;
-import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
-import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
-import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
 
 import java.util.Random;
 

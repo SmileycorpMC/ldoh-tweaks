@@ -144,7 +144,7 @@ public class ModelTurret extends ModelBase {
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
-		else {
+		else if (!(entity instanceof EntityPlayer || (entity instanceof IEnemyMachine && ((IEnemyMachine) entity).isEnemy()))) {
 			Color colour = null;
 			if (entity instanceof IEnemyMachine) {
 				if (((IEnemyMachine) entity).isEnemy()) colour = new Color(0x2C3811);

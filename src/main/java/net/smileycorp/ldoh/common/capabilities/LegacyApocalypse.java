@@ -1,22 +1,9 @@
 package net.smileycorp.ldoh.common.capabilities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityBanoAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityCanraAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityHullAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityNoglaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityRanracAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityShycoAdapted;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
-import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityVenkrolSIV;
-
+import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIV;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -29,6 +16,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.recipe.WeightedOutputs;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+
+import java.util.*;
 
 public class LegacyApocalypse implements IApocalypse {
 
@@ -144,7 +133,7 @@ public class LegacyApocalypse implements IApocalypse {
 
 	private List<Class<? extends EntityParasiteBase>> getSpawnsForWave(int wave, Random rand) {
 		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<>();
-		if (wave % 1 == 0) {
+		if (wave % 2 == 0) {
 			spawnlist.add(EntityOronco.class);
 			for (int i = 0; i < 3 + Math.round(wave*0.3); i++) {
 				spawnlist.addAll(adaptedtable.getResults(rand));
@@ -153,7 +142,7 @@ public class LegacyApocalypse implements IApocalypse {
 				spawnlist.add(EntityOronco.class);
 			}
 		}
-		else if (wave % 1 == 1) {
+		else if (wave % 2 == 1) {
 			for (int i = 0; i < 3 + Math.round(wave*1.4); i++) {
 				spawnlist.add(EntityVenkrolSIV.class);
 			}

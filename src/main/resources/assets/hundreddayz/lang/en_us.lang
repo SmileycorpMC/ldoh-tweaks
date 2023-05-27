@@ -74,10 +74,11 @@ tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damag
 tooltip.hundreddayz.BarbedWire.durability=Durability:
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
-tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
+tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy mercenaries/players.
 tooltip.hundreddayz.Turret1=Uses basic or incendiary ammo ammo.
 tooltip.hundreddayz.Turret2=Repair with iron.
-tooltip.hundreddayz.EnemyTurret=Hostile.
+tooltip.hundreddayz.EnemyTurret0=Automatically shoots all monsters, mercenaries and players.
+tooltip.hundreddayz.EnemyTurret1=Has infinite ammo.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
@@ -112,9 +113,11 @@ death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
+gui.turret.text.NoOwner=No Owner
 gui.turret.text.Owner=Owner: 
 gui.turret.text.NoTarget=No Target
-gui.turret.text.Target=Target: 
+gui.turret.text.Target=Target:
+gui.turret.text.Hostile=Hostile
 
 jei.category.hundreddayz.Syringe=Syringes
 

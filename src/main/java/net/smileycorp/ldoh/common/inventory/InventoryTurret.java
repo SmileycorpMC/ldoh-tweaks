@@ -1,6 +1,8 @@
 package net.smileycorp.ldoh.common.inventory;
 
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.mrcrayfish.guns.init.ModGuns;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -18,23 +20,26 @@ public class InventoryTurret extends InventoryBasic {
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return isAmmo(stack);
+		return isAmmo(stack, null);
 	}
 
-	public int getAmmoSlot() {
+	public int getAmmoSlot(Entity target) {
+		int slot = -1;
 		for(int i = inventoryContents.size()-1; i >= 0; i--) {
-			if (isAmmo(inventoryContents.get(i))) return i;
+			if (isAmmo(inventoryContents.get(i), target)) return i;
+			else if (slot < 0 && isAmmo(inventoryContents.get(i), null)) slot = i;
 		}
-		return -1;
+		return slot;
 	}
 
-	public boolean isAmmo(ItemStack stack) {
+	public boolean isAmmo(ItemStack stack, Entity target) {
 		Item item = stack.getItem();
-		return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
+		if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
+		return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO);
 	}
 
 	public boolean hasAmmo() {
-		return getAmmoSlot() > -1;
+		return getAmmoSlot(null) > -1;
 	}
 
 	public NBTTagCompound writeToNBT() {
@@ -45,8 +50,8 @@ public class InventoryTurret extends InventoryBasic {
 		ItemStackHelper.loadAllItems(nbt, inventoryContents);
 	}
 
-	public ItemStack getAmmo() {
-		int slot = getAmmoSlot();
+	public ItemStack getAmmo(Entity target) {
+		int slot = getAmmoSlot(target);
 		return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
 	}
 

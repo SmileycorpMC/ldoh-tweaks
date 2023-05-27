@@ -51,7 +51,7 @@ public class ModWorldGen implements IWorldGenerator {
 			genSurfaceBlock(world, rand, chunkX, chunkZ, Blocks.SOUL_SAND.getDefaultState(), BOPBlocks.dirt.getDefaultState()
 					.withProperty(BlockBOPDirt.VARIANT, BOPDirtType.LOAMY).withProperty(BlockBOPDirt.COARSE, true));
 		}
-		genNest(world, rand, chunkX, chunkZ, EnumBiomeType.BADLANDS.matches(biome));
+		if (EnumBiomeType.BADLANDS.matches(biome)) genNest(world, rand, chunkX, chunkZ);
 	}
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){
@@ -87,8 +87,7 @@ public class ModWorldGen implements IWorldGenerator {
 		gen.generate(world, rand, new BlockPos(x, world.getChunkFromChunkCoords(chunkX, chunkZ).getHeightValue(x&15, z&15)-1, z));
 	}
 
-	private void genNest(World world, Biome biome, Random rand, int chunkX, int chunkZ) {
-		if (!EnumBiomeType.BADLANDS.matches(biome)) return;
+	private void genNest(World world, Random rand, int chunkX, int chunkZ) {
 		if (rand.nextInt(160) == 0) {
 			int x = (chunkX << 4) +rand.nextInt(16);
 			int z = (chunkZ << 4) + rand.nextInt(16);

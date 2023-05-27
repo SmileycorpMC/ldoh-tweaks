@@ -1,22 +1,14 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.util.Map.Entry;
-import java.util.Random;
-
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityCrux;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityHeed;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityDorpa;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfBear;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfCow;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfPig;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfSheep;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityGanro;
-import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,6 +37,7 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class SpawnerEvents {

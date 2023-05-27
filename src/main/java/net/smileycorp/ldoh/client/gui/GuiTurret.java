@@ -9,9 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.translation.I18n;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.model.ModelTurret;
@@ -60,10 +58,18 @@ public class GuiTurret extends GuiContainer {
 		fontRenderer.drawString(name, x + 88 - fontRenderer.getStringWidth(name) / 2, y + 6, 4210752);
 
 		//draw owner name
-		Team team = turret.getTeam();
-		ITextComponent username = new TextComponentString(owner!=null ? owner : "");
-		if (team!=null) username.setStyle(new Style().setColor(team.getColor()));
-		String text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
+		String text;
+		if (turret.isEnemy()) {
+			text = new TextComponentTranslation("gui.turret.text.Hostile").setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText();
+		}
+		else if (owner != null) {
+			Team team = turret.getTeam();
+			ITextComponent username = new TextComponentString(owner);
+			if (team != null) username.setStyle(new Style().setColor(team.getColor()));
+			text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
+		} else {
+			text = I18n.translateToLocal("gui.turret.text.NoOwner");
+		}
 		fontRenderer.drawString(text, x + 65, y + 20, 4210752);
 
 		//draw target name

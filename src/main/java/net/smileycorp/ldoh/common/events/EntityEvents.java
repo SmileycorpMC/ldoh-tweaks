@@ -7,7 +7,9 @@ import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfDragonE;
+import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -43,6 +45,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
@@ -53,6 +56,7 @@ import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
+import net.smileycorp.ldoh.common.capabilities.IRandomEntity;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.*;
@@ -65,13 +69,7 @@ import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
-import com.animania.api.interfaces.IAnimaniaAnimal;
-import com.dhanantry.scapeandrunparasites.entity.ai.EntityParasiteBase;
-import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
-import com.legacy.wasteland.world.WastelandWorld;
+
 import java.util.Collection;
 import java.util.Random;
 
@@ -88,6 +86,10 @@ public class EntityEvents {
 		//lets entities break blocks if the capability is set to enabled
 		if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
 			event.addCapability(ModDefinitions.getResource("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
+		}
+		//used for randomMobs
+		if (!Loader.isModLoaded("optifine") &!entity.hasCapability(LDOHCapabilities.RANDOM_ENTITY, null) && entity.world.isRemote) {
+			event.addCapability(ModDefinitions.getResource("RandomEntity"), new IRandomEntity.Provider());
 		}
 	}
 
@@ -293,6 +295,7 @@ public class EntityEvents {
 		if (entity instanceof EntitySkeletonHorse) event.setCanceled(true);
 		else if (entity instanceof EntitySkeleton) event.setCanceled(true);
 		else if (entity instanceof EntityCreeper) event.setCanceled(true);
+		if (!event.isCanceled() && event.getWorld().isRemote && entity.hasCapability(LDOHCapabilities.RANDOM_ENTITY, null)) entity.getCapability(LDOHCapabilities.RANDOM_ENTITY, null).setEntity(entity);
 	}
 
 	@SubscribeEvent
@@ -303,7 +306,7 @@ public class EntityEvents {
 		if (!world.isRemote) {
 			//replace zombies with vespas if they are in a sky base
 			if (player.getPosition().getY() - event.pos.getY() > 30) {
-				if (entity instanceof EntityParasiteBase) entity = (event.getDay() == 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
+				if (entity instanceof EntityParasiteBase) entity = (event.getDay() >= 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
 				else entity = new EntityVespa(world);
 				//give the vespas the ability to break blocks
 				if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
@@ -311,13 +314,13 @@ public class EntityEvents {
 				}
 				event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getZ());
 
-			} else if (entity.getClass() == EntityZombie.class && event.getDay() <=50) {
+			} else if (entity.getClass() == EntityZombie.class) {
 				//turns zombies into a random variant based on rng and day
 				Random rand = world.rand;
 				int randInt = rand.nextInt(100);
 				if (randInt < 3) {
 					event.entity = new EntityTF2Zombie(world);
-				} else if (randInt < 45 - (world.getWorldTime()/24000)) {
+				} else if (event.getDay() <= 50 && randInt < 45 - (world.getWorldTime()/24000)) {
 					event.entity = new EntityCrawlingZombie(world);
 				}
 			}

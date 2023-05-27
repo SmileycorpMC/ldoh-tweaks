@@ -10,6 +10,7 @@ import net.smileycorp.ldoh.common.entity.EntityTurret;
 public class RenderTurret extends RenderLiving<EntityTurret> {
 
 	public static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/entity/turret.png");
+	public static final ResourceLocation ENEMY_TEXTURE = ModDefinitions.getResource("textures/entity/enemy_turret.png");
 
 	public RenderTurret(RenderManager rendermanager)
 	{
@@ -18,7 +19,7 @@ public class RenderTurret extends RenderLiving<EntityTurret> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityTurret entity) {
-		return TEXTURE;
+		return entity.isEnemy() ? ENEMY_TEXTURE :TEXTURE;
 	}
 
 }

@@ -36,7 +36,8 @@ public class ItemTurret extends ItemBlockTooltip {
 		if (nbt != null) {
 			if (nbt.hasKey("isEnemy")) {
 				if (nbt.getBoolean("isEnemy")) {
-					tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.EnemyTurret"));
+					tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.EnemyTurret0"));
+					tooltip.add(I18n.translateToLocal("tooltip.hundreddayz.EnemyTurret1"));
 					return;
 				}
 			}

@@ -38,7 +38,7 @@ public class ContainerTurret extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return turret.isSameTeam(player);
+		return player.isCreative() || turret.isSameTeam(player);
 	}
 
 	@Override

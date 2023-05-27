@@ -149,6 +149,7 @@ public class ModUtils {
 	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
+			if (!entity.isEntityAlive() |! target.isEntityAlive()) return false;
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator() || ((EntityPlayer) target).isCreative()) return false;
 			if (entity instanceof IEnemyMachine) if (((IEnemyMachine) entity).isEnemy() && (target instanceof EntityPlayer || target instanceof EntityMob)) return true;
 			if (entity.getTeam() != null) { if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());

@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,8 +33,10 @@ import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurret;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import java.util.UUID;
@@ -224,14 +227,14 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
 		if (tile != null &! world.isRemote) {
-			if (isSameTeam(player)) {
+			if (isSameTeam(player) || player.isCreative()) {
 				ItemStack stack = player.getHeldItem(hand);
 				if (stack.getItem() == Items.IRON_INGOT) {
 					if (getHealth() < getMaxHealth()) {
 						heal(4f);
 						if (!player.isCreative()) stack.shrink(1);
 						playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
-						return EnumActionResult.SUCCESS;
+						return EnumActionResult.PASS;
 					}
 				} else if (!player.isSneaking()) {
 					BlockPos pos = tile.getPos();
@@ -246,7 +249,17 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@Override
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
-		if (!world.isRemote) for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
+		if (!world.isRemote) {
+			for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
+			if (isEnemy()) {
+				entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
+				entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
+				entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3)+1), 0.0f);
+				entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3)+1), 0.0f);
+				if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
+				if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
+			}
+		}
 		BlockPos pos = dataManager.get(TILE_POS);
 		if (TILE_POS!=null) {
 			world.destroyBlock(pos, false);
@@ -256,13 +269,14 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (source.getTrueSource() instanceof EntityLivingBase) {
-			EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
-			if (canTarget(entity)) setTarget(entity);
-		}
-		else if (source.getImmediateSource() instanceof EntityLivingBase) {
-			EntityLivingBase entity = (EntityLivingBase) source.getImmediateSource();
-			if (canTarget(entity)) setTarget(entity);
+		if (source != null) {
+			if (source.getTrueSource() instanceof EntityLivingBase) {
+				EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
+				if (canTarget(entity)) setTarget(entity);
+			} else if (source.getImmediateSource() instanceof EntityLivingBase) {
+				EntityLivingBase entity = (EntityLivingBase) source.getImmediateSource();
+				if (canTarget(entity)) setTarget(entity);
+			}
 		}
 		return super.attackEntityFrom(source, amount);
 	}
@@ -321,11 +335,12 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	public boolean canTarget(EntityLivingBase entity) {
+		if (entity == null) return false;
 		if (getDistance(entity) > 50) return false;
-		if (getOwnerUUID() == null) {
-			if (entity instanceof EntityPlayer) return ((EntityPlayer) target).isSpectator() ? false : true;
+		if (isEnemy()) {
+			if (entity instanceof EntityPlayer) return ((EntityPlayer) entity).isSpectator() ? false : true;
 			if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
-				if (!entity.getTeam().getName().equals("GREEN"));
+				if (!entity.getTeam().getName().equals("GREEN")) return true;
 			}
 		}
 		return ModUtils.canTarget(this, entity);
@@ -369,8 +384,8 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		return inventory.hasAmmo();
 	}
 
-	public ItemStack getAmmo() {
-		return isEnemy() ? new ItemStack(ModGuns.BASIC_AMMO) : inventory.getAmmo();
+	public ItemStack getAmmo(Entity target) {
+		return isEnemy() ? new ItemStack(target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(target);
 	}
 
 	@SideOnly(Side.CLIENT)

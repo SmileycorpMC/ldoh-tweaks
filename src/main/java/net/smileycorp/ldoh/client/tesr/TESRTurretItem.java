@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -83,60 +82,56 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 
 	@Override
 	public void renderByItem(ItemStack stack) {
+		boolean isEnemy = false;
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt != null && nbt.hasKey("isEnemy") && nbt.getBoolean("isEnemy")) isEnemy = true;
 		Minecraft mc = Minecraft.getMinecraft();
 		GlStateManager.pushMatrix();
 		switch (transforms) {
-		case GUI:
-			GlStateManager.scale(1.15, 1.15, 1.15);
-			GlStateManager.translate(0.43, 0.53, 0);
-			break;
-		case FIXED:
-			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.scale(2, 2, 2);
-			GlStateManager.translate(-0.25, 0.25, 0.25);
-			break;
-		case GROUND:
-			GlStateManager.scale(1.5, 1.5, 1.5);
-			GlStateManager.translate(0.34, 0.3, 0.34);
-			break;
-		case FIRST_PERSON_RIGHT_HAND:
-			GlStateManager.scale(2, 2, 2);
-			GlStateManager.rotate(90, 0, 1, 0);
-			GlStateManager.translate(0, 0.2, 0.5);
-			break;
-		case FIRST_PERSON_LEFT_HAND:
-			GlStateManager.scale(2, 2, 2);
-			GlStateManager.rotate(180, 0, 1, 0);
-			GlStateManager.translate(0, 0.2, 0);
-			break;
-		case THIRD_PERSON_RIGHT_HAND:
-			GlStateManager.scale(1.3, 1.3, 1.3);
-			GlStateManager.rotate(90, 0, 0, 1);
-			GlStateManager.rotate(22.5f, 1, 0, 0);
-			GlStateManager.translate(0.42, -0.2, 0.6);
-			break;
-		case THIRD_PERSON_LEFT_HAND:
-			GlStateManager.scale(1.3, 1.3, 1.3);
-			GlStateManager.translate(0.43, 0.35, 0.48);
-			break;
-		default: break;
+			case GUI:
+				GlStateManager.scale(1.15, 1.15, 1.15);
+				GlStateManager.translate(0.43, 0.53, 0);
+				break;
+			case FIXED:
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.translate(-0.25, 0.25, 0.25);
+				break;
+			case GROUND:
+				GlStateManager.scale(1.5, 1.5, 1.5);
+				GlStateManager.translate(0.34, 0.3, 0.34);
+				break;
+			case FIRST_PERSON_RIGHT_HAND:
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.translate(0, 0.2, 0.5);
+				break;
+			case FIRST_PERSON_LEFT_HAND:
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.rotate(180, 0, 1, 0);
+				GlStateManager.translate(0, 0.2, 0);
+				break;
+			case THIRD_PERSON_RIGHT_HAND:
+				GlStateManager.scale(1.3, 1.3, 1.3);
+				GlStateManager.rotate(90, 0, 0, 1);
+				GlStateManager.rotate(22.5f, 1, 0, 0);
+				GlStateManager.translate(0.42, -0.2, 0.6);
+				break;
+			case THIRD_PERSON_LEFT_HAND:
+				GlStateManager.scale(1.3, 1.3, 1.3);
+				GlStateManager.translate(0.43, 0.35, 0.48);
+				break;
+			default:
+				break;
 		}
 		IBakedModel base = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(BASE_LOC);
 		mc.getRenderItem().renderItem(stack, ForgeHooksClient.handleCameraTransforms(base, transforms, false));
-		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
+		mc.getTextureManager().bindTexture(isEnemy ? RenderTurret.ENEMY_TEXTURE : RenderTurret.TEXTURE);
 		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -0.9, 0);
-		NBTTagCompound nbt = stack.getTagCompound();
-		Entity entity = null;
-		if (nbt != null) {
-			if (nbt.hasKey("isEnemy")) {
-				if (nbt.getBoolean("isEnemy")) {
-					entity = mc.player;
-				}
-			}
-		}
-		turret.render(entity, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
+		nbt = stack.getTagCompound();
+		turret.render(isEnemy ? mc.player : null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
 		GlStateManager.popMatrix();
 	}
 

@@ -9,6 +9,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.atlas.api.IOngoingEvent;
+import net.smileycorp.ldoh.common.ConfigHandler;
 
 public interface IApocalypse extends IOngoingEvent {
 
@@ -44,7 +45,7 @@ public interface IApocalypse extends IOngoingEvent {
 		protected final IApocalypse instance;
 
 		public Provider(EntityPlayer player) {
-			instance = new Apocalypse(player);
+			instance = ConfigHandler.legacyApocalypse ? new LegacyApocalypse(player) : new Apocalypse(player);
 		}
 
 		@Override
