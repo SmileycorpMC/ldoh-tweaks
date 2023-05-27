@@ -1,5 +1,8 @@
 package net.smileycorp.ldoh.common.events;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 import com.Fishmod.mod_LavaCow.init.FishItems;
 import de.maxhenkel.car.items.ModItems;
 import net.minecraft.block.Block;
@@ -23,10 +26,6 @@ import net.smileycorp.ldoh.common.entity.*;
 import net.smileycorp.ldoh.common.item.*;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
-
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
