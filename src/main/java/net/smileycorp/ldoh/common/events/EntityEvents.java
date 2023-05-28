@@ -56,7 +56,6 @@ import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
-import net.smileycorp.ldoh.common.capabilities.IRandomEntity;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.*;
@@ -86,10 +85,6 @@ public class EntityEvents {
 		//lets entities break blocks if the capability is set to enabled
 		if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
 			event.addCapability(ModDefinitions.getResource("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
-		}
-		//used for randomMobs
-		if (!Loader.isModLoaded("optifine") &!entity.hasCapability(LDOHCapabilities.RANDOM_ENTITY, null) && entity.world.isRemote) {
-			event.addCapability(ModDefinitions.getResource("RandomEntity"), new IRandomEntity.Provider());
 		}
 	}
 
@@ -295,7 +290,6 @@ public class EntityEvents {
 		if (entity instanceof EntitySkeletonHorse) event.setCanceled(true);
 		else if (entity instanceof EntitySkeleton) event.setCanceled(true);
 		else if (entity instanceof EntityCreeper) event.setCanceled(true);
-		if (!event.isCanceled() && event.getWorld().isRemote && entity.hasCapability(LDOHCapabilities.RANDOM_ENTITY, null)) entity.getCapability(LDOHCapabilities.RANDOM_ENTITY, null).setEntity(entity);
 	}
 
 	@SubscribeEvent

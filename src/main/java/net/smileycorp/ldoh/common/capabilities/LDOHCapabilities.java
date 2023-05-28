@@ -32,6 +32,4 @@ public class LDOHCapabilities {
 	@CapabilityInject(IVillageData.class)
 	public final static Capability<IVillageData> VILLAGE_DATA = null;
 
-	@CapabilityInject(IRandomEntity.class)
-    public static final Capability<IRandomEntity> RANDOM_ENTITY = null;
 }

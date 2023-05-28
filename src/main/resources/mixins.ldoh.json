@@ -11,7 +11,9 @@
     "MixinItem",
     "MixinItemBucket"
   ],
-  "client": [],
+  "client": [
+	"MixinRender"
+  ],
   "server": [
 	"MixinWorldServer"
   ],
