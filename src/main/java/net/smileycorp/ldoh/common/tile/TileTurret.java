@@ -9,9 +9,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 
-public class TileTurret extends TileEntity implements IInventory  {
+public class TileTurret extends TileEntity implements IInventory {
 
 	protected EntityTurret entity = null;
+	protected NBTTagCompound entity_nbt = null;
 
 	public void spawnEntity(EntityPlayer owner, EnumFacing facing, NBTTagCompound nbt) {
 		entity = new EntityTurret(world);
@@ -25,7 +26,7 @@ public class TileTurret extends TileEntity implements IInventory  {
 
 	public NBTTagCompound getDropNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		if (entity!=null) nbt.setTag("entity", entity.saveToTile());
+		if (entity!=null) nbt.setTag("entity", entity.saveToItem());
 		return nbt;
 	}
 

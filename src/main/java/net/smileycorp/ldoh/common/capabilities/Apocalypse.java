@@ -3,10 +3,8 @@ package net.smileycorp.ldoh.common.capabilities;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
-import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIV;
+import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIII;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -26,7 +24,9 @@ public class Apocalypse implements IApocalypse {
 
 	public static WeightedOutputs<Class<? extends EntityParasiteBase>> adaptedtable = init();
 
-	protected Entity boss;
+	protected EntityParasiteBase boss;
+	protected int phase = 0;
+	private EntityPlayer player;
 
 	private static WeightedOutputs<Class<? extends EntityParasiteBase>> init() {
 		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<>();
@@ -40,62 +40,43 @@ public class Apocalypse implements IApocalypse {
 		return new WeightedOutputs<>(adaptedmap);
 	}
 
-	private EntityPlayer player;
-	private int wave = 0;
-	private boolean started = false;
-
 	public Apocalypse(EntityPlayer player) {
 		this.player=player;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		if (nbt.hasKey("wave")) {
-			wave = nbt.getInteger("wave");
-		}
-		if (nbt.hasKey("started")) {
-			started = nbt.getBoolean("started");
-		}
 		if (nbt.hasKey("boss") && player != null) {
-			boss = player.world.getEntityByID(nbt.getInteger("boss"));
+			boss = (EntityParasiteBase) player.world.getEntityByID(nbt.getInteger("boss"));
+		}
+		if (nbt.hasKey("phase")) {
+			phase = nbt.getInteger("phase");
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("wave", wave);
-		nbt.setBoolean("started", started);
 		if (boss != null) nbt.setInteger("boss", boss.getEntityId());
+		if (phase > 0) nbt.setInteger("phase", phase);
 		return nbt;
 	}
 
 	@Override
 	public void update(World world) {
-		if (!world.isRemote) {
-			if (isActive(world)) {
+		if (!world.isRemote && isActive(world)) {
+			if (player.ticksExisted % 60 == 0) {
 				Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
 				BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
 				EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
 				world.spawnEntity(bolt);
-				if (boss != null) {
-					if (boss.isDead || ((EntityLivingBase) boss).getHealth() <= 0) {
-						world.setWorldTime(world.getWorldTime() + 1500);
-						boss = null;
-						if (wave==4) {
-							world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
-							player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
-							return;
-						}
-						spawnWave(world);
-					}
-				}
+				spawnWave(world);
 			}
 		}
 	}
 
 	@Override
 	public boolean isActive(World world) {
-		return player != null && wave > 0 && wave < 4;
+		return player != null && boss != null;
 	}
 
 	@Override
@@ -110,22 +91,24 @@ public class Apocalypse implements IApocalypse {
 
 	@Override
 	public boolean canStart(World world) {
-		return !started && world.getWorldTime() > 2418000 && world.getWorldTime() % 24000 > 18000;
+		return world.getWorldTime() > 2418000 && world.getWorldTime() % 24000 > 18000 && phase == 0;
 	}
 
 	@Override
 	public void startEvent() {
-		if (player!=null) {
+		if (player != null) {
 			player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
-			started = true;
-			spawnWave(player.world);
+			for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
+			boss = spawnEntity(player.world, new EntityOronco(player.world));
+			if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
+				boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
 		}
 	}
 
 	@Override
 	public void spawnWave(World world) {
-		for (Class<? extends EntityParasiteBase> clazz :  getSpawnsForWave(wave, world.rand)) {
+		for (Class<? extends EntityParasiteBase> clazz :  getSpawnsForWave(world.rand)) {
 			Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
 			BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 65);
 			EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
@@ -134,8 +117,6 @@ public class Apocalypse implements IApocalypse {
 				spawnEntity(world, clazz.getConstructor(World.class).newInstance(world));
 			} catch (Exception e) {}
 		}
-		boss = spawnEntity(world, new EntityOronco(world));
-		wave++;
 	}
 
 	private EntityParasiteBase spawnEntity(World world, EntityParasiteBase entity) {
@@ -152,18 +133,27 @@ public class Apocalypse implements IApocalypse {
 		return entity;
 	}
 
-	private List<Class<? extends EntityParasiteBase>> getSpawnsForWave(int wave, Random rand) {
+	private List<Class<? extends EntityParasiteBase>> getSpawnsForWave(Random rand) {
 		List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<>();
-		for (int i = 0; i < 3 + Math.round(wave*2.4); i++) {
-			spawnlist.add(EntityVenkrolSIV.class);
-		}
-		for (int i = 0; i < 3 + Math.round(wave); i++) {
-			spawnlist.addAll(adaptedtable.getResults(rand));
-		}
-		if (wave == 3) {
-			for (int i = 0; i<13; i++) spawnlist.add(EntityButhol.class);
-		}
+		if (rand.nextInt(5) < 2) for (int i = 0; i< rand.nextInt(3)+1; i++) spawnlist.addAll(adaptedtable.getResults(rand));
+		else for (int i = 0; i< rand.nextInt(7)+3; i++) spawnlist.add(EntityButhol.class);
 		return spawnlist;
 	}
 
+	public void onBossHurt(IApocalypseBoss capability, float amount) {
+		if (boss.isEntityAlive()) {
+			int newPhase = (int) Math.floor((boss.getMaxHealth() - boss.getHealth() - amount) / 25f);
+			if (phase < newPhase) {
+				boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(newPhase-phase)));
+				phase = newPhase;
+			}
+		} else {
+			boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(8-phase)));
+			phase = 8;
+			boss.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
+			player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
+			boss = null;
+			capability.setPlayer(null);
+		}
+	}
 }

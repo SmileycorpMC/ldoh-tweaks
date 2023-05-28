@@ -23,6 +23,8 @@ public interface IApocalypse extends IOngoingEvent {
 
 	public void setPlayer(EntityPlayer player);
 
+	public void onBossHurt(IApocalypseBoss capability, float amount);
+
 	public static class Storage implements IStorage<IApocalypse> {
 
 		@Override

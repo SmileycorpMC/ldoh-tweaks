@@ -146,7 +146,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		if (nbt.hasKey("health")) setHealth(nbt.getFloat("health"));
 	}
 
-	public NBTTagCompound saveToTile() {
+	public NBTTagCompound saveToItem() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if (isEnemy()) nbt.setBoolean("isEnemy", isEnemy());
 		nbt.setTag("inventory", inventory.writeToNBT());
@@ -226,21 +226,17 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
-		if (tile != null &! world.isRemote) {
-			if (isSameTeam(player) || player.isCreative()) {
-				ItemStack stack = player.getHeldItem(hand);
-				if (stack.getItem() == Items.IRON_INGOT) {
-					if (getHealth() < getMaxHealth()) {
-						heal(4f);
-						if (!player.isCreative()) stack.shrink(1);
-						playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
-						return EnumActionResult.PASS;
-					}
-				} else if (!player.isSneaking()) {
-					BlockPos pos = tile.getPos();
-					player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
-					return EnumActionResult.SUCCESS;
-				}
+		if (tile != null &! world.isRemote && (isSameTeam(player) || player.isCreative())) {
+			ItemStack stack = player.getHeldItem(hand);
+			if (stack.getItem() == Items.IRON_INGOT && getHealth() < getMaxHealth()) {
+					heal(4f);
+					if (!player.isCreative()) stack.shrink(1);
+					playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
+					return EnumActionResult.PASS;
+			} else if (!player.isSneaking()) {
+				BlockPos pos = tile.getPos();
+				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+				return EnumActionResult.SUCCESS;
 			}
 		}
 		return super.applyPlayerInteraction(player, vec, hand);
@@ -249,21 +245,20 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@Override
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
-		if (!world.isRemote) {
-			for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
-			if (isEnemy()) {
-				entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
-				entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
-				entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3)+1), 0.0f);
-				entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3)+1), 0.0f);
-				if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
-				if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
-			}
-		}
 		BlockPos pos = dataManager.get(TILE_POS);
 		if (TILE_POS!=null) {
 			world.destroyBlock(pos, false);
 			world.removeTileEntity(pos);
+		}
+		if (world.isRemote) return;
+		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
+		if (isEnemy()) {
+			entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
+			entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
+			entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3)+1), 0.0f);
+			entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3)+1), 0.0f);
+			if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
+			if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
 		}
 	}
 
@@ -311,6 +306,16 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@Override
 	protected boolean canDespawn() {
 		return false;
+	}
+
+	@Override
+	public boolean isInRangeToRenderDist(double distance) {
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
+		if (Double.isNaN(d0)) {
+			d0 = 1.0D;
+		}
+		d0 = d0 * 64.0D * getRenderDistanceWeight();
+		return distance < d0 * d0;
 	}
 
 	@Override

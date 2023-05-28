@@ -23,6 +23,9 @@ public class LDOHCapabilities {
 	@CapabilityInject(IApocalypse.class)
 	public final static Capability<IApocalypse> APOCALYPSE = null;
 
+	@CapabilityInject(IApocalypseBoss.class)
+	public final static Capability<IApocalypseBoss> APOCALYPSE_BOSS = null;
+
 	@CapabilityInject(IFollowers.class)
 	public final static Capability<IFollowers> FOLLOWERS = null;
 

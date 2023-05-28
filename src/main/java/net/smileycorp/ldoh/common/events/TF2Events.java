@@ -221,7 +221,7 @@ public class TF2Events {
 		if (!world.isRemote) {
 			if (entity instanceof EntitySentry) {
 				EntitySentry sentry = (EntitySentry) entity;
-				world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
+				if (sentry.getOwner() != null && sentry.getOwner().getTeam() != null) world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
 				sentry.targetTasks.taskEntries.clear();
 				sentry.targetTasks.addTask(2, new EntityAISpotTarget<EntityLivingBase>(sentry, EntityLivingBase.class, true, true,
 						e -> ModUtils.canTarget(sentry, e), false, true));

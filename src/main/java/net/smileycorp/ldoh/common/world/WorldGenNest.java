@@ -12,7 +12,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityLockableLoot;
+import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,13 +28,12 @@ public class WorldGenNest extends WorldGenerator {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean generate(World world, Random rand, BlockPos base) {
-		int centerY = rand.nextInt(10)+ 10;
 		//crater
 		for (int i = -8; i <= 8; i++) {
 			for (int j = -8; j <= 8; j++) {
 				for (int k = -8; k <= 8; k++) {
 					BlockPos pos = base.up().add(i, j, k);
-					double r = pos.getDistance(base.getX(), base.getY()+1, base.getZ());
+					double r = pos.getDistance(base.getX(), base.getY(), base.getZ());
 					if (r<=7.5) world.setBlockToAir(pos);
 					else if(r<8.5)world.setBlockState(pos, (rand.nextInt(2) == 0 ? Blocks.NETHERRACK : BOPBlocks.flesh).getDefaultState(), 18);
 				}
@@ -114,7 +113,9 @@ public class WorldGenNest extends WorldGenerator {
 
 	private void placeLoot(World world, BlockPos pos) {
 		world.setBlockState(pos, Blocks.RED_SHULKER_BOX.getDefaultState(), 18);
-		((TileEntityLockableLoot) world.getTileEntity(pos)).setLootTable(ModDefinitions.NEST_CRATE, world.rand.nextLong());
+		TileEntityShulkerBox tile = new TileEntityShulkerBox();
+		tile.setLootTable(ModDefinitions.NEST_CRATE, world.rand.nextLong());
+		world.setTileEntity(pos, tile);
 	}
 
 }

@@ -94,6 +94,9 @@ public class LegacyApocalypse implements IApocalypse {
 	}
 
 	@Override
+	public void onBossHurt(IApocalypseBoss capability, float amount) {}
+
+	@Override
 	public boolean canStart(World world) {
 		return !started && world.getWorldTime() > 2418000 && world.getWorldTime() % 24000 > 18000;
 	}
@@ -120,12 +123,10 @@ public class LegacyApocalypse implements IApocalypse {
 				entity.setPosition(localpos.getX(), localpos.getY(), localpos.getZ());
 				world.spawnEntity(entity);
 				entity.targetTasks.taskEntries.clear();
-				entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, new Class[] {EntityParasiteBase.class}));
+				entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, EntityParasiteBase.class));
 				entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(entity, EntityPlayer.class, false));
 				entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
-			} catch (Exception e) {
-
-			}
+			} catch (Exception e) {}
 		}
 		timer = 1000;
 		wave++;

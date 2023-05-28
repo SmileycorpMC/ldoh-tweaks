@@ -193,6 +193,18 @@
 						}
 					}],
 					"weight": 6
+				},
+				{
+					"type": "item",
+					"name": "minecraft:blaze_rod",
+					"functions": [{
+						"function": "set_count",
+						"count": {
+							"min": 2,
+							"max": 5
+						}
+					}],
+					"weight": 6
 				}
 			]
 		}

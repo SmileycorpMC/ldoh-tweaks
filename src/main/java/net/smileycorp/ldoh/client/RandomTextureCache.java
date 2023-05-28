@@ -12,7 +12,6 @@ import net.minecraftforge.client.resource.VanillaResourceType;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class RandomTextureCache implements ISelectiveResourceReloadListener {
@@ -26,7 +25,8 @@ public class RandomTextureCache implements ISelectiveResourceReloadListener {
     private void init(ResourceLocation loc) {
         List<ResourceLocation> list = Lists.newArrayList();
         String domain = loc.getResourceDomain();
-        String path = loc.getResourcePath().replace("textures/entity", "mcpatcher/mob").replace(".png", "");
+        String path = loc.getResourcePath().replace("textures", "mcpatcher").replace("entity", "mob")
+                .replace("entities", "mob").replace(".png", "");
         IResourceManager rm = Minecraft.getMinecraft().getResourceManager();
         int i = 1;
         while (true) {

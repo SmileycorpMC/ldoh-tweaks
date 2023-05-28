@@ -88,10 +88,10 @@ public class ModWorldGen implements IWorldGenerator {
 	}
 
 	private void genNest(World world, Random rand, int chunkX, int chunkZ) {
-		if (rand.nextInt(160) == 0) {
+		if (rand.nextInt(255) == 0) {
 			int x = (chunkX << 4) +rand.nextInt(16);
 			int z = (chunkZ << 4) + rand.nextInt(16);
-			new WorldGenNest().generate(world, rand, world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z)));
+			new WorldGenNest().generate(world, rand, new BlockPos(x, rand.nextInt(10)+ 10, z));
 		}
 	}
 
