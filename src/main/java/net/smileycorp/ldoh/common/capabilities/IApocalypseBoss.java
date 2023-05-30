@@ -33,13 +33,13 @@ public interface IApocalypseBoss {
 
 	}
 
-	public static class ApocalypseBoss implements IApocalypseBoss {
+	public static class ApocalypseBoss implements IApocalypseBoss { //TODO: test if missing code was the reason for broken event
 
 		private EntityPlayer player;
 
 		@Override
 		public void setPlayer(EntityPlayer player) {
-
+			this.player = player;
 		}
 
 		@Override
@@ -70,7 +70,7 @@ public interface IApocalypseBoss {
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == LDOHCapabilities.UNBURIED_SPAWNER ? LDOHCapabilities.APOCALYPSE_BOSS.cast(instance) : null;
+			return capability == LDOHCapabilities.APOCALYPSE_BOSS ? LDOHCapabilities.APOCALYPSE_BOSS.cast(instance) : null;
 		}
 
 		@Override

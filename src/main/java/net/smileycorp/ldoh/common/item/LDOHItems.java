@@ -20,4 +20,6 @@ public class LDOHItems {
 	public static final Item TF2_PROF_TOKEN = new ItemTF2ProfessionToken();
 	public static final Item INCENDIARY_AMMO = new ItemIncendiaryAmmo();
 
+	public static final Item TURRET_UPGRADE = new ItemTurretUpgrade();
+
 }

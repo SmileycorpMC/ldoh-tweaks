@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 public class TileTurret extends TileEntity implements IInventory {
 
@@ -58,7 +59,7 @@ public class TileTurret extends TileEntity implements IInventory {
 
 	@Override
 	public void clear() {
-		if (this.entity != null) entity.getInventory().clear();
+		if (isHopping()) entity.getInventory().clear();
 	}
 
 	@Override
@@ -66,42 +67,42 @@ public class TileTurret extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
-		return entity == null ? ItemStack.EMPTY : entity.getInventory().decrStackSize(slot, count);
+		return  isHopping() ? entity.getInventory().decrStackSize(slot, count) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public int getField(int field) {
-		return entity == null ? 0 : entity.getInventory().getField(field);
+		return isHopping() ? entity.getInventory().getField(field) : 0;
 	}
 
 	@Override
 	public int getFieldCount() {
-		return entity == null ? 0 : entity.getInventory().getFieldCount();
+		return isHopping() ? entity.getInventory().getFieldCount() : 0;
 	}
 
 	@Override
 	public int getInventoryStackLimit() {
-		return entity == null ? 0 : entity.getInventory().getInventoryStackLimit();
+		return isHopping() ? entity.getInventory().getInventoryStackLimit() : 0;
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return entity == null ? 0 : entity.getInventory().getSizeInventory();
+		return isHopping() ? entity.getInventory().getSizeInventory() : 0;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return entity == null ? ItemStack.EMPTY : entity.getInventory().getStackInSlot(slot);
+		return isHopping() ? entity.getInventory().getStackInSlot(slot) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return entity == null ? false : entity.getInventory().isEmpty();
+		return isHopping() ? entity.getInventory().isEmpty() : true;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return entity == null ? false : entity.getInventory().isItemValidForSlot(slot, stack);
+		return isHopping() ? entity.getInventory().isItemValidForSlot(slot, stack) : false;
 	}
 
 	@Override
@@ -116,17 +117,21 @@ public class TileTurret extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack removeStackFromSlot(int slot) {
-		return entity == null ? ItemStack.EMPTY : entity.getInventory().removeStackFromSlot(slot);
+		return isHopping() ?  entity.getInventory().removeStackFromSlot(slot) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public void setField(int field, int value) {
-		if (entity!=null) entity.getInventory().setField(field, value);
+		if (isHopping()) entity.getInventory().setField(field, value);
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if (entity!=null) entity.getInventory().setInventorySlotContents(slot, stack);
+		if (isHopping()) entity.getInventory().setInventorySlotContents(slot, stack);
+	}
+
+	public boolean isHopping() {
+		return (entity != null && entity.hasUpgrade(TurretUpgrade.HOPPING));
 	}
 
 }

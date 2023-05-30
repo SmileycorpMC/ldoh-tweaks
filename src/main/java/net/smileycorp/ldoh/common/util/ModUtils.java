@@ -291,4 +291,13 @@ public class ModUtils {
 	public static boolean isProjectile(DamageSource source) {
 		return source instanceof DamageSourceProjectile;
 	}
+
+    public static int[] posToArray(BlockPos pos) {
+		return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
+
+	public static BlockPos arrayToPos(int[] array) {
+		if (array.length < 3) return null;
+		return new BlockPos(array[0], array[1], array[2]);
+	}
 }

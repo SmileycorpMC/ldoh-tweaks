@@ -65,7 +65,7 @@ public class AITurretShoot extends EntityAIBase {
 							bullet.motionZ = dir.z * SPEED;
 							turret.world.spawnEntity(bullet);
 							ammo.shrink(1);
-							turret.setCooldown(3);
+							turret.setCooldown(3); //TODO: reduce turret fire range and rate slightly to make range and barrel spin upgrades more impactful
 							String sound = fakegun.sounds.getFire(fakegun);
 							SoundEvent event = ModSounds.getSound(sound);
 							if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));

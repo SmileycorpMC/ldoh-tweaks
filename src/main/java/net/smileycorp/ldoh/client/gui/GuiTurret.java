@@ -27,11 +27,11 @@ public class GuiTurret extends GuiContainer {
 	protected ModelBase turretModel = new ModelTurret();
 	protected String owner = null;
 
-	public GuiTurret(EntityTurret turret, EntityPlayer player) {
+	public GuiTurret(EntityTurret turret, EntityPlayer player) { //TODO: finish turret ui/functionality upgrade
 		super(new ContainerTurret(turret, player));
 		this.turret = turret;
 		width = 176;
-		height = 184;
+		height = 200;
 		owner = turret.getOwnerUsername();
 	}
 
@@ -48,17 +48,20 @@ public class GuiTurret extends GuiContainer {
 		int health = (int) Math.ceil(turret.getHealth());
 		for (int i = 0; i<=Math.ceil(health/2); i++) {
 			int hx = x + 65 + ((i%10)*10);
-			int hy = y + 49 + ((int)Math.floor(i/10)*10);
+			int hy = y + 65 + ((int)Math.floor(i/10)*10);
 			int u = (i+1)*2>health ? 9 : 0;
 			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 184, 9, 9);
 		}
 
 		//draw gui name
-		String name = I18n.translateToLocal(TRANSLATION_KEY);
-		fontRenderer.drawString(name, x + 88 - fontRenderer.getStringWidth(name) / 2, y + 6, 4210752);
+		String text = I18n.translateToLocal(TRANSLATION_KEY);
+		fontRenderer.drawString(text, x + 88 - fontRenderer.getStringWidth(text) / 2, y + 6, 4210752);
+
+		//draw upgrades text
+		text = new TextComponentTranslation("gui.turret.text.Upgrades").setStyle(new Style().setColor(TextFormatting.DARK_GRAY)).getFormattedText();
+		fontRenderer.drawString(text, x + 65, y + 26, 4210752);
 
 		//draw owner name
-		String text;
 		if (turret.isEnemy()) {
 			text = new TextComponentTranslation("gui.turret.text.Hostile").setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText();
 		}
@@ -70,16 +73,16 @@ public class GuiTurret extends GuiContainer {
 		} else {
 			text = I18n.translateToLocal("gui.turret.text.NoOwner");
 		}
-		fontRenderer.drawString(text, x + 65, y + 20, 4210752);
+		fontRenderer.drawString(text, x + 65, y + 36, 4210752);
 
 		//draw target name
 		if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
 		else {
 			EntityLivingBase target = turret.getTarget();
 			text = target.getDisplayName().getFormattedText();
-			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 40, 4210752);
+			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 56, 4210752);
 		}
-		fontRenderer.drawString(text, x + 65, y + 30, 4210752);
+		fontRenderer.drawString(text, x + 65, y + 46, 4210752);
 
 		//draw turret entity
 		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);

@@ -18,7 +18,7 @@ public enum EnumBiomeType {
 	private final Optional<Biome>[] biomes;
 
 
-	private EnumBiomeType(Optional<Biome>... biomes) {
+	EnumBiomeType(Optional<Biome>... biomes) {
 		this.biomes = biomes;
 	}
 

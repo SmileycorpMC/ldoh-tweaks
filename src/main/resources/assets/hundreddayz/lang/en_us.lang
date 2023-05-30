@@ -56,6 +56,8 @@ item.hundreddayz.Bonesaw.name=Bonesaw
 item.hundreddayz.incendiary_ammo.name=Incendiary Ammo
 item.hundreddayz.FireAxe.name=Fire Axe
 item.hundreddayz.FireHat.name=Fireman Hat
+item.hundreddayz.BlankTurretUpgrade.name=Blank Sentry Turret Upgrade
+item.hundreddayz.TurretUpgrade.name=Sentry Turret Upgrade
 
 tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
@@ -86,6 +88,17 @@ tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
 tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
 
+tooltip.hundreddayz.TurretUpgrade.hopping.name=Hopping
+tooltip.hundreddayz.TurretUpgrade.hopping.description=Non-upgrade items can be inserted/extracted from turrets with hoppers and pipes.
+tooltip.hundreddayz.TurretUpgrade.ammo_optimization.name=Ammo Optimization
+tooltip.hundreddayz.TurretUpgrade.ammo_optimization.description=Automatically switches to the most effective ammo type for the current target.
+tooltip.hundreddayz.TurretUpgrade.barrel_spin.name=Increased Barrel Spin
+tooltip.hundreddayz.TurretUpgrade.barrel_spin.description=Increases fire rate by 1 tick per upgrade;
+tooltip.hundreddayz.TurretUpgrade.range_extension.name=Range Extension
+tooltip.hundreddayz.TurretUpgrade.range_extension.description=Increases turret range by 20 blocks per upgrade;
+tooltip.hundreddayz.TurretUpgrade.redstone_control.name=Redstone Control
+tooltip.hundreddayz.TurretUpgrade.redstone_control.description=Turret will only be active if powered by redstone.
+
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler
 entity.hundreddayz.TFZombie.name=TF2 NPC Zombie
@@ -113,9 +126,11 @@ death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
+gui.turret.text.Upgrades=Upgrades:
 gui.turret.text.NoOwner=No Owner
 gui.turret.text.Owner=Owner: 
-gui.turret.text.NoTarget=No Target
+gui.turret.text.NoTarget=Idle
+gui.turret.text.Disabled=Disabled
 gui.turret.text.Target=Target:
 gui.turret.text.Hostile=Hostile
 

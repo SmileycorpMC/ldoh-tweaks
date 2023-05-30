@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.common.entity;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.google.common.collect.Lists;
 import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -36,9 +37,11 @@ import net.smileycorp.ldoh.common.inventory.InventoryTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import net.smileycorp.ldoh.common.util.TurretUpgrade;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
+import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("deprecation")
@@ -54,6 +57,8 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	//read these values from the nbt and cache them to make sure it gets loaded / synced properly
 	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
 	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
+
+	protected static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
 
 	protected EntityLivingBase target = null;
 	protected InventoryTurret inventory = new InventoryTurret();
@@ -79,6 +84,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		dataManager.register(TARGET, getEntityId());
 		dataManager.register(TILE_POS, null);
 		dataManager.register(OWNER_UUID, "");
+		dataManager.register(TURRET_UPGRADES, new BlockPos(0, 0, 0));
 	}
 
 	@Override
@@ -96,7 +102,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
+	public void readEntityFromNBT(NBTTagCompound nbt) { //TODO: fix turret and tile becoming unlinked when spawned via structure
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
 		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
@@ -117,10 +123,10 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		super.writeEntityToNBT(nbt);
 		nbt.setTag("inventory", inventory.writeToNBT());
 		nbt.setBoolean("isEnemy", isEnemy());
-		if (owner!=null) nbt.setString("owner", dataManager.get(OWNER_UUID));
-		if (TILE_POS != null) {
+		if (owner != null) nbt.setString("owner", dataManager.get(OWNER_UUID));
+		BlockPos tilePos = dataManager.get(TILE_POS);
+		if (tilePos != null) {
 			NBTTagCompound pos = new NBTTagCompound();
-			BlockPos tilePos = dataManager.get(TILE_POS);
 			pos.setInteger("x", tilePos.getX());
 			pos.setInteger("y", tilePos.getY());
 			pos.setInteger("z", tilePos.getZ());
@@ -132,7 +138,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
-		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy")); //TODO: make enemy turrets come pre installed with upgrades
 		if (!isEnemy()) {
 			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
 			this.owner = owner;
@@ -205,13 +211,13 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		}
 		if (hasTarget()) {
 			EntityLivingBase target = getTarget();
-			getLookHelper().setLookPosition(target.posX + (target.width*0.5), target.posY + (target.height * 0.75), target.posZ + (target.width*0.5), 10, 80);
+			getLookHelper().setLookPosition(target.posX + (target.width*0.5), target.posY + (target.height * 0.75), target.posZ + (target.width*0.5), 10, 90);
 		}
 		if (getCooldown() > 0) {
 			setCooldown(getCooldown()-1);
 			setSpin(getSpin()+0.34906585f);
 		}
-		if (getPositionVector()!=turretPos) {
+		if (getPositionVector() != turretPos) {
 			posX = turretPos.x;
 			posY = turretPos.y;
 			posZ = turretPos.z;
@@ -246,7 +252,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	public void onDeath(DamageSource source) {
 		super.onDeath(source);
 		BlockPos pos = dataManager.get(TILE_POS);
-		if (TILE_POS!=null) {
+		if (pos != null) {
 			world.destroyBlock(pos, false);
 			world.removeTileEntity(pos);
 		}
@@ -325,7 +331,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	@Override
 	public Team getTeam() {
-		if (isEnemy()) return null;
+		if (isEnemy()) return null; //TODO: add green team (optional)
 		String team = dataManager.get(TEAM);
 		return team.isEmpty() ? null : world.getScoreboard().getTeam(team);
 	}
@@ -390,7 +396,8 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	public ItemStack getAmmo(Entity target) {
-		return isEnemy() ? new ItemStack(target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(target);
+		if (!hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION)) target = null;
+		return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase) ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(target);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -401,6 +408,16 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	@Override
 	public String getName() {
 		return I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name");
+	}
+
+	public List<TurretUpgrade> getInstalledUpgrades() {
+		List<TurretUpgrade> upgrades = Lists.newArrayList();
+		for (int i : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) upgrades.add(TurretUpgrade.get(i));
+		return upgrades;
+	}
+
+	public boolean hasUpgrade(TurretUpgrade upgrade) { //TODO: finish upgrade system
+		return getInstalledUpgrades().contains(upgrade);
 	}
 
 }
