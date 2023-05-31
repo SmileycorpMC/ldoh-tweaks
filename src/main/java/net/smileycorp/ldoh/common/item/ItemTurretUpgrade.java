@@ -51,7 +51,7 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return isBlank(stack) ? "" : super.getUnlocalizedName();
+		return isBlank(stack) ? "item.hundreddayz.BlankTurretUpgrade" : super.getUnlocalizedName();
 	}
 
 	@Override

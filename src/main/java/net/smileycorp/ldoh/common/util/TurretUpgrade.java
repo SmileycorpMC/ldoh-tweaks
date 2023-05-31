@@ -1,5 +1,8 @@
 package net.smileycorp.ldoh.common.util;
 
+import net.minecraft.item.ItemStack;
+import net.smileycorp.ldoh.common.item.LDOHItems;
+
 public enum TurretUpgrade {
 
     //TODO: texture turret upgrades
@@ -7,11 +10,11 @@ public enum TurretUpgrade {
     HOPPING("hopping", false),
     AMMO_OPTIMIZATION("ammo_optimization", false),
 
-    BARREL_SPIN("barrel_spin", true), //TODO: add BARREL_SPIN functionality
-    RANGE_EXTENSION("range_extension", true), //TODO: add RANGE_EXTENSION functionality
-    REDSTONE_CONTROL("redstone_control", false); //TODO: add REDSTONE_CONTROL functionality
+    BARREL_SPIN("barrel_spin", true),
+    RANGE("range", true),
+    REDSTONE_CONTROL("redstone_control", false);
 
-    //TODO: add more upgrades if time and ideas
+    //TODO: add more upgrades if time and ideas (optional)
 
     private final String name;
     private final boolean isStackable;
@@ -27,6 +30,10 @@ public enum TurretUpgrade {
 
     public boolean isStackable() {
        return isStackable;
+    }
+
+    public ItemStack getItem() {
+       return new ItemStack(LDOHItems.TURRET_UPGRADE, ordinal());
     }
 
     public static boolean isBlank(int id) {

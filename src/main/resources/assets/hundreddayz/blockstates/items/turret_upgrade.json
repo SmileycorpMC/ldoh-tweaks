@@ -1,0 +1,15 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-item",
+        "model": "forge:item-layer"
+    },
+    "variants": {
+		"blank": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/blank" }}],
+		"hopping": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/hopping" }}],
+		"ammo_optimization": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/ammo_optimization" }}],
+		"barrel_spin": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/barrel_spin" }}],
+		"range": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/range" }}],
+		"redstone_control": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/redstone_control" }}]
+	}
+}

@@ -33,7 +33,8 @@ import net.smileycorp.atlas.api.util.DataUtils;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
-import net.smileycorp.ldoh.common.inventory.InventoryTurret;
+import net.smileycorp.ldoh.common.inventory.InventoryTurretAmmo;
+import net.smileycorp.ldoh.common.inventory.InventoryTurretUpgrades;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -58,10 +59,11 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
 	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
 
-	protected static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
+	public static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
 
 	protected EntityLivingBase target = null;
-	protected InventoryTurret inventory = new InventoryTurret();
+	protected InventoryTurretAmmo inventory = new InventoryTurretAmmo();
+	protected InventoryTurretUpgrades upgrades = new InventoryTurretUpgrades(this);
 
 	protected EntityPlayer owner = null;
 	protected TileTurret tile = null;
@@ -116,6 +118,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		}
 		if (nbt.hasKey("cooldown")) dataManager.set(COOLDOWN, nbt.getInteger("cooldown"));
 		if (nbt.hasKey("spin")) dataManager.set(SPIN, nbt.getFloat("spin"));
+		if (nbt.hasKey("upgrades")) dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(nbt.getIntArray("upgrades")));
 	}
 
 	@Override
@@ -135,10 +138,20 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		nbt.setInteger("facing", dataManager.get(FACING).ordinal());
 		nbt.setInteger("cooldown", dataManager.get(COOLDOWN));
 		nbt.setFloat("spin", dataManager.get(SPIN));
+		int[] upgrades = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		for (int upgrade : upgrades) {
+			if (!TurretUpgrade.isBlank(upgrade)) {
+				nbt.setIntArray("upgrades", upgrades);
+				return;
+			}
+		}
 	}
 
 	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
-		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy")); //TODO: make enemy turrets come pre installed with upgrades
+		if (nbt.hasKey("isEnemy")) {
+			dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+			updateUpgrades(TurretUpgrade.AMMO_OPTIMIZATION, TurretUpgrade.BARREL_SPIN);
+		}
 		if (!isEnemy()) {
 			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
 			this.owner = owner;
@@ -149,6 +162,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		dataManager.set(TILE_POS, tile.getPos());
 		dataManager.set(FACING, facing);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
+		if (nbt.hasKey("upgrades")) dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(nbt.getIntArray("upgrades")));
 		if (nbt.hasKey("health")) setHealth(nbt.getFloat("health"));
 	}
 
@@ -156,7 +170,14 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if (isEnemy()) nbt.setBoolean("isEnemy", isEnemy());
 		nbt.setTag("inventory", inventory.writeToNBT());
-		nbt.setFloat("health", getHealth());
+		if (getHealth() < getMaxHealth()) nbt.setFloat("health", getHealth());
+		int[] upgrades = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		for (int upgrade : upgrades) {
+			if (!TurretUpgrade.isBlank(upgrade)) {
+				nbt.setIntArray("upgrades", upgrades);
+				return nbt;
+			}
+		}
 		return nbt;
 	}
 
@@ -347,9 +368,9 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	public boolean canTarget(EntityLivingBase entity) {
 		if (entity == null) return false;
-		if (getDistance(entity) > 50) return false;
+		if (getDistance(entity) > getRange()) return false;
 		if (isEnemy()) {
-			if (entity instanceof EntityPlayer) return ((EntityPlayer) entity).isSpectator() ? false : true;
+			if (entity instanceof EntityPlayer) return ((EntityPlayer) entity).isSpectator() || ((EntityPlayer) entity).isCreative() ? false : true;
 			if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
 				if (!entity.getTeam().getName().equals("GREEN")) return true;
 			}
@@ -387,8 +408,12 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		dataManager.set(SPIN, spin);
 	}
 
-	public InventoryTurret getInventory() {
+	public InventoryTurretAmmo getInventory() {
 		return inventory;
+	}
+
+	public InventoryTurretUpgrades getUpgradeInventory() {
+		return upgrades;
 	}
 
 	public boolean hasAmmo() {
@@ -405,6 +430,22 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		return username;
 	}
 
+	public boolean isActive() {
+		if (hasUpgrade(TurretUpgrade.REDSTONE_CONTROL)) {
+			BlockPos tile_pos = dataManager.get(TILE_POS);
+			if (tile_pos != null) return world.isBlockPowered(tile_pos);
+		}
+		return true;
+	}
+
+	public int getFireRate() {
+		return 4 - getUpgradeCount(TurretUpgrade.BARREL_SPIN);
+	}
+
+	public int getRange () {
+		return 30 + (20 * getUpgradeCount(TurretUpgrade.RANGE));
+	}
+
 	@Override
 	public String getName() {
 		return I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name");
@@ -416,8 +457,55 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		return upgrades;
 	}
 
-	public boolean hasUpgrade(TurretUpgrade upgrade) { //TODO: finish upgrade system
-		return getInstalledUpgrades().contains(upgrade);
+	public boolean hasUpgrade(TurretUpgrade upgrade) {
+		for (int i : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) if (TurretUpgrade.get(i) == upgrade) return true;
+		return false;
+	}
+
+	public int getUpgradeCount(TurretUpgrade upgrade) {
+		if (upgrade == null) return 0;
+		List<TurretUpgrade> upgrades = getInstalledUpgrades();
+		if (!upgrade.isStackable()) return upgrades.contains(upgrade) ? 1 :0;
+		int count = 0;
+		for (int i : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) if (TurretUpgrade.get(i) == upgrade) count++;
+		return count;
+	}
+
+	public void applyUpgrade(int slot, TurretUpgrade upgrade) {
+		int[] array = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		array[slot] = upgrade.ordinal();
+		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+	}
+
+	public void updateUpgrades(TurretUpgrade... upgrades) {
+		int[] array = new int[] {0, 0, 0};
+		for (int i = 0; i < upgrades.length; i++) {
+			if (i == array.length) break;
+			TurretUpgrade upgrade = upgrades[i];
+			if (upgrade == null || upgrade == TurretUpgrade.BLANK) continue;
+			array[i] = upgrade.ordinal();
+		}
+		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+	}
+
+	public void updateUpgrades(int[] upgrades) {
+		int[] array = new int[] {0, 0, 0};
+		for (int i = 0; i < upgrades.length; i++) {
+			if (i == array.length) break;
+			int upgrade = upgrades[i];
+			if (TurretUpgrade.isBlank(upgrade)) continue;
+			array[i] = upgrade;
+		}
+		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+	}
+
+	public boolean hasUpgrades() {
+		for (int upgrade : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) {
+			if (!TurretUpgrade.isBlank(upgrade)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

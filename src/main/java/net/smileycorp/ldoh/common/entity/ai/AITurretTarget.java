@@ -18,13 +18,15 @@ public class AITurretTarget extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		return !turret.hasTarget();
+		return !turret.hasTarget() && turret.isActive();
 	}
 
 	@Override
 	public void updateTask() {
+		int range = turret.getRange();
 		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
-				new AxisAlignedBB(turret.posX - 50, turret.posY - 50, turret.posZ - 50, turret.posX + 50, turret.posY + 50, turret.posZ + 50), turret::canTarget)) {
+				new AxisAlignedBB(turret.posX - range, turret.posY - range, turret.posZ - range,
+						turret.posX + range, turret.posY + range, turret.posZ + range), turret::canTarget)) {
 			float distance = turret.getDistance(entity);
 			if (turret.getEntitySenses().canSee(entity) && distance < this.distance) {
 				target = entity;

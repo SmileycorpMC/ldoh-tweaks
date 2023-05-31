@@ -31,7 +31,7 @@ public class GuiTurret extends GuiContainer {
 		super(new ContainerTurret(turret, player));
 		this.turret = turret;
 		width = 176;
-		height = 200;
+		height = 202;
 		owner = turret.getOwnerUsername();
 	}
 
@@ -42,15 +42,15 @@ public class GuiTurret extends GuiContainer {
 
 		//draw background texture
 		mc.getTextureManager().bindTexture(TEXTURE);
-		drawTexturedModalRect(x, y, 0, 0, xSize, 184);
+		drawTexturedModalRect(x, y, 0, 0, xSize, 202);
 
 		//draw health
 		int health = (int) Math.ceil(turret.getHealth());
 		for (int i = 0; i<=Math.ceil(health/2); i++) {
 			int hx = x + 65 + ((i%10)*10);
-			int hy = y + 65 + ((int)Math.floor(i/10)*10);
+			int hy = y + 67 + ((int)Math.floor(i/10)*10);
 			int u = (i+1)*2>health ? 9 : 0;
-			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 184, 9, 9);
+			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 203, 9, 9);
 		}
 
 		//draw gui name
@@ -73,16 +73,21 @@ public class GuiTurret extends GuiContainer {
 		} else {
 			text = I18n.translateToLocal("gui.turret.text.NoOwner");
 		}
-		fontRenderer.drawString(text, x + 65, y + 36, 4210752);
+		fontRenderer.drawString(text, x + 65, y + 38, 4210752);
 
 		//draw target name
-		if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
+		if (!turret.isActive()) text = I18n.translateToLocal("gui.turret.text.Disabled");
+		else if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
 		else {
 			EntityLivingBase target = turret.getTarget();
 			text = target.getDisplayName().getFormattedText();
-			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 56, 4210752);
+			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 58, 4210752);
 		}
-		fontRenderer.drawString(text, x + 65, y + 46, 4210752);
+		fontRenderer.drawString(text, x + 65, y + 48, 4210752);
+
+		//draw turret stats
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.Range") + turret.getRange(), x + 8, y + 71, 4210752);
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.FireRate") + turret.getFireRate(), x + 8, y + 81, 4210752);
 
 		//draw turret entity
 		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);

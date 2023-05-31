@@ -94,8 +94,8 @@ tooltip.hundreddayz.TurretUpgrade.ammo_optimization.name=Ammo Optimization
 tooltip.hundreddayz.TurretUpgrade.ammo_optimization.description=Automatically switches to the most effective ammo type for the current target.
 tooltip.hundreddayz.TurretUpgrade.barrel_spin.name=Increased Barrel Spin
 tooltip.hundreddayz.TurretUpgrade.barrel_spin.description=Increases fire rate by 1 tick per upgrade;
-tooltip.hundreddayz.TurretUpgrade.range_extension.name=Range Extension
-tooltip.hundreddayz.TurretUpgrade.range_extension.description=Increases turret range by 20 blocks per upgrade;
+tooltip.hundreddayz.TurretUpgrade.range.name=Extended Range
+tooltip.hundreddayz.TurretUpgrade.range.description=Increases turret range by 20 blocks per upgrade;
 tooltip.hundreddayz.TurretUpgrade.redstone_control.name=Redstone Control
 tooltip.hundreddayz.TurretUpgrade.redstone_control.description=Turret will only be active if powered by redstone.
 
@@ -126,13 +126,15 @@ death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
-gui.turret.text.Upgrades=Upgrades:
-gui.turret.text.NoOwner=No Owner
-gui.turret.text.Owner=Owner: 
-gui.turret.text.NoTarget=Idle
+gui.turret.text.Upgrades=Upgrades: 
 gui.turret.text.Disabled=Disabled
-gui.turret.text.Target=Target:
+gui.turret.text.NoTarget=Idle
 gui.turret.text.Hostile=Hostile
+gui.turret.text.NoOwner=No Owner
+gui.turret.text.Owner=Owner:
+gui.turret.text.Target=Target:
+gui.turret.text.Range=Range: 
+gui.turret.text.FireRate=Speed: 
 
 jei.category.hundreddayz.Syringe=Syringes
 

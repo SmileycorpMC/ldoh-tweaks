@@ -37,7 +37,7 @@ public class AITurretShoot extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		return turret.hasTarget() && turret.getCooldown() == 0 && (turret.hasAmmo() || turret.isEnemy());
+		return turret.hasTarget() && turret.getCooldown() == 0 && (turret.hasAmmo() || turret.isEnemy()) && turret.isActive();
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class AITurretShoot extends EntityAIBase {
 							bullet.motionZ = dir.z * SPEED;
 							turret.world.spawnEntity(bullet);
 							ammo.shrink(1);
-							turret.setCooldown(3); //TODO: reduce turret fire range and rate slightly to make range and barrel spin upgrades more impactful
+							turret.setCooldown(turret.getFireRate());
 							String sound = fakegun.sounds.getFire(fakegun);
 							SoundEvent event = ModSounds.getSound(sound);
 							if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));

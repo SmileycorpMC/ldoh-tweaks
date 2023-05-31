@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "hundreddayz:turret_upgrade",
+	"pattern" : [
+		" Q ",
+		"QRQ",
+		" G "
+	],
+    "key" : {
+		"Q" : {
+    		"type": "forge:ore_dict",
+    		"ore": "itemQuartz"
+        },
+		"G" : {
+            "type": "forge:ore_dict",
+    		"ore": "ingotGold"
+        },
+		"R" : {
+    		"item": "minecraft:redstone"
+        }
+	},
+    "result": {
+        "item": "hundreddayz:turret_upgrade",
+        "count": 1,
+		"data": 0
+    }
+}

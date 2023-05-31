@@ -10,12 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
-public class InventoryTurret extends InventoryBasic {
+public class InventoryTurretAmmo extends InventoryBasic {
 
-	public InventoryTurret() {
+	public InventoryTurretAmmo() {
 		super(ModDefinitions.getName("entity.turret"), false, 9);
 	}
 
