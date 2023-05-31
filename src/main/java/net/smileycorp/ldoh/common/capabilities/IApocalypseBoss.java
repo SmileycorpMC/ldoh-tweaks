@@ -44,8 +44,11 @@ public interface IApocalypseBoss {
 
 		@Override
 		public void onHurt(float amount) {
-			if (player != null && player.hasCapability(LDOHCapabilities.APOCALYPSE, null) )
+			System.out.println("loop");
+			if (player != null && player.hasCapability(LDOHCapabilities.APOCALYPSE, null) ) {
+				System.out.println("goop");
 				player.getCapability(LDOHCapabilities.APOCALYPSE, null).onBossHurt(this, amount);
+			}
 		}
 
 		@Override
@@ -59,13 +62,13 @@ public interface IApocalypseBoss {
 		}
 	}
 
-	public static class Provider implements ICapabilitySerializable<NBTTagList> {
+	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
 		protected final IApocalypseBoss instance = new ApocalypseBoss();
 
 		@Override
 		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			return capability == LDOHCapabilities.APOCALYPSE;
+			return capability == LDOHCapabilities.APOCALYPSE_BOSS;
 		}
 
 		@Override
@@ -74,12 +77,12 @@ public interface IApocalypseBoss {
 		}
 
 		@Override
-		public NBTTagList serializeNBT() {
-			return (NBTTagList) LDOHCapabilities.APOCALYPSE_BOSS.getStorage().writeNBT(LDOHCapabilities.APOCALYPSE_BOSS, instance, null);
+		public NBTTagCompound serializeNBT() {
+			return (NBTTagCompound) LDOHCapabilities.APOCALYPSE_BOSS.getStorage().writeNBT(LDOHCapabilities.APOCALYPSE_BOSS, instance, null);
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagList nbt) {
+		public void deserializeNBT(NBTTagCompound nbt) {
 			LDOHCapabilities.APOCALYPSE_BOSS.getStorage().readNBT(LDOHCapabilities.APOCALYPSE_BOSS, instance, null, nbt);
 		}
 

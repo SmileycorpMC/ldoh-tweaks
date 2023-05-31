@@ -5,7 +5,6 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 
 public enum TurretUpgrade {
 
-    //TODO: texture turret upgrades
     BLANK("blank", false),
     HOPPING("hopping", false),
     AMMO_OPTIMIZATION("ammo_optimization", false),
@@ -33,7 +32,7 @@ public enum TurretUpgrade {
     }
 
     public ItemStack getItem() {
-       return new ItemStack(LDOHItems.TURRET_UPGRADE, ordinal());
+       return new ItemStack(LDOHItems.TURRET_UPGRADE, 1, ordinal());
     }
 
     public static boolean isBlank(int id) {

@@ -1,18 +1,9 @@
 package net.smileycorp.ldoh.common.inventory;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
-import com.mrcrayfish.guns.init.ModGuns;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.item.ItemTurretUpgrade;
 import net.smileycorp.ldoh.common.item.LDOHItems;
@@ -50,8 +41,8 @@ public class InventoryTurretUpgrades implements IInventory {
 		if (amount <= 0) return ItemStack.EMPTY;
 		int[] upgrades = ModUtils.posToArray(turret.getDataManager().get(EntityTurret.TURRET_UPGRADES));
 		if (TurretUpgrade.isBlank(upgrades[slot])) return ItemStack.EMPTY;
-   int id = upgrades[slot];
-   upgrades[slot] = 0;
+   		int id = upgrades[slot];
+   		upgrades[slot] = 0;
 		turret.updateUpgrades(upgrades);
 		return TurretUpgrade.get(id).getItem();
 	}

@@ -5,6 +5,7 @@ import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIII;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -28,6 +29,8 @@ public class Apocalypse implements IApocalypse {
 	protected int phase = 0;
 	private EntityPlayer player;
 
+	protected boolean hasStarted;
+
 	private static WeightedOutputs<Class<? extends EntityParasiteBase>> init() {
 		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<>();
 		adaptedmap.put(EntityShycoAdapted.class, 1);
@@ -47,17 +50,26 @@ public class Apocalypse implements IApocalypse {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("boss") && player != null) {
-			boss = (EntityParasiteBase) player.world.getEntityByID(nbt.getInteger("boss"));
+			Entity entity = player.world.getEntityByID(nbt.getInteger("boss"));
+			if (entity instanceof  EntityParasiteBase) {
+				boss = (EntityParasiteBase) entity;
+				if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
+					boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
+			}
 		}
 		if (nbt.hasKey("phase")) {
 			phase = nbt.getInteger("phase");
+		}
+		if (nbt.hasKey("hasStarted")) {
+			hasStarted = nbt.getBoolean("hasStarted");
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		if (boss != null) nbt.setInteger("boss", boss.getEntityId());
+		if (boss != null && boss.isEntityAlive()) nbt.setInteger("boss", boss.getEntityId());
 		if (phase > 0) nbt.setInteger("phase", phase);
+		nbt.setBoolean("hasStarted", hasStarted);
 		return nbt;
 	}
 
@@ -91,12 +103,13 @@ public class Apocalypse implements IApocalypse {
 
 	@Override
 	public boolean canStart(World world) {
-		return world.getWorldTime() > 2418000 && world.getWorldTime() % 24000 > 18000 && phase == 0;
+		return world.getWorldTime() > 2418000 && world.getWorldTime() % 24000 > 18000 && phase == 0 && hasStarted == false;
 	}
 
 	@Override
 	public void startEvent() {
 		if (player != null) {
+			hasStarted = true;
 			player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
 			for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
@@ -141,13 +154,17 @@ public class Apocalypse implements IApocalypse {
 	}
 
 	public void onBossHurt(IApocalypseBoss capability, float amount) {
+		System.out.println("poop");
 		if (boss.isEntityAlive()) {
+			System.out.println("shoop");
 			int newPhase = (int) Math.floor((boss.getMaxHealth() - boss.getHealth() - amount) / 25f);
 			if (phase < newPhase) {
+				System.out.println("troop");
 				boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(newPhase-phase)));
 				phase = newPhase;
 			}
 		} else {
+			System.out.println("moop");
 			boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(8-phase)));
 			phase = 8;
 			boss.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");

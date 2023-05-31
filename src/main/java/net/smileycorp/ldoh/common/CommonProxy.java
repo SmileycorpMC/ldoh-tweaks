@@ -33,6 +33,7 @@ import net.smileycorp.ldoh.common.capabilities.IHunger.Hunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker.SpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
+import net.smileycorp.ldoh.common.capabilities.IApocalypseBoss.ApocalypseBoss;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandHandDebug;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
@@ -84,10 +85,12 @@ public class CommonProxy {
 		CapabilityManager.INSTANCE.register(IUnburiedSpawner.class, new IUnburiedSpawner.Storage(), () -> new UnburiedSpawner(null));
 		CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), MiniRaid::new);
 		CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), Hunger::new);
-		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(), () -> new Apocalypse(null));
+		CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(),
+				() -> ConfigHandler.legacyApocalypse ? new LegacyApocalypse(null) : new Apocalypse(null));
 		CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), Followers::new);
 		CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), Curing::new);
 		CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), VillageData::new);
+		CapabilityManager.INSTANCE.register(IApocalypseBoss.class, new IApocalypseBoss.Storage(), () -> new ApocalypseBoss());
 
 		//register turret gui
 		NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {

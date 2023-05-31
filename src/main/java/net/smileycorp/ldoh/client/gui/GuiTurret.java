@@ -86,8 +86,8 @@ public class GuiTurret extends GuiContainer {
 		fontRenderer.drawString(text, x + 65, y + 48, 4210752);
 
 		//draw turret stats
-		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.Range") + turret.getRange(), x + 8, y + 71, 4210752);
-		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.FireRate") + turret.getFireRate(), x + 8, y + 81, 4210752);
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.Range") + turret.getRange(), x + 11, y + 67, 4210752);
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.FireRate") + turret.getFireRate(), x + 11, y + 77, 4210752);
 
 		//draw turret entity
 		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
@@ -95,7 +95,7 @@ public class GuiTurret extends GuiContainer {
 		GlStateManager.pushMatrix();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.disableCull();
-		GlStateManager.translate(x+36, y+16, 40);
+		GlStateManager.translate(x+36, y+10, 40);
 		GlStateManager.rotate(-30, 1, 0, 0);
 		GlStateManager.rotate(135, 0, 1, 0);
 		turretModel.render(turret, 0, 0, 0, turret.rotationPitch, 0, 2);
