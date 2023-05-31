@@ -21,6 +21,8 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 public class InventoryTurretUpgrades implements IInventory {
 
+  //TODO: test fixes, organize project imports
+
 	protected final EntityTurret turret;
 
 	public InventoryTurretUpgrades(EntityTurret turret) {
@@ -34,22 +36,24 @@ public class InventoryTurretUpgrades implements IInventory {
 
 	@Override
 	public boolean isEmpty() {
-		return turret.hasUpgrades();
+		return !turret.hasUpgrades();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
 		int[] upgrades = ModUtils.posToArray(turret.getDataManager().get(EntityTurret.TURRET_UPGRADES));
-		return TurretUpgrade.isBlank(upgrades[slot]) ? ItemStack.EMPTY : TurretUpgrade.get(slot).getItem();
+		return TurretUpgrade.isBlank(upgrades[slot]) ? ItemStack.EMPTY : TurretUpgrade.get(upgrades[slot]).getItem();
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amount) {
 		if (amount <= 0) return ItemStack.EMPTY;
 		int[] upgrades = ModUtils.posToArray(turret.getDataManager().get(EntityTurret.TURRET_UPGRADES));
-		if (TurretUpgrade.isBlank(upgrades[amount])) return ItemStack.EMPTY;
+		if (TurretUpgrade.isBlank(upgrades[slot])) return ItemStack.EMPTY;
+   int id = upgrades[slot];
+   upgrades[slot] = 0;
 		turret.updateUpgrades(upgrades);
-		return TurretUpgrade.get(slot).getItem();
+		return TurretUpgrade.get(id).getItem();
 	}
 
 	@Override
