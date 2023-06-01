@@ -5,6 +5,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
@@ -49,6 +52,10 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 		}
 	}
 
+	public boolean hasEffect(ItemStack stack) {
+		return !isBlank(stack);
+	}
+
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return isBlank(stack) ? "item.hundreddayz.BlankTurretUpgrade" : super.getUnlocalizedName();
@@ -57,9 +64,13 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		if (isBlank(stack)) return;
-		final String key = new StringBuilder("tooltip.hundreddayz.TurretUpgrade.").append(byMeta(stack.getMetadata())).toString();
-		tooltip.add(I18n.translateToLocal(key+".name"));
-		tooltip.add(I18n.translateToLocal(key+".description"));
+		final String name = byMeta(stack.getMetadata());
+		final String key = new StringBuilder("tooltip.hundreddayz.TurretUpgrade.").append(name).toString();
+		if (name.equals("australium")) tooltip.add(new TextComponentTranslation(key+".name").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText());
+		else {
+			tooltip.add(I18n.translateToLocal(key+".name"));
+			tooltip.add(I18n.translateToLocal(key+".description"));
+		}
 	}
 
 }

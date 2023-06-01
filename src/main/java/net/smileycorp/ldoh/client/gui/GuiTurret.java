@@ -27,7 +27,7 @@ public class GuiTurret extends GuiContainer {
 	protected ModelBase turretModel = new ModelTurret();
 	protected String owner = null;
 
-	public GuiTurret(EntityTurret turret, EntityPlayer player) { //TODO: finish turret ui/functionality upgrade
+	public GuiTurret(EntityTurret turret, EntityPlayer player) {
 		super(new ContainerTurret(turret, player));
 		this.turret = turret;
 		width = 176;

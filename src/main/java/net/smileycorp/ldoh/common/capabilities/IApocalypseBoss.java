@@ -33,7 +33,7 @@ public interface IApocalypseBoss {
 
 	}
 
-	public static class ApocalypseBoss implements IApocalypseBoss { //TODO: test if missing code was the reason for broken event
+	public static class ApocalypseBoss implements IApocalypseBoss {
 
 		private EntityPlayer player;
 
@@ -44,9 +44,7 @@ public interface IApocalypseBoss {
 
 		@Override
 		public void onHurt(float amount) {
-			System.out.println("loop");
 			if (player != null && player.hasCapability(LDOHCapabilities.APOCALYPSE, null) ) {
-				System.out.println("goop");
 				player.getCapability(LDOHCapabilities.APOCALYPSE, null).onBossHurt(this, amount);
 			}
 		}

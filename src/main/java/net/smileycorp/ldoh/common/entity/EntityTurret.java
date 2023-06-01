@@ -27,6 +27,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.util.DataUtils;
@@ -35,6 +36,7 @@ import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurretAmmo;
 import net.smileycorp.ldoh.common.inventory.InventoryTurretUpgrades;
+import net.smileycorp.ldoh.common.item.ItemTurretUpgrade;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -104,7 +106,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) { //TODO: fix turret and tile becoming unlinked when spawned via structure
+	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
 		if (nbt.hasKey("isEnemy")) dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
@@ -159,7 +161,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 				dataManager.set(TEAM, owner.getTeam().getName());
 			}
 		}
-		dataManager.set(TILE_POS, tile.getPos());
+		dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
 		dataManager.set(FACING, facing);
 		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
 		if (nbt.hasKey("upgrades")) dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(nbt.getIntArray("upgrades")));
@@ -198,10 +200,16 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (tile == null) {
-			TileEntity tile = world.getTileEntity(dataManager.get(TILE_POS));
+			BlockPos tilepos = dataManager.get(TILE_POS);
+			TileEntity tile = world.getTileEntity(getPosition().add(tilepos));
 			if (tile instanceof TileTurret) {
 				this.tile = (TileTurret) tile;
 				((TileTurret) tile).setEntity(this);
+			} else if (world.getTileEntity(tilepos) instanceof TileTurret) {// update turrets placed before 0.4.6 to the new system
+				tile = world.getTileEntity(tilepos);
+				this.tile = (TileTurret) tile;
+				((TileTurret) tile).setEntity(this);
+				dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
 			}
 		}
 		if (ticksExisted%5 == 0 &! isEnemy()) {
@@ -256,10 +264,16 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		if (tile != null &! world.isRemote && (isSameTeam(player) || player.isCreative())) {
 			ItemStack stack = player.getHeldItem(hand);
 			if (stack.getItem() == Items.IRON_INGOT && getHealth() < getMaxHealth()) {
-					heal(4f);
-					if (!player.isCreative()) stack.shrink(1);
+				heal(4f);
+				if (!player.isCreative()) stack.shrink(1);
+				playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
+				return EnumActionResult.PASS;
+			} else if (stack.getItem() == LDOHItems.TURRET_UPGRADE &! ItemTurretUpgrade.isBlank(stack)) {
+				if (applyUpgrade(stack) &! player.isCreative()) {
+					stack.shrink(1);
 					playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
 					return EnumActionResult.PASS;
+				}
 			} else if (!player.isSneaking()) {
 				BlockPos pos = tile.getPos();
 				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
@@ -279,6 +293,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		}
 		if (world.isRemote) return;
 		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
+		for (TurretUpgrade upgrade : getInstalledUpgrades()) if (!isEnemy() || rand.nextInt(100) < 25) entityDropItem(upgrade.getItem(), 0.0f);
 		if (isEnemy()) {
 			entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
 			entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
@@ -421,8 +436,9 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	public ItemStack getAmmo(Entity target) {
-		if (!hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION)) target = null;
-		return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase) ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(target);
+		boolean optimize = hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION);
+		return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase && optimize) ?
+				LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -453,7 +469,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	public List<TurretUpgrade> getInstalledUpgrades() {
 		List<TurretUpgrade> upgrades = Lists.newArrayList();
-		for (int i : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) upgrades.add(TurretUpgrade.get(i));
+		for (int i : ModUtils.posToArray(dataManager.get(TURRET_UPGRADES))) if (!TurretUpgrade.isBlank(i)) upgrades.add(TurretUpgrade.get(i));
 		return upgrades;
 	}
 
@@ -471,10 +487,17 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		return count;
 	}
 
-	public void applyUpgrade(int slot, TurretUpgrade upgrade) {
-		int[] array = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
-		array[slot] = upgrade.ordinal();
-		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+	public boolean applyUpgrade(ItemStack upgrade) {
+		int[] array =  ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		for (int i = 0; i < array.length; i++) {
+			int id = array[i];
+			if (TurretUpgrade.isBlank(id)) {
+				array[i] = upgrade.getMetadata();
+				dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void updateUpgrades(TurretUpgrade... upgrades) {
@@ -489,14 +512,8 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 	}
 
 	public void updateUpgrades(int[] upgrades) {
-		int[] array = new int[] {0, 0, 0};
-		for (int i = 0; i < upgrades.length; i++) {
-			if (i == array.length) break;
-			int upgrade = upgrades[i];
-			if (TurretUpgrade.isBlank(upgrade)) continue;
-			array[i] = upgrade;
-		}
-		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
+		if (upgrades.length < 3) return;
+		dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(upgrades));
 	}
 
 	public boolean hasUpgrades() {

@@ -46,7 +46,6 @@ public class ApocalypseEvents {
 	public void onDamage(LivingDamageEvent event) {
 		Entity entity = event.getEntity();
 		if (entity.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null)) {
-			System.out.println("zoop");
 			entity.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).onHurt(event.getAmount());
 		}
 	}

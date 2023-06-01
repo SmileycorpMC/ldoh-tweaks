@@ -30,7 +30,6 @@ public class TESRBarbedWire extends TileEntitySpecialRenderer<TileBarbedWire> {
 			}
 		}
 		if (te.isEnchanted()) {
-			//System.out.println("enchanted");
 			float f = mc.player.ticksExisted +partialTicks;
 			BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 			World world = getWorld();

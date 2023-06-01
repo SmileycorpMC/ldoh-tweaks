@@ -9,10 +9,12 @@
     "MixinEntityLiving",
 	"MixinEntityLivingBase",
     "MixinItem",
-    "MixinItemBucket"
+    "MixinItemBucket",
+	"MixinBlockPortal"
   ],
   "client": [
-	"MixinRender"
+	"MixinRender",
+	"MixinFMLCommonHandler"
   ],
   "server": [
 	"MixinWorldServer"

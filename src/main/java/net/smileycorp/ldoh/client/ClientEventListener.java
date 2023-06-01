@@ -23,6 +23,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemExpBottle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -295,7 +296,7 @@ public class ClientEventListener {
 			if (block == RealisticTorchesBlocks.torchUnlit) {
 				event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.UnlitTorch").getFormattedText());
 			}
-		} else if (item == Items.EXPERIENCE_BOTTLE) {
+		} else if (item instanceof ItemExpBottle) {
 			event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.ExpBottle").getFormattedText());
 		}
 	}

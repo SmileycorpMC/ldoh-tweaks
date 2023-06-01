@@ -12,8 +12,6 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 public class InventoryTurretUpgrades implements IInventory {
 
-  //TODO: test fixes, organize project imports
-
 	protected final EntityTurret turret;
 
 	public InventoryTurretUpgrades(EntityTurret turret) {
@@ -54,7 +52,7 @@ public class InventoryTurretUpgrades implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if (!isItemValidForSlot(slot, stack)) return;
+		if (!isItemValidForSlot(slot, stack) &! stack.isEmpty()) return;
 		int[] upgrades = ModUtils.posToArray(turret.getDataManager().get(EntityTurret.TURRET_UPGRADES));
 		upgrades[slot] = stack.getMetadata();
 		turret.updateUpgrades(upgrades);

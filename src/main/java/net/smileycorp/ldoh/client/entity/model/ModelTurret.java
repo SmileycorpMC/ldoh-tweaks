@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
+import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 import java.awt.*;
 
@@ -163,8 +164,10 @@ public class ModelTurret extends ModelBase {
 			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
 		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
 		base.render(scale);
-		GlStateManager.color(1, 1, 1);
+		if (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM)) GlStateManager.color(1, 0.831372549f, 0);
+		else GlStateManager.color(1, 1, 1);
 		axel.render(scale);
+		GlStateManager.color(1, 1, 1);
 		GlStateManager.popMatrix();
 	}
 

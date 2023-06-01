@@ -29,14 +29,11 @@ public class BakedModelBarbedWire extends BakedModelWrapper<IBakedModel> {
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing facing, long rand) {
 		List<BakedQuad> quads = originalModel.getQuads(state, facing, rand);
-		System.out.println(base.getTextures());
 		try {
 			if (state instanceof IExtendedBlockState && ((IExtendedBlockState) state).getUnlistedNames().contains(BlockBarbedWire.IS_ENCHANTED)) {
 				if (((IExtendedBlockState) state).getValue(BlockBarbedWire.IS_ENCHANTED)) {
 					IModel newModel = base.retexture(enchanted_texturemap);
 					quads.addAll(newModel.bake(newModel.getDefaultState(), DefaultVertexFormats.BLOCK, RenderingUtils.defaultTextureGetter).getQuads(state, facing, rand));
-
-					System.out.println(newModel.getTextures());
 				}
 			}
 		} catch (Exception e) {

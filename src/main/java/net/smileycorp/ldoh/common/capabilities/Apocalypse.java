@@ -31,6 +31,8 @@ public class Apocalypse implements IApocalypse {
 
 	protected boolean hasStarted;
 
+	protected float multiplier = 0;
+
 	private static WeightedOutputs<Class<? extends EntityParasiteBase>> init() {
 		Map<Class<? extends EntityParasiteBase>, Integer> adaptedmap = new HashMap<>();
 		adaptedmap.put(EntityShycoAdapted.class, 1);
@@ -53,8 +55,10 @@ public class Apocalypse implements IApocalypse {
 			Entity entity = player.world.getEntityByID(nbt.getInteger("boss"));
 			if (entity instanceof  EntityParasiteBase) {
 				boss = (EntityParasiteBase) entity;
+				multiplier = boss.getMaxHealth() / 8f;
 				if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
 					boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
+
 			}
 		}
 		if (nbt.hasKey("phase")) {
@@ -114,6 +118,7 @@ public class Apocalypse implements IApocalypse {
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
 			for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
 			boss = spawnEntity(player.world, new EntityOronco(player.world));
+			multiplier = boss.getMaxHealth() / 8f;
 			if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
 				boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
 		}
@@ -154,18 +159,14 @@ public class Apocalypse implements IApocalypse {
 	}
 
 	public void onBossHurt(IApocalypseBoss capability, float amount) {
-		System.out.println("poop");
 		if (boss.isEntityAlive()) {
-			System.out.println("shoop");
-			int newPhase = (int) Math.floor((boss.getMaxHealth() - boss.getHealth() - amount) / 25f);
+			int newPhase = (int) Math.floor((boss.getMaxHealth() - boss.getHealth() - amount) / multiplier);
 			if (phase < newPhase) {
-				System.out.println("troop");
-				boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(newPhase-phase)));
+				boss.world.setWorldTime(boss.world.getWorldTime() + (750*(newPhase-phase)));
 				phase = newPhase;
 			}
 		} else {
-			System.out.println("moop");
-			boss.world.setWorldTime(boss.world.getWorldTime() + (1500*(8-phase)));
+			boss.world.setWorldTime(boss.world.getWorldTime() + (750*(8-phase)));
 			phase = 8;
 			boss.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
 			player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));

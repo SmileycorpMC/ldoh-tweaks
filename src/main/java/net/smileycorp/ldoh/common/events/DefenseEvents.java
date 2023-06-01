@@ -26,35 +26,6 @@ public class DefenseEvents {
 		}
 	}
 
-	/*@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onHurt(LivingHurtEvent event) {
-		EntityLivingBase entity = event.getEntityLiving();
-		if (event.getSource() == null) return;
-		Entity attacker = event.getSource().getImmediateSource();
-		World world = entity.world;
-		if (!world.isRemote) {
-			if (attacker instanceof EntityProjectile) {
-				float totalDamage = 0;
-				for (EntityProjectile projectile : world.getEntitiesWithinAABB(EntityProjectile.class, entity.getEntityBoundingBox().grow(0.1))) {
-					if (entity instanceof EntityPlayer) {
-						EntityLivingBase shooter = projectile.getShooter();
-						if(shooter instanceof EntityPlayer && !((EntityPlayer) shooter).canAttackPlayer((EntityPlayer) entity)) continue;
-					}
-					float damage = projectile.getDamage();
-					if (projectile instanceof EntityIncendiaryProjectile) {
-						if (entity instanceof EntityParasiteBase) damage = damage * 3;
-						else damage = damage * 0.7f;
-					}
-					System.out.println(damage);
-					totalDamage += damage;
-					projectile.setDead();
-				}
-				if (totalDamage!=0) event.setAmount(totalDamage);
-				else System.out.println("ahhhhhh");
-			}
-		}
-	}*/
-
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onDamage(LivingDamageEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();

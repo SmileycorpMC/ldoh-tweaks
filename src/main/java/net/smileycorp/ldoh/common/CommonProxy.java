@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.smileycorp.ldoh.client.gui.GuiTurret;
 import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks.BreakBlocks;
@@ -44,6 +46,8 @@ import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
+import net.smileycorp.ldoh.common.util.TurretUpgrade;
+import rafradek.TF2weapons.item.crafting.TF2CraftingManager;
 
 public class CommonProxy {
 
@@ -133,6 +137,9 @@ public class CommonProxy {
 		AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);
 		WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
 				new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
+		//add australium turret upgrade
+		TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(null, TurretUpgrade.AUSTRALIUM.getItem(),
+				new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {

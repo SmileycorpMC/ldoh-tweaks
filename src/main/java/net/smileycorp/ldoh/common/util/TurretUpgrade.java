@@ -8,10 +8,11 @@ public enum TurretUpgrade {
     BLANK("blank", false),
     HOPPING("hopping", false),
     AMMO_OPTIMIZATION("ammo_optimization", false),
-
     BARREL_SPIN("barrel_spin", true),
     RANGE("range", true),
-    REDSTONE_CONTROL("redstone_control", false);
+    REDSTONE_CONTROL("redstone_control", false),
+
+    AUSTRALIUM("australium", false);
 
     //TODO: add more upgrades if time and ideas (optional)
 

@@ -10,6 +10,7 @@
 		"ammo_optimization": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/ammo_optimization" }}],
 		"barrel_spin": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/barrel_spin" }}],
 		"range": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/range" }}],
-		"redstone_control": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/redstone_control" }}]
+		"redstone_control": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/redstone_control" }}],
+		"australium": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/australium" }}]
 	}
 }
