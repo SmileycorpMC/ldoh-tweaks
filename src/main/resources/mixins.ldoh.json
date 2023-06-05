@@ -9,7 +9,6 @@
     "MixinEntityLiving",
 	"MixinEntityLivingBase",
     "MixinItem",
-    "MixinItemBucket",
 	"MixinBlockPortal"
   ],
   "client": [
