@@ -12,7 +12,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -28,6 +27,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.smileycorp.ldoh.client.gui.GuiTurret;
 import net.smileycorp.ldoh.common.capabilities.*;
+import net.smileycorp.ldoh.common.capabilities.IApocalypseBoss.ApocalypseBoss;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks.BreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring.Curing;
 import net.smileycorp.ldoh.common.capabilities.IFollowers.Followers;
@@ -35,7 +35,6 @@ import net.smileycorp.ldoh.common.capabilities.IHunger.Hunger;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker.SpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
-import net.smileycorp.ldoh.common.capabilities.IApocalypseBoss.ApocalypseBoss;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandHandDebug;
 import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
@@ -138,7 +137,7 @@ public class CommonProxy {
 		WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
 				new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
 		//add australium turret upgrade
-		TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(null, TurretUpgrade.AUSTRALIUM.getItem(),
+		TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(ModDefinitions.getResource("austrailum_turret_upgrade"), TurretUpgrade.AUSTRALIUM.getItem(),
 				new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
 	}
 

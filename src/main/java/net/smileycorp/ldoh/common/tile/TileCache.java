@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,6 +46,19 @@ public class TileCache extends TileEntity implements IInventory {
 				|| super.hasCapability(capability, facing);
 	}
 
+	public ItemStack getContainedItem() {
+		return item.copy();
+	}
+
+	public int getCurrentCount() {
+		return count;
+	}
+
+	public int getMaxCount() {
+		if (!item.isEmpty()) { return item.getMaxStackSize() * 64; }
+		return 4096;
+	}
+
 	@Override
 	public int getSizeInventory() {
 		return 64;
@@ -57,11 +71,11 @@ public class TileCache extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		if (count == 0 || item.isEmpty()) return ItemStack.EMPTY;
+		if (count == 0 || item.isEmpty() || slot >= 64) return ItemStack.EMPTY;
+		int slotCount = count % (slot*item.getMaxStackSize());
+		if (slotCount <= 0 ) return ItemStack.EMPTY;
 		ItemStack stack = item.copy();
-		int size = item.getMaxStackSize();
-		if (count < size) stack.setCount(count);
-		else stack.setCount(size);
+		stack.setCount(slotCount);
 		return stack;
 	}
 
@@ -79,6 +93,7 @@ public class TileCache extends TileEntity implements IInventory {
 		}
 		stack.setCount(count);
 		this.count = total;
+		if (count <= 0) item = ItemStack.EMPTY;
 		return stack;
 	}
 
@@ -91,6 +106,7 @@ public class TileCache extends TileEntity implements IInventory {
 		} else {
 			stack = ItemStack.EMPTY;
 		}
+		if (count <= 0) item = ItemStack.EMPTY;
 		return stack;
 	}
 
@@ -106,11 +122,6 @@ public class TileCache extends TileEntity implements IInventory {
 			if (total <= getMaxCount()) count = total;
 			else count = max;
 		}
-	}
-
-	private int getMaxCount() {
-		if (!item.isEmpty()) { return item.getMaxStackSize() * 64; }
-		return 4096;
 	}
 
 	@Override

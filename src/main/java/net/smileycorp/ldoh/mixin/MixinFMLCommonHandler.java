@@ -1,21 +1,11 @@
 package net.smileycorp.ldoh.mixin;
 
-import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.smileycorp.ldoh.common.util.ModUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import javax.security.auth.callback.Callback;
 
 @Mixin(value = FMLCommonHandler.class, remap = false)
 public class MixinFMLCommonHandler {

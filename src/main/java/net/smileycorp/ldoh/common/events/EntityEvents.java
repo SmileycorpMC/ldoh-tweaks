@@ -8,14 +8,12 @@ import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfDragonE;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
@@ -276,13 +274,6 @@ public class EntityEvents {
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityVillagerTek.class, false));
 				//banshee.tasks.addTask(3, new AIBreakEgg(banshee));
-			}
-			//replace ender dragon with parasite
-			else if (entity instanceof EntityDragon) {
-				EntityInfDragonE dragon = new EntityInfDragonE(world);
-				dragon.setPositionAndRotation(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-				world.spawnEntity(dragon);
-				event.setCanceled(true);
 			}
 		}
 		//fix rare skeleton horse traps from appearing as well as skeletons and creepers spawning from fish's undead rising

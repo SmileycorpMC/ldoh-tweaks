@@ -21,6 +21,7 @@ message.hundreddayz.VillagerMessage.Survivor=Survivor
 message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
 
 message.hundreddayz.SealedCrate=Right click with a Crow Bar to open sealed crates
+message.hundreddayz.Cache=%1$s/%2$s %3$s
 
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
@@ -87,6 +88,7 @@ tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
 tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
+tooltip.hundreddayz.ExpBottle=Can be drunk to gain experience.
 
 tooltip.hundreddayz.TurretUpgrade.hopping.name=Hopping
 tooltip.hundreddayz.TurretUpgrade.hopping.description=Non-upgrade items can be inserted/extracted from turrets with hoppers and pipes.

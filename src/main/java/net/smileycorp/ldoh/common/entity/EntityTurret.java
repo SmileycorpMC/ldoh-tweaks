@@ -27,7 +27,6 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.util.DataUtils;
@@ -465,7 +464,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 
 	@Override
 	public String getName() {
-		return I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name");
+		return isEnemy() ? I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name") : super.getName();
 	}
 
 	public List<TurretUpgrade> getInstalledUpgrades() {

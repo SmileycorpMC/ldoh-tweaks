@@ -16,11 +16,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemExpBottle;
@@ -81,10 +81,16 @@ public class ClientEventListener {
 	}
 
 	@SubscribeEvent
+	public static void blockColourHandler(ColorHandlerEvent.Block event) {
+		BlockColors registry = event.getBlockColors();
+		registry.registerBlockColorHandler(new BlockTurretColour(), LDOHBlocks.TURRET);
+	}
+
+	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		//register entity renderers
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/zombie.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, new ResourceLocation("textures/entity/zombie/husk.png")));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, "zombie"));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, "husk"));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, RenderTF2Zombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, RenderZombieNurse::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
@@ -115,9 +121,6 @@ public class ClientEventListener {
 		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
 		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
 		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
-		/*for (IBlockState state : LDOHBlocks.BARBED_WIRE.getBlockState().getValidStates()) {
-			RenderingUtils.replaceRegisteredModel(getModelLocation(state), registry, BakedModelBarbedWire.class);
-		}*/
 	}
 
 	//Render Gas Overlay when below gas level

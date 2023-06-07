@@ -26,7 +26,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
-		//Mobends support for nurse model
+		//Mobends support for entity models
 		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
 	}
 

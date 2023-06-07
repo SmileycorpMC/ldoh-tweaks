@@ -144,7 +144,9 @@ public class ModelTurret extends ModelBase {
 	@Override
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
-		if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
+		boolean australium = (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM));
+		if (australium) GlStateManager.color(1, 0.831372549f, 0);
+		else if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
 		else if (!(entity instanceof EntityPlayer || (entity instanceof IEnemyMachine && ((IEnemyMachine) entity).isEnemy()))) {
 			Color colour = null;
 			if (entity instanceof IEnemyMachine) {
@@ -164,8 +166,7 @@ public class ModelTurret extends ModelBase {
 			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
 		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
 		base.render(scale);
-		if (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM)) GlStateManager.color(1, 0.831372549f, 0);
-		else GlStateManager.color(1, 1, 1);
+		if (!australium) GlStateManager.color(1, 1, 1);
 		axel.render(scale);
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.popMatrix();
