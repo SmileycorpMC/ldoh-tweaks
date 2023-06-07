@@ -48,7 +48,7 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
-		//registerItem(registry, new ItemBlockTooltip(LDOHBlocks.CACHE));
+		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.CACHE));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 
@@ -73,7 +73,7 @@ public class RegistryEvents {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
-		GameRegistry.registerTileEntity(TileCache.class, ModDefinitions.getResource("cache"));
+		GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("cache"));
 	}
 
 	@SubscribeEvent

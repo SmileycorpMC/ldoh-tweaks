@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "hundreddayz:filing_cabinet",
+	"pattern" : [
+		"MMM",
+		"M M",
+		"MMM"
+	],
+    "key" : {
+		"M" : {
+    		"type": "forge:ore_dict",
+    		"ore": "ingotIron"
+        }
+	},
+    "result": {
+        "item": "hundreddayz:filing_cabinet",
+        "count": 1
+    }
+}

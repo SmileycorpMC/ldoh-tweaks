@@ -1,11 +1,11 @@
 package net.smileycorp.ldoh.common.tile;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -15,7 +15,7 @@ import net.smileycorp.atlas.api.util.RecipeUtils;
 
 import javax.annotation.Nullable;
 
-public class TileCache extends TileEntity implements IInventory {
+public class TileFilingCabinet extends TileEntity implements IInventory {
 
 	protected ItemStack item = ItemStack.EMPTY;
 	protected int count = 0;
@@ -24,7 +24,7 @@ public class TileCache extends TileEntity implements IInventory {
 
 	@Override
 	public String getName() {
-		return hasCustomName() ? customName : "container.hundreddayz.cache";
+		return hasCustomName() ? customName : "container.hundreddayz.FilingCabinet";
 	}
 
 	@Override
@@ -71,17 +71,23 @@ public class TileCache extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		if (count == 0 || item.isEmpty() || slot >= 64) return ItemStack.EMPTY;
-		int slotCount = count % (slot*item.getMaxStackSize());
+		if (isEmpty() || slot >= 64) return ItemStack.EMPTY;
+		int slotCount = getSlotCount(slot);
 		if (slotCount <= 0 ) return ItemStack.EMPTY;
 		ItemStack stack = item.copy();
 		stack.setCount(slotCount);
 		return stack;
 	}
 
+	private int getSlotCount(int slot) {
+		int lastSlot = Math.floorDiv(count, item.getMaxStackSize());
+		if (lastSlot > slot) return item.getMaxStackSize();
+		return lastSlot == slot ? count % item.getMaxStackSize() : 0;
+	}
+
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
-		if (this.count == 0 || item.isEmpty()) return ItemStack.EMPTY;
+		if (isEmpty()) return ItemStack.EMPTY;
 		ItemStack stack = item.copy();
 		int size = item.getMaxStackSize();
 		int total = this.count - count;
@@ -112,15 +118,14 @@ public class TileCache extends TileEntity implements IInventory {
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		if (item.isEmpty()) {
+		if (slot >= 64) return;
+		if (isEmpty()) {
 			count = stack.getCount();
 			item = stack.copy();
 			item.setCount(1);
 		} else if (RecipeUtils.compareItemStacks(stack, item, true)) {
-			int max = getMaxCount();
-			int total = count + stack.getCount();
-			if (total <= getMaxCount()) count = total;
-			else count = max;
+			count = count + stack.getCount() - getStackInSlot(slot).getCount();
+			if (count <= 0) item = ItemStack.EMPTY;
 		}
 	}
 
@@ -205,4 +210,15 @@ public class TileCache extends TileEntity implements IInventory {
 		readFromNBT(compound);
 	}
 
+	public void dropContents() {
+		if (isEmpty()) return;
+		int stackCount = Math.floorDiv(count, item.getMaxStackSize())-1;
+		if (stackCount > 0) for (int i = 0; i <= stackCount; i++) {
+			ItemStack stack = item.copy();
+			stack.setCount(i == stackCount ? count%item.getMaxStackSize() : item.getMaxStackSize());
+			EntityItem entityitem = new EntityItem(this.world, pos.getX()+0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, stack);
+			entityitem.setDefaultPickupDelay();
+			world.spawnEntity(entityitem);
+		}
+	}
 }
