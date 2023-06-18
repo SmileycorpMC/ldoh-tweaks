@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common.entity;
+package net.smileycorp.ldoh.integration.tektopia.entities;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipeList;

@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
@@ -60,7 +61,7 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import net.tangotek.tektopia.entities.EntityVillagerTek;
+import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
@@ -229,7 +230,7 @@ public class EntityEvents {
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(zombie);
 				zombie.tasks.addTask(3, new ESM_EntityAIGrief(zombie));
 			}
 			//makes the vespa hostile to the player and other mobs
@@ -238,7 +239,7 @@ public class EntityEvents {
 				vespa.targetTasks.addTask(2, new EntityAINearestAttackableTarget(vespa, EntityPlayer.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityTF2Character.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityAnimal.class, false));
-				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(vespa);
 			}
 			//makes the sludge lord hostile to the player
 			else if (entity instanceof EntitySludgeLord) {
@@ -246,7 +247,7 @@ public class EntityEvents {
 				slord.targetTasks.addTask(2, new EntityAINearestAttackableTarget(slord, EntityPlayer.class, false));
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityAnimal.class, false));
-				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(slord);
 			}
 			//makes the weta hostile to the player
 			else if (entity instanceof EntityWeta) {
@@ -254,7 +255,7 @@ public class EntityEvents {
 				weta.targetTasks.addTask(2, new EntityAINearestAttackableTarget(weta, EntityPlayer.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityTF2Character.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, false));
-				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(weta);
 				//weta.tasks.addTask(3, new AIBreakEgg(weta));
 			}
 			//makes the ptera hostile to the player
@@ -263,7 +264,7 @@ public class EntityEvents {
 				ptera.targetTasks.addTask(2, new EntityAINearestAttackableTarget(ptera, EntityPlayer.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityTF2Character.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, false));
-				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(ptera);
 				//ptera.tasks.addTask(3, new AIBreakEgg(ptera));
 			}
 			//makes the banshee hostile to the player
@@ -272,7 +273,7 @@ public class EntityEvents {
 				banshee.targetTasks.addTask(2, new EntityAINearestAttackableTarget(banshee, EntityPlayer.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityTF2Character.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, false));
-				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityVillagerTek.class, false));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(banshee);
 				//banshee.tasks.addTask(3, new AIBreakEgg(banshee));
 			}
 		}

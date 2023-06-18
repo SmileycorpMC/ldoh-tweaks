@@ -10,7 +10,6 @@ import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -33,20 +32,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.IVillageData;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.*;
-import net.tangotek.tektopia.Village;
-import net.tangotek.tektopia.entities.EntityVillagerTek;
+import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
@@ -110,12 +106,6 @@ public class ModUtils {
 				speed.applyModifier(new DayTimeSpeedModifier(world));
 	}
 
-	//gets the cost of an item for a particular tektopia village
-	public  static int getCost(Village village, int baseCost) {
-		float mult = Math.min((village.getTownData().getProfessionSales() / 5) * 0.2F, 10.0F);
-		return (int)(baseCost * (1.0F + mult));
-	}
-
 	//checks if a 64/64 area around the position consists of only regular wasteland
 	public static boolean isOnlyWasteland(World world, int x, int z) {
 		if (ConfigHandler.betaSpawnpoint) return true;
@@ -162,7 +152,7 @@ public class ModUtils {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (target instanceof EntityPlayer || target instanceof EntityVillagerTek || target instanceof EntityTF2Character) {
+			if (target instanceof EntityPlayer || target instanceof EntityTF2Character || (Loader.isModLoaded("tektopia") && TektopiaUtils.isVillager(target))) {
 				if (!canTarget(entity, target)) {
 					if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
 				}
@@ -191,13 +181,6 @@ public class ModUtils {
 
 	public static Vec3d getVecFromPathPoint(PathPoint pathPoint) {
 		return new Vec3d(pathPoint.x, pathPoint.y, pathPoint.z);
-	}
-
-	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
-		IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
-		if (!cap.hasVillage()) return false;
-		BlockPos village = cap.getVillage().getCenter();
-		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 75;
 	}
 
 	public static RayTraceResult rayTrace(World world, EntityLivingBase entity, float distance) {

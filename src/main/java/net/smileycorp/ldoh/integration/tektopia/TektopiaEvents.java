@@ -1,30 +1,65 @@
-package net.smileycorp.ldoh.common.events;
+package net.smileycorp.ldoh.integration.tektopia;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
+import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
-import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
-import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
+import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.IVillageData;
+import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.integration.tektopia.entities.EntityLDOHArchitect;
+import net.smileycorp.ldoh.integration.tektopia.entities.EntityLDOHTradesman;
+import net.smileycorp.ldoh.common.events.RegistryEvents;
+import net.tangotek.tektopia.ModItems;
+import net.tangotek.tektopia.VillageManager;
 import net.tangotek.tektopia.entities.EntityArchitect;
 import net.tangotek.tektopia.entities.EntityNecromancer;
 import net.tangotek.tektopia.entities.EntityTradesman;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
+import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 public class TektopiaEvents {
+
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		RegistryEvents.registerItem(event.getRegistry(), TektopiaUtils.TF2_PROF_TOKEN);
+	}
+
+	//capability manager
+	@SubscribeEvent
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		Entity entity = event.getObject();
+		//give mercs home village
+		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
+			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
+		}
+	}
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -44,6 +79,13 @@ public class TektopiaEvents {
 			tradesman.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
 			world.spawnEntity(tradesman);
 			event.setCanceled(true);
+		}
+		if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
+			IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
+			if (cap.shouldHaveVillage() &! cap.hasVillage()) {
+				VillageManager villages = VillageManager.get(world);
+				cap.setVillage(villages);
+			}
 		}
 	}
 
@@ -67,6 +109,39 @@ public class TektopiaEvents {
 				}
 			}
 		}
+	}
+
+	//Player ticks
+	@SubscribeEvent
+	public void playerTick(TickEvent.PlayerTickEvent event) {
+		if (event.phase == TickEvent.Phase.END) {
+			EntityPlayer player = event.player;
+			World world = player.world;
+			if (!world.isRemote) {
+				if (world.getWorldTime() >= 1080000 &! GameStageHelper.hasStage(player, "town")) {
+					GameStageHelper.addStage(player, "town");
+					ITextComponent survivor = new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + ".Survivor");
+					survivor.setStyle(new Style().setBold(true));
+					player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "0", survivor));
+					ITextComponent token = new TextComponentTranslation(ModItems.structureTownHall.getUnlocalizedName());
+					token.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true));
+					player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "1", token));				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+		int ID = 301;
+		IForgeRegistry<EntityEntry> registry = event.getRegistry();
+		EntityEntry ARCHITECT = EntityEntryBuilder.create().entity(EntityLDOHArchitect.class)
+				.id(ModDefinitions.getResource("architect"), ID++)
+				.name("villager.architect").tracker(80, 3, true).build();
+		registry.register(ARCHITECT);
+		EntityEntry TRADESMAN = EntityEntryBuilder.create().entity(EntityLDOHTradesman.class)
+				.id(ModDefinitions.getResource("tradesman"), ID++)
+				.name("villager.tradesman").tracker(80, 3, true).build();
+		registry.register(TRADESMAN);
 	}
 
 	//hooks into the hordes infection event

@@ -40,7 +40,6 @@ import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import net.tangotek.tektopia.VillageManager;
 import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
 import rafradek.TF2weapons.entity.ai.EntityAISpotTarget;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
@@ -69,10 +68,6 @@ public class TF2Events {
 		//give medics ability to cure
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
-		}
-		//give mercs home village
-		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
-			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
 		}
 	}
 
@@ -270,14 +265,6 @@ public class TF2Events {
 				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
 				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
 				//if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
-				//fetch closest village to entities that were spawned in one
-				if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
-					IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
-					if (cap.shouldHaveVillage() &! cap.hasVillage()) {
-						VillageManager villages = VillageManager.get(world);
-						cap.setVillage(villages);
-					}
-				}
 
 				//give persistence to tf2 buildings
 			} else if (entity instanceof EntityBuilding) {

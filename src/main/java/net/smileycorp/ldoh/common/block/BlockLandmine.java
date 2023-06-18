@@ -25,7 +25,6 @@ import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
-import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import javax.annotation.Nullable;
@@ -134,7 +133,7 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 
 	@Override
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
-		return (entity instanceof EntityTF2Character || entity instanceof EntityVillagerTek) ? PathNodeType.BLOCKED : super.getAiPathNodeType(state, world, pos, entity);
+		return (entity instanceof EntityTF2Character) ? PathNodeType.BLOCKED : super.getAiPathNodeType(state, world, pos, entity);
 	}
 
 	public static void prime(World world, BlockPos pos, IBlockState state) {

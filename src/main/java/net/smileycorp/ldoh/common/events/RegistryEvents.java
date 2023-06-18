@@ -48,11 +48,11 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
-		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.CACHE));
+		//registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 
-	private static void registerItem(IForgeRegistry<Item> registry, Item item) {
+	public static void registerItem(IForgeRegistry<Item> registry, Item item) {
 		registry.register(item);
 		ITEMS.add(item);
 	}
@@ -143,14 +143,6 @@ public class RegistryEvents {
 				.id(ModDefinitions.getResource("zombie_technician"), ID++)
 				.name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build();
 		registry.register(ZOMBIE_TECHNICIAN);
-		EntityEntry ARCHITECT = EntityEntryBuilder.create().entity(EntityLDOHArchitect.class)
-				.id(ModDefinitions.getResource("architect"), ID++)
-				.name("villager.architect").tracker(80, 3, true).build();
-		registry.register(ARCHITECT);
-		EntityEntry TRADESMAN = EntityEntryBuilder.create().entity(EntityLDOHTradesman.class)
-				.id(ModDefinitions.getResource("tradesman"), ID++)
-				.name("villager.tradesman").tracker(80, 3, true).build();
-		registry.register(TRADESMAN);
 		EntityEntry TURRET = EntityEntryBuilder.create().entity(EntityTurret.class)
 				.id(ModDefinitions.getResource("turret"), ID++)
 				.name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build();

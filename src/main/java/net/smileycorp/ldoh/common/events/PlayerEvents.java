@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.common.events;
 
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.furniture.tileentity.TileEntityCrate;
-import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -39,7 +38,6 @@ import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.tangotek.tektopia.ModItems;
 
 public class PlayerEvents {
 
@@ -56,7 +54,6 @@ public class PlayerEvents {
 	//prevent picking and placing lava and other hot liquids
 	@SubscribeEvent
 	public void fillBucket(FillBucketEvent event) {
-		System.out.println("woom");
 		EntityPlayer player = event.getEntityPlayer();
 		if (isHot(event.getEmptyBucket(), player) || isHot(event.getFilledBucket(), player)) {
 			event.setResult(Event.Result.DENY);
@@ -114,14 +111,6 @@ public class PlayerEvents {
 					text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 					player.sendMessage(text);
 				}
-				if (world.getWorldTime() >= 1080000 &! GameStageHelper.hasStage(player, "town")) {
-					GameStageHelper.addStage(player, "town");
-					ITextComponent survivor = new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + ".Survivor");
-					survivor.setStyle(new Style().setBold(true));
-					player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "0", survivor));
-					ITextComponent token = new TextComponentTranslation(ModItems.structureTownHall.getUnlocalizedName());
-					token.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true));
-					player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "1", token));				}
 			}
 		}
 	}

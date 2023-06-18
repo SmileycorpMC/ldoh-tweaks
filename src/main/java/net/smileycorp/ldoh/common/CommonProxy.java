@@ -18,6 +18,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -46,6 +47,7 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
+import net.smileycorp.ldoh.integration.tektopia.TektopiaEvents;
 import rafradek.TF2weapons.item.crafting.TF2CraftingManager;
 
 public class CommonProxy {
@@ -59,12 +61,12 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new EntityEvents());
 		MinecraftForge.EVENT_BUS.register(new PlayerEvents());
 		MinecraftForge.EVENT_BUS.register(new SpawnerEvents());
-		MinecraftForge.EVENT_BUS.register(new TektopiaEvents());
 		MinecraftForge.EVENT_BUS.register(new TF2Events());
 		MinecraftForge.EVENT_BUS.register(new WorldEvents());
 		MinecraftForge.ORE_GEN_BUS.register(new WorldEvents());
 		MinecraftForge.EVENT_BUS.register(new DefenseEvents());
 		RCEventBus.INSTANCE.register(new WorldEvents());
+		if (Loader.isModLoaded("tektopia")) MinecraftForge.EVENT_BUS.register(new TektopiaEvents());
 
 		//Add Safehouse loot tables
 		LootTableList.register(ModDefinitions.SAFEHOUSE_CHEST);
