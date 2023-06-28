@@ -2,15 +2,15 @@ package net.smileycorp.ldoh.common.world.gen.biome;
 
 import java.util.Random;
 
+import com.legacy.wasteland.config.WastelandConfig;
+
+import biomesoplenty.api.block.BOPBlocks;
+import biomesoplenty.common.biome.BOPBiome.PropsBuilder;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import biomesoplenty.api.block.BOPBlocks;
-import biomesoplenty.common.biome.BOPBiome.PropsBuilder;
-
-import com.legacy.wasteland.config.WastelandConfig;
 
 public class BiomeInfernalWasteland extends Biome {
 
