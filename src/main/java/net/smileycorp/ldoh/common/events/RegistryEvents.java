@@ -48,7 +48,7 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
-		//registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
+		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 

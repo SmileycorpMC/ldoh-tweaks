@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = '1.12.2-1.1.8d'
+version = '1.12.2-1.1.9'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 
