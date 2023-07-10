@@ -13,8 +13,6 @@ import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 
 public class TESRBarbedWire extends TileEntitySpecialRenderer<TileBarbedWire> {
 
-	public static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-
 	@Override
 	public void render(TileBarbedWire te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		Minecraft mc = Minecraft.getMinecraft();

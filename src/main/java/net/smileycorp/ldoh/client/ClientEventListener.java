@@ -44,6 +44,7 @@ import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.entity.*;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
+import net.smileycorp.ldoh.client.tesr.TESRFilingCabinet;
 import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
@@ -54,6 +55,7 @@ import net.smileycorp.ldoh.common.entity.*;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
+import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
 import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
@@ -110,6 +112,7 @@ public class ClientEventListener {
 		}
 		//register renderer for barbed wire healthbar
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFilingCabinet.class, new TESRFilingCabinet());
 		//register turret item renderer
 		Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
 		GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.INCENDIARY_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
