@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,6 +48,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 	}
 
 	public ItemStack getContainedItem() {
+		if (count <= 0 &! item.isEmpty()) item = ItemStack.EMPTY;
 		return item.copy();
 	}
 
@@ -198,6 +200,11 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 			compound.setTag("items", items);
 		}
 		return compound;
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
 	}
 
 	@Override
