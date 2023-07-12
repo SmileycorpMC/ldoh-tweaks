@@ -54,7 +54,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 		}
 		GlStateManager.rotate(180, 1, 0,  0);
 		GlStateManager.scale(0.025f, 0.025f,  0.025f);
-		GlStateManager.translate(12, 2, -0.5);
+		GlStateManager.translate(13, 2, -0.5);
 		FontRenderer font = mc.fontRenderer;
 		String count = String.valueOf(te.getCurrentCount());
 		font.drawString(count, -font.getStringWidth(count), 2, 0xFFFFFF);
