@@ -11,7 +11,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,25 +51,18 @@ public abstract class MixinEntityLivingBase extends Entity {
 
 	@Inject(at=@At("HEAD"), method = "attackEntityFrom(Lnet/minecraft/util/DamageSource;F)Z", cancellable = true)
 	public void attackEntityFrom(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callback) {
-		System.out.println(source);
-		System.out.println(source.damageType);
-		new Exception().printStackTrace();
 		if (ModUtils.isProjectile(source)) {
 			callback.cancel();
 			if (!ForgeHooks.onLivingAttack((EntityLivingBase) (Entity) this, source, amount)) {
 				callback.setReturnValue(false);
-				return;
 			} else if (this.isEntityInvulnerable(source)) {
 				callback.setReturnValue(false);
-				return;
 			} else if (this.world.isRemote) {
 				callback.setReturnValue(false);
-				return;
 			} else {
 				this.idleTime = 0;
 				if (this.getHealth() <= 0.0F) {
 					callback.setReturnValue(false);
-					return;
 				} else {
 					float f = amount;
 
