@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.tile;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -98,8 +99,8 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 		if (count < amount) amount = count;
 		count -= amount;
 		if (count == 0) item = ItemStack.EMPTY;
-		markDirty();
 		stack.setCount(amount);
+		markDirty();
 		return stack;
 	}
 
@@ -164,6 +165,10 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 	}
 
 	public void markDirty() {
+		IBlockState state = world.getBlockState(pos);
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		world.notifyBlockUpdate(pos, state, state, 3);
+		world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
 		super.markDirty();
 	}
 
