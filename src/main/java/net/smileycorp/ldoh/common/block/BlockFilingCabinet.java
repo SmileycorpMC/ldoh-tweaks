@@ -3,6 +3,7 @@ package net.smileycorp.ldoh.common.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -10,6 +11,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +28,9 @@ public class BlockFilingCabinet extends Block implements ITileEntityProvider, IB
 
 	public BlockFilingCabinet() {
 		super(Material.IRON);
+		setHardness(5.0F);
+		setResistance(10.0F);
+		setSoundType(SoundType.METAL);
 		setHarvestLevel("PICKAXE", 1);
 		String name = "Filing_Cabinet";
 		setUnlocalizedName(ModDefinitions.getName(name));
@@ -35,13 +40,31 @@ public class BlockFilingCabinet extends Block implements ITileEntityProvider, IB
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (world.isRemote || hand == EnumHand.MAIN_HAND) return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+		if (world.isRemote || player.isSneaking()) return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
 		if (world.getTileEntity(pos) instanceof TileFilingCabinet) {
 			TileFilingCabinet cabinet = (TileFilingCabinet) world.getTileEntity(pos);
-			player.sendMessage(new TextComponentTranslation("message.hundreddayz.FilingCabinet",
-					cabinet.getCurrentCount(), cabinet.getMaxCount(), cabinet.getContainedItem().getDisplayName()));
+			ItemStack stack = player.getHeldItem(hand);
+			if (cabinet.canInsert(stack)) {
+				cabinet.insertItem(stack);
+			}
 		}
 		return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+	}
+
+	@Override
+	public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
+		if (world.isRemote) return;
+		if (world.getTileEntity(pos) instanceof TileFilingCabinet) {
+			TileFilingCabinet cabinet = (TileFilingCabinet) world.getTileEntity(pos);
+			if (cabinet.isEmpty()) return;
+			ItemStack stack = player.getHeldItemMainhand();
+			ItemStack item = cabinet.getContainedItem();
+			if (stack.isEmpty() || (stack.getItem() == item.getItem() && stack.getMetadata() == item.getMetadata()
+					&& stack.getTagCompound() == item.getTagCompound())) {
+				ItemStack drop = cabinet.extractItem(player.isSneaking() ? stack.getMaxStackSize() : 1);
+				if (!player.addItemStackToInventory(drop)) player.dropItem(drop,false);
+			}
+		}
 	}
 
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -94,6 +95,37 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 		return lastSlot == slot ? count % item.getMaxStackSize() : 0;
 	}
 
+	public boolean canInsert(ItemStack stack) {
+		return isEmpty() || (stack.getItem() == item.getItem() && stack.getMetadata() == item.getMetadata()
+				&& stack.getTagCompound() == item.getTagCompound() && count < getMaxCount());
+	}
+
+	public ItemStack extractItem(int amount) {
+		ItemStack stack = item.copy();
+		if (count < amount) amount = count;
+		count -= amount;
+		if (count == 0) item = ItemStack.EMPTY;
+		markDirty();
+		stack.setCount(amount);
+		return stack;
+	}
+
+	public void insertItem(ItemStack stack) {
+		int newCount = stack.getCount() + count;
+		if (count == 0 && newCount > 0) {
+			item = stack.copy();
+			item.setCount(1);
+		}
+		if (newCount > getMaxCount()){
+			stack.setCount(newCount-count);
+			count = getMaxCount();
+		} else {
+			stack.setCount(0);
+			count = newCount;
+		}
+		markDirty();
+	}
+
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
 		if (isEmpty()) return ItemStack.EMPTY;
@@ -139,10 +171,6 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 	}
 
 	public void markDirty() {
-		IBlockState state = world.getBlockState(pos);
-		world.markBlockRangeForRenderUpdate(pos, pos);
-		world.notifyBlockUpdate(pos, state, state, 3);
-		world.scheduleBlockUpdate(pos,getBlockType(),0,0);
 		super.markDirty();
 	}
 
@@ -227,6 +255,18 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 		readFromNBT(compound);
 	}
 
+	@Override
+	@Nullable
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
+		handleUpdateTag(pkt.getNbtCompound());
+	}
+
 	public void dropContents() {
 		if (isEmpty()) return;
 		int stackCount = Math.floorDiv(count, item.getMaxStackSize())-1;
@@ -238,4 +278,5 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 			world.spawnEntity(entityitem);
 		}
 	}
+
 }

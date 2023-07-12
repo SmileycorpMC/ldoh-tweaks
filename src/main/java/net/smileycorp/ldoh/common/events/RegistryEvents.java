@@ -73,7 +73,7 @@ public class RegistryEvents {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
-		GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("cache"));
+		GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("filing_cabinet"));
 	}
 
 	@SubscribeEvent
