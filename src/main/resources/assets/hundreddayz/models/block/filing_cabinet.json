@@ -2,7 +2,7 @@
     "parent": "block/orientable",
     "textures": {
         "top": "hundreddayz:blocks/filing_cabinet",
-        "front": "hundreddayz:blocks/filing_cabinet_front",
+        "front": "hundreddayz:blocks/filing_cabinet_front_test",
         "side": "hundreddayz:blocks/filing_cabinet"
     }
 }

@@ -61,7 +61,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 		}
 		GlStateManager.rotate(180, 1, 0,  0);
 		GlStateManager.scale(0.025f, 0.025f,  0.025f);
-		GlStateManager.translate(12, 6, -0.5);
+		GlStateManager.translate(12, 2, -0.5);
 		FontRenderer font = mc.fontRenderer;
 		String count = String.valueOf(te.getCurrentCount());
 		font.drawString(count, -font.getStringWidth(count), 2, 0xFFFFFF);
@@ -71,6 +71,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 	private void renderItem(Minecraft mc, TileFilingCabinet te, EnumFacing facing, double x, double y, double z) {
 		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();
+		GlStateManager.enableRescaleNormal();
 		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		switch (facing) {
@@ -90,7 +91,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 				GlStateManager.translate(x+0.5, y+0.4, z+1.01);
 				break;
 		}
-		GlStateManager.scale(0.6f, 0.6f,  0.01f);
+		GlStateManager.scale(0.6f, 0.6f,  0.001f);
 		RenderItem render = mc.getRenderItem();
 		IBakedModel model = render.getItemModelWithOverrides(te.getContainedItem(), te.getWorld(), mc.player);
 		model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GUI, false);
