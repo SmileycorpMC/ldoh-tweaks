@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.client;
+package net.smileycorp.ldoh.client.colour;
 
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;

@@ -42,6 +42,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.atlas.api.item.IMetaItem;
+import net.smileycorp.ldoh.client.colour.BlockTurretColour;
+import net.smileycorp.ldoh.client.colour.ItemEggColour;
 import net.smileycorp.ldoh.client.entity.*;
 import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.client.tesr.TESRFilingCabinet;

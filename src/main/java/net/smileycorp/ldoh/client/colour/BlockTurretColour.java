@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.client;
+package net.smileycorp.ldoh.client.colour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
