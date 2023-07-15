@@ -11,10 +11,7 @@ public enum TurretUpgrade {
     BARREL_SPIN("barrel_spin", true),
     RANGE("range", true),
     REDSTONE_CONTROL("redstone_control", false),
-
     AUSTRALIUM("australium", false);
-
-    //TODO: add more upgrades if time and ideas (optional)
 
     private final String name;
     private final boolean isStackable;
