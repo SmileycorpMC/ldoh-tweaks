@@ -12,6 +12,7 @@
     "MixinItem"
   ],
   "client": [
+    "MixinBiome",
     "MixinFMLCommonHandler",
     "MixinRender"
   ],
