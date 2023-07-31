@@ -42,8 +42,8 @@ public class ItemWeapon extends ItemBase {
 
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
-		if (state.getBlockHardness(world, pos) != 0.0D &! isTool) {
-			stack.damageItem(2, entity);
+		if (state.getBlockHardness(world, pos) != 0.0D) {
+			stack.damageItem(isTool ? 1 : 2, entity);
 		}
 		return true;
 	}
