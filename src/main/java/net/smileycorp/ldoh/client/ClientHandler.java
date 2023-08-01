@@ -14,6 +14,7 @@ import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.network.*;
 
+//client hooks for our network packets
 public class ClientHandler {
 
 	//show title with the specified text

@@ -63,6 +63,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
 		setUnlocalizedName(ModDefinitions.getName(name));
 		setRegistryName(ModDefinitions.getResource(name));
+		//iron mining level to stop mobs breaking them
 		setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumAxis.X));
 		setHarvestLevel("pickaxe", 2);
 		setHardness(0.3F);
@@ -80,17 +81,21 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
+		//creat tile entity based in material
 		return new TileBarbedWire(EnumBarbedWireMat.byMeta(meta%3));
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+		//slow entities
 		entity.setInWeb();
 		if (world.getTileEntity(pos) instanceof TileBarbedWire &! world.isRemote) {
+			//tick damage on server
 			TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
 			if (te.getOrUpdateCooldown() == 0) {
 				te.causeDamage();
 			}
+			//break barbed wire
 			if (te.getDurability() <= 0) {
 				world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 			}
@@ -102,6 +107,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		return new ExtendedBlockState(this, new IProperty[]{MATERIAL, AXIS}, new IUnlistedProperty[]{IS_ENCHANTED});
 	}
 
+	//hook for enchanted barbed wire rendering, probably not needed as we now use a tesr instead of baked model
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity te = world.getTileEntity(pos);
@@ -117,7 +123,9 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 			TileBarbedWire tile = ((TileBarbedWire) world.getTileEntity(pos));
 			if (stack.hasTagCompound()) {
 				NBTTagCompound nbt = stack.getTagCompound();
+				//sync durability with item
 				if (nbt.hasKey("durability"))tile.setDurability(nbt.getInteger("durability"));
+				//add enchantments from item
 				if (nbt.hasKey("ench")) {
 					for (NBTBase tag : nbt.getTagList("ench", 10)) {
 						int level = ((NBTTagCompound)tag).getShort("lvl");
@@ -126,6 +134,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 					}
 				}
 			}
+			//set the player as the owner to remove self and team damage
 			if (placer instanceof EntityPlayer) tile.setOwner((EntityPlayer) placer);
 		}
 	}
@@ -164,15 +173,19 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		return 0;
 	}
 
+
+	//replace vanilla behaviour so we can modify the dropped items
 	@Override
 	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
 		player.addStat(StatList.getBlockStats(this));
 		player.addExhaustion(0.005F);
 		EnumBarbedWireMat mat = state.getValue(MATERIAL);
+		//drop barbed wire with nbt when silk touch is used
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
 			ItemStack drop = ((TileBarbedWire) te).getDrop();
 			spawnAsEntity(world, pos, drop);
 		} else {
+			//drop an amount of nuggets based on amount of remaining durability
 			Item item = mat.getDrop();
 			int count = (int) ((double)((TileBarbedWire) te).getDurability() / (double)mat.getDurability() * 7d);
 			spawnAsEntity(world, pos, new ItemStack(item, count, 0));
@@ -215,6 +228,8 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 		return EnumBarbedWireMat.values().length * 2;
 	}
 
+	//hopefully this makes mercs smarter and not giant dumbasses who get themselves stuck in barbed wire
+	//tek villagers should also be here but if we remove tektopia this needs not to crash
 	@Override
 	public PathNodeType getAiPathNodeType(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EntityLiving entity) {
 		return (entity instanceof EntityTF2Character) ? PathNodeType.DAMAGE_CACTUS : super.getAiPathNodeType(state, world, pos, entity);

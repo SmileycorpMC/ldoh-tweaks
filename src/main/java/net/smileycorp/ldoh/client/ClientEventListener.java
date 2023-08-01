@@ -84,6 +84,7 @@ public class ClientEventListener {
 		registry.registerItemColorHandler(new ItemEggColour(), LDOHItems.SPAWNER);
 	}
 
+	//register turret australium rendering
 	@SubscribeEvent
 	public static void blockColourHandler(ColorHandlerEvent.Block event) {
 		BlockColors registry = event.getBlockColors();
@@ -114,9 +115,11 @@ public class ClientEventListener {
 		}
 		//register renderer for barbed wire healthbar
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
+		//register renderer for filing cabinet items
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFilingCabinet.class, new TESRFilingCabinet());
 		//register turret item renderer
 		Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
+		//add incendiary ammo rendering properties to gun workbench
 		GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.INCENDIARY_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
 	}
 
@@ -124,6 +127,7 @@ public class ClientEventListener {
 	public static void onModelBake(ModelBakeEvent event) {
 		IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
 		ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
+		//register our turret item renderer
 		TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
 		registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
 	}
@@ -206,19 +210,26 @@ public class ClientEventListener {
 		}
 	}
 
+	//all the hunger and syringe rendering should probably be moved to it's own class
+	//and maybe have players be able to interact with the slot
+	//could potentially be part of the capabilities?
 	@SubscribeEvent
 	public static void drawGUI(GuiScreenEvent.BackgroundDrawnEvent event) {
 		if (event.getGui() instanceof GuiMercenary) {
 			GuiMercenary gui = (GuiMercenary) event.getGui();
 			EntityTF2Character entity = gui.mercenary;
 			if (entity.hasCapability(LDOHCapabilities.HUNGER, null) &! entity.isRobot()) {
+				//draw merc hunger
 				Minecraft mc = Minecraft.getMinecraft();
 				IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.getTextureManager().bindTexture(TF_HUNGER_TEXTURE);
+				//draw background
 				gui.drawTexturedModalRect(gui.getGuiLeft() - 54, gui.getGuiTop(), 0, 0, 54, 70);
+				//get the correct texture coordinate for the current hunger icon
 				int v = hunger.hasHungerEffect() ? 79 : 70;
 				int food = hunger.getFoodLevel();
+				//draw hunger icons
 				for (int i = 0; i<=Math.ceil(food/2); i++) {
 					int x = gui.getGuiLeft() - 50 + ((4-i%5)*9);
 					int y = gui.getGuiTop() + 16 + ((int)Math.floor(i/5)*9);
@@ -227,6 +238,7 @@ public class ClientEventListener {
 				}
 				FontRenderer font = gui.fontRenderer;
 				if (!hunger.getFoodSlot().isEmpty()) {
+					//draw hunger slot item
 					GlStateManager.enableLighting();
 					GlStateManager.enableRescaleNormal();
 					RenderHelper.enableGUIStandardItemLighting();
@@ -236,18 +248,22 @@ public class ClientEventListener {
 					RenderHelper.disableStandardItemLighting();
 					GlStateManager.disableLighting();
 				}
+				//draw hunger text
 				String text = I18n.translateToLocal("gui.text.Hunger");
 				font.drawString(text, gui.getGuiLeft() - 26 - (font.getStringWidth(text)/2), gui.getGuiTop()+5, 4210752);
 			}
 			if (entity.hasCapability(LDOHCapabilities.CURING, null)) {
+				//draw medic syringes inventory
 				Minecraft mc = Minecraft.getMinecraft();
 				ICuring curing = entity.getCapability(LDOHCapabilities.CURING, null);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.getTextureManager().bindTexture(MEDIC_SYRINGES_TEXTURE);
+				//draw background
 				gui.drawTexturedModalRect(gui.getGuiLeft() - 54, gui.getGuiTop() + 112, 0, 0, 54, 54);
 				FontRenderer font = gui.fontRenderer;
 				int count = curing.getSyringeCount();
 				if (count > 0) {
+					//render syringe items
 					GlStateManager.enableLighting();
 					GlStateManager.enableRescaleNormal();
 					RenderHelper.enableGUIStandardItemLighting();
@@ -257,6 +273,7 @@ public class ClientEventListener {
 					RenderHelper.disableStandardItemLighting();
 					GlStateManager.disableLighting();
 				}
+				//draw syringe title
 				String text = I18n.translateToLocal("gui.text.Curing");
 				font.drawString(text, gui.getGuiLeft() - 26 - (font.getStringWidth(text)/2), gui.getGuiTop()+117, 4210752);
 			}
@@ -270,21 +287,25 @@ public class ClientEventListener {
 			EntityTF2Character entity = gui.mercenary;
 			int mouseX = event.getMouseX();
 			int mouseY = event.getMouseY();
+			//show tooltips for hunger items
 			if (entity.hasCapability(LDOHCapabilities.HUNGER, null) &! entity.isRobot()) {
 				IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
 				if (!hunger.getFoodSlot().isEmpty()) {
 					int slotX = gui.getGuiLeft() - 36;
 					int slotY = gui.getGuiTop() + 42;
+					//is mouse over the hunger slot?
 					if (mouseX >= slotX  && mouseX <= slotX + 18 && mouseY >= slotY  && mouseY <= slotY + 18) {
 						gui.renderToolTip(hunger.getFoodSlot(), mouseX, mouseY);
 					}
 				}
 			}
+			//show tooltips for medic curing slot
 			if (entity.hasCapability(LDOHCapabilities.CURING, null)) {
 				int count = entity.getCapability(LDOHCapabilities.CURING, null).getSyringeCount();
 				if (count > 0) {
 					int slotX = gui.getGuiLeft() - 36;
 					int slotY = gui.getGuiTop() + 136;
+					//is mouse over the hunger slot?
 					if (mouseX >= slotX  && mouseX <= slotX + 18 && mouseY >= slotY  && mouseY <= slotY + 18) {
 						gui.renderToolTip(new ItemStack(LDOHItems.SYRINGE, count, 2), mouseX, mouseY);
 					}
@@ -293,6 +314,7 @@ public class ClientEventListener {
 		}
 	}
 
+	//add tooltips to other mods items
 	@SubscribeEvent
 	public static void addInformation(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
@@ -309,6 +331,7 @@ public class ClientEventListener {
 		}
 	}
 
+	//unused, this can potentially be deleted
 	public static ModelResourceLocation getModelLocation(IBlockState state) {
 		String property = "";
 

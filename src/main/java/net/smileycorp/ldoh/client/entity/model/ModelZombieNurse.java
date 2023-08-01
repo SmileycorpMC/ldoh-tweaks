@@ -4,7 +4,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelZombie;
 
 public class ModelZombieNurse extends ModelZombie {
-	
+
+	//need this on the off chance someone removes mobends
 	 public ModelZombieNurse(float modelSize, float p_i1149_2_) {
 		 	super(modelSize, false); 
 	        this.bipedLeftLeg = new ModelRenderer(this, 0, 16);

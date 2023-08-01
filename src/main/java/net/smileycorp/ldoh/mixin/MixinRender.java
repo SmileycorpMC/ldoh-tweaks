@@ -11,17 +11,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//this is the reak hacky shit
 @Mixin(Render.class)
 public abstract class MixinRender {
 
+	//mostly the same as vanilla behavior
 	@Inject(at=@At("HEAD"), method = "bindEntityTexture(Lnet/minecraft/entity/Entity;)Z", cancellable = true)
 	protected void bindEntityTexture(Entity entity, CallbackInfoReturnable<Boolean> callback) {
+		//check if optifine is installed so we can default to their random mob texture loading
 		if (Loader.isModLoaded("optifine")) return;
-		callback.cancel();
+		//get the base texture
 		ResourceLocation resourcelocation = getEntityTexture(entity);
 		if (resourcelocation == null) {
 			callback.setReturnValue(false);
 		} else {
+			//redirect to our random texture cache to get any alternate textures
 			bindTexture(RandomTextureCache.INSTANCE.getLoc(resourcelocation, entity));
 			callback.setReturnValue(true);
 		}

@@ -51,7 +51,9 @@ public abstract class MixinEntityLivingBase extends Entity {
 
 	@Inject(at=@At("HEAD"), method = "attackEntityFrom(Lnet/minecraft/util/DamageSource;F)Z", cancellable = true)
 	public void attackEntityFrom(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callback) {
+		//make mrcrafyish bullets ignore damage cooldown
 		if (ModUtils.isProjectile(source)) {
+			//mostly duplicate of vanilla behaviour but without the damage cooldown
 			callback.cancel();
 			if (!ForgeHooks.onLivingAttack((EntityLivingBase) (Entity) this, source, amount)) {
 				callback.setReturnValue(false);

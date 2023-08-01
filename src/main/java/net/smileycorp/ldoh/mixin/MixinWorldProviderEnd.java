@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//this entire file doesn't work properly
+//may look into another solution if it ever becomes relevant
+//replaces the ender dragon with a parasite
 @Mixin(WorldProviderEnd.class)
 public abstract class MixinWorldProviderEnd extends WorldProvider {
 

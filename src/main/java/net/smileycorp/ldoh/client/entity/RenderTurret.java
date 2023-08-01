@@ -17,6 +17,7 @@ public class RenderTurret extends RenderLiving<EntityTurret> {
 		super(rendermanager, new ModelTurret(), 0.5F);
 	}
 
+	//render turret with enemy texture if required
 	@Override
 	protected ResourceLocation getEntityTexture(EntityTurret entity) {
 		return entity.isEnemy() ? ENEMY_TEXTURE :TEXTURE;

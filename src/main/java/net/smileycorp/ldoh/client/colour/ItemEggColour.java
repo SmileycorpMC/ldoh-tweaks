@@ -8,6 +8,7 @@ import net.smileycorp.ldoh.common.item.ItemSpawner;
 public class ItemEggColour implements IItemColor {
 
 	@Override
+	//follow rough vanilla behaviour for colouring our spawn eggs
 	public int colorMultiplier(ItemStack stack, int tintIndex) {
 		int colour = tintIndex == 1 ? 0x00000 : 0xFB40F9;
 		int meta = stack.getMetadata();

@@ -87,6 +87,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 		if (nbt != null && nbt.hasKey("isEnemy") && nbt.getBoolean("isEnemy")) isEnemy = true;
 		Minecraft mc = Minecraft.getMinecraft();
 		GlStateManager.pushMatrix();
+		//get translations based on item position
 		switch (transforms) {
 			case GUI:
 				GlStateManager.scale(1.15, 1.15, 1.15);
@@ -124,13 +125,16 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 			default:
 				break;
 		}
+		//get and bind the correct texture for type of turret
 		IBakedModel base = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(BASE_LOC);
 		mc.getRenderItem().renderItem(stack, ForgeHooksClient.handleCameraTransforms(base, transforms, false));
 		mc.getTextureManager().bindTexture(isEnemy ? RenderTurret.ENEMY_TEXTURE : RenderTurret.TEXTURE);
 		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(180, 1, 0, 0);
 		GlStateManager.translate(0, -0.9, 0);
+		//eventually we'll add australium rendering to this
 		nbt = stack.getTagCompound();
+		//render turret entity over item
 		turret.render(isEnemy ? mc.player : null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
 		GlStateManager.popMatrix();
 	}

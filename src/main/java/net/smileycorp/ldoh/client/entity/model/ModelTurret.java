@@ -145,27 +145,36 @@ public class ModelTurret extends ModelBase {
 	public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		boolean australium = (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM));
+		//tint the turret the australium colour if it has the upgrade
 		if (australium) GlStateManager.color(1, 0.831372549f, 0);
 		else if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
 		else if (!(entity instanceof EntityPlayer || (entity instanceof IEnemyMachine && ((IEnemyMachine) entity).isEnemy()))) {
 			Color colour = null;
 			if (entity instanceof IEnemyMachine) {
+				//check if the turret is an enemy turret
 				if (((IEnemyMachine) entity).isEnemy()) colour = new Color(0x2C3811);
+				//if the entity is a player, the turret is an enemy turret in the inventory
 			} else if (entity instanceof EntityPlayer) colour = new Color(0x2C3811);
 			if (colour == null) {
 				if (entity.getTeam() != null) {
+					//get the team coulour
 					colour = new Color(Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode));
 				} else {
+					//apply the dark grey colour to the hull if no other colours needed
 					colour = new Color(0x404040);
 				}
 			}
 			GlStateManager.color(colour.getRed()/255f, colour.getGreen()/255f, colour.getBlue()/255f);
 		}
 		if (entity instanceof EntityTurret) {
+			//pivot turret gun based on facing
 			axel.rotateAngleX = headPitch * 0.0174533f;
+			//rotate turret gun while firing
 			gun_middle.rotateAngleZ = ((EntityTurret)entity).getSpin();
+			//if entity isn't a turret this is being rendered from the inventory, so apply inventory animation
 		} else gun_middle.rotateAngleZ=(0.0261799388f*age);
 		base.render(scale);
+		//remove australium tint
 		if (!australium) GlStateManager.color(1, 1, 1);
 		axel.render(scale);
 		GlStateManager.color(1, 1, 1);
@@ -177,6 +186,8 @@ public class ModelTurret extends ModelBase {
 		if (entity != null) {
 			switch (((EntityTurret) entity).getFacing()) {
 			case UP: break;
+			//rotate the turret model based on direction it is placed on
+				//ai isn't currently updated for directions, so turrets are restricted to floor placement
 			case DOWN:
 				GlStateManager.rotate(180, 1, 0, 0);
 				GlStateManager.translate(0, -2.5, 0);
@@ -201,6 +212,7 @@ public class ModelTurret extends ModelBase {
 				GlStateManager.translate(0, -1.25, -1.25);
 				break;
 			}
+			//rotate turret based on it's facing
 			base.rotateAngleY = yaw  * 0.0174533f;
 			axel.rotateAngleY = yaw * 0.0174533f;
 		}

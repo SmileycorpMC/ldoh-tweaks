@@ -27,6 +27,7 @@ public class TESRBarbedWire extends TileEntitySpecialRenderer<TileBarbedWire> {
 			}
 		}
 		if (te.isEnchanted()) {
+			//render enchanted glint layer if barbed wire is enchanted
 			float f = mc.player.ticksExisted +partialTicks;
 			BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 			World world = getWorld();

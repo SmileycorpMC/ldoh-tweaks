@@ -17,6 +17,8 @@ public abstract class MixinBlockPortal extends BlockBreakable {
 		super(p_i45712_1_, p_i45712_2_);
 	}
 
+	//prevent nether portals from being created
+	//have to use this since no nether portals is no longer being maintained and is no longer able to be added to modpacks
 	@Inject(at=@At("HEAD"), method = "trySpawnPortal(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true)
 	public void trySpawnPortal(World worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callback) {
 		callback.setReturnValue(false);

@@ -20,6 +20,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 	public void render(TileFilingCabinet te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.player;
+		//draw filing cabinet contents
 		if (!te.isEmpty() && player != null) {
 			EnumFacing facing = te.getWorld().getBlockState(te.getPos()).getValue(BlockFilingCabinet.FACING);
 			setLightmapDisabled(true);
@@ -33,6 +34,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 	}
 
+	//draw item count
 	private void drawText(Minecraft mc, TileFilingCabinet te, EnumFacing facing, double x, double y, double z) {
 		GlStateManager.pushMatrix();
 		switch (facing) {
@@ -61,6 +63,7 @@ public class TESRFilingCabinet extends TileEntitySpecialRenderer<TileFilingCabin
 		GlStateManager.popMatrix();
 	}
 
+	//draw item sprite
 	private void renderItem(Minecraft mc, TileFilingCabinet te, EnumFacing facing, double x, double y, double z) {
 		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();

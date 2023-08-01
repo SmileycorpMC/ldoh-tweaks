@@ -14,6 +14,7 @@ import java.awt.*;
 
 public class BlockTurretColour implements IBlockColor {
 
+	//tint turret base australium colour if turret has australium upgrade
 	@Override
 	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
 		Block block = state.getBlock();

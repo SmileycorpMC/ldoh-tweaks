@@ -20,6 +20,8 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new ClientEventListener());
+		//register our random mobs support to the reload listener
+		//should probably prevent this when optifine is installed
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(RandomTextureCache.INSTANCE);
 	}
 
