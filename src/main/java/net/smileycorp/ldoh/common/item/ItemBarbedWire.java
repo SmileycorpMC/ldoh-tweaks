@@ -70,5 +70,18 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 		return enchantment.type.canEnchantItem(Items.IRON_SWORD);
 	}
 
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return stack.getTagCompound() != null && stack.getTagCompound().hasKey("durability");
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		if (!showDurabilityBar(stack)) return 0;
+		EnumBarbedWireMat mat = EnumBarbedWireMat.byMeta(stack.getMetadata());
+		NBTTagCompound nbt = stack.getTagCompound();
+		return 1-((double) nbt.getInteger("durability") / (double) mat.getDurability());
+	}
+
 
 }
