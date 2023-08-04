@@ -288,7 +288,7 @@ public class EntityTurret extends EntityLiving implements IEnemyMachine {
 		BlockPos pos = dataManager.get(TILE_POS);
 		if (pos != null) {
 			BlockPos tilepos = getPosition().add(pos);
-			world.destroyBlock(getPosition().add(tilepos ), false);
+			world.destroyBlock(tilepos, false);
 			world.removeTileEntity(tilepos);
 		}
 		if (world.isRemote) return;

@@ -342,7 +342,7 @@ public class EntityEvents {
 				event.setAmount(3f);
 			}
 			//adds 1/10 chance for bleed effect from husks
-			if ((attacker instanceof EntityHusk) && world.rand.nextInt(10)==0) {
+			if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0) {
 				entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
 			}
 		}
