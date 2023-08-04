@@ -157,7 +157,7 @@ public class ModelTurret extends ModelBase {
 			} else if (entity instanceof EntityPlayer) colour = new Color(0x2C3811);
 			if (colour == null) {
 				if (entity.getTeam() != null) {
-					//get the team coulour
+					//get the team colour
 					colour = new Color(Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode));
 				} else {
 					//apply the dark grey colour to the hull if no other colours needed

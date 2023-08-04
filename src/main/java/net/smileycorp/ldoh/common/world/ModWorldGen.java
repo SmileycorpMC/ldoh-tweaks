@@ -20,6 +20,7 @@ import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.world.WorldGenSurface.EnumVariant;
+import rafradek.TF2weapons.TF2weapons;
 
 import java.util.Random;
 
@@ -45,6 +46,11 @@ public class ModWorldGen implements IWorldGenerator {
 			genOre(world, chunkpos, rand, Blocks.COAL_ORE);
 			genOre(world, chunkpos, rand, Blocks.IRON_ORE);
 			genOre(world, chunkpos, rand, Blocks.GOLD_ORE);
+			genSpecialOre(world, chunkpos, rand, TF2weapons.blockCopperOre, 3, 28, 10, 7);
+			genSpecialOre(world, chunkpos, rand, TF2weapons.blockLeadOre, 3, 28, 6, 2);
+		} else {
+			genSpecialOre(world, chunkpos, rand, TF2weapons.blockCopperOre, 3, 65, 20, 7);
+			genSpecialOre(world, chunkpos, rand, TF2weapons.blockLeadOre, 3, 36, 8, 2);
 		}
 		if (EnumBiomeType.OCEAN.matches(biome) && rand.nextInt(15) == 0) {
 			EnumVariant variant = EnumVariant.values()[new Random().nextInt(EnumVariant.values().length)];
@@ -54,6 +60,15 @@ public class ModWorldGen implements IWorldGenerator {
 					.withProperty(BlockBOPDirt.VARIANT, BOPDirtType.LOAMY).withProperty(BlockBOPDirt.COARSE, true));
 		}
 		if (EnumBiomeType.BADLANDS.matches(biome)) genNest(world, rand, chunkX, chunkZ);
+	}
+
+	private void genSpecialOre(World world, BlockPos chunkpos, Random rand, Block block, int minHeight, int maxHeight, int count, int size) {
+		WorldGenerator generator = new WorldGenMinable(block.getDefaultState(), size);
+		int hdelta = maxHeight - minHeight;
+		for (int j = 0; j < count; ++j) {
+			BlockPos blockpos = chunkpos.add(rand.nextInt(16), minHeight + rand.nextInt(hdelta), rand.nextInt(16));
+			generator.generate(world, rand, blockpos);
+		}
 	}
 
 	protected void genOre(World world, BlockPos chunkpos, Random rand, Block block){

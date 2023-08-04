@@ -11,14 +11,14 @@ import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
 public class RenderZombieFireman extends RenderBiped<EntityZombieFireman> {
 
 	public RenderZombieFireman(RenderManager rendermanager) {
-		super(rendermanager, new ModelZombie(), 0.6F);
+		super(rendermanager, new ModelZombie(0.05f, false), 0.6F);
 		LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
 		{
 			@Override
 			protected void initArmor()
 			{
-				modelLeggings = new ModelZombie(0.55F, true);
-				modelArmor = new ModelZombie(1.1F, true);
+				modelLeggings = new ModelZombie(0.825F, true);
+				modelArmor = new ModelZombie(1.155F, true);
 			}
 		};
 		this.addLayer(layerbipedarmor);

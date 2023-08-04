@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common.entity;
 
 import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
@@ -40,8 +41,10 @@ public class EntityZombieFireman extends EntityZombie {
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
 		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0D);
 		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6D);
-		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(10.0D);
 	}
+
+	@Override
+	public void knockBack(Entity entity, float strength, double xRatio, double zRatio) {}
 
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
