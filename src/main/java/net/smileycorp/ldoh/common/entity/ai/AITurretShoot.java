@@ -26,13 +26,15 @@ public class AITurretShoot extends EntityAIBase {
 
 	protected static final float LENGTH = 0.5f;
 	protected static final float SPEED = 5f;
-	protected Gun fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getModifiedGun(new ItemStack(ModGuns.CHAIN_GUN));
+	protected final Gun fakegun;
 	protected int idleTimer = 0;
 
 	protected final EntityTurret turret;
 
 	public AITurretShoot(EntityTurret turret) {
 		this.turret = turret;
+		fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getGun();
+		fakegun.projectile.life = 60;
 	}
 
 	@Override
