@@ -78,6 +78,7 @@ public class CommonProxy {
 		LootTableList.register(ModDefinitions.MILITARY_CRATE);
 		LootTableList.register(ModDefinitions.MILITARY_AMMO);
 		LootTableList.register(ModDefinitions.MILITARY_TREASURE);
+		LootTableList.register(ModDefinitions.TECH_CRATE);
 
 		//Setup Packets for use
 		PacketHandler.initPackets();

@@ -6,10 +6,13 @@ import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
+import com.dhanantry.scapeandrunparasites.SRPMain;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
+import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
+import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -46,6 +49,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
@@ -65,6 +69,7 @@ import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
+import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import java.util.Collection;
@@ -338,6 +343,16 @@ public class EntityEvents {
 		Entity attacker = event.getSource().getImmediateSource();
 		World world = entity.world;
 		if (!world.isRemote) {
+			if (event.getEntity() instanceof EntityZombie && attacker instanceof EntityPlayer && entity.getRNG().nextInt(1000) == 0) {
+				EntitySpy spy = new EntitySpy(world);
+				spy.setPosition(entity.posX, entity.posY, entity.posZ);
+				spy.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+				world.spawnEntity(spy);
+				spy.attackEntityFrom(event.getSource(), spy.getHealth());
+				spy.setHealth(0);
+				entity.setDead();
+				event.setCanceled(true);
+			}
 			if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage) {
 				event.setAmount(3f);
 			}
@@ -399,5 +414,16 @@ public class EntityEvents {
 				}
 			}
 		}
+	}
+
+	//enable parasites on day 50
+	@SubscribeEvent
+	public void worldTick(TickEvent.WorldTickEvent event) {
+		World world = event.world;
+		if (world.isRemote || world.getWorldTime() < 1200000) return;
+		SRPWorldData parasite_data = SRPWorldData.get(world);
+		if (parasite_data == null || parasite_data.getEvolutionPhase() > -2) return;
+		parasite_data.setEvolutionPhase((byte) 0, true, world, true);
+		parasite_data.markDirty();
 	}
 }

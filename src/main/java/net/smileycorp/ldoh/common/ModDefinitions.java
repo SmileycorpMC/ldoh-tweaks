@@ -46,8 +46,9 @@ public class ModDefinitions {
 	public static final ResourceLocation MILITARY_CRATE = getResource("chests/military_crate");
 	public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
 	public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
+    public static final ResourceLocation TECH_CRATE = getResource("chests/tech_crate");
 
-	//helper methods
+    //helper methods
 	public static String getName(String name) {
 		return MODID + "." + name.replace("_", "");
 	}
