@@ -50,11 +50,6 @@
 			},
 			{
 				"type": "item",
-				"name": "metalworks:control_circuit",
-				"weight": 5
-			},
-			{
-				"type": "item",
 				"name": "cfm:item_ink_cartridge",
 				"weight": 5
 			},
