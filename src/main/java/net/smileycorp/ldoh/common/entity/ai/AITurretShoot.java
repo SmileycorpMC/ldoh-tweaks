@@ -19,6 +19,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
@@ -29,12 +30,13 @@ public class AITurretShoot extends EntityAIBase {
 	protected final Gun fakegun;
 	protected int idleTimer = 0;
 
-	protected final EntityTurret turret;
+	protected final EntityAbstractTurret turret;
 
-	public AITurretShoot(EntityTurret turret) {
+	public AITurretShoot(EntityAbstractTurret turret) {
 		this.turret = turret;
 		fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getGun();
 		fakegun.projectile.life = 60;
+		fakegun.projectile.speed = turret.getProjectileSpeed();
 	}
 
 	@Override
@@ -58,25 +60,7 @@ public class AITurretShoot extends EntityAIBase {
 					if (ray.entityHit instanceof EntityLivingBase) {
 						EntityLivingBase entity = (EntityLivingBase) ray.entityHit;
 						if (turret.canTarget(entity)) {
-							ItemStack ammo = turret.getAmmo(entity);
-							ProjectileFactory factory = AmmoRegistry.getInstance().getFactory(ammo.getItem().getRegistryName());
-							EntityProjectile bullet = factory.create(turret.world, turret, (ItemGun) ModGuns.CHAIN_GUN, fakegun);
-							bullet.setPosition(pos.x, pos.y, pos.z);
-							bullet.motionX = dir.x * SPEED;
-							bullet.motionY = dir.y * SPEED;
-							bullet.motionZ = dir.z * SPEED;
-							turret.world.spawnEntity(bullet);
-							ammo.shrink(1);
-							turret.setCooldown(turret.getFireRate());
-							String sound = fakegun.sounds.getFire(fakegun);
-							SoundEvent event = ModSounds.getSound(sound);
-							if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
-							if(event != null) turret.world.playSound(null, turret.getPosition(), event, SoundCategory.HOSTILE, 5.0F, 0.8F + turret.world.rand.nextFloat() * 0.2F);
-							MessageBullet messageBullet = new MessageBullet(bullet.getEntityId(), bullet.posX, bullet.posY, bullet.posZ, bullet.motionX, bullet.motionY, bullet.motionZ, 0, 0);
-							PacketHandler.INSTANCE.sendToAllAround(messageBullet, new NetworkRegistry.TargetPoint(turret.dimension, turret.posX, turret.posY, turret.posZ, GunConfig.SERVER.network.projectileTrackingRange));
-							if (ray.entityHit != target &! ray.entityHit.isDead) {
-								turret.setTarget((EntityLivingBase) ray.entityHit);
-							}
+							turret.shoot(pos);
 							idleTimer = 0;
 							return;
 						}

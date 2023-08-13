@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.item.ItemTurretUpgrade;
 import net.smileycorp.ldoh.common.item.LDOHItems;
@@ -12,9 +13,9 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 public class InventoryTurretUpgrades implements IInventory {
 
-	protected final EntityTurret turret;
+	protected final EntityAbstractTurret turret;
 
-	public InventoryTurretUpgrades(EntityTurret turret) {
+	public InventoryTurretUpgrades(EntityAbstractTurret turret) {
 		this.turret = turret;
 	}
 

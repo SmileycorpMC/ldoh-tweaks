@@ -4,15 +4,16 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 
 public class AITurretTarget extends EntityAIBase {
 
-	protected final EntityTurret turret;
+	protected final EntityAbstractTurret turret;
 	protected float distance = 100;
 	protected EntityLivingBase target = null;
 
-	public AITurretTarget(EntityTurret turret) {
+	public AITurretTarget(EntityAbstractTurret turret) {
 		this.turret = turret;
 	}
 
@@ -36,7 +37,6 @@ public class AITurretTarget extends EntityAIBase {
 		if (target != null) {
 			turret.setTarget(target);
 			distance = 100;
-			return;
 		}
 	}
 

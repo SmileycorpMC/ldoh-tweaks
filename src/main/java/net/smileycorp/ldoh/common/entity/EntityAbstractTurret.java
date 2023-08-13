@@ -2,16 +2,9 @@ package net.smileycorp.ldoh.common.entity;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.google.common.collect.Lists;
-import com.mrcrayfish.guns.GunConfig;
-import com.mrcrayfish.guns.common.ProjectileFactory;
-import com.mrcrayfish.guns.entity.EntityProjectile;
 import com.mrcrayfish.guns.init.ModGuns;
-import com.mrcrayfish.guns.init.ModSounds;
-import com.mrcrayfish.guns.item.AmmoRegistry;
-import com.mrcrayfish.guns.item.ItemGun;
-import com.mrcrayfish.guns.network.PacketHandler;
-import com.mrcrayfish.guns.network.message.MessageBullet;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,14 +17,16 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.util.DataUtils;
@@ -53,20 +48,19 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("deprecation")
-public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret> {
+public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P extends EntityAbstractTurret<T, P>> extends EntityLiving implements IEnemyMachine {
 
-	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
-	protected static final DataParameter<Boolean> IS_ENEMY = EntityDataManager.<Boolean>createKey(EntityTurret.class, DataSerializers.BOOLEAN);
-	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityTurret.class, DataSerializers.FACING);
-	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
-	protected static final DataParameter<Float> SPIN = EntityDataManager.<Float>createKey(EntityTurret.class, DataSerializers.FLOAT);
-	protected static final DataParameter<Integer> TARGET = EntityDataManager.<Integer>createKey(EntityTurret.class, DataSerializers.VARINT);
+	protected static final DataParameter<String> TEAM = EntityDataManager.<String>createKey(EntityAbstractTurret.class, DataSerializers.STRING);
+	protected static final DataParameter<Boolean> IS_ENEMY = EntityDataManager.<Boolean>createKey(EntityAbstractTurret.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<EnumFacing> FACING = EntityDataManager.<EnumFacing>createKey(EntityAbstractTurret.class, DataSerializers.FACING);
+	protected static final DataParameter<Integer> COOLDOWN = EntityDataManager.<Integer>createKey(EntityAbstractTurret.class, DataSerializers.VARINT);
+	protected static final DataParameter<Integer> TARGET = EntityDataManager.<Integer>createKey(EntityAbstractTurret.class, DataSerializers.VARINT);
 
 	//read these values from the nbt and cache them to make sure it gets loaded / synced properly
-	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
-	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityTurret.class, DataSerializers.STRING);
+	protected static final DataParameter<BlockPos> TILE_POS = EntityDataManager.<BlockPos>createKey(EntityAbstractTurret.class, DataSerializers.BLOCK_POS);
+	protected static final DataParameter<String> OWNER_UUID = EntityDataManager.<String>createKey(EntityAbstractTurret.class, DataSerializers.STRING);
 
-	public static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityTurret.class, DataSerializers.BLOCK_POS);
+	public static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityAbstractTurret.class, DataSerializers.BLOCK_POS);
 
 	protected EntityLivingBase target = null;
 	protected InventoryTurretAmmo inventory = new InventoryTurretAmmo();
@@ -77,9 +71,8 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 	protected String username = null;
 	protected Vec3d turretPos;
 
-	public EntityTurret(World world) {
+	public EntityAbstractTurret(World world) {
 		super(world);
-		setSize(0.5f, 0.5f);
 	}
 
 	@Override
@@ -89,7 +82,6 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		dataManager.register(IS_ENEMY, false);
 		dataManager.register(FACING, EnumFacing.UP);
 		dataManager.register(COOLDOWN, 0);
-		dataManager.register(SPIN, 0f);
 		dataManager.register(TARGET, getEntityId());
 		dataManager.register(TILE_POS, null);
 		dataManager.register(OWNER_UUID, "");
@@ -124,8 +116,66 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 			dataManager.set(FACING, EnumFacing.getFront(nbt.getInteger("facing")));
 		}
 		if (nbt.hasKey("cooldown")) dataManager.set(COOLDOWN, nbt.getInteger("cooldown"));
-		if (nbt.hasKey("spin")) dataManager.set(SPIN, nbt.getFloat("spin"));
 		if (nbt.hasKey("upgrades")) dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(nbt.getIntArray("upgrades")));
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setTag("inventory", inventory.writeToNBT());
+		nbt.setBoolean("isEnemy", isEnemy());
+		if (owner != null) nbt.setString("owner", dataManager.get(OWNER_UUID));
+		BlockPos tilePos = dataManager.get(TILE_POS);
+		if (tilePos != null) {
+			NBTTagCompound pos = new NBTTagCompound();
+			pos.setInteger("x", tilePos.getX());
+			pos.setInteger("y", tilePos.getY());
+			pos.setInteger("z", tilePos.getZ());
+			nbt.setTag("tilePos", pos);
+		}
+		nbt.setInteger("facing", dataManager.get(FACING).ordinal());
+		nbt.setInteger("cooldown", dataManager.get(COOLDOWN));
+		int[] upgrades = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		for (int upgrade : upgrades) {
+			if (!TurretUpgrade.isBlank(upgrade)) {
+				nbt.setIntArray("upgrades", upgrades);
+				return;
+			}
+		}
+	}
+
+	public void readFromTile(EntityPlayer owner, T tile, NBTTagCompound nbt, EnumFacing facing) {
+		if (nbt.hasKey("isEnemy")) {
+			dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+			updateUpgrades(TurretUpgrade.AMMO_OPTIMIZATION, TurretUpgrade.BARREL_SPIN);
+		}
+		if (!isEnemy()) {
+			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
+			this.owner = owner;
+			if (owner.getTeam() != null) {
+				dataManager.set(TEAM, owner.getTeam().getName());
+			}
+		}
+		dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
+		dataManager.set(FACING, facing);
+		if (nbt.hasKey("inventory")) inventory.readFromNBT(nbt.getCompoundTag("inventory"));
+		if (nbt.hasKey("upgrades")) dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(nbt.getIntArray("upgrades")));
+		if (nbt.hasKey("health")) setHealth(nbt.getFloat("health"));
+	}
+
+	public NBTTagCompound saveToItem() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		if (isEnemy()) nbt.setBoolean("isEnemy", isEnemy());
+		nbt.setTag("inventory", inventory.writeToNBT());
+		if (getHealth() < getMaxHealth()) nbt.setFloat("health", getHealth());
+		int[] upgrades = ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
+		for (int upgrade : upgrades) {
+			if (!TurretUpgrade.isBlank(upgrade)) {
+				nbt.setIntArray("upgrades", upgrades);
+				return nbt;
+			}
+		}
+		return nbt;
 	}
 
 	@Override
@@ -134,15 +184,11 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 	}
 
 	@Override
-	public float getEyeHeight() {
-		return 0.25f;
-	}
-
-	@Override
 	protected void collideWithEntity(Entity entityIn){}
 
 	@Override
 	public void onLivingUpdate() {
+		super.onLivingUpdate();
 		if (tile == null) {
 			BlockPos tilepos = dataManager.get(TILE_POS);
 			TileEntity tile = world.getTileEntity(getPosition().add(tilepos));
@@ -156,15 +202,67 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 				dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
 			}
 		}
-		if (hasTarget()) {
-			EntityLivingBase target = getTarget();
-			getLookHelper().setLookPosition(target.posX + (target.width*0.5), target.posY + (target.height * 0.75), target.posZ + (target.width*0.5), 10, 90);
+		if (ticksExisted%5 == 0 &! isEnemy()) {
+			if (world.isRemote && username == null) {
+				String uuidString = dataManager.get(OWNER_UUID);
+				if (DataUtils.isValidUUID(uuidString)) {
+					username = UsernameCache.getLastKnownUsername(UUID.fromString(uuidString));
+				}
+				if (username == null) username = uuidString;
+			}
+			if (owner == null || owner.isDead |! owner.isAddedToWorld()) {
+				String uuidString = dataManager.get(OWNER_UUID);
+				if (!world.isRemote && DataUtils.isValidUUID(uuidString)) owner = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(uuidString));
+
+			}
+			//data check owner and update team accordingly
+			if (owner != null) {
+				if (owner.getTeam() != null) {
+					if(!owner.getTeam().isSameTeam(getTeam())) {
+						dataManager.set(TEAM, owner.getTeam().getName());
+					}
+				} else if (dataManager.get(TEAM) != "") {
+					dataManager.set(TEAM,"");
+				}
+			} else if (getTeam() == null) {
+				dataManager.set(TEAM, "GREEN");
+			}
 		}
-		if (getCooldown() > 0) {
-			setCooldown(getCooldown()-1);
-			setSpin(getSpin()+0.34906585f);
+		if (getPositionVector() != turretPos) {
+			posX = turretPos.x;
+			posY = turretPos.y;
+			posZ = turretPos.z;
 		}
-		super.onLivingUpdate();
+	}
+
+	@Override
+	public void onAddedToWorld() {
+		super.onAddedToWorld();
+		turretPos = getPositionVector();
+	}
+
+	@Override
+	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
+		if (tile != null &! world.isRemote && (isSameTeam(player) || player.isCreative())) {
+			ItemStack stack = player.getHeldItem(hand);
+			if (stack.getItem() == Items.IRON_INGOT && getHealth() < getMaxHealth()) {
+				heal(4f);
+				if (!player.isCreative()) stack.shrink(1);
+				playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
+				return EnumActionResult.PASS;
+			} else if (stack.getItem() == LDOHItems.TURRET_UPGRADE &! ItemTurretUpgrade.isBlank(stack)) {
+				if (applyUpgrade(stack) &! player.isCreative()) {
+					stack.shrink(1);
+					playSound(SoundEvents.BLOCK_ANVIL_USE, 0.8f, 1f);
+					return EnumActionResult.PASS;
+				}
+			} else if (!player.isSneaking()) {
+				BlockPos pos = tile.getPos();
+				player.openGui(LDOHTweaks.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+				return EnumActionResult.SUCCESS;
+			}
+		}
+		return super.applyPlayerInteraction(player, vec, hand);
 	}
 
 	@Override
@@ -180,24 +278,11 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
 		for (TurretUpgrade upgrade : getInstalledUpgrades()) if (!isEnemy() || rand.nextInt(100) < 25) entityDropItem(upgrade.getItem(), 0.0f);
 		if (isEnemy()) {
-			entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
-			entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
-			entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3)+1), 0.0f);
-			entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3)+1), 0.0f);
-			if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
-			if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
+			dropEnemyItems();
 		}
 	}
 
-	@Override
-	public void dropEnemyItems() {
-		entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15)+10), 0.0f);
-		entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
-		entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3)+1), 0.0f);
-		entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3)+1), 0.0f);
-		if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
-		if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
-	}
+	public abstract void dropEnemyItems();
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -424,27 +509,5 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		return false;
 	}
 
-	@Override
-	public void shoot(Vec3d pos) {
-		ItemStack ammo = getAmmo(getTarget());
-		ProjectileFactory factory = AmmoRegistry.getInstance().getFactory(ammo.getItem().getRegistryName());
-		EntityProjectile bullet = factory.create(world, this, (ItemGun) ModGuns.CHAIN_GUN, fakegun);
-		bullet.setPosition(pos.x, pos.y, pos.z);
-		bullet.motionX = dir.x * SPEED;
-		bullet.motionY = dir.y * SPEED;
-		bullet.motionZ = dir.z * SPEED;
-		turret.world.spawnEntity(bullet);
-		ammo.shrink(1);
-		turret.setCooldown(turret.getFireRate());
-		String sound = fakegun.sounds.getFire(fakegun);
-		SoundEvent event = ModSounds.getSound(sound);
-		if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
-		if(event != null) turret.world.playSound(null, turret.getPosition(), event, SoundCategory.HOSTILE, 5.0F, 0.8F + turret.world.rand.nextFloat() * 0.2F);
-		MessageBullet messageBullet = new MessageBullet(bullet.getEntityId(), bullet.posX, bullet.posY, bullet.posZ, bullet.motionX, bullet.motionY, bullet.motionZ, 0, 0);
-		PacketHandler.INSTANCE.sendToAllAround(messageBullet, new NetworkRegistry.TargetPoint(turret.dimension, turret.posX, turret.posY, turret.posZ, GunConfig.SERVER.network.projectileTrackingRange));
-		if (ray.entityHit != target &! ray.entityHit.isDead) {
-			turret.setTarget((EntityLivingBase) ray.entityHit);
-		}
-	}
-
+	public abstract void shoot(Vec3d pos);
 }
