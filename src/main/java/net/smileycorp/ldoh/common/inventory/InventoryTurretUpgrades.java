@@ -80,7 +80,8 @@ public class InventoryTurretUpgrades implements IInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return slot < 3 && stack != null && stack.getItem() == LDOHItems.TURRET_UPGRADE &! ItemTurretUpgrade.isBlank(stack);
+		return slot < 3 && stack != null && stack.getItem() == LDOHItems.TURRET_UPGRADE &! ItemTurretUpgrade.isBlank(stack) &&
+				turret.canApplyUpgrade(TurretUpgrade.get(stack.getMetadata()));
 	}
 
 	@Override

@@ -1,42 +1,22 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
-import com.mrcrayfish.guns.GunConfig;
-import com.mrcrayfish.guns.common.ProjectileFactory;
-import com.mrcrayfish.guns.entity.EntityProjectile;
-import com.mrcrayfish.guns.init.ModGuns;
-import com.mrcrayfish.guns.init.ModSounds;
-import com.mrcrayfish.guns.item.AmmoRegistry;
-import com.mrcrayfish.guns.item.ItemGun;
-import com.mrcrayfish.guns.network.PacketHandler;
-import com.mrcrayfish.guns.network.message.MessageBullet;
-import com.mrcrayfish.guns.object.Gun;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
 public class AITurretShoot extends EntityAIBase {
 
 	protected static final float LENGTH = 0.5f;
-	protected static final float SPEED = 5f;
-	protected final Gun fakegun;
+
 	protected int idleTimer = 0;
 
 	protected final EntityAbstractTurret turret;
 
 	public AITurretShoot(EntityAbstractTurret turret) {
 		this.turret = turret;
-		fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getGun();
-		fakegun.projectile.life = 60;
-		fakegun.projectile.speed = turret.getProjectileSpeed();
 	}
 
 	@Override
@@ -60,7 +40,7 @@ public class AITurretShoot extends EntityAIBase {
 					if (ray.entityHit instanceof EntityLivingBase) {
 						EntityLivingBase entity = (EntityLivingBase) ray.entityHit;
 						if (turret.canTarget(entity)) {
-							turret.shoot(pos);
+							turret.shoot(pos, entity);
 							idleTimer = 0;
 							return;
 						}

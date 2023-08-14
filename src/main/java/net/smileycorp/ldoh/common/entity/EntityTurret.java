@@ -11,38 +11,30 @@ import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.item.ItemGun;
 import com.mrcrayfish.guns.network.PacketHandler;
 import com.mrcrayfish.guns.network.message.MessageBullet;
+import com.mrcrayfish.guns.object.Gun;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.util.DataUtils;
-import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
 import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
 import net.smileycorp.ldoh.common.inventory.InventoryTurretAmmo;
 import net.smileycorp.ldoh.common.inventory.InventoryTurretUpgrades;
-import net.smileycorp.ldoh.common.item.ItemTurretUpgrade;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import net.smileycorp.ldoh.common.tile.TileAbstractTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
@@ -50,7 +42,6 @@ import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret> {
@@ -200,106 +191,12 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (source != null) {
-			if (source.getTrueSource() instanceof EntityLivingBase) {
-				EntityLivingBase entity = (EntityLivingBase) source.getTrueSource();
-				if (canTarget(entity)) setTarget(entity);
-			} else if (source.getImmediateSource() instanceof EntityLivingBase) {
-				EntityLivingBase entity = (EntityLivingBase) source.getImmediateSource();
-				if (canTarget(entity)) setTarget(entity);
-			}
+	public void readFromTile(EntityPlayer owner, TileTurret tile, NBTTagCompound nbt, EnumFacing facing) {
+		if (nbt.hasKey("isEnemy")) {
+			dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
+			updateUpgrades(TurretUpgrade.AMMO_OPTIMIZATION, TurretUpgrade.BARREL_SPIN);
 		}
-		return super.attackEntityFrom(source, amount);
-	}
-
-	public boolean hasTarget() {
-		EntityLivingBase target = getTarget();
-		if (target == null) return false;
-		return !target.isDead && target.isAddedToWorld() && canTarget(target) && getEntitySenses().canSee(target);
-	}
-
-	public void setTarget(EntityLivingBase target) {
-		this.target = target;
-		dataManager.set(TARGET, target == null ? getEntityId() : target.getEntityId());
-	}
-
-	public EntityLivingBase getTarget() {
-		if (world.isRemote) {
-			int id = dataManager.get(TARGET);
-			if (id != getEntityId()) {
-				Entity target = world.getEntityByID(id);
-				if (target instanceof EntityLivingBase) return (EntityLivingBase) target;
-			}
-			return null;
-		} else return target;
-	}
-
-	@Override
-	public boolean hasNoGravity() {
-		return true;
-	}
-
-	@Override
-	protected boolean canDespawn() {
-		return false;
-	}
-
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 10.0D;
-		if (Double.isNaN(d0)) {
-			d0 = 1.0D;
-		}
-		d0 = d0 * 64.0D * getRenderDistanceWeight();
-		return distance < d0 * d0;
-	}
-
-	@Override
-	public boolean isEnemy() {
-		return dataManager.get(IS_ENEMY);
-	}
-
-	@Override
-	public Team getTeam() {
-		if (isEnemy()) return null; //TODO: add green team (optional)
-		String team = dataManager.get(TEAM);
-		return team.isEmpty() ? null : world.getScoreboard().getTeam(team);
-	}
-
-	public boolean isSameTeam(Entity entity) {
-		if (isEnemy()) {
-			if (entity instanceof IEnemyMachine) return (((IEnemyMachine) entity).isEnemy());
-			return false;
-		}
-		if (getTeam() == null) return entity.getTeam() == null;
-		return getTeam().equals(entity.getTeam());
-	}
-
-	public boolean canTarget(EntityLivingBase entity) {
-		if (entity == null) return false;
-		if (getDistance(entity) > getRange()) return false;
-		if (isEnemy()) {
-			if (entity instanceof EntityPlayer) return ((EntityPlayer) entity).isSpectator() || ((EntityPlayer) entity).isCreative() ? false : true;
-			if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
-				if (!entity.getTeam().getName().equals("GREEN")) return true;
-			}
-		}
-		return ModUtils.canTarget(this, entity);
-	}
-
-	public EntityPlayer getOwner() {
-		return isEnemy() ? null : owner;
-	}
-
-	public UUID getOwnerUUID() {
-		if (isEnemy()) return null;
-		String uuidString = dataManager.get(OWNER_UUID);
-		return DataUtils.isValidUUID(uuidString) ? UUID.fromString(uuidString) : null;
-	}
-
-	public EnumFacing getFacing() {
-		return dataManager.get(FACING);
+		super.readFromTile(owner, tile, nbt, facing);
 	}
 
 	public int getCooldown() {
@@ -318,14 +215,6 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		dataManager.set(SPIN, spin);
 	}
 
-	public InventoryTurretAmmo getInventory() {
-		return inventory;
-	}
-
-	public InventoryTurretUpgrades getUpgradeInventory() {
-		return upgrades;
-	}
-
 	public boolean hasAmmo() {
 		return inventory.hasAmmo();
 	}
@@ -334,19 +223,6 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		boolean optimize = hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION);
 		return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase && optimize) ?
 				LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public String getOwnerUsername() {
-		return username;
-	}
-
-	public boolean isActive() {
-		if (hasUpgrade(TurretUpgrade.REDSTONE_CONTROL)) {
-			BlockPos tile_pos = dataManager.get(TILE_POS);
-			if (tile_pos != null) return world.isBlockPowered(tile_pos);
-		}
-		return true;
 	}
 
 	public int getFireRate() {
@@ -425,25 +301,34 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 	}
 
 	@Override
-	public void shoot(Vec3d pos) {
+	public boolean canApplyUpgrade(TurretUpgrade upgrade) {
+		return true;
+	}
+
+	@Override
+	public void shoot(Vec3d pos, EntityLivingBase entity) {
+		Gun fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getGun();
+		fakegun.projectile.life = 60;
+		fakegun.projectile.speed = getProjectileSpeed();
 		ItemStack ammo = getAmmo(getTarget());
 		ProjectileFactory factory = AmmoRegistry.getInstance().getFactory(ammo.getItem().getRegistryName());
 		EntityProjectile bullet = factory.create(world, this, (ItemGun) ModGuns.CHAIN_GUN, fakegun);
 		bullet.setPosition(pos.x, pos.y, pos.z);
-		bullet.motionX = dir.x * SPEED;
-		bullet.motionY = dir.y * SPEED;
-		bullet.motionZ = dir.z * SPEED;
-		turret.world.spawnEntity(bullet);
+		Vec3d dir = getLookVec();
+		bullet.motionX = dir.x * bullet.getProjectile().speed;
+		bullet.motionY = dir.y * bullet.getProjectile().speed;
+		bullet.motionZ = dir.z * bullet.getProjectile().speed;
+		world.spawnEntity(bullet);
 		ammo.shrink(1);
-		turret.setCooldown(turret.getFireRate());
+		setCooldown(getFireRate());
 		String sound = fakegun.sounds.getFire(fakegun);
 		SoundEvent event = ModSounds.getSound(sound);
 		if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
-		if(event != null) turret.world.playSound(null, turret.getPosition(), event, SoundCategory.HOSTILE, 5.0F, 0.8F + turret.world.rand.nextFloat() * 0.2F);
+		if(event != null) world.playSound(null, getPosition(), event, SoundCategory.HOSTILE, 5.0F, 0.8F + world.rand.nextFloat() * 0.2F);
 		MessageBullet messageBullet = new MessageBullet(bullet.getEntityId(), bullet.posX, bullet.posY, bullet.posZ, bullet.motionX, bullet.motionY, bullet.motionZ, 0, 0);
-		PacketHandler.INSTANCE.sendToAllAround(messageBullet, new NetworkRegistry.TargetPoint(turret.dimension, turret.posX, turret.posY, turret.posZ, GunConfig.SERVER.network.projectileTrackingRange));
-		if (ray.entityHit != target &! ray.entityHit.isDead) {
-			turret.setTarget((EntityLivingBase) ray.entityHit);
+		PacketHandler.INSTANCE.sendToAllAround(messageBullet, new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, GunConfig.SERVER.network.projectileTrackingRange));
+		if (entity != target &! entity.isDead) {
+			setTarget(entity);
 		}
 	}
 

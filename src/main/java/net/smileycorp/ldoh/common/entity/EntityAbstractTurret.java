@@ -1,8 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
-import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.google.common.collect.Lists;
-import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,7 +21,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -145,10 +142,6 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 	}
 
 	public void readFromTile(EntityPlayer owner, T tile, NBTTagCompound nbt, EnumFacing facing) {
-		if (nbt.hasKey("isEnemy")) {
-			dataManager.set(IS_ENEMY, nbt.getBoolean("isEnemy"));
-			updateUpgrades(TurretUpgrade.AMMO_OPTIMIZATION, TurretUpgrade.BARREL_SPIN);
-		}
 		if (!isEnemy()) {
 			dataManager.set(OWNER_UUID, owner.getUniqueID().toString());
 			this.owner = owner;
@@ -415,11 +408,7 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		return inventory.hasAmmo();
 	}
 
-	public ItemStack getAmmo(Entity target) {
-		boolean optimize = hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION);
-		return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase && optimize) ?
-				LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
-	}
+	public abstract ItemStack getAmmo(Entity target);
 
 	@SideOnly(Side.CLIENT)
 	public String getOwnerUsername() {
@@ -434,22 +423,11 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		return true;
 	}
 
-	public int getFireRate() {
-		return 4 - getUpgradeCount(TurretUpgrade.BARREL_SPIN);
-	}
+	public abstract int getFireRate();
 
-	public int getRange () {
-		return 30 + (20 * getUpgradeCount(TurretUpgrade.RANGE));
-	}
+	public abstract int getRange();
 
-	public int getProjectileSpeed() {
-		return 10 * (1 + getUpgradeCount(TurretUpgrade.RIFLING));
-	}
-
-	@Override
-	public String getName() {
-		return isEnemy() ? I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name") : super.getName();
-	}
+	public abstract int getProjectileSpeed();
 
 	public List<TurretUpgrade> getInstalledUpgrades() {
 		List<TurretUpgrade> upgrades = Lists.newArrayList();
@@ -471,12 +449,14 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		return count;
 	}
 
-	public boolean applyUpgrade(ItemStack upgrade) {
+	public boolean applyUpgrade(ItemStack stack) {
+		TurretUpgrade upgrade = TurretUpgrade.get(stack.getMetadata());
+		if (!canApplyUpgrade(upgrade)) return false;
 		int[] array =  ModUtils.posToArray(dataManager.get(TURRET_UPGRADES));
 		for (int i = 0; i < array.length; i++) {
 			int id = array[i];
 			if (TurretUpgrade.isBlank(id)) {
-				array[i] = upgrade.getMetadata();
+				array[i] = upgrade.ordinal();
 				dataManager.set(TURRET_UPGRADES, ModUtils.arrayToPos(array));
 				return true;
 			}
@@ -509,5 +489,7 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		return false;
 	}
 
-	public abstract void shoot(Vec3d pos);
+	public abstract boolean canApplyUpgrade(TurretUpgrade upgrade);
+
+	public abstract void shoot(Vec3d pos, EntityLivingBase entity);
 }
