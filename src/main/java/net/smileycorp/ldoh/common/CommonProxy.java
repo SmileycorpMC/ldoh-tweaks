@@ -1,5 +1,7 @@
 package net.smileycorp.ldoh.common;
 
+import com.mrcrayfish.furniture.api.RecipeAPI;
+import com.mrcrayfish.furniture.api.RecipeRegistry;
 import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
@@ -9,8 +11,7 @@ import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.smileycorp.ldoh.client.gui.GuiTurret;
 import net.smileycorp.ldoh.common.capabilities.*;
@@ -142,6 +144,16 @@ public class CommonProxy {
 		//add australium turret upgrade
 		TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(ModDefinitions.getResource("austrailum_turret_upgrade"), TurretUpgrade.AUSTRALIUM.getItem(),
 				new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
+		//add cfm repairing compatability
+		for (Item item : ForgeRegistries.ITEMS) {
+			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isDamageable()) return;
+			if (item instanceof ItemBow || item instanceof ItemSword || item instanceof ItemTool || item instanceof ItemFlintAndSteel) {
+				RecipeRegistry.getInstance().registerDishwasherRecipe(new ItemStack(item));
+			}
+			if (item instanceof ItemArmor) {
+				RecipeRegistry.getInstance().registerWashingMachineRecipe(new ItemStack(item));
+			}
+		}
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
