@@ -35,10 +35,8 @@ import net.smileycorp.ldoh.common.inventory.InventoryTurretUpgrades;
 import net.smileycorp.ldoh.common.item.ItemTurretUpgrade;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileAbstractTurret;
-import net.smileycorp.ldoh.common.tile.TileTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
-import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import java.util.List;

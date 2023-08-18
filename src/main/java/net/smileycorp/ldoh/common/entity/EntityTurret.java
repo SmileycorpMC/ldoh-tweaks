@@ -1,7 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
-import com.google.common.collect.Lists;
 import com.mrcrayfish.guns.GunConfig;
 import com.mrcrayfish.guns.common.ProjectileFactory;
 import com.mrcrayfish.guns.entity.EntityProjectile;
@@ -13,9 +12,7 @@ import com.mrcrayfish.guns.network.PacketHandler;
 import com.mrcrayfish.guns.network.message.MessageBullet;
 import com.mrcrayfish.guns.object.Gun;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -23,26 +20,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.smileycorp.atlas.api.util.DataUtils;
-import net.smileycorp.ldoh.common.entity.ai.AITurretShoot;
-import net.smileycorp.ldoh.common.entity.ai.AITurretTarget;
-import net.smileycorp.ldoh.common.inventory.InventoryTurretAmmo;
-import net.smileycorp.ldoh.common.inventory.InventoryTurretUpgrades;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileTurret;
-import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
 import rafradek.TF2weapons.TF2weapons;
-import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
-
-import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret> {
@@ -181,7 +170,6 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 		world.spawnEntity(bullet);
 		ammo.shrink(1);
 		setCooldown(getFireRate());
-		EntityCreature
 		String sound = fakegun.sounds.getFire(fakegun);
 		SoundEvent event = ModSounds.getSound(sound);
 		if(event == null) event = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));

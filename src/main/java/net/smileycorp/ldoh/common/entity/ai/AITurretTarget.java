@@ -5,7 +5,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
 
 public class AITurretTarget extends EntityAIBase {
 

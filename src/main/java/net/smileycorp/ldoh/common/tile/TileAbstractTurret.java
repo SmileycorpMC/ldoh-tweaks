@@ -8,10 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
-
-import java.util.function.Supplier;
 
 public abstract class TileAbstractTurret<T extends EntityAbstractTurret> extends TileEntity implements IInventory {
 
