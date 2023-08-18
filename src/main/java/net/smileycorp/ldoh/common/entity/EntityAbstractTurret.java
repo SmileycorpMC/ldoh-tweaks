@@ -59,17 +59,20 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 
 	public static final DataParameter<BlockPos> TURRET_UPGRADES = EntityDataManager.<BlockPos>createKey(EntityAbstractTurret.class, DataSerializers.BLOCK_POS);
 
+	private final Class<T> tileClass;
+
 	protected EntityLivingBase target = null;
 	protected InventoryTurretAmmo inventory = new InventoryTurretAmmo();
 	protected InventoryTurretUpgrades upgrades = new InventoryTurretUpgrades(this);
 
 	protected EntityPlayer owner = null;
-	protected TileTurret tile = null;
+	protected T tile = null;
 	protected String username = null;
 	protected Vec3d turretPos;
 
-	public EntityAbstractTurret(World world) {
+	public EntityAbstractTurret(World world, Class<T> tileClass) {
 		super(world);
+		this.tileClass = tileClass;
 	}
 
 	@Override
@@ -185,13 +188,13 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		if (tile == null) {
 			BlockPos tilepos = dataManager.get(TILE_POS);
 			TileEntity tile = world.getTileEntity(getPosition().add(tilepos));
-			if (tile instanceof TileTurret) {
-				this.tile = (TileTurret) tile;
-				((TileTurret) tile).setEntity(this);
-			} else if (world.getTileEntity(tilepos) instanceof TileTurret) {// update turrets placed before 0.4.6 to the new system
+			if (tile.getClass() == tileClass) {
+				this.tile = (T) tile;
+				this.tile.setEntity((P) this);
+			} else if (world.getTileEntity(tilepos).getClass() == tileClass) {// update turrets placed before 0.4.6 to the new system
 				tile = world.getTileEntity(tilepos);
-				this.tile = (TileTurret) tile;
-				((TileTurret) tile).setEntity(this);
+				this.tile = (T) tile;
+				this.tile.setEntity((P) this);
 				dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
 			}
 		}
@@ -270,9 +273,7 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		if (world.isRemote) return;
 		for (ItemStack stack : inventory.getItems()) entityDropItem(stack, 0.0f);
 		for (TurretUpgrade upgrade : getInstalledUpgrades()) if (!isEnemy() || rand.nextInt(100) < 25) entityDropItem(upgrade.getItem(), 0.0f);
-		if (isEnemy()) {
-			dropEnemyItems();
-		}
+		if (isEnemy()) dropEnemyItems();
 	}
 
 	public abstract void dropEnemyItems();
@@ -386,14 +387,6 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 
 	public void setCooldown(int cooldown) {
 		dataManager.set(COOLDOWN, cooldown);
-	}
-
-	public float getSpin() {
-		return dataManager.get(SPIN);
-	}
-
-	public void setSpin(float spin) {
-		dataManager.set(SPIN, spin);
 	}
 
 	public InventoryTurretAmmo getInventory() {
