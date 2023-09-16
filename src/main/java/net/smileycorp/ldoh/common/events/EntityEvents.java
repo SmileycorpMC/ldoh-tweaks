@@ -46,12 +46,14 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
+import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.InfectionRegister;
@@ -101,6 +103,15 @@ public class EntityEvents {
 			event.setCanceled(true);
 			return;
 		}
+	}
+
+	//prevent entities spawning within 30 blocks of world spawn, should hopefully fix invisible zombies in the safehouse
+	@SubscribeEvent
+	public void checkSpawn(LivingSpawnEvent.CheckSpawn event) {
+		if (event.getWorld() == null || event.getWorld().isRemote) return;
+		World world = event.getWorld();
+		BlockPos spawn = world.getSpawnPoint();
+		if (spawn.getDistance((int)event.getX(), spawn.getY(), (int)event.getZ()) <= 30);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
