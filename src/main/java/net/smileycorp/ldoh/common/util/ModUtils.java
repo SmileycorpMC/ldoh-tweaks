@@ -211,15 +211,29 @@ public class ModUtils {
 			for (int i = 0; i < getRandomSize(rand); i++) {
 				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);
-				pos = new BlockPos(pos.getX()+rand.nextFloat(), world.getHeight(pos.getX(), pos.getZ()), pos.getZ()+rand.nextFloat());
-				EntityMob entity = isParasite? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
-				entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
-				entity.enablePersistence();
-				entity.onAddedToWorld();
-				entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-				world.spawnEntity(entity);
+				spawnMob(world, rand, basepos, pos, isParasite, day);
 			}
 		}
+	}
+
+	private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite, int day) {
+		pos = new BlockPos(pos.getX() + rand.nextFloat(), basepos.getY(), pos.getZ() + rand.nextFloat());
+		for (int i = 0; i <= 7; i++) {
+			if (world.isAirBlock(pos.up(i)) && world.isAirBlock(pos.up(i + 1))) {
+				pos = pos.down(i);
+				break;
+			} else if (i > 0 && world.isAirBlock(pos.down(i)) && world.isAirBlock(pos.down(i + 1))) {
+				pos = pos.down(i);
+				break;
+			}
+			if (i == 7) return;
+		}
+		EntityMob entity = isParasite ? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
+		entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+		entity.enablePersistence();
+		entity.onAddedToWorld();
+		entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+		world.spawnEntity(entity);
 	}
 
 	private static int getRandomSize(Random rand) {

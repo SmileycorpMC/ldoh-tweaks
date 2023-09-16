@@ -9,8 +9,10 @@ import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
+import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
+import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -44,6 +46,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -126,9 +129,9 @@ public class EntityEvents {
 										new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
 							} else if (randInt < 17) {
 								newentity = new EntityZombieFireman(world);
-							} else if (world.getWorldTime() < 240000) {
+							} else if (world.getWorldTime() < 264000) {
 								newentity = new EntityDummyZombie2(world);
-							} else if (world.getWorldTime() < 480000) {
+							} else if (world.getWorldTime() < 504000) {
 								newentity = new EntityDummyZombie1(world);
 							}
 							//turns zombies into husks in a desert
@@ -365,13 +368,19 @@ public class EntityEvents {
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent event) {
 		ResourceLocation loc = event.getName();
-		if (loc == LootTableList.ENTITIES_ZOMBIE) {
+		if (loc.equals(LootTableList.ENTITIES_ZOMBIE)) {
 			LootTable table  = event.getTable();
 			LootEntryItem clothLoot = new LootEntryItem(LDOHItems.CLOTH_FABRIC, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(0, 2))}, new LootCondition[0], "cloth_fabric");
 			table.addPool(new LootPool(new LootEntryItem[]{clothLoot}, new LootCondition[]{new KilledByPlayer(false),
 					new RandomChanceWithLooting(1f, 0.5f)}, new RandomValueRange(1), new RandomValueRange(0), "cloth_fabric"));
 			LootEntryItem eye = new LootEntryItem(Items.FERMENTED_SPIDER_EYE, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1))}, new LootCondition[0], "spider_eye");
 			table.addPool(new LootPool(new LootEntryItem[]{eye}, new LootCondition[]{new RandomChanceWithLooting(0.1f, 0.05f)}, new RandomValueRange(1), new RandomValueRange(0), "spider_eye"));
+		}
+		else if (loc.equals(new ResourceLocation("rafradek_tf2_weapons:entities/spy"))) {
+			LootTable table  = event.getTable();
+			LootEntryItem baguette = new LootEntryItem(ItemListxlfoodmod.baguette, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1, 64))}, new LootCondition[0], "baguette");
+			table.addPool(new LootPool(new LootEntryItem[]{baguette}, new LootCondition[]{new KilledByPlayer(false),
+					new RandomChanceWithLooting(1f, 0f)}, new RandomValueRange(1), new RandomValueRange(0), "baguette"));
 		}
 	}
 
@@ -424,4 +433,13 @@ public class EntityEvents {
 		parasite_data.setEvolutionPhase((byte) 0, true, world, true);
 		parasite_data.markDirty();
 	}
+
+	//prevent coth before day 50
+	@SubscribeEvent
+	public void applyEffect(PotionEvent.PotionApplicableEvent event) {
+		if (event.getPotionEffect() == null || event.getEntityLiving() == null) return;
+		World world = event.getEntity().getEntityWorld();
+		if (event.getPotionEffect().getPotion() == SRPPotions.COTH_E && world.getWorldTime() < 1200000);
+	}
+
 }

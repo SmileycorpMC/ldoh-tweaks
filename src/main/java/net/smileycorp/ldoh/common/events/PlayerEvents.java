@@ -101,12 +101,12 @@ public class PlayerEvents {
 					if (player.isSneaking() &! followers.isCrouching()) followers.setCrouching();
 					else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
 				}
-				if (world.getWorldTime() == 241000) {
+				if (world.getWorldTime() == 265000) {
 					ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_0);
 					text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 					player.sendMessage(text);
 				}
-				if (world.getWorldTime() == 481000) {
+				if (world.getWorldTime() == 505000) {
 					ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_1);
 					text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
 					player.sendMessage(text);

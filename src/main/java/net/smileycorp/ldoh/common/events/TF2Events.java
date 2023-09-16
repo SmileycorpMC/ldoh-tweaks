@@ -95,7 +95,8 @@ public class TF2Events {
 			//adds the player to a team after killing the opposite merc
 			if (event.getSource().getTrueSource() instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
-				if (entity instanceof EntityTF2Character) {
+				//prevent spy easter egg from forcing player teams
+				if (entity instanceof EntityTF2Character &! (entity instanceof EntitySpy)) {
 					if (!((EntityTF2Character) entity).isRobot()) {
 						if (player.getTeam() == null) {
 							if (entity.getTeam() == world.getScoreboard().getTeam("RED")) {
