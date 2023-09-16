@@ -22,4 +22,5 @@ public class LDOHItems {
 	public static final Item TURRET_UPGRADE = new ItemTurretUpgrade();
 
     //public static final Item TURRET_TARGETING_UPDRADE = new ItemTurretTargetingUpgrade();
+	
 }

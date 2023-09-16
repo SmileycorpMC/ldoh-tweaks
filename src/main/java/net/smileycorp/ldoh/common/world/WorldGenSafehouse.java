@@ -21,6 +21,7 @@ import net.minecraft.block.BlockStairs.EnumShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityLockableLoot;
 import net.minecraft.tileentity.TileEntitySign;
@@ -40,6 +41,7 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
+import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
 import net.smileycorp.ldoh.common.util.EnumAxis;
 
 import java.time.LocalDateTime;
@@ -434,8 +436,9 @@ public class WorldGenSafehouse extends WorldGenerator {
 		}
 
 		//desk
-		world.setBlockState(pos.west(4), FurnitureBlocks.DESK_CABINET_SPRUCE.getDefaultState().withProperty(BlockFurniture.FACING, isAprilFools ? EnumFacing.EAST : EnumFacing.WEST), 18);
-		((TileEntityLockableLoot) world.getTileEntity(pos.west(4))).setLootTable(ModDefinitions.SAFEHOUSE_CABINET, rand.nextLong());
+		world.setBlockState(pos.west(4), LDOHBlocks.FILING_CABINET.getDefaultState().withProperty(BlockHorizontal.FACING, isAprilFools ? EnumFacing.WEST : EnumFacing.EAST), 18);
+		TileFilingCabinet cabinet = (TileFilingCabinet) world.getTileEntity(pos.west(4));
+		cabinet.insertItem(new ItemStack(Items.PAPER, rand.nextInt(7) + 10));
 		for (int k = 1; k <= 3; k++) {
 			world.setBlockState(pos.west(4).north(k), FurnitureBlocks.TABLE_ANDESITE.getDefaultState(), 19);
 		}
@@ -462,8 +465,8 @@ public class WorldGenSafehouse extends WorldGenerator {
 				world.setBlockState(pos.add(i, 0, j), FurnitureBlocks.TABLE_SPRUCE.getDefaultState(), 19);
 			}
 		}
-		world.setBlockState(pos.add(4, 0, 2), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
-		world.setBlockState(pos.add(2, 0, 3), BlockSeat.instance.getDefaultState().withProperty(BlockSeat.WOOD_TYPE, EnumWoodType.SPRUCE), 18);
+		world.setBlockState(pos.add(4, 0, 2), FurnitureBlocks.CHAIR_SPRUCE.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.NORTH), 18);
+		world.setBlockState(pos.add(2, 0, 3), FurnitureBlocks.CHAIR_SPRUCE.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.WEST), 18);
 		world.setBlockState(pos.add(3, 1, 3), FurnitureBlocks.PLATE.getDefaultState(), 18);
 
 		world.setBlockState(pos.east(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING,
