@@ -47,6 +47,7 @@ public class ModDefinitions {
 	public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
 	public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
     public static final ResourceLocation TECH_CRATE = getResource("chests/tech_crate");
+    public static final ResourceLocation EIFFEL_GOOD_GOOD = getResource("chests/eiffel_good_good");
 
     //helper methods
 	public static String getName(String name) {

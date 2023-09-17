@@ -9,8 +9,6 @@ import com.mrcrayfish.furniture.blocks.BlockFurniture;
 import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import com.mrcrayfish.furniture.tileentity.TileEntityTree;
 import com.mrcrayfish.guns.block.BlockWorkbench;
-import jds.bibliocraft.blocks.BiblioWoodBlock.EnumWoodType;
-import jds.bibliocraft.blocks.BlockSeat;
 import mariot7.xlfoodmod.init.BlockListxlfoodmod;
 import net.blay09.mods.cookingforblockheads.block.BlockFridge;
 import net.blay09.mods.cookingforblockheads.tile.TileFridge;
@@ -38,6 +36,7 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTableManager;
 import net.minecraftforge.items.IItemHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.TimedEvents;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
@@ -54,9 +53,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 
 	private LocalDateTime time = LocalDateTime.now();
 
-	private boolean isHalloween = false;
-	private boolean isChristmas = false;
-	private boolean isAprilFools = false;
+	private boolean isSilly = false;
 	private boolean isAnniversary = false;
 	private String[] anniversaryMessage = {"", "", "", ""};
 
@@ -71,9 +68,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 	private boolean generated = false;
 
 	public WorldGenSafehouse() {
-		if ((time.getMonth() == Month.OCTOBER && time.getDayOfMonth() >= 17)) isHalloween = true;
-		else if ((time.getMonth() == Month.DECEMBER && time.getDayOfMonth() >= 11) || (time.getMonth() == Month.JANUARY && time.getDayOfMonth() <= 2)) isChristmas = true;
-		else if ((time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1) || new Random().nextInt(256) == 0) isAprilFools = true;
+		if ((time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1) || new Random().nextInt(256) == 0) isSilly = true;
 		else if ((time.getMonth() == Month.MAY && time.getDayOfMonth() == 21)) {
 			isAnniversary = true;
 			int years = time.getYear() - 2021;
@@ -420,33 +415,34 @@ public class WorldGenSafehouse extends WorldGenerator {
 
 	@SuppressWarnings("unchecked")
 	private void decorateBase(World world, Random rand) {
+		final boolean isHalloween = TimedEvents.isHalloween();
 		BlockPos pos = basepos.up();
 		if (exitpos == null) {
 			CrashReport report = CrashReport.makeCrashReport(new Exception("Please report to LDOH discord, I would make a new world if I were you."), "If this crash happens something has gone seriously wrong.");
 			throw new ReportedException(report);
 		}
 		//workbenches and chests
-		world.setBlockState(pos.west(4).south(4), com.mrcrayfish.guns.init.ModBlocks.WORKBENCH.getDefaultState().withProperty(BlockWorkbench.FACING, isAprilFools ? EnumFacing.EAST : EnumFacing.WEST), 18);
+		world.setBlockState(pos.west(4).south(4), com.mrcrayfish.guns.init.ModBlocks.WORKBENCH.getDefaultState().withProperty(BlockWorkbench.FACING, isSilly ? EnumFacing.EAST : EnumFacing.WEST), 18);
 		world.setBlockState(pos.west(4).south(3), Blocks.CRAFTING_TABLE.getDefaultState(), 18);
 
 		for (int i = 0; i <= 1; i++) {
 			BlockPos chest = pos.south(4).west(i);
-			world.setBlockState(chest, Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, isAprilFools ? EnumFacing.SOUTH : EnumFacing.NORTH), 19);
+			world.setBlockState(chest, Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, isSilly ? EnumFacing.SOUTH : EnumFacing.NORTH), 19);
 			((TileEntityLockableLoot) world.getTileEntity(chest)).setLootTable(ModDefinitions.SAFEHOUSE_CHEST, rand.nextLong());
 		}
 
 		//desk
-		world.setBlockState(pos.west(4), LDOHBlocks.FILING_CABINET.getDefaultState().withProperty(BlockHorizontal.FACING, isAprilFools ? EnumFacing.WEST : EnumFacing.EAST), 18);
+		world.setBlockState(pos.west(4), LDOHBlocks.FILING_CABINET.getDefaultState().withProperty(BlockHorizontal.FACING, isSilly ? EnumFacing.WEST : EnumFacing.EAST), 18);
 		TileFilingCabinet cabinet = (TileFilingCabinet) world.getTileEntity(pos.west(4));
 		cabinet.insertItem(new ItemStack(Items.PAPER, rand.nextInt(7) + 10));
 		for (int k = 1; k <= 3; k++) {
 			world.setBlockState(pos.west(4).north(k), FurnitureBlocks.TABLE_ANDESITE.getDefaultState(), 19);
 		}
-		if (isAprilFools) world.setBlockState(pos.west(3).north(2), FurnitureBlocks.TOILET.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.EAST), 18);
+		if (isSilly) world.setBlockState(pos.west(3).north(2), FurnitureBlocks.TOILET.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.EAST), 18);
 		else world.setBlockState(pos.west(3).north(2), FurnitureBlocks.MODERN_CHAIR.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.EAST), 18);
 		world.setBlockState(pos.west(4).north(3).up(), Blocks.BREWING_STAND.getDefaultState(), 18);
 		world.setBlockState(pos.west(4).north(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING,
-				isAprilFools ? EnumFacing.WEST : EnumFacing.EAST), 18);
+				isSilly ? EnumFacing.WEST : EnumFacing.EAST), 18);
 		IItemHandler fridgeInv = ((TileFridge) world.getTileEntity(pos.west(4).north(4))).getCombinedItemHandler();
 		LootTableManager manager = world.getLootTableManager();
 		for (ItemStack stack : manager.getLootTableFromLocation(ModDefinitions.SAFEHOUSE_MEDICAL_FRIDGE).generateLootForPools(rand, new LootContext(0, (WorldServer) world, manager, null, null, null))) {
@@ -470,7 +466,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 		world.setBlockState(pos.add(3, 1, 3), FurnitureBlocks.PLATE.getDefaultState(), 18);
 
 		world.setBlockState(pos.east(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING,
-				isAprilFools ? EnumFacing.EAST : EnumFacing.WEST), 18);
+				isSilly ? EnumFacing.EAST : EnumFacing.WEST), 18);
 		fridgeInv = ((TileFridge) world.getTileEntity(pos.east(4))).getCombinedItemHandler();
 		for (ItemStack stack : manager.getLootTableFromLocation(ModDefinitions.SAFEHOUSE_FRIDGE).generateLootForPools(rand, new LootContext(0, (WorldServer) world, manager, null, null, null))) {
 			while (true) {
@@ -538,7 +534,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 			world.setBlockState(exitpos.up().east().south(), button.withProperty(BlockButton.FACING, EnumFacing.SOUTH), 18);
 		}
 		if (isHalloween) placeHalloweenDecorations(world, rand, pos);
-		if (isChristmas) placeChristmasDecorations(world, rand, pos);
+		if (TimedEvents.isChristmas()) placeChristmasDecorations(world, rand, pos);
 		if (isAnniversary) placeAnniversaryDecorations(world, rand, pos);
 	}
 
@@ -595,7 +591,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 
 	private void setRandomBrick(Random rand, World world, BlockPos pos) {
 		IBlockState state = Blocks.STONEBRICK.getDefaultState();
-		int r = rand.nextInt(isHalloween ? 6 : 10);
+		int r = rand.nextInt(TimedEvents.isHalloween() ? 3 : 10);
 		if (r == 0) {
 			state = state.withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED);
 		} else if (r == 1) {

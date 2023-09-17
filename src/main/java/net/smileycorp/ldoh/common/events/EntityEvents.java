@@ -3,6 +3,7 @@ package net.smileycorp.ldoh.common.events;
 import com.Fishmod.mod_LavaCow.entities.EntityBanshee;
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
+import com.Fishmod.mod_LavaCow.entities.IAggressive;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
@@ -60,6 +61,7 @@ import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.TimedEvents;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
@@ -74,6 +76,7 @@ import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.building.EntitySentry;
 import rafradek.TF2weapons.entity.mercenary.EntitySpy;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.item.ItemFromData;
 
 import java.util.Collection;
 import java.util.Random;
@@ -246,7 +249,7 @@ public class EntityEvents {
 				EntityZombie zombie = (EntityZombie) entity;
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, false));
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(zombie);
 				zombie.tasks.addTask(3, new ESM_EntityAIGrief(zombie));
 			}
@@ -255,7 +258,7 @@ public class EntityEvents {
 				EntityVespa vespa = (EntityVespa) entity;
 				vespa.targetTasks.addTask(2, new EntityAINearestAttackableTarget(vespa, EntityPlayer.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityTF2Character.class, false));
-				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityAnimal.class, false));
+				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(vespa);
 			}
 			//makes the sludge lord hostile to the player
@@ -263,7 +266,7 @@ public class EntityEvents {
 				EntitySludgeLord slord = (EntitySludgeLord) entity;
 				slord.targetTasks.addTask(2, new EntityAINearestAttackableTarget(slord, EntityPlayer.class, false));
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
-				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityAnimal.class, false));
+				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(slord);
 			}
 			//makes the weta hostile to the player
@@ -271,27 +274,24 @@ public class EntityEvents {
 				EntityWeta weta = (EntityWeta) entity;
 				weta.targetTasks.addTask(2, new EntityAINearestAttackableTarget(weta, EntityPlayer.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityTF2Character.class, false));
-				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, false));
+				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(weta);
-				//weta.tasks.addTask(3, new AIBreakEgg(weta));
 			}
 			//makes the ptera hostile to the player
 			else if (entity instanceof EntityPtera) {
 				EntityPtera ptera = (EntityPtera) entity;
 				ptera.targetTasks.addTask(2, new EntityAINearestAttackableTarget(ptera, EntityPlayer.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityTF2Character.class, false));
-				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, false));
+				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(ptera);
-				//ptera.tasks.addTask(3, new AIBreakEgg(ptera));
 			}
 			//makes the banshee hostile to the player
 			else if (entity instanceof EntityBanshee) {
 				EntityBanshee banshee = (EntityBanshee) entity;
 				banshee.targetTasks.addTask(2, new EntityAINearestAttackableTarget(banshee, EntityPlayer.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityTF2Character.class, false));
-				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, false));
+				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(banshee);
-				//banshee.tasks.addTask(3, new AIBreakEgg(banshee));
 			}
 		}
 		//fix rare skeleton horse traps from appearing as well as skeletons and creepers spawning from fish's undead rising
@@ -359,6 +359,7 @@ public class EntityEvents {
 				EntitySpy spy = new EntitySpy(world);
 				spy.setPosition(entity.posX, entity.posY, entity.posZ);
 				spy.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+				if (TimedEvents.isHalloween()) spy.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemFromData.getNewStack("merasmushat"));
 				world.spawnEntity(spy);
 				spy.attackEntityFrom(event.getSource(), spy.getHealth());
 				spy.setHealth(0);
@@ -390,8 +391,11 @@ public class EntityEvents {
 		else if (loc.equals(new ResourceLocation("rafradek_tf2_weapons:entities/spy"))) {
 			LootTable table  = event.getTable();
 			LootEntryItem baguette = new LootEntryItem(ItemListxlfoodmod.baguette, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1, 64))}, new LootCondition[0], "baguette");
-			table.addPool(new LootPool(new LootEntryItem[]{baguette}, new LootCondition[]{new KilledByPlayer(false),
+			table.addPool(new LootPool(new LootEntryItem[]{baguette}, new LootCondition[]{(rand, ctx)->!TimedEvents.isHalloween(), new KilledByPlayer(false),
 					new RandomChanceWithLooting(1f, 0f)}, new RandomValueRange(1), new RandomValueRange(0), "baguette"));
+			LootEntryItem candy = new LootEntryItem(LDOHItems.CANDY_CORN, 1, 1, new LootFunction[]{new SetCount(new LootCondition[0], new RandomValueRange(1, 64))}, new LootCondition[0], "candy");
+			table.addPool(new LootPool(new LootEntryItem[]{candy}, new LootCondition[]{(rand, ctx)->TimedEvents.isHalloween(), new KilledByPlayer(false),
+					new RandomChanceWithLooting(1f, 0f)}, new RandomValueRange(1), new RandomValueRange(0), "candy"));
 		}
 	}
 

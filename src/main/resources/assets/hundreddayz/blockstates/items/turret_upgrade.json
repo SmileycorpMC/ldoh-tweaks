@@ -11,6 +11,8 @@
 		"barrel_spin": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/barrel_spin" }}],
 		"range": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/range" }}],
 		"redstone_control": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/redstone_control" }}],
-		"australium": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/australium" }}]
+		"australium": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/australium" }}],
+		"rifling": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/rifling" }}],
+		"smart_targeting": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/smart_targeting" }}]
 	}
 }
