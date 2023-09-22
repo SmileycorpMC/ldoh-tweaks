@@ -1,18 +1,27 @@
 package net.smileycorp.ldoh.common.events;
 
 import com.Fishmod.mod_LavaCow.init.FishItems;
+import com.animania.addons.extra.common.handler.ExtraAddonItemHandler;
+import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
+import com.mrcrayfish.furniture.api.IRecipeRegistry;
+import com.mrcrayfish.furniture.api.RecipeType;
+import com.mrcrayfish.furniture.api.RecipeVariables;
 import de.maxhenkel.car.items.ModItems;
+import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -78,12 +87,39 @@ public class RegistryEvents {
 
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+		for (ItemStack egg : OreDictionary.getOres("egg")) GameRegistry.addSmelting(egg, new ItemStack(ItemListxlfoodmod.fried_egg), 0.1f);
 		GameRegistry.addSmelting(new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 0), 0.1f);
 		GameRegistry.addSmelting(new ItemStack(Blocks.SOUL_SAND), new ItemStack(Items.QUARTZ, 1, 0), 0.1f);
 		FuelHandler.getInstance().registerFuel(ModItems.RAPECAKE, 50);
 		OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
 		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
 		OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
+	}
+
+	public static void registerCFMRecipes(IRecipeRegistry registry) {
+		//add cfm repairing compatability
+		for (Item item : ForgeRegistries.ITEMS) {
+			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isDamageable()) return;
+			if (item.getEquipmentSlot(new ItemStack(item)) != null)
+				registry.registerRecipe(RecipeType.WASHING_MACHINE, new RecipeVariables().setInput(new ItemStack(item)));
+			else registry.registerRecipe(RecipeType.DISHWASHER, new RecipeVariables().setInput(new ItemStack(item)));
+			if (item instanceof ItemFood && FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item)).getItem() instanceof ItemFood) {
+				registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(item))
+						.setOutput(FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item))));
+			}
+		}
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(Items.PORKCHOP))
+				.setInput(new ItemStack(Items.COOKED_PORKCHOP)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawFrogLegs))
+				.setInput(new ItemStack(ExtraAddonItemHandler.cookedFrogLegs)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBacon))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeBacon)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBeef))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeBeef)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeSteak))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeSteak)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimePork))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimePork)));
 	}
 
 	@SubscribeEvent

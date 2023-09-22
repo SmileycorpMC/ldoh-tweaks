@@ -186,14 +186,17 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
 		if (tile == null) {
 			BlockPos tilepos = dataManager.get(TILE_POS);
 			TileEntity tile = world.getTileEntity(getPosition().add(tilepos));
-			if (tile.getClass() == tileClass) {
+			if (tile != null && tile.getClass() == tileClass) {
 				this.tile = (T) tile;
 				this.tile.setEntity((P) this);
-			} else if (world.getTileEntity(tilepos).getClass() == tileClass) {// update turrets placed before 0.4.6 to the new system
+				// update turrets placed before 0.4.6 to the new system
+			} else if (world.getTileEntity(tilepos) != null && world.getTileEntity(tilepos).getClass() == tileClass) {
 				tile = world.getTileEntity(tilepos);
 				this.tile = (T) tile;
 				this.tile.setEntity((P) this);
 				dataManager.set(TILE_POS, tile.getPos().subtract(this.getPosition()));
+			} else {
+				world.removeEntity(this);
 			}
 		}
 		if (ticksExisted%5 == 0 &! isEnemy()) {

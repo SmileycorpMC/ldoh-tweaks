@@ -10,6 +10,7 @@ import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
+import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityShulkerBox;
@@ -23,8 +24,10 @@ import java.util.Random;
 
 public class WorldGenNest extends WorldGenerator {
 
-	private IBlockState[] blocks = {SRPBlocks.ParasiteStain.getDefaultState().withProperty(BlockParasiteStain.VARIANT, BlockParasiteStain.EnumType.FEELER),
+	private IBlockState[] nest_blocks = {Blocks.NETHER_WART_BLOCK.getDefaultState(), SRPBlocks.ParasiteStain.getDefaultState().withProperty(BlockParasiteStain.VARIANT, BlockParasiteStain.EnumType.FEELER),
 			SRPBlocks.ParasiteStain.getDefaultState().withProperty(BlockParasiteStain.VARIANT, BlockParasiteStain.EnumType.FLESH)};
+	private IBlockState[] wall_blocks = {Blocks.NETHERRACK.getDefaultState(), BOPBlocks.flesh.getDefaultState()};
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean generate(World world, Random rand, BlockPos base) {
@@ -35,7 +38,7 @@ public class WorldGenNest extends WorldGenerator {
 					BlockPos pos = base.up().add(i, j, k);
 					double r = pos.getDistance(base.getX(), base.getY(), base.getZ());
 					if (r<=7.5) world.setBlockToAir(pos);
-					else if(r<8.5)world.setBlockState(pos, (rand.nextInt(2) == 0 ? Blocks.NETHERRACK : BOPBlocks.flesh).getDefaultState(), 18);
+					else if(r<8.5) placeWallBlock(world, pos);
 				}
 			}
 		}
@@ -51,7 +54,7 @@ public class WorldGenNest extends WorldGenerator {
 					if (s <= r) {
 						world.setBlockToAir(pos);
 					} else if (s <= r + 2) {
-						world.setBlockState(pos, (rand.nextInt(2) == 0 ? Blocks.NETHERRACK : BOPBlocks.flesh).getDefaultState(), 18);
+						placeWallBlock(world, pos);
 					}
 					pos = pos.up();
 					x++;
@@ -66,7 +69,7 @@ public class WorldGenNest extends WorldGenerator {
 					BlockPos pos = base.add(i, j, k);
 					double r = pos.getDistance(base.getX(), base.getY(), base.getZ());
 					if (r<=5.5) world.setBlockToAir(pos);
-					else if (r<=6.5) placeBlock(world, pos);
+					else if (r<=6.5) placeNestBlock(world, pos);
 				}
 			}
 		}
@@ -85,10 +88,11 @@ public class WorldGenNest extends WorldGenerator {
 			}
 		}
 		//shulkers
-		BlockPos floor = base.down(4);
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			if (facing.getAxis() == EnumFacing.Axis.Y) continue;
-			placeLoot(world, floor.offset(facing, 4));
+			BlockPos pos = base.offset(facing, 4);
+			placeLoot(world, pos.down(4), EnumFacing.UP);
+			placeLoot(world, pos.up(4), EnumFacing.DOWN);
 		}
 		//grunts
 		for (int i = 0; i <  3; i++) {
@@ -107,12 +111,16 @@ public class WorldGenNest extends WorldGenerator {
 		return true;
 	}
 
-	private void placeBlock(World world, BlockPos pos) {
-		world.setBlockState(pos, blocks[world.rand.nextInt(blocks.length)], 18);
+	private void placeWallBlock(World world, BlockPos pos) {
+		world.setBlockState(pos, wall_blocks[world.rand.nextInt(wall_blocks.length)], 18);
 	}
 
-	private void placeLoot(World world, BlockPos pos) {
-		world.setBlockState(pos, Blocks.RED_SHULKER_BOX.getDefaultState(), 18);
+	private void placeNestBlock(World world, BlockPos pos) {
+		world.setBlockState(pos, nest_blocks[world.rand.nextInt(nest_blocks.length)], 18);
+	}
+
+	private void placeLoot(World world, BlockPos pos, EnumFacing facing) {
+		world.setBlockState(pos, Blocks.RED_SHULKER_BOX.getDefaultState().withProperty(BlockShulkerBox.FACING, facing), 18);
 		TileEntityShulkerBox tile = new TileEntityShulkerBox();
 		tile.setLootTable(ModDefinitions.NEST_CRATE, world.rand.nextLong());
 		world.setTileEntity(pos, tile);

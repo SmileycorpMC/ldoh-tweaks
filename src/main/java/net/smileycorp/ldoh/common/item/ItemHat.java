@@ -18,6 +18,11 @@ public class ItemHat extends ItemBase {
 		setMaxStackSize(1);
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
 	}
+
+    @Override
+    public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
+        return EntityEquipmentSlot.HEAD;
+    }
 	
 	@Override
 	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot slot, Entity entity) {

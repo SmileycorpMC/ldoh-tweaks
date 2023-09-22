@@ -36,7 +36,8 @@ public class ModWorldGen implements IWorldGenerator {
 		Biome biome = world.getBiomeProvider().getBiomes(null, x, z, 1, 1, false)[0];
 		if (rand.nextInt(EnumBiomeType.CITY.matches(biome) ? 7 : EnumBiomeType.BADLANDS.matches(biome) ? 13
 				: EnumBiomeType.OCEAN.matches(biome) ? 24 : 18) == 0) {
-			BlockPos pos = new BlockPos(x, world.getHeight(x, z)+1, z);
+			BlockPos pos = new BlockPos(x, Math.min(world.getHeight(x, z), 60), z);
+			while (!world.isAirBlock(pos)) pos = pos.up();
 			world.setBlockState(pos, LDOHBlocks.HORDE_SPAWNER.getDefaultState(), 18);
 			((TileHordeSpawner)world.getTileEntity(pos)).setNatural();
 		}

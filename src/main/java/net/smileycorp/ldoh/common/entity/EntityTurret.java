@@ -76,7 +76,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 			double x = target.posX + (target.width*0.5);
 			double y = target.posY + (target.height * 0.75);
 			double z = target.posZ + (target.width*0.5);
-			if (hasUpgrade(TurretUpgrade.SMART_TARGETING)) {
+			if (hasUpgrade(TurretUpgrade.PREDICTIVE_TARGETING)) {
 				double distance = Math.ceil(getDistance(target) / (float)getProjectileSpeed());
 				x = x + target.motionX * distance;
 				y = y + target.motionY * distance;
