@@ -13,7 +13,7 @@ public enum TurretUpgrade {
     REDSTONE_CONTROL("redstone_control", false),
     AUSTRALIUM("australium", false),
     RIFLING("rifling", true),
-    SMART_TARGETING("smart_targeting", true);
+    PREDICTIVE_TARGETING("predictive_targeting", false);
 
     private final String name;
     private final boolean isStackable;

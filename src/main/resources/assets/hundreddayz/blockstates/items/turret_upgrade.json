@@ -13,6 +13,6 @@
 		"redstone_control": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/redstone_control" }}],
 		"australium": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/australium" }}],
 		"rifling": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/rifling" }}],
-		"smart_targeting": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/smart_targeting" }}]
+		"predictive_targeting": [{ "textures": { "layer0": "hundreddayz:items/turret_upgrade/predictive_targeting" }}]
 	}
 }

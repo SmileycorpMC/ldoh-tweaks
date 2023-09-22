@@ -54,7 +54,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
-import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.InfectionRegister;

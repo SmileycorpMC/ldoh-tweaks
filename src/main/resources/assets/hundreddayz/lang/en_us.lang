@@ -104,8 +104,8 @@ tooltip.hundreddayz.TurretUpgrade.redstone_control.description=Turret will only 
 tooltip.hundreddayz.TurretUpgrade.australium.name=Australium
 tooltip.hundreddayz.TurretUpgrade.rifling.name=Improved Rifling
 tooltip.hundreddayz.TurretUpgrade.rifling.description=Increases turret projectile speed by 5 blocks per tick.
-tooltip.hundreddayz.TurretUpgrade.smart_targeting.name=Smart Targeting
-tooltip.hundreddayz.TurretUpgrade.smart_targeting.description=Turret predicts where it's target is moving to and pre-emptively fires.
+tooltip.hundreddayz.TurretUpgrade.predictive_targeting.name=Predictive Targeting
+tooltip.hundreddayz.TurretUpgrade.predictive_targeting.description=Turret predicts where it's target is moving to and pre-emptively fires.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler

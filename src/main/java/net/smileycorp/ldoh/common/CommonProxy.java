@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common;
 
-import com.mrcrayfish.furniture.api.RecipeRegistry;
-import com.mrcrayfish.furniture.api.Recipes;
 import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
@@ -21,13 +19,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.smileycorp.ldoh.client.gui.GuiTurret;
 import net.smileycorp.ldoh.common.capabilities.*;
@@ -86,6 +80,9 @@ public class CommonProxy {
 
 		//Setup Packets for use
 		PacketHandler.initPackets();
+
+		//register cfm recipe handler
+		FMLInterModComms.sendMessage("cfm", "register", "net.smileycorp.ldoh.common.events.RegistryEvents.registerCFMRecipes");
 	}
 
 	public void init(FMLInitializationEvent event) {
@@ -148,17 +145,7 @@ public class CommonProxy {
 				new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
 	}
 
-	public void postInit(FMLPostInitializationEvent event) {
-		//add cfm repairing compatability
-		for (Item item : ForgeRegistries.ITEMS) {
-			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isDamageable()) return;
-			if (item.getEquipmentSlot(new ItemStack(item)) == null)
-				RecipeRegistry.getInstance().registerDishwasherRecipe(new ItemStack(item));
-			else RecipeRegistry.getInstance().registerWashingMachineRecipe(new ItemStack(item));
-		}
-		Recipes.addCommRecipesToLocal();
-		Recipes.updateDataList();
-	}
+	public void postInit(FMLPostInitializationEvent event) {}
 
 	public void serverStart(FMLServerStartingEvent event) {
 		//Register Boss Command
