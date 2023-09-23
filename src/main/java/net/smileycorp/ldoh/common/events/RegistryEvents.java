@@ -13,9 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -33,6 +31,7 @@ import net.smileycorp.ldoh.common.entity.*;
 import net.smileycorp.ldoh.common.item.*;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
+import pavocado.exoticbirds.init.ExoticbirdsItems;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -98,17 +97,19 @@ public class RegistryEvents {
 	}
 
 	public static void registerCFMRecipes(IRecipeRegistry registry) {
-		//add cfm repairing compatability
+		//register washing machine and dishwasher recipes
 		for (Item item : ForgeRegistries.ITEMS) {
-			if (item instanceof ItemFood && FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item)).getItem() instanceof ItemFood) {
-				registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(item))
-						.setOutput(FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item))));
-			}
-			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isDamageable()) continue;
+			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isRepairable()) continue;
 			if (item.getEquipmentSlot(new ItemStack(item)) != null)
 				registry.registerRecipe(RecipeType.WASHING_MACHINE, new RecipeVariables().setInput(new ItemStack(item)));
 			else registry.registerRecipe(RecipeType.DISHWASHER, new RecipeVariables().setInput(new ItemStack(item)));
 		}
+		//register freezer recipes
+		registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(Blocks.PACKED_ICE))
+				.setOutput(new ItemStack(BOPBlocks.hard_ice)));
+		registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(Items.FLINT))
+				.setOutput(new ItemStack(Items.PRISMARINE_SHARD)));
+		//register grill recipes
 		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(Items.PORKCHOP))
 				.setOutput(new ItemStack(Items.COOKED_PORKCHOP)));
 		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawFrogLegs))
@@ -121,8 +122,61 @@ public class RegistryEvents {
 				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeSteak)));
 		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimePork))
 				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimePork)));
-		registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(Blocks.PACKED_ICE))
-				.setOutput(new ItemStack(BOPBlocks.hard_ice)));
+		//register oven recipes
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(Items.CHORUS_FRUIT))
+				.setOutput(new ItemStack(Items.CHORUS_FRUIT_POPPED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawFrogLegs))
+				.setOutput(new ItemStack(ExtraAddonItemHandler.cookedFrogLegs)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawPeacock))
+				.setOutput(new ItemStack(ExtraAddonItemHandler.cookedPeacock)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawPrimePeacock))
+				.setOutput(new ItemStack(ExtraAddonItemHandler.cookedPrimePeacock)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawPrimeRabbit))
+				.setOutput(new ItemStack(ExtraAddonItemHandler.cookedPrimeRabbit)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBacon))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeBacon)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBeef))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeBeef)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeSteak))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeSteak)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimePork))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimePork)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeMutton))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeMutton)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawHorse))
+				.setOutput(new ItemStack(FarmAddonItemHandler.cookedHorse)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.PARASITE_ITEM))
+				.setOutput(new ItemStack(FishItems.PARASITE_ITEM_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.MOUSSE))
+				.setOutput(new ItemStack(FishItems.MEATBALL)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.ZOMBIEPIRANHA_ITEM))
+				.setOutput(new ItemStack(FishItems.ZOMBIEPIRANHA_ITEM_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.PIRANHA))
+				.setOutput(new ItemStack(FishItems.PIRANHA_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.CHEIROLEPIS))
+				.setOutput(new ItemStack(FishItems.CHEIROLEPIS_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.MIMIC_CLAW))
+				.setOutput(new ItemStack(FishItems.MIMIC_CLAW_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.PTERA_WING, 1, OreDictionary.WILDCARD_VALUE))
+				.setOutput(new ItemStack(FishItems.PTERA_WING_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.ENIGMOTH_LARVA_ITEM))
+				.setOutput(new ItemStack(FishItems.ENIGMOTH_LARVA_ITEM_COOKED)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(FishItems.FROZENTHIGH))
+				.setOutput(new ItemStack(Items.ROTTEN_FLESH, 4)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.cheese))
+				.setOutput(new ItemStack(ItemListxlfoodmod.cheese_puff)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.marshmallow))
+				.setOutput(new ItemStack(ItemListxlfoodmod.roasted_marshmallow)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.dough))
+				.setOutput(new ItemStack(ItemListxlfoodmod.cooked_dough)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.raw_chicken_wing))
+				.setOutput(new ItemStack(ItemListxlfoodmod.cooked_chicken_wing)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.onion))
+				.setOutput(new ItemStack(ItemListxlfoodmod.onion_rings)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ItemListxlfoodmod.rice))
+				.setOutput(new ItemStack(ItemListxlfoodmod.fried_rice)));
+		registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExoticbirdsItems.birdmeat))
+				.setOutput(new ItemStack(ExoticbirdsItems.cooked_birdmeat)));
 	}
 
 	@SubscribeEvent

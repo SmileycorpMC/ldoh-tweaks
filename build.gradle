@@ -85,7 +85,7 @@ dependencies {
 	implementation "curse.maven:epicsiege-229449:2874756"
 	implementation "curse.maven:exoticbirds-242830:2987034"
 	implementation "curse.maven:firstaid-276837:4414252"
-	implementation "curse.maven:fishsundead-321139:4017095"
+	implementation "curse.maven:fishsundead-321139:4753503"
 	implementation "curse.maven:followme-463841:3520547"
 	implementation "curse.maven:ftbquests-289412:3156637"
 	implementation "curse.maven:cfm-55438:3865259"
