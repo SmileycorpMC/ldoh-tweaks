@@ -1,5 +1,7 @@
 package net.smileycorp.ldoh.common.util;
 
+import com.Fishmod.mod_LavaCow.entities.IAggressive;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityFishTameable;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.google.common.collect.Multimap;
 import com.legacy.wasteland.world.WastelandWorld;
@@ -16,6 +18,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -297,4 +301,8 @@ public class ModUtils {
 		if (array.length < 3) return null;
 		return new BlockPos(array[0], array[1], array[2]);
 	}
+
+    public static boolean isTargetableAnimal(EntityAnimal entity) {
+		return !(entity instanceof IAggressive || entity instanceof EntityFishTameable || entity instanceof IMob);
+    }
 }

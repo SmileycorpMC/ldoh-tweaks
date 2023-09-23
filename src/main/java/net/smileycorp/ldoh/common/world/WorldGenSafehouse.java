@@ -5,7 +5,6 @@ import biomesoplenty.api.enums.BOPWoods;
 import biomesoplenty.common.block.BlockBOPLog;
 import biomesoplenty.common.block.BlockBOPPlanks;
 import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
-import com.mrcrayfish.furniture.blocks.BlockDigitalClock;
 import com.mrcrayfish.furniture.blocks.BlockFurniture;
 import com.mrcrayfish.furniture.init.FurnitureBlocks;
 import com.mrcrayfish.furniture.tileentity.TileEntityTree;

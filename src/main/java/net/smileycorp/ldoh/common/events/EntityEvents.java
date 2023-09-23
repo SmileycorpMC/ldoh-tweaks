@@ -3,9 +3,9 @@ package net.smileycorp.ldoh.common.events;
 import com.Fishmod.mod_LavaCow.entities.EntityBanshee;
 import com.Fishmod.mod_LavaCow.entities.EntitySludgeLord;
 import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
-import com.Fishmod.mod_LavaCow.entities.IAggressive;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
@@ -248,7 +248,7 @@ public class EntityEvents {
 				EntityZombie zombie = (EntityZombie) entity;
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityTF2Character.class, false));
 				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntitySentry.class, false));
-				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(zombie, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(zombie);
 				zombie.tasks.addTask(3, new ESM_EntityAIGrief(zombie));
 			}
@@ -257,7 +257,7 @@ public class EntityEvents {
 				EntityVespa vespa = (EntityVespa) entity;
 				vespa.targetTasks.addTask(2, new EntityAINearestAttackableTarget(vespa, EntityPlayer.class, false));
 				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityTF2Character.class, false));
-				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget(vespa, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				vespa.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(vespa, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(vespa);
 			}
 			//makes the sludge lord hostile to the player
@@ -265,7 +265,7 @@ public class EntityEvents {
 				EntitySludgeLord slord = (EntitySludgeLord) entity;
 				slord.targetTasks.addTask(2, new EntityAINearestAttackableTarget(slord, EntityPlayer.class, false));
 				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityTF2Character.class, false));
-				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget(slord, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				slord.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(slord, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(slord);
 			}
 			//makes the weta hostile to the player
@@ -273,7 +273,7 @@ public class EntityEvents {
 				EntityWeta weta = (EntityWeta) entity;
 				weta.targetTasks.addTask(2, new EntityAINearestAttackableTarget(weta, EntityPlayer.class, false));
 				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityTF2Character.class, false));
-				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget(weta, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				weta.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(weta, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(weta);
 			}
 			//makes the ptera hostile to the player
@@ -281,7 +281,7 @@ public class EntityEvents {
 				EntityPtera ptera = (EntityPtera) entity;
 				ptera.targetTasks.addTask(2, new EntityAINearestAttackableTarget(ptera, EntityPlayer.class, false));
 				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityTF2Character.class, false));
-				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget(ptera, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				ptera.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(ptera, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(ptera);
 			}
 			//makes the banshee hostile to the player
@@ -289,8 +289,16 @@ public class EntityEvents {
 				EntityBanshee banshee = (EntityBanshee) entity;
 				banshee.targetTasks.addTask(2, new EntityAINearestAttackableTarget(banshee, EntityPlayer.class, false));
 				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityTF2Character.class, false));
-				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget(banshee, EntityAnimal.class, 10, false, false, e -> !(e instanceof IAggressive)));
+				banshee.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(banshee, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
 				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(banshee);
+			}
+			//makes unburied hostile to the player
+			else if (entity instanceof EntityUnburied) {
+				EntityUnburied unburied = (EntityUnburied) entity;
+				unburied.targetTasks.addTask(2, new EntityAINearestAttackableTarget(unburied, EntityPlayer.class, false));
+				unburied.targetTasks.addTask(3, new EntityAINearestAttackableTarget(unburied, EntityTF2Character.class, false));
+				unburied.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityAnimal>(unburied, EntityAnimal.class, 10, false, false, ModUtils::isTargetableAnimal));
+				if (Loader.isModLoaded("tektopia")) TektopiaUtils.addTargetTask(unburied);
 			}
 		}
 		//fix rare skeleton horse traps from appearing as well as skeletons and creepers spawning from fish's undead rising

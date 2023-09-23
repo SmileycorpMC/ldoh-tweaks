@@ -25,7 +25,6 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
-import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
 import java.util.Random;
 
