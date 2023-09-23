@@ -78,13 +78,13 @@ public class WorldGenNest extends WorldGenerator {
 			BlockPos pos = world.getTopSolidOrLiquidBlock(base.add(rand.nextInt(12) - 6, 0, rand.nextInt(12) - 6));
 			if (world.getBlockState(pos.down()).getBlock() == SRPBlocks.ParasiteStain) {
 				for (int j = 0; j <= rand.nextInt(3); j++) {
-					world.setBlockState(pos, SRPBlocks.InfestedBush.getDefaultState().withProperty(BlockInfestedBush.VARIANT, EnumType.SPINE), 18);
+					setBlockAndNotifyAdequately(world, pos, SRPBlocks.InfestedBush.getDefaultState().withProperty(BlockInfestedBush.VARIANT, EnumType.SPINE) );
 				}
 			} else if (world.getBlockState(pos.down()).getBlock() == BOPBlocks.flesh) {
 				IBlockState eyebulb = BOPBlocks.double_plant.getDefaultState()
 						.withProperty(BlockBOPDoublePlant.VARIANT, DoublePlantType.EYEBULB);
-				world.setBlockState(pos, eyebulb, 18);
-				world.setBlockState(pos.up(), eyebulb.withProperty(BlockBOPDoublePlant.HALF, Half.UPPER), 18);
+				setBlockAndNotifyAdequately(world, pos, eyebulb );
+				setBlockAndNotifyAdequately(world, pos.up(), eyebulb.withProperty(BlockBOPDoublePlant.HALF, Half.UPPER) );
 			}
 		}
 		//shulkers
@@ -112,15 +112,15 @@ public class WorldGenNest extends WorldGenerator {
 	}
 
 	private void placeWallBlock(World world, BlockPos pos) {
-		world.setBlockState(pos, wall_blocks[world.rand.nextInt(wall_blocks.length)], 18);
+		setBlockAndNotifyAdequately(world, pos, wall_blocks[world.rand.nextInt(wall_blocks.length)] );
 	}
 
 	private void placeNestBlock(World world, BlockPos pos) {
-		world.setBlockState(pos, nest_blocks[world.rand.nextInt(nest_blocks.length)], 18);
+		setBlockAndNotifyAdequately(world, pos, nest_blocks[world.rand.nextInt(nest_blocks.length)] );
 	}
 
 	private void placeLoot(World world, BlockPos pos, EnumFacing facing) {
-		world.setBlockState(pos, Blocks.RED_SHULKER_BOX.getDefaultState().withProperty(BlockShulkerBox.FACING, facing), 18);
+		setBlockAndNotifyAdequately(world, pos, Blocks.RED_SHULKER_BOX.getDefaultState().withProperty(BlockShulkerBox.FACING, facing) );
 		TileEntityShulkerBox tile = new TileEntityShulkerBox();
 		tile.setLootTable(ModDefinitions.NEST_CRATE, world.rand.nextLong());
 		world.setTileEntity(pos, tile);

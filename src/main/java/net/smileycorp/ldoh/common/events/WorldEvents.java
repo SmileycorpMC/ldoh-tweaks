@@ -24,6 +24,7 @@ import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 
 import java.util.Random;
@@ -39,7 +40,7 @@ public class WorldEvents {
 		if (world.getGameRules().getInt("spawnRadius")>0) world.getGameRules().setOrCreateGameRule("spawnRadius", "0");
 		Random rand = world.rand;
 		if (world.provider.getDimension() == 0) {
-			WorldGenSafehouse safehouse = new WorldGenSafehouse();
+			WorldDataSafehouse safehouse = WorldDataSafehouse.getData(world);
 			//tries to find a wasteland biome to spawn the player in
 			Biome biome = null;
 			int x = 0;
@@ -83,12 +84,7 @@ public class WorldEvents {
 			}
 			BlockPos spawn = new BlockPos(x, y, z);
 			world.getWorldInfo().setSpawn(spawn);
-			if (!ConfigHandler.noSafehouse) {
-				if (!safehouse.isMarked()) {
-					safehouse.markPositions(world, spawn.down(), true);
-				}
-				safehouse.generate(world, rand, world.getSpawnPoint().down());
-			}
+			if (!safehouse.isMarked()) safehouse.markPositions(world, spawn.down(), true);
 			event.setCanceled(true);
 		}
 	}

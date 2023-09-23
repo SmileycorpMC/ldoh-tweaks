@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.events;
 
+import biomesoplenty.api.block.BOPBlocks;
 import com.Fishmod.mod_LavaCow.init.FishItems;
 import com.animania.addons.extra.common.handler.ExtraAddonItemHandler;
 import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
@@ -120,6 +121,8 @@ public class RegistryEvents {
 				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimeSteak)));
 		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimePork))
 				.setOutput(new ItemStack(FarmAddonItemHandler.cookedPrimePork)));
+		registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(Blocks.PACKED_ICE))
+				.setOutput(new ItemStack(BOPBlocks.hard_ice)));
 	}
 
 	@SubscribeEvent

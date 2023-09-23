@@ -70,7 +70,7 @@ public class WorldGenSurface extends WorldGenerator {
 		for (BlockPos pos : positions) {
 			if (world.getBlockState(pos).getBlock() == Blocks.GRAVEL || world.getBlockState(pos).getBlock() == BOPBlocks.dried_sand) {
 				int r = (int) Math.floor(Math.pow(pos.getX() - center.getX(), 2) + Math.pow(pos.getZ() - center.getZ(), 2));
-				if (world.rand.nextInt(Math.max(r, 1))>100)  world.setBlockState(pos, world.rand.nextInt(Math.max(r, 1))<35 ? state1 : state2, 18);
+				if (world.rand.nextInt(Math.max(r, 1))>100)  setBlockAndNotifyAdequately(world, pos, world.rand.nextInt(Math.max(r, 1))<35 ? state1 : state2);
 			}
 		}
 		return true;

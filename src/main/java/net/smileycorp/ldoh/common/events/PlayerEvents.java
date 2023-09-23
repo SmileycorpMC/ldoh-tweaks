@@ -38,6 +38,8 @@ import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 public class PlayerEvents {
 
@@ -189,6 +191,13 @@ public class PlayerEvents {
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public void playerJoin(PlayerLoggedInEvent event) {
+		if (event.player == null || event.player.world.isRemote) return;
+		WorldDataSafehouse data = WorldDataSafehouse.getData(event.player.world);
+		if (!data.isGenerated()) data.generate(event.player.world);
 	}
 
 }
