@@ -12,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
 import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.ldoh.client.ClientEventListener;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockRendererDispatcher.class)
 public class MixinBlockRendererDispatcher {
 
+	//unused
+	//supposed to be used to optimise gas rendering
 	@Inject(at=@At("TAIL"), method = "renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z", cancellable = true)
 	public void renderBlock(IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder buffer, CallbackInfoReturnable<Boolean> callback) {
 		if (blockAccess.getWorldType() != WorldType.FLAT && pos.getY() == 30) {

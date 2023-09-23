@@ -1,10 +1,10 @@
 package net.smileycorp.ldoh.common.entity;
 
+import buildcraft.core.BCCoreItems;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import buildcraft.core.BCCoreItems;
 
 public class EntityZombieTechnician extends EntityProfessionZombie {
 

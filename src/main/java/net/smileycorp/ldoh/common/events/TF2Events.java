@@ -1,13 +1,9 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
-
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -39,17 +35,11 @@ import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.ICuring;
-import net.smileycorp.ldoh.common.capabilities.IFollowers;
-import net.smileycorp.ldoh.common.capabilities.IHunger;
-import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
-import net.smileycorp.ldoh.common.capabilities.IVillageData;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
-import net.tangotek.tektopia.VillageManager;
 import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
 import rafradek.TF2weapons.entity.ai.EntityAISpotTarget;
 import rafradek.TF2weapons.entity.ai.EntityAIUseMedigun;
@@ -61,6 +51,9 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.inventory.InventoryLoadout;
 import rafradek.TF2weapons.item.ItemAmmo;
 import rafradek.TF2weapons.item.ItemFromData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TF2Events {
 
@@ -75,10 +68,6 @@ public class TF2Events {
 		//give medics ability to cure
 		if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
 			event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
-		}
-		//give mercs home village
-		if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
-			event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
 		}
 	}
 
@@ -106,7 +95,8 @@ public class TF2Events {
 			//adds the player to a team after killing the opposite merc
 			if (event.getSource().getTrueSource() instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
-				if (entity instanceof EntityTF2Character) {
+				//prevent spy easter egg from forcing player teams
+				if (entity instanceof EntityTF2Character &! (entity instanceof EntitySpy)) {
 					if (!((EntityTF2Character) entity).isRobot()) {
 						if (player.getTeam() == null) {
 							if (entity.getTeam() == world.getScoreboard().getTeam("RED")) {
@@ -227,19 +217,20 @@ public class TF2Events {
 		if (!world.isRemote) {
 			if (entity instanceof EntitySentry) {
 				EntitySentry sentry = (EntitySentry) entity;
+				if (sentry.getOwner() != null && sentry.getOwner().getTeam() != null) world.getScoreboard().addPlayerToTeam(sentry.getCachedUniqueIdString(), sentry.getOwner().getTeam().getName());
 				sentry.targetTasks.taskEntries.clear();
-				sentry.targetTasks.addTask(2, new EntityAISpotTarget(sentry, EntityLivingBase.class, true, true,
+				sentry.targetTasks.addTask(2, new EntityAISpotTarget<EntityLivingBase>(sentry, EntityLivingBase.class, true, true,
 						e -> ModUtils.canTarget(sentry, e), false, true));
 			}
 			if (entity instanceof EntityTF2Character) {
 				EntityTF2Character merc = (EntityTF2Character) entity;
 				//makes tf2 mercs avoid zombies more
-				merc.tasks.addTask(3, new EntityAIAvoidEntity<>(merc, EntityMob.class, e -> ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
+				merc.tasks.addTask(3, new EntityAIAvoidEntity<EntityMob>(merc, EntityMob.class, e -> ModUtils.canTarget(merc, e), 5.0F, 0.6D, 0.6D));
 				//redo targeting ai
 				merc.targetTasks.taskEntries.clear();
 				if (entity instanceof EntityMedic) {
 					//medic heal targeting
-					EntityAIBase ai = new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.shouldHeal(merc, e), false, true) {
+					EntityAIBase ai = new EntityAINearestChecked<EntityLivingBase>(merc, EntityLivingBase.class, true, false, e -> ModUtils.shouldHeal(merc, e), false, true) {
 						@Override
 						public boolean shouldExecute() {
 							return ModUtils.shouldHeal(merc, targetEntity);
@@ -247,10 +238,10 @@ public class TF2Events {
 					};
 					merc.targetTasks.addTask(1, ai);
 					merc.targetTasks.addTask(2, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(3, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
+					merc.targetTasks.addTask(3, new EntityAINearestChecked<EntityLivingBase>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
 				} else {
 					merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
-					merc.targetTasks.addTask(2, new EntityAINearestChecked(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
+					merc.targetTasks.addTask(2, new EntityAINearestChecked<EntityLivingBase>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
 				}
 				if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
 					ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
@@ -275,14 +266,6 @@ public class TF2Events {
 				if (merc.hasCapability(LDOHCapabilities.HUNGER, null)) merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
 				if (merc.hasCapability(LDOHCapabilities.CURING, null)) merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
 				//if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
-				//fetch closest village to entities that were spawned in one
-				if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
-					IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
-					if (cap.shouldHaveVillage() &! cap.hasVillage()) {
-						VillageManager villages = VillageManager.get(world);
-						cap.setVillage(villages);
-					}
-				}
 
 				//give persistence to tf2 buildings
 			} else if (entity instanceof EntityBuilding) {

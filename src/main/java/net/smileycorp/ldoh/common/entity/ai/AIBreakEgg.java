@@ -1,9 +1,6 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.SoundEvents;
@@ -11,6 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.smileycorp.atlas.api.entity.ai.EntityAIGoToPos;
 import pavocado.exoticbirds.init.ExoticbirdsBlocks;
+
+import java.util.List;
 
 public class AIBreakEgg extends EntityAIGoToPos {
 

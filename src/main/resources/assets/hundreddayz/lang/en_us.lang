@@ -11,7 +11,7 @@ message.hundreddayz.FinalDaySubtitle=At midnight the apocalypse will begin.
 message.hundreddayz.WorldsEnd=The air smells of death. You can already feel the horrors this night will bring.
 message.hundreddayz.EventEnd=As the sun finally rises, you can feel the invasion over.
 message.hundreddayz.Evolution_0=The zombies have evolved, now they can break blocks.
-message.hundreddayz.Evolution_1=The zombies have evolved, now they can pillar.
+message.hundreddayz.Evolution_1=The zombies have evolved, now they can place blocks.
 
 message.hundreddayz.TFHordeStart=An enemy army appears at the horizon.
 message.hundreddayz.TFHordeEnd=The sounds of gunfire start to fade.
@@ -21,6 +21,7 @@ message.hundreddayz.VillagerMessage.Survivor=Survivor
 message.hundreddayz.VillagerMessage1=Place a %1$s above your base structure's door and the civillians will start coming to you.
 
 message.hundreddayz.SealedCrate=Right click with a Crow Bar to open sealed crates
+message.hundreddayz.FilingCabinet=%1$s/%2$s %3$s
 
 commands.hundreddayz.StartBossEvent.usage=/startBossEvent
 commands.hundreddayz.StartBossEvent.success=Bosses have been spawned, the event has now started
@@ -55,16 +56,20 @@ item.hundreddayz.Hardhat.name=Hardhat
 item.hundreddayz.Bonesaw.name=Bonesaw
 item.hundreddayz.incendiary_ammo.name=Incendiary Ammo
 item.hundreddayz.FireAxe.name=Fire Axe
-item.hundreddayz.FireHat.name=Fireman Hat
+item.hundreddayz.FireHat.name=Fireman Helmet
+item.hundreddayz.BlankTurretUpgrade.name=Blank Sentry Turret Upgrade
+item.hundreddayz.TurretUpgrade.name=Sentry Turret Upgrade
+item.hundreddayz.CandyCorn.name=Candy Corn
 
 tile.hundreddayz.BarbedWireIron.name=Barbed Wire
 tile.hundreddayz.BarbedWireGold.name=Gold Barbed Wire
 tile.hundreddayz.BarbedWireDiamond.name=Diamond Encrusted Barbed Wire
 tile.hundreddayz.Landmine.name=Landmine
 tile.hundreddayz.Turret.name=Sentry Turret
+tile.hundreddayz.EnemyTurret.name=Enemy Turret
 tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
-tile.hundreddayz.Cache.name=Item Cache
+tile.hundreddayz.FilingCabinet.name=Filing Cabinet
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
@@ -73,15 +78,34 @@ tooltip.hundreddayz.BarbedWire.Diamond=Has Very high durability and medium damag
 tooltip.hundreddayz.BarbedWire.durability=Durability:
 tooltip.hundreddayz.Landmine0=Explodes when stepped off, dealing lots of damage.
 tooltip.hundreddayz.Landmine1=Takes 2 minutes after placing to become primed.
-tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy soldiers.
+tooltip.hundreddayz.Turret0=Automatically shoots monsters and enemy mercenaries/players.
 tooltip.hundreddayz.Turret1=Uses basic or incendiary ammo ammo.
 tooltip.hundreddayz.Turret2=Repair with iron.
+tooltip.hundreddayz.EnemyTurret0=Automatically shoots all monsters, mercenaries and players.
+tooltip.hundreddayz.EnemyTurret1=Has infinite ammo.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.Syringe=Hold right click to extract blood.
 tooltip.hundreddayz.AntibodySerum=Cures your allies from infection.
 tooltip.hundreddayz.incendiary_ammo0=Optional ammo for turrets.
 tooltip.hundreddayz.incendiary_ammo1=Deals extra damage to parasites.
-tooltip.hundreddayz.cache=Can store up to 64 stacks of a single item.
+tooltip.hundreddayz.FilingCabinet=Can store up to 64 stacks of a single item.
+tooltip.hundreddayz.ExpBottle=Can be drunk to gain experience.
+
+tooltip.hundreddayz.TurretUpgrade.hopping.name=Hopping
+tooltip.hundreddayz.TurretUpgrade.hopping.description=Non-upgrade items can be inserted/extracted from turrets with hoppers and pipes.
+tooltip.hundreddayz.TurretUpgrade.ammo_optimization.name=Ammo Optimization
+tooltip.hundreddayz.TurretUpgrade.ammo_optimization.description=Automatically switches to the most effective ammo type for the current target.
+tooltip.hundreddayz.TurretUpgrade.barrel_spin.name=Increased Barrel Spin
+tooltip.hundreddayz.TurretUpgrade.barrel_spin.description=Increases fire rate by 1 tick per upgrade.
+tooltip.hundreddayz.TurretUpgrade.range.name=Extended Range
+tooltip.hundreddayz.TurretUpgrade.range.description=Increases turret range by 20 blocks per upgrade.
+tooltip.hundreddayz.TurretUpgrade.redstone_control.name=Redstone Control
+tooltip.hundreddayz.TurretUpgrade.redstone_control.description=Turret will only be active if powered by redstone.
+tooltip.hundreddayz.TurretUpgrade.australium.name=Australium
+tooltip.hundreddayz.TurretUpgrade.rifling.name=Improved Rifling
+tooltip.hundreddayz.TurretUpgrade.rifling.description=Increases turret projectile speed by 5 blocks per tick.
+tooltip.hundreddayz.TurretUpgrade.predictive_targeting.name=Predictive Targeting
+tooltip.hundreddayz.TurretUpgrade.predictive_targeting.description=Turret predicts where it's target is moving to and pre-emptively fires.
 
 entity.hundreddayz.CrawlingZombie.name=Zombie Crawler
 entity.hundreddayz.CrawlingHusk.name=Husk Crawler
@@ -102,6 +126,7 @@ entity.hundreddayz.HuskNoPlace.name=Husk
 entity.hundreddayz.HuskNoBreakOrPlace.name=Husk
 
 entity.hundreddayz.Turret.name=Sentry Turret
+entity.hundreddayz.EnemyTurret.name=Enemy Turret
 
 death.attack.ToxicGas=%1$s choked on toxic gas
 death.attack.Shrapnel=%1$s went kaboom
@@ -109,9 +134,15 @@ death.attack.BarbedWire=%1$s met a prickly end
 
 gui.text.Hunger=Hunger
 gui.text.Curing=Syringes
+gui.turret.text.Upgrades=Upgrades: 
+gui.turret.text.Disabled=Disabled
+gui.turret.text.NoTarget=Idle
+gui.turret.text.Hostile=Hostile
+gui.turret.text.NoOwner=No Owner
 gui.turret.text.Owner=Owner: 
-gui.turret.text.NoTarget=No Target
 gui.turret.text.Target=Target: 
+gui.turret.text.Range=Range: 
+gui.turret.text.FireRate=Speed: 
 
 jei.category.hundreddayz.Syringe=Syringes
 
@@ -120,4 +151,4 @@ hundreddayz.subtitle.tf.ally=Ally Team Approaches
 hundreddayz.subtitle.landmine.beep=Landmine Beeps
 
 tooltip.hundreddayz.Crowbar=Right click to open sealed crates
-tooltip.hundreddayz.UnlitTorch=Use a matchbox to light
+tooltip.hundreddayz.UnlitTorch=Craft with a matchbox to light

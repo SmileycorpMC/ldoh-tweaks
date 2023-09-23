@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.item;
 
+import com.google.common.collect.Multimap;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,8 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.common.collect.Multimap;
 
 
 public class ItemWeapon extends ItemBase {
@@ -43,8 +42,8 @@ public class ItemWeapon extends ItemBase {
 
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
-		if (state.getBlockHardness(world, pos) != 0.0D &! isTool) {
-			stack.damageItem(2, entity);
+		if (state.getBlockHardness(world, pos) != 0.0D) {
+			stack.damageItem(isTool ? 1 : 2, entity);
 		}
 		return true;
 	}

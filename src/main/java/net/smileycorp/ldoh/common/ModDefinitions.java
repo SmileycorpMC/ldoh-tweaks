@@ -7,8 +7,8 @@ public class ModDefinitions {
 	//mod constants
 	public static final String MODID = "hundreddayz";
 	public static final String NAME = "LDoH Tweaks";
-	public static final String VERSION = "1.1.8";
-	public static final String DEPENDENCIES = "required-after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
+	public static final String VERSION = "1.1.10";
+	public static final String DEPENDENCIES = "after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
 			+ "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
 			+ "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"
 			+ "required-after:bibliocraft;required-after:car;required-after:buildcraftcore;after:biometweaker;required-after:animania;required-after:followme;required-after:gamestages;"
@@ -46,8 +46,10 @@ public class ModDefinitions {
 	public static final ResourceLocation MILITARY_CRATE = getResource("chests/military_crate");
 	public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
 	public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
+    public static final ResourceLocation TECH_CRATE = getResource("chests/tech_crate");
+    public static final ResourceLocation EIFFEL_GOOD_GOOD = getResource("chests/eiffel_good_good");
 
-	//helper methods
+    //helper methods
 	public static String getName(String name) {
 		return MODID + "." + name.replace("_", "");
 	}

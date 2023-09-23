@@ -1,23 +1,25 @@
 package net.smileycorp.ldoh.common.util;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
+import com.Fishmod.mod_LavaCow.entities.IAggressive;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityFishTameable;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
+import com.google.common.collect.Multimap;
+import com.legacy.wasteland.world.WastelandWorld;
+import com.mrcrayfish.furniture.init.FurnitureItems;
+import com.mrcrayfish.guns.entity.DamageSourceProjectile;
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -28,41 +30,31 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.IVillageData;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
-import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
-import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
-import net.tangotek.tektopia.Village;
-import net.tangotek.tektopia.entities.EntityVillagerTek;
+import net.smileycorp.ldoh.common.entity.*;
+import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
-import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.google.common.collect.Multimap;
-import com.legacy.wasteland.world.WastelandWorld;
-import com.mrcrayfish.furniture.init.FurnitureItems;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ModUtils {
 
@@ -118,12 +110,6 @@ public class ModUtils {
 				speed.applyModifier(new DayTimeSpeedModifier(world));
 	}
 
-	//gets the cost of an item for a particular tektopia village
-	public  static int getCost(Village village, int baseCost) {
-		float mult = Math.min((village.getTownData().getProfessionSales() / 5) * 0.2F, 10.0F);
-		return (int)(baseCost * (1.0F + mult));
-	}
-
 	//checks if a 64/64 area around the position consists of only regular wasteland
 	public static boolean isOnlyWasteland(World world, int x, int z) {
 		if (ConfigHandler.betaSpawnpoint) return true;
@@ -157,7 +143,9 @@ public class ModUtils {
 	public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
-			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
+			if (!entity.isEntityAlive() |! target.isEntityAlive()) return false;
+			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator() || ((EntityPlayer) target).isCreative()) return false;
+			if (entity instanceof IEnemyMachine) if (((IEnemyMachine) entity).isEnemy() && (target instanceof EntityPlayer || target instanceof EntityMob)) return true;
 			if (entity.getTeam() != null) { if (target.getTeam() != null || target instanceof EntityMob) return !entity.getTeam().isSameTeam(target.getTeam());
 			} else return target instanceof EntityMob &!(target instanceof EntityTF2Character);
 		}
@@ -168,7 +156,7 @@ public class ModUtils {
 		if (entity == target) return false;
 		if (entity != null && target != null) {
 			if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-			if (target instanceof EntityPlayer || target instanceof EntityVillagerTek || target instanceof EntityTF2Character) {
+			if (target instanceof EntityPlayer || target instanceof EntityTF2Character || (Loader.isModLoaded("tektopia") && TektopiaUtils.isVillager(target))) {
 				if (!canTarget(entity, target)) {
 					if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED)) return true;
 				}
@@ -199,13 +187,6 @@ public class ModUtils {
 		return new Vec3d(pathPoint.x, pathPoint.y, pathPoint.z);
 	}
 
-	public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
-		IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
-		if (!cap.hasVillage()) return false;
-		BlockPos village = cap.getVillage().getCenter();
-		return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 75;
-	}
-
 	public static RayTraceResult rayTrace(World world, EntityLivingBase entity, float distance) {
 		Vec3d eyepos = entity.getPositionEyes(1f);
 		Vec3d lookangle = entity.getLook(1f);
@@ -234,15 +215,29 @@ public class ModUtils {
 			for (int i = 0; i < getRandomSize(rand); i++) {
 				Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
 				BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30)/10d);
-				pos = new BlockPos(pos.getX()+rand.nextFloat(), world.getHeight(pos.getX(), pos.getZ()), pos.getZ()+rand.nextFloat());
-				EntityMob entity = isParasite? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
-				entity.setPosition(pos.getX()+0.5f, pos.getY(), pos.getZ()+0.5f);
-				entity.enablePersistence();
-				entity.onAddedToWorld();
-				entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-				world.spawnEntity(entity);
+				spawnMob(world, rand, basepos, pos, isParasite, day);
 			}
 		}
+	}
+
+	private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite, int day) {
+		pos = new BlockPos(pos.getX() + rand.nextFloat(), basepos.getY(), pos.getZ() + rand.nextFloat());
+		for (int i = 0; i <= 7; i++) {
+			if (world.isAirBlock(pos.up(i)) && world.isAirBlock(pos.up(i + 1))) {
+				pos = pos.down(i);
+				break;
+			} else if (i > 0 && world.isAirBlock(pos.down(i)) && world.isAirBlock(pos.down(i + 1))) {
+				pos = pos.down(i);
+				break;
+			}
+			if (i == 7) return;
+		}
+		EntityMob entity = isParasite ? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
+		entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
+		entity.enablePersistence();
+		entity.onAddedToWorld();
+		entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+		world.spawnEntity(entity);
 	}
 
 	private static int getRandomSize(Random rand) {
@@ -294,4 +289,20 @@ public class ModUtils {
 		}
 	}
 
+	public static boolean isProjectile(DamageSource source) {
+		return source instanceof DamageSourceProjectile;
+	}
+
+    public static int[] posToArray(BlockPos pos) {
+		return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
+
+	public static BlockPos arrayToPos(int[] array) {
+		if (array.length < 3) return null;
+		return new BlockPos(array[0], array[1], array[2]);
+	}
+
+    public static boolean isTargetableAnimal(EntityAnimal entity) {
+		return !(entity instanceof IAggressive || entity instanceof EntityFishTameable || entity instanceof IMob);
+    }
 }

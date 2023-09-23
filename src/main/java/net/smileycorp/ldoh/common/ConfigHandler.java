@@ -11,10 +11,13 @@ public class ConfigHandler {
 	public static boolean noDaySlowdown;
 	public static boolean betaSpawnpoint;
 
+	public static boolean legacyApocalypse;
+
 	//load config properties
 	public static void syncConfig() {
 		try{
 			config.load();
+			legacyApocalypse = config.get("Legacy Difficulty", "legacyApocalypse", false, "Should the day 100 boss event use the pre 0.5.0 wave based system instead of the single boss and time pausing of 0.5.0?").getBoolean();
 			legacyDamage = config.get("Legacy Difficulty", "legacyDamage", false, "Should zombies use the pre 0.4.5 damage, where they always deal 3 damage through armour?").getBoolean();
 			legacySpawns = config.get("Legacy Difficulty", "legacySpawns", false, "Should zombies spawn fully evolved, and nurses/firemen not replace spawns?").getBoolean();
 			noSafehouse = config.get("Legacy Difficulty", "noSafehouse", false, "Should the safehouse be blocked from spawning?").getBoolean();

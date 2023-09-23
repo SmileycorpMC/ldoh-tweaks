@@ -1,24 +1,14 @@
 package net.smileycorp.ldoh.common.util;
 
-import java.util.Random;
-
+import com.google.common.base.Predicate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import rafradek.TF2weapons.entity.mercenary.EntityDemoman;
-import rafradek.TF2weapons.entity.mercenary.EntityEngineer;
-import rafradek.TF2weapons.entity.mercenary.EntityHeavy;
-import rafradek.TF2weapons.entity.mercenary.EntityMedic;
-import rafradek.TF2weapons.entity.mercenary.EntityPyro;
-import rafradek.TF2weapons.entity.mercenary.EntityScout;
-import rafradek.TF2weapons.entity.mercenary.EntitySniper;
-import rafradek.TF2weapons.entity.mercenary.EntitySoldier;
-import rafradek.TF2weapons.entity.mercenary.EntitySpy;
-import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.entity.mercenary.*;
 import rafradek.TF2weapons.item.ItemFromData;
 import rafradek.TF2weapons.item.ItemWeapon;
 import rafradek.TF2weapons.util.WeaponData;
 
-import com.google.common.base.Predicate;
+import java.util.Random;
 
 public enum EnumTFClass {
 	DEMOMAN("demoman", EntityDemoman.class, 4),
