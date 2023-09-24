@@ -1,9 +1,5 @@
 package net.smileycorp.ldoh.common.entity;
 
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.MobEffects;
@@ -20,6 +16,10 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
+
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EntityZombieNurse extends EntityZombie {
 

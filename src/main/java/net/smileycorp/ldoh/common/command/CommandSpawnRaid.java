@@ -1,12 +1,5 @@
 package net.smileycorp.ldoh.common.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -19,6 +12,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid.RaidType;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class CommandSpawnRaid extends CommandBase {
 

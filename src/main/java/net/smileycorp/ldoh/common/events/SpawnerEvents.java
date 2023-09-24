@@ -1,10 +1,14 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.util.Random;
-
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
-
+import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityCrux;
+import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityHeed;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.*;
+import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
+import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityGanro;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +29,16 @@ import net.smileycorp.hordes.common.event.HordeBuildSpawntableEvent;
 import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
-import net.smileycorp.hordes.common.hordeevent.HordeSpawnEntry;
+import net.smileycorp.hordes.hordeevent.HordeSpawnEntry;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
+
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class SpawnerEvents {
 
@@ -127,7 +135,7 @@ public class SpawnerEvents {
 		if (day > 100 && day%100 == 0) {
 			if (event.getEntityPlayer().getTeam() != null) {
 				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
-					event.setSound(ModDefinitions.getResource("tf_enemy"));
+					event.setSound(ModDefinitions.TF_ENEMY_SOUND);
 				}
 			}
 		}
@@ -148,13 +156,29 @@ public class SpawnerEvents {
 	@SubscribeEvent
 	public void hordeBuildSpawntable(HordeBuildSpawntableEvent event) {
 		int day = event.getDay();
-		if (day > 100 && day%100 == 0) {
+		if (day > 100 && day % 100 == 0) {
 			if (event.getEntityPlayer().getTeam() != null) {
 				if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
 					event.spawntable.clear();
 					for (EnumTFClass tfclass : EnumTFClass.values()) if (tfclass != EnumTFClass.SPY) event.spawntable.addEntry(new HordeSpawnEntry(tfclass.getEntityClass()) , 1);
 				}
 			}
+		} if (day > 100 && event.getEntityWorld().rand.nextInt(2) == 0) {
+			event.spawntable.clear();
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityMudo.class), 75);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityInfHuman.class), 25);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityInfCow.class), 5);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityInfPig.class), 5);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityInfBear.class), 5);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityInfSheep.class), 5);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityButhol.class), 10);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityFlog.class), 5);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityDorpa.class), 1);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityHeed.class), 1);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityCrux.class), 1);
+			event.spawntable.addEntry(new HordeSpawnEntry(EntityGanro.class), 1);
+			for (Entry<Class<? extends EntityParasiteBase>, Integer> entry : Apocalypse.adaptedtable.getTable())
+				event.spawntable.addEntry(new HordeSpawnEntry(entry.getKey()), 2);
 		}
 	}
 

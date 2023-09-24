@@ -1,10 +1,10 @@
 package net.smileycorp.ldoh.common.entity;
 
+import de.maxhenkel.car.items.ModItems;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import de.maxhenkel.car.items.ModItems;
 
 public class EntityZombieMechanic extends EntityProfessionZombie {
 

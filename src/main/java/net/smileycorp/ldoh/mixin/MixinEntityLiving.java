@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.item.LDOHItems;
+import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.ldoh.common.util.ModUtils;
-
+import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,8 +25,12 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
 	public void processInitialInteract(EntityPlayer player, EnumHand hand, CallbackInfoReturnable<Boolean> callback) {
 		ItemStack stack = player.getHeldItem(hand);
 		if (!world.isRemote) {
+			//join entity team, used to make player join merc teams before opening their gui
 			if (player.getTeam() == null) ModUtils.tryJoinTeam(player, this);
-			if (stack.getItem() == LDOHItems.TF2_PROF_TOKEN) {
+			//hack to bypass mixin restrictions
+			//check if tektopia is installed because the pack no longer requires it
+			if (Loader.isModLoaded("tektopia") && TektopiaUtils.isToken(stack)) {
+				//use merc tokens transforming tek villagers code before handling other villager interactions
 				stack.interactWithEntity(player, this, hand);
 				callback.setReturnValue(true);
 				callback.cancel();

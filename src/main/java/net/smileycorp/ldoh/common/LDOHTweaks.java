@@ -16,6 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 @Mod(modid=ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
 public class LDOHTweaks {
 
@@ -24,6 +27,8 @@ public class LDOHTweaks {
 
 	@SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
 	public static CommonProxy PROXY;
+
+	public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
 	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
 	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");

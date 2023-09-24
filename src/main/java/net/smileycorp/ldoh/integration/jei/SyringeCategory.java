@@ -1,15 +1,7 @@
 package net.smileycorp.ldoh.integration.jei;
 
-import java.awt.Color;
-
-import javax.annotation.Nonnull;
-
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -20,6 +12,9 @@ import net.minecraft.util.text.translation.I18n;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.integration.jei.SyringeCategory.Wrapper;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
 
 @SuppressWarnings("deprecation")
 public class SyringeCategory implements IRecipeCategory<Wrapper> {

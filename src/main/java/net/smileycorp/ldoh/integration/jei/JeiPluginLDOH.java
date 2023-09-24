@@ -1,17 +1,12 @@
 package net.smileycorp.ldoh.integration.jei;
 
-import javax.annotation.Nonnull;
-
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiHelpers;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import com.google.common.collect.Lists;
+import mezz.jei.api.*;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
 
 @JEIPlugin
 public class JeiPluginLDOH implements IModPlugin {

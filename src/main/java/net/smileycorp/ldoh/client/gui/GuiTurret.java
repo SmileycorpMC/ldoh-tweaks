@@ -9,9 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.translation.I18n;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.model.ModelTurret;
@@ -33,7 +31,7 @@ public class GuiTurret extends GuiContainer {
 		super(new ContainerTurret(turret, player));
 		this.turret = turret;
 		width = 176;
-		height = 184;
+		height = 202;
 		owner = turret.getOwnerUsername();
 	}
 
@@ -44,36 +42,52 @@ public class GuiTurret extends GuiContainer {
 
 		//draw background texture
 		mc.getTextureManager().bindTexture(TEXTURE);
-		drawTexturedModalRect(x, y, 0, 0, xSize, 184);
+		drawTexturedModalRect(x, y, 0, 0, xSize, 202);
 
 		//draw health
 		int health = (int) Math.ceil(turret.getHealth());
 		for (int i = 0; i<=Math.ceil(health/2); i++) {
 			int hx = x + 65 + ((i%10)*10);
-			int hy = y + 49 + ((int)Math.floor(i/10)*10);
+			int hy = y + 67 + ((int)Math.floor(i/10)*10);
 			int u = (i+1)*2>health ? 9 : 0;
-			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 184, 9, 9);
+			if ((i*2)<health) drawTexturedModalRect(hx, hy, u, 203, 9, 9);
 		}
 
 		//draw gui name
-		String name = I18n.translateToLocal(TRANSLATION_KEY);
-		fontRenderer.drawString(name, x + 88 - fontRenderer.getStringWidth(name) / 2, y + 6, 4210752);
+		String text = I18n.translateToLocal(TRANSLATION_KEY);
+		fontRenderer.drawString(text, x + 88 - fontRenderer.getStringWidth(text) / 2, y + 6, 4210752);
+
+		//draw upgrades text
+		text = new TextComponentTranslation("gui.turret.text.Upgrades").setStyle(new Style().setColor(TextFormatting.DARK_GRAY)).getFormattedText();
+		fontRenderer.drawString(text, x + 65, y + 26, 4210752);
 
 		//draw owner name
-		Team team = turret.getTeam();
-		ITextComponent username = new TextComponentString(owner!=null ? owner : "");
-		if (team!=null) username.setStyle(new Style().setColor(team.getColor()));
-		String text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
-		fontRenderer.drawString(text, x + 65, y + 20, 4210752);
+		if (turret.isEnemy()) {
+			text = new TextComponentTranslation("gui.turret.text.Hostile").setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText();
+		}
+		else if (owner != null) {
+			Team team = turret.getTeam();
+			ITextComponent username = new TextComponentString(owner);
+			if (team != null) username.setStyle(new Style().setColor(team.getColor()));
+			text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
+		} else {
+			text = I18n.translateToLocal("gui.turret.text.NoOwner");
+		}
+		fontRenderer.drawString(text, x + 65, y + 38, 4210752);
 
 		//draw target name
-		if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
+		if (!turret.isActive()) text = I18n.translateToLocal("gui.turret.text.Disabled");
+		else if (!turret.hasTarget()) text = I18n.translateToLocal("gui.turret.text.NoTarget");
 		else {
 			EntityLivingBase target = turret.getTarget();
 			text = target.getDisplayName().getFormattedText();
-			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 40, 4210752);
+			fontRenderer.drawString(ModUtils.getPosString(target.getPosition()), x + 65, y + 58, 4210752);
 		}
-		fontRenderer.drawString(text, x + 65, y + 30, 4210752);
+		fontRenderer.drawString(text, x + 65, y + 48, 4210752);
+
+		//draw turret stats
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.Range") + turret.getRange(), x + 11, y + 67, 4210752);
+		fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.FireRate") + turret.getFireRate(), x + 11, y + 77, 4210752);
 
 		//draw turret entity
 		mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
@@ -81,7 +95,7 @@ public class GuiTurret extends GuiContainer {
 		GlStateManager.pushMatrix();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.disableCull();
-		GlStateManager.translate(x+36, y+16, 40);
+		GlStateManager.translate(x+36, y+10, 40);
 		GlStateManager.rotate(-30, 1, 0, 0);
 		GlStateManager.rotate(135, 0, 1, 0);
 		turretModel.render(turret, 0, 0, 0, turret.rotationPitch, 0, 2);

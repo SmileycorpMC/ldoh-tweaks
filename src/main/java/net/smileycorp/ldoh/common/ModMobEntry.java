@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.common;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +9,8 @@ import net.smileycorp.atlas.api.util.TextUtils;
 import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+
+import javax.annotation.Nullable;
 
 public class ModMobEntry {
 

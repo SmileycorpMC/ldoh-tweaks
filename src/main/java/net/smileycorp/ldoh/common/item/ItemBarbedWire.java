@@ -1,8 +1,8 @@
 package net.smileycorp.ldoh.common.item;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +12,8 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
+
+import java.util.List;
 
 public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 
@@ -52,4 +54,34 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 		}
 
 	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public int getItemEnchantability(ItemStack stack) {
+		return EnumBarbedWireMat.byMeta(stack.getMetadata()).getEnchantability();
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return enchantment.type.canEnchantItem(Items.IRON_SWORD);
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return stack.getTagCompound() != null && stack.getTagCompound().hasKey("durability");
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		if (!showDurabilityBar(stack)) return 0;
+		EnumBarbedWireMat mat = EnumBarbedWireMat.byMeta(stack.getMetadata());
+		NBTTagCompound nbt = stack.getTagCompound();
+		return 1-((double) nbt.getInteger("durability") / (double) mat.getDurability());
+	}
+
+
 }
