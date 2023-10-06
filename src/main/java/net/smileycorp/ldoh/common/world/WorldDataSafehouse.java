@@ -43,6 +43,7 @@ public class WorldDataSafehouse extends WorldSavedData {
             safehouse.generate(world, rand, spawn.down());
         }
         generated = true;
+        markDirty();
     }
 
     public boolean isMarked() {
@@ -51,6 +52,7 @@ public class WorldDataSafehouse extends WorldSavedData {
 
     public boolean markPositions(World world, BlockPos pos, boolean forced) {
         if (generated = true) generated = false;
+        markDirty();
         return safehouse.markPositions(world, pos, forced);
     }
 
