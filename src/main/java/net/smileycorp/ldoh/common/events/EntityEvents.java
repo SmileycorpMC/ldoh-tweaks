@@ -350,7 +350,7 @@ public class EntityEvents {
 				float amount = 1;
 				EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
 				for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
-				amount = Math.max(amount, 3f);
+				amount = 3f;
 				event.setAmount(Math.max(amount, event.getAmount()));
 			}
 		}
