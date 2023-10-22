@@ -15,4 +15,7 @@ public class LDOHBlocks {
 	// functional
 	public static final Block HORDE_SPAWNER = new BlockHordeSpawner();
 
+	//decoration
+	public static final Block LABORATORY_BLOCK = new BlockLaboratory();
+
 }

@@ -55,6 +55,7 @@ import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.*;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
+import net.smileycorp.ldoh.common.item.ItemBlockMeta;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
@@ -109,7 +110,7 @@ public class ClientEventListener {
 		for (Item item: RegistryEvents.ITEMS) {
 			if (item instanceof IMetaItem) {
 				for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
-					ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(ModDefinitions.getResource("items/"+item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
+					ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(ModDefinitions.getResource((item instanceof ItemBlockMeta ? "" : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
 				}
 			} else ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
 		}

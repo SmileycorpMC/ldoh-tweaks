@@ -11,6 +11,7 @@ import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -51,6 +52,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -305,4 +307,32 @@ public class ModUtils {
     public static boolean isTargetableAnimal(EntityAnimal entity) {
 		return !(entity instanceof IAggressive || entity instanceof EntityFishTameable || entity instanceof IMob);
     }
+
+	public static String getPropertyString(Map<IProperty<?>, Comparable<? >> values)
+	{
+		StringBuilder stringbuilder = new StringBuilder();
+
+		for (Map.Entry< IProperty<?>, Comparable<? >> entry : values.entrySet())
+		{
+			if (stringbuilder.length() != 0)
+			{
+				stringbuilder.append(",");
+			}
+
+			IProperty<?> iproperty = (IProperty)entry.getKey();
+			stringbuilder.append(iproperty.getName());
+			stringbuilder.append("=");
+			stringbuilder.append(getPropertyName(iproperty, entry.getValue()));
+		}
+
+		if (stringbuilder.length() == 0) {
+			stringbuilder.append("normal");
+		}
+		return stringbuilder.toString();
+	}
+
+	private static <T extends Comparable<T>> String getPropertyName(IProperty<T> property, Comparable<?> value) {
+		return property.getName((T)value);
+	}
+
 }

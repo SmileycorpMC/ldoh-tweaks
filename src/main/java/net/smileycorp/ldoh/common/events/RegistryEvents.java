@@ -59,6 +59,7 @@ public class RegistryEvents {
 		registerItem(registry, new ItemTurret());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
+		registerItem(registry, new ItemBlockMeta(LDOHBlocks.LABORATORY_BLOCK));
 	}
 
 	public static void registerItem(IForgeRegistry<Item> registry, Item item) {
