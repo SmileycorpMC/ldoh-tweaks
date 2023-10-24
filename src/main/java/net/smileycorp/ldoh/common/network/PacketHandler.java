@@ -23,7 +23,6 @@ public class PacketHandler {
 		NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
 		//discriminator 5 open from exhaustion code removal
 		NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 6, Side.CLIENT);
-		NETWORK_INSTANCE.registerMessage(ClientSyncHungerEffect.class, SyncHungerEffectMessage.class, 7, Side.CLIENT);
 	}
 
 	public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {
@@ -110,21 +109,6 @@ public class PacketHandler {
 			if (ctx.side == Side.CLIENT) {
 				Minecraft.getMinecraft().addScheduledTask(() -> {
 					ClientHandler.syncMedicCure(message);
-				});
-			}
-			return null;
-		}
-	}
-
-	public static class ClientSyncHungerEffect implements IMessageHandler<SyncHungerEffectMessage, IMessage> {
-
-		public ClientSyncHungerEffect() {}
-
-		@Override
-		public IMessage onMessage(SyncHungerEffectMessage message, MessageContext ctx) {
-			if (ctx.side == Side.CLIENT) {
-				Minecraft.getMinecraft().addScheduledTask(() -> {
-					ClientHandler.syncHungerEffect(message);
 				});
 			}
 			return null;

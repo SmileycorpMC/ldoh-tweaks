@@ -50,6 +50,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -456,12 +457,15 @@ public class EntityEvents {
 		parasite_data.markDirty();
 	}
 
-	//prevent coth before day 50
+	//prevent coth before day 50 and for machine entities
 	@SubscribeEvent
 	public void applyEffect(PotionEvent.PotionApplicableEvent event) {
 		if (event.getPotionEffect() == null || event.getEntityLiving() == null) return;
-		World world = event.getEntity().getEntityWorld();
-		if (event.getPotionEffect().getPotion() == SRPPotions.COTH_E && world.getWorldTime() < 1200000);
+		EntityLivingBase entity = event.getEntityLiving();
+		World world = entity.getEntityWorld();
+		if (event.getPotionEffect().getPotion() == SRPPotions.COTH_E && (entity instanceof EntityBuilding ||
+				entity instanceof IEnemyMachine || (entity instanceof EntityTF2Character && ((EntityTF2Character) entity).isRobot())
+				|| world.getWorldTime() < 1200000)) event.setResult(Event.Result.DENY);
 	}
 
 }

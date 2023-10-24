@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.common.events;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
@@ -117,7 +116,11 @@ public class TF2Events {
 		World world = entity.world;
 		//hunger tick
 		if (entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
-			if (!((EntityTF2Character) entity).isRobot()) entity.getCapability(LDOHCapabilities.HUNGER, null).onUpdate((EntityLiving) entity);
+			if (!((EntityTF2Character) entity).isRobot()) {
+				IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
+				hunger.onUpdate((EntityLiving) entity);
+				if (entity.motionX > 0.2 || entity.motionY > 0.2 || entity.motionZ > 0.2) hunger.onUpdate((EntityLiving) entity);
+			}
 		}
 		if (entity instanceof EntityTF2Character &! world.isRemote) {
 			EntityTF2Character merc = (EntityTF2Character) entity;
@@ -166,9 +169,6 @@ public class TF2Events {
 					stack = merc.getCapability(LDOHCapabilities.CURING, null).tryPickupSyringe(stack, merc);
 				}
 				if (stack.getCount() == 0) item.setDead();
-			}
-			if (merc.isRobot() && merc.isPotionActive(SRPPotions.COTH_E)) {
-				merc.removePotionEffect(SRPPotions.COTH_E);
 			}
 		}
 	}

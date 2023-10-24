@@ -24,53 +24,52 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.ldoh.common.network.*;
+import net.smileycorp.ldoh.common.network.PacketHandler;
+import net.smileycorp.ldoh.common.network.StartEatingMessage;
+import net.smileycorp.ldoh.common.network.SyncFoodMessage;
+import net.smileycorp.ldoh.common.network.SyncHungerMessage;
 
 import java.util.Random;
 
 public interface IHunger {
 
-	public void addStats(int foodLevelIn, float foodSaturationModifier);
+	void addStats(int foodLevelIn, float foodSaturationModifier);
 
-	public void addStats(ItemFood foodItem, ItemStack stack);
+	void addStats(ItemFood foodItem, ItemStack stack);
 
-	public void onUpdate(EntityLiving entity);
+	void onUpdate(EntityLiving entity);
 
-	public void readNBT(NBTTagCompound compound);
+	void readNBT(NBTTagCompound compound);
 
-	public void writeNBT(NBTTagCompound compound);
+	void writeNBT(NBTTagCompound compound);
 
-	public int getFoodLevel();
+	int getFoodLevel();
 
-	public boolean needFood();
+	boolean needFood();
 
-	public void addExhaustion(float exhaustion);
+	void addExhaustion(float exhaustion);
 
-	public float getSaturationLevel();
+	float getSaturationLevel();
 
-	public void setFoodLevel(int foodLevelIn);
+	void setFoodLevel(int foodLevelIn);
 
-	public ItemStack tryPickupFood(ItemStack stack, EntityLiving entity);
+	ItemStack tryPickupFood(ItemStack stack, EntityLiving entity);
 
-	public void setFoodStack(ItemStack stack);
+	void setFoodStack(ItemStack stack);
 
-	public boolean isEating();
+	boolean isEating();
 
-	public boolean hasHungerEffect();
+	void startEating(EntityLiving entity);
 
-	public void setHungerEffect(EntityLiving entity, boolean hasHunger);
+	ItemStack getFoodSlot();
 
-	public void startEating(EntityLiving entity);
+	void syncClients(EntityLiving entity);
 
-	public ItemStack getFoodSlot();
+	void syncClient(EntityLiving entity, EntityPlayerMP player);
 
-	public void syncClients(EntityLiving entity);
+	void setFoodSaturationLevel(float foodSaturationLevelIn);
 
-	public void syncClient(EntityLiving entity, EntityPlayerMP player);
-
-	public void setFoodSaturationLevel(float foodSaturationLevelIn);
-
-	public static class Storage implements IStorage<IHunger> {
+	class Storage implements IStorage<IHunger> {
 
 		@Override
 		public NBTBase writeNBT(Capability<IHunger> capability, IHunger instance, EnumFacing side) {
@@ -85,15 +84,11 @@ public interface IHunger {
 		}
 	}
 
-	public static class Hunger implements IHunger {
+	class Hunger implements IHunger {
 
 		protected ItemStack foodSlot = new ItemStack(Items.BREAD, 8);
 		protected ItemStack heldItem = ItemStack.EMPTY;
-
-		protected boolean appleCoreInit = false;
 		protected int eatingTicks = 0;
-
-		protected boolean hasHunger = false;
 
 		protected int foodLevel = 20;
 		protected float foodSaturationLevel = 5.0F;
@@ -118,12 +113,10 @@ public interface IHunger {
 				EnumDifficulty enumdifficulty = entity.world.getDifficulty();
 				prevFoodLevel = foodLevel;
 
-				if (entity.isPotionActive(MobEffects.HUNGER)) {
+				if (entity.isPotionActive(MobEffects.HUNGER))
 					addExhaustion(0.005F * (entity.getActivePotionEffect(MobEffects.HUNGER).getAmplifier() + 1));
-					if (!hasHunger)setHungerEffect(entity, true);
-				} else if (hasHunger)setHungerEffect(entity, false);
 				if (entity.isPotionActive(HordesInfection.INFECTED)) {
-					addExhaustion(0.007F * (entity.getActivePotionEffect(HordesInfection.INFECTED).getAmplifier()+1));
+					addExhaustion(0.007F * (entity.getActivePotionEffect(HordesInfection.INFECTED).getAmplifier() + 1));
 				}
 
 				if (foodExhaustionLevel > 4.0F)
@@ -140,9 +133,7 @@ public interface IHunger {
 					}
 				}
 
-				boolean flag = entity.world.getGameRules().getBoolean("naturalRegeneration");
-
-				if (flag && getSaturationLevel() > 0.0F && getFoodLevel() >= 20)
+				if (getSaturationLevel() > 0.0F && getFoodLevel() >= 20)
 				{
 					++foodTimer;
 
@@ -154,7 +145,7 @@ public interface IHunger {
 						foodTimer = 0;
 					}
 				}
-				else if (flag && getFoodLevel() >= 18)
+				else if (getFoodLevel() >= 18)
 				{
 					++foodTimer;
 
@@ -186,7 +177,7 @@ public interface IHunger {
 			}
 			if (eatingTicks > 0) {
 				eatingTicks--;
-				foodSlot.getItem().onUsingTick(foodSlot, entity, 32-eatingTicks);
+				foodSlot.getItem().onUsingTick(foodSlot, entity, 32 - eatingTicks);
 				if (entity.world.isRemote) renderEatAnimation(entity);
 				if (eatingTicks == 0) {
 					entity.stopActiveHand();
@@ -281,8 +272,7 @@ public interface IHunger {
 		}
 
 		@Override
-		public void addExhaustion(float exhaustion)
-		{
+		public void addExhaustion(float exhaustion) {
 			foodExhaustionLevel = Math.min(foodExhaustionLevel + exhaustion, 40.0F);
 		}
 
@@ -363,22 +353,9 @@ public interface IHunger {
 			PacketHandler.NETWORK_INSTANCE.sendTo(new SyncHungerMessage(entity, getFoodLevel()), player);
 		}
 
-		@Override
-		public boolean hasHungerEffect() {
-			return hasHunger;
-		}
-
-		@Override
-		public void setHungerEffect(EntityLiving entity, boolean hasHunger) {
-			this.hasHunger = hasHunger;
-			if (!entity.world.isRemote) {
-				PacketHandler.NETWORK_INSTANCE.sendToAllTracking(new SyncHungerEffectMessage(entity, hasHunger), entity);
-			}
-		}
-
 	}
 
-	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+	class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
 		protected final IHunger instance = LDOHCapabilities.HUNGER.getDefaultInstance();
 

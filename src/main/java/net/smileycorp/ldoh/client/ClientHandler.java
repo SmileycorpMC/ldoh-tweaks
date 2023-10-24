@@ -75,13 +75,4 @@ public class ClientHandler {
 		}
 	}
 
-	//sync the hunger potion effect to the client
-	public static void syncHungerEffect(SyncHungerEffectMessage message) {
-		Entity entity = message.getEntity(Minecraft.getMinecraft().world);
-		if (entity!=null) if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
-			IHunger hunger = entity.getCapability(LDOHCapabilities.HUNGER, null);
-			hunger.setHungerEffect((EntityLiving) entity, message.hasHunger());
-		}
-	}
-
 }
