@@ -43,161 +43,163 @@ import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 public class PlayerEvents {
 
-	//capability manager
-	@SubscribeEvent
-	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		Entity entity = event.getObject();
-		//spawner instance for boss event
-		if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer &!(entity instanceof FakePlayer)) {
-			event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
-		}
-	}
+    //capability manager
+    @SubscribeEvent
+    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        Entity entity = event.getObject();
+        //spawner instance for boss event
+        if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
+            event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
+        }
+    }
 
-	//prevent picking and placing lava and other hot liquids
-	@SubscribeEvent
-	public void fillBucket(FillBucketEvent event) {
-		EntityPlayer player = event.getEntityPlayer();
-		if (isHot(event.getEmptyBucket(), player) || isHot(event.getFilledBucket(), player)) {
-			event.setResult(Event.Result.DENY);
-			event.setCanceled(true);
-		} else if (event.getTarget() != null && event.getTarget().typeOfHit == RayTraceResult.Type.BLOCK) {
-			BlockPos pos = event.getTarget().getBlockPos();
-			IBlockState state = player.world.getBlockState(pos);
-			if (state == null) return;
-			if (state.getMaterial() == Material.LAVA) {
-				event.setResult(Event.Result.DENY);
-				event.setCanceled(true);
-				return;
-			} else if (!(state.getBlock() instanceof IFluidBlock)) return;
-			Fluid fluid = ((IFluidBlock) state.getBlock()).getFluid();
-			if (fluid == null) return;
-			if (fluid.getTemperature() >= 450) {
-				event.setResult(Event.Result.DENY);
-				event.setCanceled(true);
-			}
-		}
-	}
+    //prevent picking and placing lava and other hot liquids
+    @SubscribeEvent
+    public void fillBucket(FillBucketEvent event) {
+        EntityPlayer player = event.getEntityPlayer();
+        if (isHot(event.getEmptyBucket(), player) || isHot(event.getFilledBucket(), player)) {
+            event.setResult(Event.Result.DENY);
+            event.setCanceled(true);
+        } else if (event.getTarget() != null && event.getTarget().typeOfHit == RayTraceResult.Type.BLOCK) {
+            BlockPos pos = event.getTarget().getBlockPos();
+            IBlockState state = player.world.getBlockState(pos);
+            if (state == null) return;
+            if (state.getMaterial() == Material.LAVA) {
+                event.setResult(Event.Result.DENY);
+                event.setCanceled(true);
+                return;
+            } else if (!(state.getBlock() instanceof IFluidBlock)) return;
+            Fluid fluid = ((IFluidBlock) state.getBlock()).getFluid();
+            if (fluid == null) return;
+            if (fluid.getTemperature() >= 450) {
+                event.setResult(Event.Result.DENY);
+                event.setCanceled(true);
+            }
+        }
+    }
 
-	private static boolean isHot(ItemStack stack, EntityPlayer player) {
-		if (stack == null || player == null) return false;
-		if (stack.getItem() == Items.LAVA_BUCKET &! player.capabilities.isCreativeMode) return true;
-		if (stack.getItem() instanceof UniversalBucket &! player.capabilities.isCreativeMode) {
-			UniversalBucket bucket = (UniversalBucket) stack.getItem();
-			Fluid fluid = bucket.getFluid(stack).getFluid();
-			if (fluid.getTemperature() >= 450 || fluid.getBlock().getDefaultState().getMaterial() == Material.LAVA) return true;
-		}
-		return false;
-	}
+    private static boolean isHot(ItemStack stack, EntityPlayer player) {
+        if (stack == null || player == null) return false;
+        if (stack.getItem() == Items.LAVA_BUCKET & !player.capabilities.isCreativeMode) return true;
+        if (stack.getItem() instanceof UniversalBucket & !player.capabilities.isCreativeMode) {
+            UniversalBucket bucket = (UniversalBucket) stack.getItem();
+            Fluid fluid = bucket.getFluid(stack).getFluid();
+            if (fluid.getTemperature() >= 450 || fluid.getBlock().getDefaultState().getMaterial() == Material.LAVA)
+                return true;
+        }
+        return false;
+    }
 
 
-	//Player ticks
-	@SubscribeEvent
-	public void playerTick(PlayerTickEvent event) {
-		if (event.phase == Phase.END) {
-			EntityPlayer player = event.player;
-			World world = player.world;
-			if (!world.isRemote) {
-				//follower stopping
-				if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
-					IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
-					if (player.isSneaking() &! followers.isCrouching()) followers.setCrouching();
-					else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
-				}
-				if (world.getWorldTime() == 265000) {
-					ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_0);
-					text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-					player.sendMessage(text);
-				}
-				if (world.getWorldTime() == 505000) {
-					ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_1);
-					text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
-					player.sendMessage(text);
-				}
-			}
-		}
-	}
+    //Player ticks
+    @SubscribeEvent
+    public void playerTick(PlayerTickEvent event) {
+        if (event.phase == Phase.END) {
+            EntityPlayer player = event.player;
+            World world = player.world;
+            if (!world.isRemote) {
+                //follower stopping
+                if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
+                    IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
+                    if (player.isSneaking() & !followers.isCrouching()) followers.setCrouching();
+                    else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
+                }
+                if (world.getWorldTime() == 265000) {
+                    ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_0);
+                    text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
+                    player.sendMessage(text);
+                }
+                if (world.getWorldTime() == 505000) {
+                    ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_1);
+                    text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
+                    player.sendMessage(text);
+                }
+            }
+        }
+    }
 
-	@SubscribeEvent(receiveCanceled = true)
-	public void playerClone(PlayerEvent.Clone event) {
-		EntityPlayer player = event.getEntityPlayer();
-		EntityPlayer original = event.getOriginal();
-		if (player != null && original != null &!(player instanceof FakePlayer || original instanceof FakePlayer)) {
-			if (player.hasCapability(LDOHCapabilities.MINI_RAID, null) && original.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
-				IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
-				raid.readFromNBT(original.getCapability(LDOHCapabilities.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
-			}
-			if (player.hasCapability(LDOHCapabilities.APOCALYPSE, null) && original.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
-				IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
-				apocalypse.readFromNBT(original.getCapability(LDOHCapabilities.APOCALYPSE, null).writeToNBT(new NBTTagCompound()));
-				apocalypse.setPlayer(player);
-			}
-			if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && original.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
-				IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
-				followers.readFromNBT(original.getCapability(LDOHCapabilities.FOLLOWERS, null).writeToNBT());
-			}
-		}
-	}
+    @SubscribeEvent(receiveCanceled = true)
+    public void playerClone(PlayerEvent.Clone event) {
+        EntityPlayer player = event.getEntityPlayer();
+        EntityPlayer original = event.getOriginal();
+        if (player != null && original != null & !(player instanceof FakePlayer || original instanceof FakePlayer)) {
+            if (player.hasCapability(LDOHCapabilities.MINI_RAID, null) && original.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
+                IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
+                raid.readFromNBT(original.getCapability(LDOHCapabilities.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
+            }
+            if (player.hasCapability(LDOHCapabilities.APOCALYPSE, null) && original.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
+                IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
+                apocalypse.readFromNBT(original.getCapability(LDOHCapabilities.APOCALYPSE, null).writeToNBT(new NBTTagCompound()));
+                apocalypse.setPlayer(player);
+            }
+            if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && original.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
+                IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
+                followers.readFromNBT(original.getCapability(LDOHCapabilities.FOLLOWERS, null).writeToNBT());
+            }
+        }
+    }
 
-	//activate when a player right clicks with an item
-	@SubscribeEvent
-	public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
-		EntityPlayer player = event.getEntityPlayer();
-		World world = player.world;
-		if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
-			IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
-			if (followers.isCrouching()) {
-				Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
-				if (target instanceof EntityLiving) {
-					if (followers.stopFollowing((EntityLiving) target)) {
-						event.setCancellationResult(EnumActionResult.FAIL);
-						event.setCanceled(true);
-					}
-				}
-			}
-		}
-	}
+    //activate when a player right clicks with an item
+    @SubscribeEvent
+    public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
+        EntityPlayer player = event.getEntityPlayer();
+        World world = player.world;
+        if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND & !world.isRemote) {
+            IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
+            if (followers.isCrouching()) {
+                Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
+                if (target instanceof EntityLiving) {
+                    if (followers.stopFollowing((EntityLiving) target)) {
+                        event.setCancellationResult(EnumActionResult.FAIL);
+                        event.setCanceled(true);
+                    }
+                }
+            }
+        }
+    }
 
-	//activate when a player right clicks an entity
-	@SubscribeEvent
-	public static void onInteractEntity(PlayerInteractEvent.EntityInteract event) {
-		EntityPlayer player = event.getEntityPlayer();
-		Entity target = event.getTarget();
-		World world = player.world;
-		if (event.getItemStack().isEmpty() && target instanceof EntityLiving &&player.hasCapability(LDOHCapabilities.FOLLOWERS, null)
-				&& event.getHand() == EnumHand.MAIN_HAND &! world.isRemote) {
-			IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
-			if (followers.isCrouching()) {
-				if (target instanceof EntityLiving) {
-					if (followers.stopFollowing((EntityLiving) target)) {
-						event.setCancellationResult(EnumActionResult.FAIL);
-						event.setCanceled(true);
-					}
-				}
-			}
-		}
-	}
+    //activate when a player right clicks an entity
+    @SubscribeEvent
+    public static void onInteractEntity(PlayerInteractEvent.EntityInteract event) {
+        EntityPlayer player = event.getEntityPlayer();
+        Entity target = event.getTarget();
+        World world = player.world;
+        if (event.getItemStack().isEmpty() && target instanceof EntityLiving && player.hasCapability(LDOHCapabilities.FOLLOWERS, null)
+                && event.getHand() == EnumHand.MAIN_HAND & !world.isRemote) {
+            IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
+            if (followers.isCrouching()) {
+                if (target instanceof EntityLiving) {
+                    if (followers.stopFollowing((EntityLiving) target)) {
+                        event.setCancellationResult(EnumActionResult.FAIL);
+                        event.setCanceled(true);
+                    }
+                }
+            }
+        }
+    }
 
-	//activate when a player right clicks a block
-	@SubscribeEvent
-	public void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		EntityPlayer player = event.getEntityPlayer();
-		World world = player.world;
-		if (!world.isRemote) {
-			BlockPos pos = event.getPos();
-			TileEntity tile = world.getTileEntity(pos);
-			if (tile instanceof TileEntityCrate) {
-				if (((TileEntityCrate) tile).sealed) {
-					if (event.getItemStack().getItem() != FurnitureItems.CROWBAR) player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
-				}
-			}
-		}
-	}
+    //activate when a player right clicks a block
+    @SubscribeEvent
+    public void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
+        EntityPlayer player = event.getEntityPlayer();
+        World world = player.world;
+        if (!world.isRemote) {
+            BlockPos pos = event.getPos();
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile instanceof TileEntityCrate) {
+                if (((TileEntityCrate) tile).sealed) {
+                    if (event.getItemStack().getItem() != FurnitureItems.CROWBAR)
+                        player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
+                }
+            }
+        }
+    }
 
-	@SubscribeEvent
-	public void playerJoin(PlayerLoggedInEvent event) {
-		if (event.player == null || event.player.world.isRemote) return;
-		WorldDataSafehouse data = WorldDataSafehouse.getData(event.player.world);
-		if (!data.isGenerated()) data.generate(event.player.world);
-	}
+    @SubscribeEvent
+    public void playerJoin(PlayerLoggedInEvent event) {
+        if (event.player == null || event.player.world.isRemote) return;
+        WorldDataSafehouse data = WorldDataSafehouse.getData(event.player.world);
+        if (!data.isGenerated()) data.generate(event.player.world);
+    }
 
 }

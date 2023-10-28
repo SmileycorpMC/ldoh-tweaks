@@ -83,7 +83,7 @@ public class ItemTurretTargetingUpgrade extends Item {
             List<ResourceLocation> entities = Lists.newArrayList();
             if (tag.hasKey("entities")) {
                 ((NBTTagList) tag.getTag("entities")).forEach(nbt ->
-                    entities.add(new ResourceLocation(((NBTTagString)nbt).getString())));
+                        entities.add(new ResourceLocation(((NBTTagString) nbt).getString())));
             }
             return new TargetingOptions(mode, entities);
         }

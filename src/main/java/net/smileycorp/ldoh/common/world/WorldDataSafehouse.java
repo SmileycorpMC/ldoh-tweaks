@@ -33,7 +33,7 @@ public class WorldDataSafehouse extends WorldSavedData {
 
     public void generate(World world) {
         BlockPos spawn = world.getSpawnPoint();
-        world.getEntities(Entity.class, e->!(e instanceof EntityPlayer) && spawn.distanceSqToCenter(e.posX, spawn.getY(), e.posZ) < 225)
+        world.getEntities(Entity.class, e -> !(e instanceof EntityPlayer) && spawn.distanceSqToCenter(e.posX, spawn.getY(), e.posZ) < 225)
                 .forEach(world::removeEntity);
         Random rand = world.rand;
         if (!ConfigHandler.noSafehouse) {

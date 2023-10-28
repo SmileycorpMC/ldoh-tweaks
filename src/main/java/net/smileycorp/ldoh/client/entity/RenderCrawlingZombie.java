@@ -9,27 +9,24 @@ import net.smileycorp.ldoh.client.entity.model.ModelCrawlingZombie;
 
 public class RenderCrawlingZombie extends RenderBiped<EntityZombie> {
 
-	private final String texture;
+    private final String texture;
 
-	public RenderCrawlingZombie(RenderManager rendermanager, String texture)
-	{
-		super(rendermanager, new ModelCrawlingZombie(), 0.5F);
-		this.texture = texture;
-		LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
-		{
-			@Override
-			protected void initArmor()
-			{
-				modelLeggings = new ModelCrawlingZombie(0.5F, true);
-				modelArmor = new ModelCrawlingZombie(1.0F, true);
-			}
-		};
-		this.addLayer(layerbipedarmor);
-	}
+    public RenderCrawlingZombie(RenderManager rendermanager, String texture) {
+        super(rendermanager, new ModelCrawlingZombie(), 0.5F);
+        this.texture = texture;
+        LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this) {
+            @Override
+            protected void initArmor() {
+                modelLeggings = new ModelCrawlingZombie(0.5F, true);
+                modelArmor = new ModelCrawlingZombie(1.0F, true);
+            }
+        };
+        this.addLayer(layerbipedarmor);
+    }
 
-	@Override
-	protected ResourceLocation getEntityTexture(EntityZombie entity) {
-		return new ResourceLocation("textures/entity/zombie/" + texture +".png");
-	}
+    @Override
+    protected ResourceLocation getEntityTexture(EntityZombie entity) {
+        return new ResourceLocation("textures/entity/zombie/" + texture + ".png");
+    }
 
 }

@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Item.class)
 public class MixinItem {
 
-	//add damage and attack speed to the crowbar
-	@Inject(at=@At("TAIL"), method = "getAttributeModifiers(Lnet/minecraft/inventory/EntityEquipmentSlot;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;", cancellable = true, remap = false)
-	public void getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack, CallbackInfoReturnable<Multimap<String, AttributeModifier>> callback) {
-		Multimap<String, AttributeModifier> map = callback.getReturnValue();
-		ModUtils.getAttributeModifiers(slot, stack, map);
-		callback.setReturnValue(map);
-	}
+    //add damage and attack speed to the crowbar
+    @Inject(at = @At("TAIL"), method = "getAttributeModifiers(Lnet/minecraft/inventory/EntityEquipmentSlot;Lnet/minecraft/item/ItemStack;)Lcom/google/common/collect/Multimap;", cancellable = true, remap = false)
+    public void getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack, CallbackInfoReturnable<Multimap<String, AttributeModifier>> callback) {
+        Multimap<String, AttributeModifier> map = callback.getReturnValue();
+        ModUtils.getAttributeModifiers(slot, stack, map);
+        callback.setReturnValue(map);
+    }
 
 }

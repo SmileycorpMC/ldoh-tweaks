@@ -16,25 +16,25 @@ import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 @EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.MODID)
 public class ClientProxy extends CommonProxy {
 
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		super.preInit(event);
-		MinecraftForge.EVENT_BUS.register(new ClientEventListener());
-		//register our random mobs support to the reload listener
-		//should probably prevent this when optifine is installed
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(RandomTextureCache.INSTANCE);
-	}
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        MinecraftForge.EVENT_BUS.register(new ClientEventListener());
+        //register our random mobs support to the reload listener
+        //should probably prevent this when optifine is installed
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(RandomTextureCache.INSTANCE);
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		super.init(event);
-		//Mobends support for entity models
-		if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+        //Mobends support for entity models
+        if (Loader.isModLoaded("mobends")) new LDOHMobendsAddon().register();
+    }
 
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
-	}
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+    }
 
 }

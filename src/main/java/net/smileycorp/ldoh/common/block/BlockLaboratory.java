@@ -19,46 +19,43 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties {
 
-	public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
+    public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
 
-	public BlockLaboratory() {
-		super(Material.IRON);
-		disableStats();
-		setBlockUnbreakable();
-		setResistance(6000000);
-		setSoundType(SoundType.METAL);
-		String name = "Laboratory_Block";
-		setUnlocalizedName(ModDefinitions.getName(name));
-		setRegistryName(ModDefinitions.getResource(name));
-		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-		setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
-	}
+    public BlockLaboratory() {
+        super(Material.IRON);
+        disableStats();
+        setBlockUnbreakable();
+        setResistance(6000000);
+        setSoundType(SoundType.METAL);
+        String name = "Laboratory_Block";
+        setUnlocalizedName(ModDefinitions.getName(name));
+        setRegistryName(ModDefinitions.getResource(name));
+        setCreativeTab(LDOHTweaks.CREATIVE_TAB);
+        setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
+    }
 
-	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-		ItemStack stack = placer.getHeldItem(hand);
-		return getDefaultState().withProperty(VARIANT, stack.getMetadata());
-	}
+    @Override
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        ItemStack stack = placer.getHeldItem(hand);
+        return getDefaultState().withProperty(VARIANT, stack.getMetadata());
+    }
 
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return this.getDefaultState().withProperty(VARIANT, meta);
-	}
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(VARIANT, meta);
+    }
 
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(VARIANT);
-	}
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(VARIANT);
+    }
 
 
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT});
-	}
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{VARIANT});
+    }
 
-	@Override
-	public int getMaxMeta() {
-		return 16;
-	}
+    @Override
+    public int getMaxMeta() {
+        return 16;
+    }
 
 }

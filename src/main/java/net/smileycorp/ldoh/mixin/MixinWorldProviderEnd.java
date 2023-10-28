@@ -19,7 +19,7 @@ public abstract class MixinWorldProviderEnd extends WorldProvider {
 
     private boolean hasSpawnedDragon;
 
-    @Inject(at=@At("HEAD"), method = "init()V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "init()V", cancellable = true)
     public void init(CallbackInfo callback) {
         biomeProvider = new BiomeProviderSingle(Biomes.SKY);
         NBTTagCompound nbt = this.world.getWorldInfo().getDimensionData(this.world.provider.getDimension());
@@ -27,7 +27,7 @@ public abstract class MixinWorldProviderEnd extends WorldProvider {
         callback.cancel();
     }
 
-    @Inject(at=@At("HEAD"), method = "onWorldUpdateEntities()V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "onWorldUpdateEntities()V", cancellable = true)
     public void onWorldUpdateEntities(CallbackInfo callback) {
         if (!hasSpawnedDragon) {
             EntityInfDragonE dragon = new EntityInfDragonE(world);
@@ -37,7 +37,7 @@ public abstract class MixinWorldProviderEnd extends WorldProvider {
         }
     }
 
-    @Inject(at=@At("TAIL"), method = "onWorldSave()V", cancellable = true)
+    @Inject(at = @At("TAIL"), method = "onWorldSave()V", cancellable = true)
     public void onWorldSave(CallbackInfo callback) {
         NBTTagCompound nbt = this.world.getWorldInfo().getDimensionData(this.world.provider.getDimension());
         nbt.setBoolean("hasSpawnedDragon", hasSpawnedDragon);

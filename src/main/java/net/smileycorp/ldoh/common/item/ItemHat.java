@@ -12,26 +12,26 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class ItemHat extends ItemBase {
-	
-	public ItemHat(String name) {
-		super(name);
-		setMaxStackSize(1);
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
-	}
+
+    public ItemHat(String name) {
+        super(name);
+        setMaxStackSize(1);
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
+    }
 
     @Override
     public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EntityEquipmentSlot.HEAD;
     }
-	
-	@Override
-	public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot slot, Entity entity) {
+
+    @Override
+    public boolean isValidArmor(ItemStack stack, EntityEquipmentSlot slot, Entity entity) {
         return slot == EntityEquipmentSlot.HEAD;
     }
-	
-	//copied from ItemArmor because it's the only common code we use
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+
+    //copied from ItemArmor because it's the only common code we use
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         EntityEquipmentSlot entityequipmentslot = EntityEquipmentSlot.HEAD;
         ItemStack itemstack1 = player.getItemStackFromSlot(entityequipmentslot);
@@ -40,10 +40,9 @@ public class ItemHat extends ItemBase {
             player.setItemStackToSlot(entityequipmentslot, itemstack.copy());
             itemstack.setCount(0);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-        }
-        else {
+        } else {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
         }
     }
-	
+
 }

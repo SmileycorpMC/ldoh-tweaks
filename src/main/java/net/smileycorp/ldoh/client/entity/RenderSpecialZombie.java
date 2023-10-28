@@ -9,16 +9,14 @@ import net.minecraft.util.ResourceLocation;
 import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class RenderSpecialZombie<T extends EntityZombie> extends RenderBiped<T> {
-	
-	protected String texture;
+
+    protected String texture;
 
     public RenderSpecialZombie(RenderManager rendermanager, String texture) {
         super(rendermanager, new ModelZombie(), 0.5F);
-        LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
-        {
+        LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this) {
             @Override
-			protected void initArmor()
-            {
+            protected void initArmor() {
                 this.modelLeggings = new ModelZombie(0.5F, true);
                 this.modelArmor = new ModelZombie(1.0F, true);
             }
@@ -28,8 +26,8 @@ public class RenderSpecialZombie<T extends EntityZombie> extends RenderBiped<T> 
     }
 
     @Override
-	protected ResourceLocation getEntityTexture(EntityZombie entity) {
-        return ModDefinitions.getResource("textures/entity/" + texture +".png");
+    protected ResourceLocation getEntityTexture(EntityZombie entity) {
+        return ModDefinitions.getResource("textures/entity/" + texture + ".png");
     }
 
 }

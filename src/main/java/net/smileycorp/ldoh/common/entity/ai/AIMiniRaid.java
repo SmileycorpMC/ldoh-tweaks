@@ -9,15 +9,16 @@ import java.util.concurrent.TimeUnit;
 
 public class AIMiniRaid extends EntityAIGoToEntityPos {
 
-	public AIMiniRaid(EntityLiving entity, Entity target) {
-		super(entity, target);
-	}
+    public AIMiniRaid(EntityLiving entity, Entity target) {
+        super(entity, target);
+    }
 
-	@Override
-	public boolean shouldContinueExecuting() {
-		boolean result = super.shouldContinueExecuting() && entity.getDistance(getTarget())>=10;
-		if (!result) ModUtils.DELAYED_THREAD_EXECUTOR.schedule(()->entity.tasks.removeTask(this), 20, TimeUnit.MILLISECONDS);
-		return result;
-	}
+    @Override
+    public boolean shouldContinueExecuting() {
+        boolean result = super.shouldContinueExecuting() && entity.getDistance(getTarget()) >= 10;
+        if (!result)
+            ModUtils.DELAYED_THREAD_EXECUTOR.schedule(() -> entity.tasks.removeTask(this), 20, TimeUnit.MILLISECONDS);
+        return result;
+    }
 
 }

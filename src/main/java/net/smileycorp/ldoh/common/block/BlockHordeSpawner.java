@@ -16,39 +16,39 @@ import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 public class BlockHordeSpawner extends Block implements ITileEntityProvider, IBlockProperties {
 
 
-	public BlockHordeSpawner() {
-		super(Material.AIR);
-		String name = "Horde_Spawner";
-		setUnlocalizedName(ModDefinitions.getName(name));
-		setRegistryName(ModDefinitions.getResource(name));
-		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-		setHardness(-1F);
-		setResistance(-1F);
-	}
+    public BlockHordeSpawner() {
+        super(Material.AIR);
+        String name = "Horde_Spawner";
+        setUnlocalizedName(ModDefinitions.getName(name));
+        setRegistryName(ModDefinitions.getResource(name));
+        setCreativeTab(LDOHTweaks.CREATIVE_TAB);
+        setHardness(-1F);
+        setResistance(-1F);
+    }
 
-	@Override
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		world.removeTileEntity(pos);
-	}
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        world.removeTileEntity(pos);
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileHordeSpawner();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileHordeSpawner();
+    }
 
-	public static void breakBlock(World world, BlockPos pos) {
-		world.setBlockToAir(pos);
-		world.removeTileEntity(pos);
-	}
+    public static void breakBlock(World world, BlockPos pos) {
+        world.setBlockToAir(pos);
+        world.removeTileEntity(pos);
+    }
 
 }

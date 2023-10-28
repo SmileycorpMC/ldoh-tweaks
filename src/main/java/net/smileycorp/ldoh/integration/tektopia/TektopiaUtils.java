@@ -26,9 +26,9 @@ public class TektopiaUtils {
     }
 
     //gets the cost of an item for a particular tektopia village
-    public  static int getCost(Village village, int baseCost) {
+    public static int getCost(Village village, int baseCost) {
         float mult = Math.min((village.getTownData().getProfessionSales() / 5) * 0.2F, 10.0F);
-        return (int)(baseCost * (1.0F + mult));
+        return (int) (baseCost * (1.0F + mult));
     }
 
     public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {

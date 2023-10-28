@@ -11,11 +11,11 @@ import net.smileycorp.ldoh.common.block.BlockLandmine;
 @SideOnly(Side.CLIENT)
 public class StateMapperLandmine extends StateMapperBase {
 
-	//register landmine blockstate models, as they have complicated behaviour
-	@Override
-	protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-		String statename = "primed="+state.getValue(BlockLandmine.PRIMED).toString();
-		return new ModelResourceLocation(ModDefinitions.getResource("landmine"), statename);
-	}
+    //register landmine blockstate models, as they have complicated behaviour
+    @Override
+    protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+        String statename = "primed=" + state.getValue(BlockLandmine.PRIMED).toString();
+        return new ModelResourceLocation(ModDefinitions.getResource("landmine"), statename);
+    }
 
 }

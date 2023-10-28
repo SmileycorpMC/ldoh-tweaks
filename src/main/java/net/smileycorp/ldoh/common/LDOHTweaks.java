@@ -19,45 +19,45 @@ import net.smileycorp.ldoh.common.item.LDOHItems;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-@Mod(modid=ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
+@Mod(modid = ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
 public class LDOHTweaks {
 
-	@Instance(ModDefinitions.MODID)
-	public static LDOHTweaks INSTANCE;
+    @Instance(ModDefinitions.MODID)
+    public static LDOHTweaks INSTANCE;
 
-	@SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
-	public static CommonProxy PROXY;
+    @SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
+    public static CommonProxy PROXY;
 
-	public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
+    public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
-	public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
-	public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
+    public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
+    public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
 
-	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")){
-		@Override
-		@SideOnly(Side.CLIENT)
-		public ItemStack getTabIconItem() {
-			return new ItemStack(LDOHItems.SYRINGE, 1, 3);
-		}
-	};
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")) {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public ItemStack getTabIconItem() {
+            return new ItemStack(LDOHItems.SYRINGE, 1, 3);
+        }
+    };
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		PROXY.preInit(event);
-	}
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        PROXY.preInit(event);
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		PROXY.init(event);
-	}
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        PROXY.init(event);
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		PROXY.postInit(event);
-	}
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        PROXY.postInit(event);
+    }
 
-	@EventHandler
-	public void serverStart(FMLServerStartingEvent event) {
-		PROXY.serverStart(event);
-	}
+    @EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+        PROXY.serverStart(event);
+    }
 }
