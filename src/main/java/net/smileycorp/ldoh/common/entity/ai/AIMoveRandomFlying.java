@@ -1,6 +1,5 @@
 package net.smileycorp.ldoh.common.entity.ai;
 
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.BlockPos;

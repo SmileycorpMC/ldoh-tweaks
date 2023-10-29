@@ -210,21 +210,6 @@ public class EntityInfPhoenixEnder extends EntityInfPhoenix {
         return teleportTo(d1, d2, d3);
     }
 
-    private boolean teleportTo(EntityParasiteBase entity, double x, double y, double z) {
-        EnderTeleportEvent event = new EnderTeleportEvent(this, x, y, z, 0.0F);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            return false;
-        } else {
-            boolean flag = entity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ());
-            if (flag) {
-                entity.world.playSound((EntityPlayer) null, entity.prevPosX, entity.prevPosY, entity.prevPosZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, entity.getSoundCategory(), 1.0F, 1.0F);
-                entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
-            }
-
-            return flag;
-        }
-    }
-
     private boolean teleportTo(double x, double y, double z) {
         EnderTeleportEvent event = new EnderTeleportEvent(this, x, y, z, 0.0F);
         if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -232,7 +217,7 @@ public class EntityInfPhoenixEnder extends EntityInfPhoenix {
         } else {
             boolean flag = attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ());
             if (flag) {
-                world.playSound((EntityPlayer) null, prevPosX, prevPosY, prevPosZ, SRPSounds.INFECTEDENDERMAN_PORTAL, getSoundCategory(), 1.0F, 1.0F);
+                world.playSound(null, prevPosX, prevPosY, prevPosZ, SRPSounds.INFECTEDENDERMAN_PORTAL, getSoundCategory(), 1.0F, 1.0F);
                 playSound(SRPSounds.INFECTEDENDERMAN_PORTAL, 1.0F, 1.0F);
             }
 
