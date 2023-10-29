@@ -2,8 +2,6 @@ package net.smileycorp.ldoh.client;
 
 import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
 import com.mrcrayfish.furniture.init.FurnitureItems;
-import com.mrcrayfish.guns.client.gui.DisplayProperty;
-import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -14,10 +12,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -28,39 +23,23 @@ import net.minecraft.item.ItemExpBottle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.WorldType;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smileycorp.atlas.api.client.RenderingUtils;
-import net.smileycorp.atlas.api.item.IMetaItem;
-import net.smileycorp.ldoh.client.colour.BlockTurretColour;
-import net.smileycorp.ldoh.client.colour.ItemEggColour;
-import net.smileycorp.ldoh.client.entity.*;
-import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
-import net.smileycorp.ldoh.client.tesr.TESRFilingCabinet;
-import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
-import net.smileycorp.ldoh.common.entity.zombie.*;
-import net.smileycorp.ldoh.common.events.RegistryEvents;
-import net.smileycorp.ldoh.common.item.ItemBlockMeta;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
 import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
@@ -72,69 +51,10 @@ import java.util.Map.Entry;
 @EventBusSubscriber(modid = ModDefinitions.MODID, value = Side.CLIENT)
 public class ClientEventListener {
 
-    public static String title = "";
-    public static int starttime = 0;
-
     public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.2f);
     public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
     public static ResourceLocation TF_HUNGER_TEXTURE = ModDefinitions.getResource("textures/gui/tf_hunger.png");
     public static ResourceLocation MEDIC_SYRINGES_TEXTURE = ModDefinitions.getResource("textures/gui/medic_syringes.png");
-
-    //colour our custom spawn egg
-    @SubscribeEvent
-    public static void itemColourHandler(ColorHandlerEvent.Item event) {
-        ItemColors registry = event.getItemColors();
-        registry.registerItemColorHandler(new ItemEggColour(), LDOHItems.SPAWNER);
-    }
-
-    //register turret australium rendering
-    @SubscribeEvent
-    public static void blockColourHandler(ColorHandlerEvent.Block event) {
-        BlockColors registry = event.getBlockColors();
-        registry.registerBlockColorHandler(new BlockTurretColour(), LDOHBlocks.TURRET);
-    }
-
-    @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event) {
-        //register entity renderers
-        RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, "zombie"));
-        RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, "husk"));
-        RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, RenderTF2Zombie::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, RenderZombieNurse::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
-        RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
-        RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
-        RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, RenderTurret::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
-        //handle custom mapping for landmine blockstates
-        ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
-        //register item models
-        for (Item item : RegistryEvents.ITEMS) {
-            if (item instanceof IMetaItem) {
-                for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
-                    ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(ModDefinitions.getResource((item instanceof ItemBlockMeta ? "" : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
-                }
-            } else
-                ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
-        }
-        //register renderer for barbed wire healthbar
-        ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());
-        //register renderer for filing cabinet items
-        ClientRegistry.bindTileEntitySpecialRenderer(TileFilingCabinet.class, new TESRFilingCabinet());
-        //register turret item renderer
-        Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
-        //add incendiary ammo rendering properties to gun workbench
-        GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.INCENDIARY_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
-    }
-
-    @SubscribeEvent
-    public static void onModelBake(ModelBakeEvent event) {
-        IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-        ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
-        //register our turret item renderer
-        TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
-        registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));
-    }
 
     //Render Gas Overlay when below gas level
     @SubscribeEvent

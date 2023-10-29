@@ -28,6 +28,7 @@ import net.smileycorp.atlas.api.block.FuelHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.item.*;
 import net.smileycorp.ldoh.common.tile.*;
@@ -189,70 +190,78 @@ public class RegistryEvents {
         GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
         int ID = 201;
         IForgeRegistry<EntityEntry> registry = event.getRegistry();
-        EntityEntry ZOMBIE_NO_BREAK = EntityEntryBuilder.create().entity(EntityDummyZombie0.class)
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie0.class)
                 .id(ModDefinitions.getResource("zombie_no_break"), ID++)
-                .name(ModDefinitions.getName("ZombieNoBreak")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_NO_BREAK);
-        EntityEntry ZOMBIE_NO_PLACE = EntityEntryBuilder.create().entity(EntityDummyZombie1.class)
+                .name(ModDefinitions.getName("ZombieNoBreak")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie1.class)
                 .id(ModDefinitions.getResource("zombie_no_place"), ID++)
-                .name(ModDefinitions.getName("ZombieNoPlace")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_NO_PLACE);
-        EntityEntry ZOMBIE_NO_BREAK_OR_PLACE = EntityEntryBuilder.create().entity(EntityDummyZombie2.class)
+                .name(ModDefinitions.getName("ZombieNoPlace")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie2.class)
                 .id(ModDefinitions.getResource("zombie_no_place_or_break"), ID++)
-                .name(ModDefinitions.getName("ZombieNoBreakOrPlace")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_NO_BREAK_OR_PLACE);
-        EntityEntry HUSK_NO_BREAK = EntityEntryBuilder.create().entity(EntityDummyHusk0.class)
+                .name(ModDefinitions.getName("ZombieNoBreakOrPlace")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk0.class)
                 .id(ModDefinitions.getResource("husk_no_break"), ID++)
-                .name(ModDefinitions.getName("HuskNoBreak")).tracker(80, 3, true).build();
-        registry.register(HUSK_NO_BREAK);
-        EntityEntry HUSK_NO_PLACE = EntityEntryBuilder.create().entity(EntityDummyHusk1.class)
+                .name(ModDefinitions.getName("HuskNoBreak")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk1.class)
                 .id(ModDefinitions.getResource("husk_no_place"), ID++)
-                .name(ModDefinitions.getName("HuskNoPlace")).tracker(80, 3, true).build();
-        registry.register(HUSK_NO_PLACE);
-        EntityEntry HUSK_NO_BREAK_OR_PLACE = EntityEntryBuilder.create().entity(EntityDummyHusk2.class)
+                .name(ModDefinitions.getName("HuskNoPlace")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk2.class)
                 .id(ModDefinitions.getResource("husk_no_place_or_break"), ID++)
-                .name(ModDefinitions.getName("HuskNoBreakOrPlace")).tracker(80, 3, true).build();
-        registry.register(HUSK_NO_BREAK_OR_PLACE);
-        EntityEntry CRAWLING_ZOMBIE = EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
+                .name(ModDefinitions.getName("HuskNoBreakOrPlace")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
                 .id(ModDefinitions.getResource("crawling_zombie"), ID++)
-                .name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build();
-        registry.register(CRAWLING_ZOMBIE);
-        EntityEntry CRAWLING_HUSK = EntityEntryBuilder.create().entity(EntityCrawlingHusk.class)
+                .name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityCrawlingHusk.class)
                 .id(ModDefinitions.getResource("crawling_husk"), ID++)
-                .name(ModDefinitions.getName("CrawlingHusk")).tracker(80, 3, true).build();
-        registry.register(CRAWLING_HUSK);
-        EntityEntry TF_ZOMBIE = EntityEntryBuilder.create().entity(EntityTF2Zombie.class)
+                .name(ModDefinitions.getName("CrawlingHusk")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityTF2Zombie.class)
                 .id(ModDefinitions.getResource("tf_zombie"), ID++)
-                .name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build();
-        registry.register(TF_ZOMBIE);
-        EntityEntry NURSE_ZOMBIE = EntityEntryBuilder.create().entity(EntityZombieNurse.class)
+                .name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityZombieNurse.class)
                 .id(ModDefinitions.getResource("nurse_zombie"), ID++)
-                .name(ModDefinitions.getName("NurseZombie")).tracker(80, 3, true).build();
-        registry.register(NURSE_ZOMBIE);
-        EntityEntry SWAT_ZOMBIE = EntityEntryBuilder.create().entity(EntitySwatZombie.class)
+                .name(ModDefinitions.getName("NurseZombie")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntitySwatZombie.class)
                 .id(ModDefinitions.getResource("swat_zombie"), ID++)
-                .name(ModDefinitions.getName("SwatZombie")).tracker(80, 3, true).build();
-        registry.register(SWAT_ZOMBIE);
-        EntityEntry ZOMBIE_MECHANIC = EntityEntryBuilder.create().entity(EntityZombieMechanic.class)
+                .name(ModDefinitions.getName("SwatZombie")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityZombieMechanic.class)
                 .id(ModDefinitions.getResource("zombie_mechanic"), ID++)
-                .name(ModDefinitions.getName("ZombieMechanic")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_MECHANIC);
-        EntityEntry ZOMBIE_TECHNICIAN = EntityEntryBuilder.create().entity(EntityZombieTechnician.class)
+                .name(ModDefinitions.getName("ZombieMechanic")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityZombieTechnician.class)
                 .id(ModDefinitions.getResource("zombie_technician"), ID++)
-                .name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_TECHNICIAN);
-        EntityEntry TURRET = EntityEntryBuilder.create().entity(EntityTurret.class)
+                .name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityTurret.class)
                 .id(ModDefinitions.getResource("turret"), ID++)
-                .name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build();
-        registry.register(TURRET);
-        EntityEntry INCENDIARY_PROJECTILE = EntityEntryBuilder.create().entity(EntityIncendiaryProjectile.class)
+                .name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityIncendiaryProjectile.class)
                 .id(ModDefinitions.getResource("incendiary_projectile"), ID++)
-                .name(ModDefinitions.getName("IncendiaryProjectile")).tracker(64, 80, true).build();
-        registry.register(INCENDIARY_PROJECTILE);
-        EntityEntry ZOMBIE_FIREMAN = EntityEntryBuilder.create().entity(EntityZombieFireman.class)
+                .name(ModDefinitions.getName("IncendiaryProjectile")).tracker(64, 80, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityZombieFireman.class)
                 .id(ModDefinitions.getResource("zombie_fireman"), ID++)
-                .name(ModDefinitions.getName("ZombieFireman")).tracker(80, 3, true).build();
-        registry.register(ZOMBIE_FIREMAN);
+                .name(ModDefinitions.getName("ZombieFireman")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixCloud.class)
+                .id(ModDefinitions.getResource("inf_cloud_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfCloudPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixDesert.class)
+                .id(ModDefinitions.getResource("inf_desert_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfDesertPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixEnder.class)
+                .id(ModDefinitions.getResource("inf_ender_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfEnderPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixFire.class)
+                .id(ModDefinitions.getResource("inf_fire_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfFirePhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixNether.class)
+                .id(ModDefinitions.getResource("inf_nether_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfNetherPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixSnow.class)
+                .id(ModDefinitions.getResource("inf_snow_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfSnowPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixTwilight.class)
+                .id(ModDefinitions.getResource("inf_twilight_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfTwilightPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixWater.class)
+                .id(ModDefinitions.getResource("inf_water_phoenix"), ID++)
+                .name(ModDefinitions.getName("InfWaterPhoenix")).tracker(80, 3, true).build());
     }
 
 }

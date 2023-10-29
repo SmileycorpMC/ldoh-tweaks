@@ -117,6 +117,15 @@ entity.hundreddayz.ZombieTechnician.name=Zombie Technician
 entity.hundreddayz.ZombieFireman.name=Zombie Fireman
 entity.hundreddayz.LibraryZombie.name=Library Zombie
 entity.hundreddayz.HospitalZombie.name=Hospital Zombie
+entity.hundreddayz.InfCloudPhoenix.name=Assimilated Cloud Phoenix
+entity.hundreddayz.InfDesertPhoenix.name=Assimilated Desert Phoenix
+entity.hundreddayz.InfEnderPhoenix.name=Assimilated Ender Phoenix
+entity.hundreddayz.InfFirePhoenix.name=Assimilated Fire Phoenix
+entity.hundreddayz.InfNetherPhoenix.name=Assimilated Nether Phoenix
+entity.hundreddayz.InfSnowPhoenix.name=Assimilated Snow Phoenix
+entity.hundreddayz.InfTwilightPhoenix.name=Assimilated Twilight Phoenix
+entity.hundreddayz.InfWaterPhoenix.name=Assimilated Water Phoenix
+entity.hundreddayz.InfCloudPhoenix.name=Assimilated Cloud Phoenix
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie

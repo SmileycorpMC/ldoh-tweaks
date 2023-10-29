@@ -20,6 +20,7 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
+import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
 
@@ -38,7 +39,6 @@ public class ItemSpawner extends Item implements IMetaItem {
         setRegistryName(ModDefinitions.getResource(name));
         setHasSubtypes(true);
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new BehaviorDefaultDispenseItem() {
-
             @Override
             public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
                 EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
@@ -130,6 +130,14 @@ public class ItemSpawner extends Item implements IMetaItem {
         } catch (NBTException e) {
             e.printStackTrace();
         }
+        entries.add(new ModMobEntry(EntityInfPhoenixCloud.class, "entity.hundreddayz.InfCloudPhoenix.name", 0x2A0101, 16121598));
+        entries.add(new ModMobEntry(EntityInfPhoenixDesert.class, "entity.hundreddayz.InfDesertPhoenix.name", 0x2A0101, 16767917));
+        entries.add(new ModMobEntry(EntityInfPhoenixEnder.class, "entity.hundreddayz.InfEnderPhoenix.name", 0x2A0101, 3154227));
+        entries.add(new ModMobEntry(EntityInfPhoenixFire.class, "entity.hundreddayz.InfFirePhoenix.name", 0x2A0101, 16095278));
+        entries.add(new ModMobEntry(EntityInfPhoenixNether.class, "entity.hundreddayz.InfNetherPhoenix.name", 0x2A0101, 5111808));
+        entries.add(new ModMobEntry(EntityInfPhoenixSnow.class, "entity.hundreddayz.InfSnowPhoenix.name", 0x2A0101, 16777215));
+        entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.hundreddayz.InfTwilightPhoenix.name", 0x2A0101, 395019));
+        entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.hundreddayz.InfWaterPhoenix.name", 0x2A0101, 7253246));
     }
 
     public static ItemStack getEggFor(EntityLiving entity) {
