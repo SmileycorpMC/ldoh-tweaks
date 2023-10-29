@@ -13,9 +13,9 @@ import com.dhanantry.scapeandrunparasites.init.SRPSounds;
 import com.dhanantry.scapeandrunparasites.util.SRPAttributes;
 import com.dhanantry.scapeandrunparasites.util.config.SRPConfig;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -32,6 +32,7 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
 
     private static final DataParameter<Boolean> MELTING = EntityDataManager.createKey(EntityInfPhoenix.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> HEIGH = EntityDataManager.createKey(EntityInfPhoenix.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> NECK_PHASE = EntityDataManager.createKey(EntityInfPhoenix.class, DataSerializers.VARINT);
 
     private float aSize = 1;
     private int sound;
@@ -67,6 +68,21 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
         super.entityInit();
         dataManager.register(HEIGH, 0.0F);
         dataManager.register(MELTING, false);
+        dataManager.register(NECK_PHASE, 0);
+    }
+
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+        if (!world.isRemote) {
+            EntityLivingBase target = getAttackTarget();
+            if (target == null && getNeckPhase() > 0) dataManager.set(NECK_PHASE, getNeckPhase() - 1);
+            else if (target != null && getNeckPhase() < 10) dataManager.set(NECK_PHASE, getNeckPhase() + 1);
+        }
+    }
+
+    public int getNeckPhase() {
+        return dataManager.get(NECK_PHASE);
     }
 
     @Override

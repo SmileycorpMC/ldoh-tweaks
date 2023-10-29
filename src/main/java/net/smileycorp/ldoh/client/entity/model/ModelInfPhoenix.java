@@ -1,11 +1,13 @@
 package net.smileycorp.ldoh.client.entity.model;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.math.MathHelper;
+import net.smileycorp.ldoh.common.entity.infphoenix.EntityInfPhoenix;
 
 public class ModelInfPhoenix extends ModelBase {
 	private final ModelRenderer body;
@@ -494,24 +496,22 @@ public class ModelInfPhoenix extends ModelBase {
 
 	@Override
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
-		if (((EntityLiving)entity).getAttackTarget() == null) {
-			left.rotateAngleZ = 0;
-			right.rotateAngleZ = 0;
-		} else {
-			left.rotateAngleZ = -0.523596F;
-			right.rotateAngleZ = 0.523596F;
+		if (entity instanceof EntityInfPhoenix) {
+			float neck = Math.min(((EntityInfPhoenix) entity).getNeckPhase(), 10);
+			left.rotateAngleZ = -0.0785398F * neck;
+			right.rotateAngleZ = 0.0785398F * neck;
 		}
 		right_wing.rotateAngleZ = -MathHelper.cos(age / 2.0F) * 3.1415927F * 0.2F;
 		left_wing.rotateAngleZ = MathHelper.cos(age / 2.0F) * 3.1415927F * 0.2F;
 		tentacle_left.rotateAngleX = (float) Math.sin(age * 0.25f) * 0.8f;
 		tentacle_left2.rotateAngleX = -(float) Math.sin(age * 0.5f) * 0.8f;
 		tentacle_left3.rotateAngleX = (float) Math.sin(age) * 0.8f;
-		tentacle_mid.rotateAngleX = -(float) Math.sin(age * 0.25f) * 0.8f;
-		tentacle_mid2.rotateAngleX = (float) Math.sin(age * 0.5f) * 0.8f;
-		tentacle_mid3.rotateAngleX = -(float) Math.sin(age) * 0.8f;
-		tentacle_right.rotateAngleX = (float) Math.sin(age * 0.25f) * 0.8f;
-		tentacle_right2.rotateAngleX = -(float) Math.sin(age * 0.5f) * 0.8f;
-		tentacle_right3.rotateAngleX = (float) Math.sin(age) * 0.8f;
+		tentacle_mid.rotateAngleX = -(float) Math.cos(age * 0.125f) * 0.8f;
+		tentacle_mid2.rotateAngleX = (float) Math.cos(age * 0.25f) * 0.8f;
+		tentacle_mid3.rotateAngleX = -(float) Math.cos(age * 0.5f) * 0.8f;
+		tentacle_right.rotateAngleX = -(float) Math.sin(age * 0.25f) * 0.8f;
+		tentacle_right2.rotateAngleX = (float) Math.sin(age * 0.5f) * 0.8f;
+		tentacle_right3.rotateAngleX = -(float) Math.sin(age) * 0.8f;
 		super.setRotationAngles(limbSwing, limbSwingAmount, age, netHeadYaw, headPitch, scaleFactor, entity);
 	}
 

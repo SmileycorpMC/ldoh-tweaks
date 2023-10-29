@@ -19,7 +19,7 @@ public class RandomTextureCache implements ISelectiveResourceReloadListener {
     public static final RandomTextureCache INSTANCE = new RandomTextureCache();
 
     //stores alternate textures for our random mobs implementation
-    private ListMultiMap<ResourceLocation, WeakReference<ResourceLocation>> CACHE = new ListMultiMap<>();
+    private ListMultiMap<ResourceLocation, ResourceLocation> CACHE = new ListMultiMap<>();
 
     private RandomTextureCache() {
     }
@@ -38,7 +38,7 @@ public class RandomTextureCache implements ISelectiveResourceReloadListener {
                 //find and add texture to the cache
                 ResourceLocation checkedTexture = new ResourceLocation(domain, path + (i == 1 ? "" : i) + ".png");
                 rm.getResource(checkedTexture);
-                CACHE.put(loc, new WeakReference<>(checkedTexture));
+                CACHE.put(loc, checkedTexture);
                 i++;
             } catch (Exception e) {
                 //stop searching if the texture isn't found
@@ -50,10 +50,10 @@ public class RandomTextureCache implements ISelectiveResourceReloadListener {
     //get texture from entity properties and base texture
     public ResourceLocation getLoc(ResourceLocation loc, Entity entity) {
         if (!CACHE.containsKey(loc)) init(loc);
-        List<WeakReference<ResourceLocation>> list = CACHE.get(loc);
+        List<ResourceLocation> list = CACHE.get(loc);
         if (list.isEmpty()) return loc;
             //follow optifine's implementation of converting entity id to texture id
-        else return list.get((int) (entity.getUniqueID().getLeastSignificantBits() & 0x7FFFFFFFL) % list.size()).get();
+        else return list.get((int) (entity.getUniqueID().getLeastSignificantBits() & 0x7FFFFFFFL) % list.size());
     }
 
     @Override
