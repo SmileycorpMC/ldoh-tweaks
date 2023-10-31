@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.client.entity.model;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -496,8 +497,8 @@ public class ModelInfPhoenix extends ModelBase {
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float age, float netHeadYaw, float headPitch, float scaleFactor, Entity entity) {
 		if (entity instanceof EntityInfPhoenix) {
 			float neck = Math.min(((EntityInfPhoenix) entity).getNeckPhase(), 10);
-			left.rotateAngleY = -0.0785398F * neck;
-			right.rotateAngleY = 0.0785398F * neck;
+			left.rotateAngleZ = 0.0785398F * neck;
+			right.rotateAngleZ = -0.0785398F * neck;
 		}
 		right_wing.rotateAngleZ = -MathHelper.cos(age / 2.0F) * 3.1415927F * 0.2F;
 		left_wing.rotateAngleZ = MathHelper.cos(age / 2.0F) * 3.1415927F * 0.2F;
