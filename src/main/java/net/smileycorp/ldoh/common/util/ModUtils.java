@@ -7,6 +7,9 @@ import com.google.common.collect.Multimap;
 import com.legacy.wasteland.world.WastelandWorld;
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.entity.DamageSourceProjectile;
+import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
+import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
+import funwayguy.epicsiegemod.ai.ESM_EntityAIPillarUp;
 import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
@@ -15,6 +18,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
@@ -51,6 +55,7 @@ import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
+import net.smileycorp.ldoh.mixin.MixinEntityZombie;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
@@ -335,6 +340,18 @@ public class ModUtils {
 
     private static <T extends Comparable<T>> String getPropertyName(IProperty<T> property, Comparable<?> value) {
         return property.getName((T) value);
+    }
+
+    public static void addGriefTask(EntityMob entity) {
+        entity.tasks.addTask(6, new ESM_EntityAIGrief(entity));
+    }
+
+    public static void addDigTask(EntityMob entity) {
+        entity.tasks.addTask(1, new ESM_EntityAIDigging(entity));
+    }
+
+    public static void addBuildTask(EntityMob entity) {
+        entity.tasks.addTask(2, new ESM_EntityAIPillarUp(entity));
     }
 
 }
