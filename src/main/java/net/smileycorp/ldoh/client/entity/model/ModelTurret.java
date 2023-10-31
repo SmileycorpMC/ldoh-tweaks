@@ -12,10 +12,6 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 import java.awt.*;
 
-/**
- * turret - Undefined
- * Created using Tabula 7.1.0
- */
 public class ModelTurret extends ModelBase {
     public ModelRenderer base;
     public ModelRenderer axel;

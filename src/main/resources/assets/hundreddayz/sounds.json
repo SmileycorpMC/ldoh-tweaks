@@ -14,8 +14,9 @@
     "subtitle": "hundreddayz.subtitle.landmine.beep",
     "sounds": [ "hundreddayz:landmine_beep" ]
   },
-  "snore": {
-    "subtitle": "hundreddayz.subtitle.snoring",
-    "sounds": [ "hundreddayz:snore0", "hundreddayz:snore1" ]
+  "jugg_alarm": {
+	"category": "hostile",
+    "subtitle": "hundreddayz.subtitle.alarm",
+    "sounds": [ "hundreddayz:jugg_alarm"]
   }
  }

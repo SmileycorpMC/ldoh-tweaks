@@ -27,6 +27,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.atlas.api.block.FuelHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
+import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
@@ -62,7 +63,7 @@ public class RegistryEvents {
         registerItem(registry, new ItemTurret());
         registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
         registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
-        registerItem(registry, new ItemBlockMeta(LDOHBlocks.LABORATORY_BLOCK));
+        //registerItem(registry, new ItemBlockMeta(LDOHBlocks.LABORATORY_BLOCK));
     }
 
     public static void registerItem(IForgeRegistry<Item> registry, Item item) {
@@ -262,6 +263,9 @@ public class RegistryEvents {
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixWater.class)
                 .id(ModDefinitions.getResource("inf_water_phoenix"), ID++)
                 .name(ModDefinitions.getName("InfWaterPhoenix")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityJuggernaut.class)
+                .id(ModDefinitions.getResource("juggernaut"), ID++)
+                .name(ModDefinitions.getName("Juggernaut")).tracker(80, 3, true).build());
     }
 
 }

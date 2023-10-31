@@ -28,8 +28,6 @@ public class LDOHTweaks {
     @SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
     public static CommonProxy PROXY;
 
-    public static ScheduledExecutorService DELAYED_THREAD_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
-
     public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
     public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
 

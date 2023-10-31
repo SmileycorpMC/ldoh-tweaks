@@ -11,6 +11,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.IRegistry;
+import net.minecraft.world.gen.structure.StructureNetherBridgePieces;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -35,6 +36,7 @@ import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
 import net.smileycorp.ldoh.common.CommonProxy;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
+import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.infphoenix.EntityInfPhoenix;
 import net.smileycorp.ldoh.common.entity.zombie.*;
@@ -96,6 +98,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityTurret.class, RenderTurret::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityInfPhoenix.class, RenderInfPhoenix::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityJuggernaut.class, RenderJuggernaut::new);
         //handle custom mapping for landmine blockstates
         ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
         //register item models

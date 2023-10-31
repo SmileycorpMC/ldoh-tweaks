@@ -35,6 +35,7 @@ public class ModDefinitions {
     public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
     public static final ResourceLocation TF_ALLY_SOUND = getResource("tf_ally");
     public static final ResourceLocation LANDMINE_BEEP = getResource("landmine_beep");
+    public static final ResourceLocation JUGG_ALARM = getResource("jugg_alarm");
 
     //loot tables
     public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");

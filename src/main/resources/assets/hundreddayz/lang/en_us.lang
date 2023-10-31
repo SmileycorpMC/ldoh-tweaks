@@ -70,6 +70,7 @@ tile.hundreddayz.EnemyTurret.name=Enemy Turret
 tile.hundreddayz.FlickeringLight.name=Flickering Light
 tile.hundreddayz.HordeSpawner.name=Horde Spawner
 tile.hundreddayz.FilingCabinet.name=Filing Cabinet
+tile.hundreddayz.LaboratoryBlock.name=Laboratory Block
 
 tooltip.hundreddayz.BarbedWire=Slows and deals damage to mobs.
 tooltip.hundreddayz.BarbedWire.Iron=Has Medium durability and low damage.
@@ -126,6 +127,7 @@ entity.hundreddayz.InfSnowPhoenix.name=Assimilated Snow Phoenix
 entity.hundreddayz.InfTwilightPhoenix.name=Assimilated Twilight Phoenix
 entity.hundreddayz.InfWaterPhoenix.name=Assimilated Water Phoenix
 entity.hundreddayz.InfCloudPhoenix.name=Assimilated Cloud Phoenix
+entity.hundreddayz.Juggernaut.name=Juggernaut
 
 entity.hundreddayz.ZombieNoBreak.name=Zombie
 entity.hundreddayz.ZombieNoPlace.name=Zombie

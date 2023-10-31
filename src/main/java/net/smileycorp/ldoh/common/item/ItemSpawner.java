@@ -20,6 +20,7 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
+import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
@@ -138,6 +139,7 @@ public class ItemSpawner extends Item implements IMetaItem {
         entries.add(new ModMobEntry(EntityInfPhoenixSnow.class, "entity.hundreddayz.InfSnowPhoenix.name", 0x2A0101, 16777215));
         entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.hundreddayz.InfTwilightPhoenix.name", 0x2A0101, 395019));
         entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.hundreddayz.InfWaterPhoenix.name", 0x2A0101, 7253246));
+        //entries.add(new ModMobEntry(EntityJuggernaut.class, "entity.hundreddayz.Juggernaut.name", 0x8A4411, 0x333736));
     }
 
     public static ItemStack getEggFor(EntityLiving entity) {
