@@ -1,7 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "hundreddayz:blocks/laboratory_block_6",
-		"particle": "#all"
-    }
-}

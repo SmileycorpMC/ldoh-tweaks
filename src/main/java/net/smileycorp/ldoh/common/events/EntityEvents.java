@@ -145,13 +145,8 @@ public class EntityEvents {
                                         new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
                             } else if (randInt < 17) {
                                 newentity = new EntityZombieFireman(world);
-                            } else if (world.getWorldTime() < 264000) {
-                                newentity = new EntityDummyZombie2(world);
-                            } else if (world.getWorldTime() < 504000) {
-                                newentity = new EntityDummyZombie1(world);
-                            }
-                            //turns zombies into husks in a desert
-                            else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
+                                //turns zombies into husks in a desert
+                            } else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
                                 newentity = new EntityHusk(world);
                             }
                         }
@@ -178,54 +173,6 @@ public class EntityEvents {
                         if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
                             EntityCrawlingZombie zombie = (EntityCrawlingZombie) entity;
                             EntityCrawlingHusk newentity = new EntityCrawlingHusk(world);
-                            newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-                            newentity.renderYawOffset = zombie.renderYawOffset;
-                            newentity.setPosition(entity.posX, entity.posY, entity.posZ);
-                            if (zombie.isNoDespawnRequired()) newentity.enablePersistence();
-                            entity.setDead();
-                            world.spawnEntity(newentity);
-                            event.setCanceled(true);
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                        } else {
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                            tracker.setSpawned(true);
-                        }
-                    } else if (entity.getClass() == EntityDummyZombie0.class) {
-                        if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                            EntityDummyZombie0 zombie = (EntityDummyZombie0) entity;
-                            EntityDummyHusk0 newentity = new EntityDummyHusk0(world);
-                            newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-                            newentity.renderYawOffset = zombie.renderYawOffset;
-                            newentity.setPosition(entity.posX, entity.posY, entity.posZ);
-                            if (zombie.isNoDespawnRequired()) newentity.enablePersistence();
-                            entity.setDead();
-                            world.spawnEntity(newentity);
-                            event.setCanceled(true);
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                        } else {
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                            tracker.setSpawned(true);
-                        }
-                    } else if (entity.getClass() == EntityDummyZombie1.class) {
-                        if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                            EntityDummyZombie1 zombie = (EntityDummyZombie1) entity;
-                            EntityDummyHusk1 newentity = new EntityDummyHusk1(world);
-                            newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-                            newentity.renderYawOffset = zombie.renderYawOffset;
-                            newentity.setPosition(entity.posX, entity.posY, entity.posZ);
-                            if (zombie.isNoDespawnRequired()) newentity.enablePersistence();
-                            entity.setDead();
-                            world.spawnEntity(newentity);
-                            event.setCanceled(true);
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                        } else {
-                            ModUtils.setEntitySpeed((EntityMob) entity);
-                            tracker.setSpawned(true);
-                        }
-                    } else if (entity.getClass() == EntityDummyZombie2.class) {
-                        if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                            EntityDummyZombie2 zombie = (EntityDummyZombie2) entity;
-                            EntityDummyHusk2 newentity = new EntityDummyHusk2(world);
                             newentity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
                             newentity.renderYawOffset = zombie.renderYawOffset;
                             newentity.setPosition(entity.posX, entity.posY, entity.posZ);

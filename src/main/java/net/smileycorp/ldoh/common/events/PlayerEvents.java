@@ -189,7 +189,7 @@ public class PlayerEvents {
             if (tile instanceof TileEntityCrate) {
                 if (((TileEntityCrate) tile).sealed) {
                     if (event.getItemStack().getItem() != FurnitureItems.CROWBAR)
-                        player.sendMessage(new TextComponentTranslation("message.hundreddayz.SealedCrate"));
+                        player.sendMessage(new TextComponentTranslation("message.ldoh.SealedCrate"));
                 }
             }
         }

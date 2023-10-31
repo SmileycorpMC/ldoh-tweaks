@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "ldoh:turret_upgrade",
+	"pattern" : [
+		" Q ",
+		"QRQ",
+		" G "
+	],
+    "key" : {
+		"Q" : {
+    		"type": "forge:ore_dict",
+    		"ore": "gemQuartz"
+        },
+		"G" : {
+            "type": "forge:ore_dict",
+    		"ore": "ingotGold"
+        },
+		"R" : {
+    		"type": "forge:ore_dict",
+    		"ore": "dustRedstone"
+        }
+	},
+    "result": {
+        "item": "ldoh:turret_upgrade",
+        "count": 1,
+		"data": 0
+    }
+}

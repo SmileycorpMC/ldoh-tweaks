@@ -1,0 +1,75 @@
+{
+	"pools": [{
+		"name": "ldoh:tech_crate",
+		"rolls": {
+			"min": 3,
+			"max": 6
+		},
+		"entries": [{
+				"type": "item",
+				"name": "flashlight:smallredstonebattery",
+				"functions": [{
+					"function": "set_count",
+					"count": {
+						"min": 1,
+						"max": 4
+					}
+				}],
+				"weight": 3
+			},
+			{
+				"type": "item",
+				"name": "firstaid:bandage",
+				"weight": 7,
+				"functions": [{
+					"function": "minecraft:set_count",
+					"count": {
+						"min": 1,
+						"max": 3
+					}
+				}]
+			},
+			{
+				"type": "item",
+				"name": "refinedstorage:storage_housing",
+				"weight": 3
+			},
+			{
+				"type": "item",
+				"name": "refinedstorage:processor",
+				"weight": 3,
+				"functions": [{
+					"function": "minecraft:set_data",
+					"data": 3
+				}]
+			},
+			{
+				"type": "item",
+				"name": "xlfoodmod:speedy_energy_drink",
+				"weight": 7
+			},
+			{
+				"type": "item",
+				"name": "cfm:item_ink_cartridge",
+				"weight": 5
+			},
+			{
+				"type": "item",
+				"name": "minecraft:redstone",
+				"weight": 12,
+				"functions": [{
+					"function": "minecraft:set_count",
+					"count": {
+						"min": 1,
+						"max": 6
+					}
+				}]
+			},
+			{
+				"type": "item",
+				"name": "flashlight:flashlight",
+				"weight": 2
+			}
+		]
+	}]
+}

@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "ldoh:gas_mask",
+    "ingredients": [
+        {
+            "item": "ldoh:gas_mask",
+			"data": 32767
+        },
+		{
+            "item": "ldoh:gas_filter",
+			"data": 0
+        }
+	],
+    "result": {
+        "item": "ldoh:gas_mask",
+		"data": 0,
+        "count": 1
+    }
+}

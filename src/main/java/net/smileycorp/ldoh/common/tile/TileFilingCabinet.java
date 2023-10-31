@@ -27,7 +27,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
 
     @Override
     public String getName() {
-        return hasCustomName() ? customName : "container.hundreddayz.FilingCabinet";
+        return hasCustomName() ? customName : "container.ldoh.FilingCabinet";
     }
 
     @Override

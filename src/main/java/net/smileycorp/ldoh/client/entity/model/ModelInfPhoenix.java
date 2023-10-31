@@ -1,6 +1,5 @@
 package net.smileycorp.ldoh.client.entity.model;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;

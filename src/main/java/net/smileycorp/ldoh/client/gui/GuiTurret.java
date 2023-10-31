@@ -21,7 +21,7 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 public class GuiTurret extends GuiContainer {
 
     public static ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/turret.png");
-    public static final String TRANSLATION_KEY = "entity.hundreddayz.Turret.name";
+    public static final String TRANSLATION_KEY = "entity.ldoh.Turret.name";
 
     protected EntityTurret turret;
     protected ModelBase turretModel = new ModelTurret();

@@ -244,14 +244,14 @@ public class ClientEventListener {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         if (item == FurnitureItems.CROWBAR) {
-            event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.Crowbar").getFormattedText());
+            event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.Crowbar").getFormattedText());
         } else if (item instanceof ItemBlock) {
             Block block = ((ItemBlock) item).getBlock();
             if (block == RealisticTorchesBlocks.torchUnlit) {
-                event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.UnlitTorch").getFormattedText());
+                event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.UnlitTorch").getFormattedText());
             }
         } else if (item instanceof ItemExpBottle) {
-            event.getToolTip().add(1, new TextComponentTranslation("tooltip.hundreddayz.ExpBottle").getFormattedText());
+            event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.ExpBottle").getFormattedText());
         }
     }
 

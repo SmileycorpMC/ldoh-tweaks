@@ -115,7 +115,7 @@ public class Apocalypse implements IApocalypse {
         if (player != null) {
             hasStarted = true;
             player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
-            player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
+            player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
             for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
             boss = spawnEntity(player.world, new EntityOronco(player.world));
             multiplier = boss.getMaxHealth() / 8f;
@@ -171,7 +171,7 @@ public class Apocalypse implements IApocalypse {
             boss.world.setWorldTime(boss.world.getWorldTime() + (750 * (8 - phase)));
             phase = 8;
             boss.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
-            player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
+            player.sendMessage(new TextComponentTranslation("message.ldoh.EventEnd"));
             boss = null;
             capability.setPlayer(null);
         }

@@ -47,7 +47,9 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
-import net.smileycorp.ldoh.common.entity.zombie.*;
+import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
+import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
+import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
@@ -266,12 +268,6 @@ public class ModUtils {
                 int r = rand.nextInt(100);
                 if (r <= 1) return new EntityZombieNurse(world);
                 else if (r <= 3) return new EntityZombieFireman(world);
-                if (day < 10 || r < 25) new EntityDummyZombie2(world);
-                else if (day < 20 || r < 50) return new EntityDummyZombie1(world);
-                else if (r < 75) return new EntityDummyZombie0(world);
-            } else {
-                if (day < 10) return new EntityDummyZombie2(world);
-                else if (day < 20) return new EntityDummyZombie1(world);
             }
         }
         return new EntityZombie(world);

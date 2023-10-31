@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation;
 public class ModDefinitions {
 
     //mod constants
-    public static final String MODID = "hundreddayz";
-    public static final String NAME = "LDoH Tweaks";
+    public static final String MODID = "ldoh";
+    public static final String NAME = "LDoH";
     public static final String VERSION = "1.1.10";
     public static final String DEPENDENCIES = "after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
             + "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
@@ -18,18 +18,18 @@ public class ModDefinitions {
     public static final String COMMON = LOCATION + "common.CommonProxy";
 
     //translation keys
-    public static final String JOIN_TEAM_MESSAGE = "message.hundreddayz.JoinTeam";
-    public static final String POST_JOIN_TEAM_MESSAGE = "message.hundreddayz.PostJoinTeam";
-    public static final String OTHER_JOIN_TEAM_MESSAGE = "message.hundreddayz.OtherJoinTeam";
-    public static final String DAY_COUNT_MESSAGE = "message.hundreddayz.DayCount";
-    public static final String DAY_100_MESSAGE = "message.hundreddayz.FinalDay";
-    public static final String APOCALYPSE_MESSAGE = "message.hundreddayz.WorldsEnd";
-    public static final String GAS_MESSAGE = "message.hundreddayz.Gas";
-    public static final String LAVA_PICKUP_MESSAGE = "message.hundreddayz.Lava.Pickup";
-    public static final String LAVA_BREAK_MESSAGE = "message.hundreddayz.Lava.Break";
-    public static final String ZOMBIE_EVOLUTION_MESSAGE_0 = "message.hundreddayz.Evolution_0";
-    public static final String ZOMBIE_EVOLUTION_MESSAGE_1 = "message.hundreddayz.Evolution_1";
-    public static final String VILLAGER_MESSAGE = "message.hundreddayz.VillagerMessage";
+    public static final String JOIN_TEAM_MESSAGE = "message.ldoh.JoinTeam";
+    public static final String POST_JOIN_TEAM_MESSAGE = "message.ldoh.PostJoinTeam";
+    public static final String OTHER_JOIN_TEAM_MESSAGE = "message.ldoh.OtherJoinTeam";
+    public static final String DAY_COUNT_MESSAGE = "message.ldoh.DayCount";
+    public static final String DAY_100_MESSAGE = "message.ldoh.FinalDay";
+    public static final String APOCALYPSE_MESSAGE = "message.ldoh.WorldsEnd";
+    public static final String GAS_MESSAGE = "message.ldoh.Gas";
+    public static final String LAVA_PICKUP_MESSAGE = "message.ldoh.Lava.Pickup";
+    public static final String LAVA_BREAK_MESSAGE = "message.ldoh.Lava.Break";
+    public static final String ZOMBIE_EVOLUTION_MESSAGE_0 = "message.ldoh.Evolution_0";
+    public static final String ZOMBIE_EVOLUTION_MESSAGE_1 = "message.ldoh.Evolution_1";
+    public static final String VILLAGER_MESSAGE = "message.ldoh.VillagerMessage";
 
     //sounds
     public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");

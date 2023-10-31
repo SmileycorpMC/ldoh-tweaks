@@ -191,24 +191,6 @@ public class RegistryEvents {
         GameRegistry.registerWorldGenerator(new ModWorldGen(), 0);
         int ID = 201;
         IForgeRegistry<EntityEntry> registry = event.getRegistry();
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie0.class)
-                .id(ModDefinitions.getResource("zombie_no_break"), ID++)
-                .name(ModDefinitions.getName("ZombieNoBreak")).tracker(80, 3, true).build());
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie1.class)
-                .id(ModDefinitions.getResource("zombie_no_place"), ID++)
-                .name(ModDefinitions.getName("ZombieNoPlace")).tracker(80, 3, true).build());
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyZombie2.class)
-                .id(ModDefinitions.getResource("zombie_no_place_or_break"), ID++)
-                .name(ModDefinitions.getName("ZombieNoBreakOrPlace")).tracker(80, 3, true).build());
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk0.class)
-                .id(ModDefinitions.getResource("husk_no_break"), ID++)
-                .name(ModDefinitions.getName("HuskNoBreak")).tracker(80, 3, true).build());
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk1.class)
-                .id(ModDefinitions.getResource("husk_no_place"), ID++)
-                .name(ModDefinitions.getName("HuskNoPlace")).tracker(80, 3, true).build());
-        registry.register(EntityEntryBuilder.create().entity(EntityDummyHusk2.class)
-                .id(ModDefinitions.getResource("husk_no_place_or_break"), ID++)
-                .name(ModDefinitions.getName("HuskNoBreakOrPlace")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
                 .id(ModDefinitions.getResource("crawling_zombie"), ID++)
                 .name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build());

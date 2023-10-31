@@ -71,7 +71,7 @@ public class LegacyApocalypse implements IApocalypse {
             if (isActive(world)) {
                 if ((timer == 0)) {
                     spawnWave(world);
-                    if (wave == 7) player.sendMessage(new TextComponentTranslation("message.hundreddayz.EventEnd"));
+                    if (wave == 7) player.sendMessage(new TextComponentTranslation("message.ldoh.EventEnd"));
                 }
                 timer--;
             }
@@ -106,7 +106,7 @@ public class LegacyApocalypse implements IApocalypse {
     public void startEvent() {
         if (player != null) {
             wave = 1;
-            player.sendMessage(new TextComponentTranslation("message.hundreddayz.WorldsEnd"));
+            player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
             started = true;
         }
     }

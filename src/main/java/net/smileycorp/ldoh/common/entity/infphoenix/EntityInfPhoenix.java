@@ -21,9 +21,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.ai.AIMoveRandomFlying;
 import net.smileycorp.ldoh.common.entity.ai.FlyingMoveControl;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
@@ -175,6 +177,11 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     @Override
     public boolean isEntityInvulnerable(DamageSource source) {
         return isImmune(source) || super.isEntityInvulnerable(source);
+    }
+
+    @Override
+    protected ResourceLocation getLootTable() {
+        return ModDefinitions.getResource("entities/inf_phoenix");
     }
 
     @Override

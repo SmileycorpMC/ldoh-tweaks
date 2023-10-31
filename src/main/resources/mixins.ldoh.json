@@ -9,7 +9,9 @@
     "MixinBlockPumpkin",
     "MixinEntityLiving",
     "MixinEntityLivingBase",
-    "MixinItem"
+    "MixinEntityZombie",
+    "MixinItem",
+    "MixinResourceLocation"
   ],
   "client": [
     "MixinBiome",

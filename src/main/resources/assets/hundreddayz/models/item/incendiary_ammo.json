@@ -1,6 +1,0 @@
-{
-    "parent": "cgm:item/basic_ammo",
-    "textures": {
-        "2": "hundreddayz:items/incendiary_ammo"
-	}
-}

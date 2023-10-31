@@ -147,7 +147,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 
     @Override
     public String getName() {
-        return isEnemy() ? I18n.translateToLocal("entity.hundreddayz.EnemyTurret.name") : super.getName();
+        return isEnemy() ? I18n.translateToLocal("entity.ldoh.EnemyTurret.name") : super.getName();
     }
 
     @Override

@@ -1,0 +1,11 @@
+{
+    "forge_marker": 1,
+    "variants": {
+		"axis=x,material=iron": {"model": "ldoh:iron_barbed_wire", "uvlock": true},
+		"axis=z,material=iron": {"model": "ldoh:iron_barbed_wire", "uvlock": true, "y": 90},
+		"axis=x,material=gold": {"model": "ldoh:gold_barbed_wire", "uvlock": true},
+		"axis=z,material=gold": {"model": "ldoh:gold_barbed_wire", "uvlock": true, "y": 90},
+		"axis=x,material=diamond": {"model": "ldoh:diamond_barbed_wire", "uvlock": true},
+		"axis=z,material=diamond": {"model": "ldoh:diamond_barbed_wire", "uvlock": true, "y": 90}
+    }
+}

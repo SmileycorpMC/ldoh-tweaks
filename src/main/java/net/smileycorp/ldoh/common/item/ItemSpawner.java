@@ -20,7 +20,6 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
-import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
@@ -111,35 +110,35 @@ public class ItemSpawner extends Item implements IMetaItem {
             entries.add(new ModMobEntry(tfclass, 0x436C34, 0xEF0000, "RED"));
             entries.add(new ModMobEntry(tfclass, 0x436C34, 0x0000E2, "BLU"));
         }
-        entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.hundreddayz.CrawlingZombie.name", 0x436C34, 0xBA8644));
-        entries.add(new ModMobEntry(EntityCrawlingHusk.class, "entity.hundreddayz.CrawlingHusk.name", 0xA5926A, 0xBA8644));
-        entries.add(new ModMobEntry(EntityTF2Zombie.class, "entity.hundreddayz.TFZombie.name", 0x0000E2, 0xEF0000));
-        entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.hundreddayz.NurseZombie.name", 0x436C34, 0xB5ABB4));
-        entries.add(new ModMobEntry(EntitySwatZombie.class, "entity.hundreddayz.SwatZombie.name", 0x436C34, 0x0C0C0D));
-        entries.add(new ModMobEntry(EntityZombieMechanic.class, "entity.hundreddayz.ZombieMechanic.name", 0x436C34, 0x394A6B));
-        entries.add(new ModMobEntry(EntityZombieTechnician.class, "entity.hundreddayz.ZombieTechnician.name", 0x436C34, 0xD4EB5C));
-        entries.add(new ModMobEntry(EntityZombieFireman.class, "entity.hundreddayz.ZombieFireman.name", 0x436C34, 0x20263B));
+        entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.ldoh.CrawlingZombie.name", 0x436C34, 0xBA8644));
+        entries.add(new ModMobEntry(EntityCrawlingHusk.class, "entity.ldoh.CrawlingHusk.name", 0xA5926A, 0xBA8644));
+        entries.add(new ModMobEntry(EntityTF2Zombie.class, "entity.ldoh.TFZombie.name", 0x0000E2, 0xEF0000));
+        entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.ldoh.NurseZombie.name", 0x436C34, 0xB5ABB4));
+        entries.add(new ModMobEntry(EntitySwatZombie.class, "entity.ldoh.SwatZombie.name", 0x436C34, 0x0C0C0D));
+        entries.add(new ModMobEntry(EntityZombieMechanic.class, "entity.ldoh.ZombieMechanic.name", 0x436C34, 0x394A6B));
+        entries.add(new ModMobEntry(EntityZombieTechnician.class, "entity.ldoh.ZombieTechnician.name", 0x436C34, 0xD4EB5C));
+        entries.add(new ModMobEntry(EntityZombieFireman.class, "entity.ldoh.ZombieFireman.name", 0x436C34, 0x20263B));
         try {
-            NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"hundreddayz:spawnprovider\":{isSpawned:1b}}, "
+            NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"ldoh:spawnprovider\":{isSpawned:1b}}, "
                     + "PersistenceRequired:1b, Attributes:[{Base:0.6d, Name:\"generic.movementSpeed\"}],  "
                     + "DeathLootTable:\"" + ModDefinitions.getResource("entities/library_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.LibraryZombie.name", 0x436C34, 0x00A5A5, libraryNBT));
-            NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"hundreddayz:spawnprovider\":{isSpawned:1b}}, "
+            entries.add(new ModMobEntry(EntityZombie.class, "entity.ldoh.LibraryZombie.name", 0x436C34, 0x00A5A5, libraryNBT));
+            NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"ldoh:spawnprovider\":{isSpawned:1b}}, "
                     + "PersistenceRequired:1b, Attributes:[{Base:0.6d, Name:\"generic.movementSpeed\"}],  "
                     + "DeathLootTable:\"" + ModDefinitions.getResource("entities/hospital_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.HospitalZombie.name", 0x436C34, 0x00A5A5, hospitalNBT));
+            entries.add(new ModMobEntry(EntityZombie.class, "entity.ldoh.HospitalZombie.name", 0x436C34, 0x00A5A5, hospitalNBT));
         } catch (NBTException e) {
             e.printStackTrace();
         }
-        entries.add(new ModMobEntry(EntityInfPhoenixCloud.class, "entity.hundreddayz.InfCloudPhoenix.name", 0x2A0101, 16121598));
-        entries.add(new ModMobEntry(EntityInfPhoenixDesert.class, "entity.hundreddayz.InfDesertPhoenix.name", 0x2A0101, 16767917));
-        entries.add(new ModMobEntry(EntityInfPhoenixEnder.class, "entity.hundreddayz.InfEnderPhoenix.name", 0x2A0101, 3154227));
-        entries.add(new ModMobEntry(EntityInfPhoenixFire.class, "entity.hundreddayz.InfFirePhoenix.name", 0x2A0101, 16095278));
-        entries.add(new ModMobEntry(EntityInfPhoenixNether.class, "entity.hundreddayz.InfNetherPhoenix.name", 0x2A0101, 5111808));
-        entries.add(new ModMobEntry(EntityInfPhoenixSnow.class, "entity.hundreddayz.InfSnowPhoenix.name", 0x2A0101, 16777215));
-        entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.hundreddayz.InfTwilightPhoenix.name", 0x2A0101, 395019));
-        entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.hundreddayz.InfWaterPhoenix.name", 0x2A0101, 7253246));
-        //entries.add(new ModMobEntry(EntityJuggernaut.class, "entity.hundreddayz.Juggernaut.name", 0x8A4411, 0x333736));
+        entries.add(new ModMobEntry(EntityInfPhoenixCloud.class, "entity.ldoh.InfCloudPhoenix.name", 0x2A0101, 16121598));
+        entries.add(new ModMobEntry(EntityInfPhoenixDesert.class, "entity.ldoh.InfDesertPhoenix.name", 0x2A0101, 16767917));
+        entries.add(new ModMobEntry(EntityInfPhoenixEnder.class, "entity.ldoh.InfEnderPhoenix.name", 0x2A0101, 3154227));
+        entries.add(new ModMobEntry(EntityInfPhoenixFire.class, "entity.ldoh.InfFirePhoenix.name", 0x2A0101, 16095278));
+        entries.add(new ModMobEntry(EntityInfPhoenixNether.class, "entity.ldoh.InfNetherPhoenix.name", 0x2A0101, 5111808));
+        entries.add(new ModMobEntry(EntityInfPhoenixSnow.class, "entity.ldoh.InfSnowPhoenix.name", 0x2A0101, 16777215));
+        entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.ldoh.InfTwilightPhoenix.name", 0x2A0101, 395019));
+        entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.ldoh.InfWaterPhoenix.name", 0x2A0101, 7253246));
+        //entries.add(new ModMobEntry(EntityJuggernaut.class, "entity.ldoh.Juggernaut.name", 0x8A4411, 0x333736));
     }
 
     public static ItemStack getEggFor(EntityLiving entity) {

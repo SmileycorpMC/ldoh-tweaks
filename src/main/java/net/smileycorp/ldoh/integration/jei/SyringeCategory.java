@@ -44,7 +44,7 @@ public class SyringeCategory implements IRecipeCategory<Wrapper> {
 
     @Override
     public String getTitle() {
-        return I18n.translateToLocal("jei.category.hundreddayz.Syringe").trim();
+        return I18n.translateToLocal("jei.category.ldoh.Syringe").trim();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SyringeCategory implements IRecipeCategory<Wrapper> {
 
         @Override
         public void drawInfo(Minecraft minecraft, int width, int height, int mouseX, int mouseY) {
-            String desc = I18n.translateToLocal("tooltip.hundreddayz.Syringe");
+            String desc = I18n.translateToLocal("tooltip.ldoh.Syringe");
             minecraft.fontRenderer.drawString(desc, ((width / 2) - (minecraft.fontRenderer.getStringWidth(desc) / 2)), height + 10, Color.RED.getRGB());
         }
 

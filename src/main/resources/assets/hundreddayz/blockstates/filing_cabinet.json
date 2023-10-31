@@ -1,9 +1,0 @@
-{
-    "forge_marker": 1,
-    "variants": {
-        "facing=east": { "model": "hundreddayz:filing_cabinet", "y": 90},
-        "facing=south": { "model": "hundreddayz:filing_cabinet", "y": 180},
-        "facing=west": { "model": "hundreddayz:filing_cabinet", "y": 270},
-        "facing=north": { "model": "hundreddayz:filing_cabinet"}
-    }
-}

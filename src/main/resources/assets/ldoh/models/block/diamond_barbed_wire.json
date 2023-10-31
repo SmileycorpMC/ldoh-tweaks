@@ -1,0 +1,7 @@
+{
+	"parent": "ldoh:block/barbed_wire",
+	"textures": {
+		"texture": "ldoh:blocks/diamond_barbed_wire",
+		"particle": "ldoh:blocks/diamond_barbed_wire"
+	}
+}

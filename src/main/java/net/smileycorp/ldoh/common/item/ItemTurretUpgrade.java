@@ -58,14 +58,14 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return isBlank(stack) ? "item.hundreddayz.BlankTurretUpgrade" : super.getUnlocalizedName();
+        return isBlank(stack) ? "item.ldoh.BlankTurretUpgrade" : super.getUnlocalizedName();
     }
 
     @Override
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
         if (isBlank(stack)) return;
         final String name = byMeta(stack.getMetadata());
-        final String key = new StringBuilder("tooltip.hundreddayz.TurretUpgrade.").append(name).toString();
+        final String key = new StringBuilder("tooltip.ldoh.TurretUpgrade.").append(name).toString();
         if (name.equals("australium"))
             tooltip.add(new TextComponentTranslation(key + ".name").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText());
         else {

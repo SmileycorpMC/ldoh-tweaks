@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "ldoh:blocks/laboratory_block_10",
+		"particle": "#all"
+    }
+}

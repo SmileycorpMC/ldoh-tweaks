@@ -16,9 +16,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 @Mod(modid = ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
 public class LDOHTweaks {
 
@@ -31,7 +28,7 @@ public class LDOHTweaks {
     public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
     public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
 
-    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("HundredDayzTab")) {
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("ldohTab")) {
         @Override
         @SideOnly(Side.CLIENT)
         public ItemStack getTabIconItem() {

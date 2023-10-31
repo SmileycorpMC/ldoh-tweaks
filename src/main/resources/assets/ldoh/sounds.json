@@ -1,0 +1,22 @@
+{
+  "tf_enemy": {
+    "category": "hostile",
+    "subtitle": "ldoh.subtitle.tf.enemy",
+    "sounds": [ "ldoh:tf_enemy" ]
+  },
+  "tf_ally": {
+    "category": "neutral",
+    "subtitle": "ldoh.subtitle.tf.ally",
+    "sounds": [ "ldoh:tf_ally" ]
+  }, 
+  "landmine_beep": {
+    "category": "block",
+    "subtitle": "ldoh.subtitle.landmine.beep",
+    "sounds": [ "ldoh:landmine_beep" ]
+  },
+  "jugg_alarm": {
+	"category": "hostile",
+    "subtitle": "ldoh.subtitle.alarm",
+    "sounds": [ "ldoh:jugg_alarm"]
+  }
+ }
