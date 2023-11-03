@@ -6,9 +6,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.smileycorp.ldoh.common.difficulty.DifficultyOptions;
-import net.smileycorp.ldoh.common.difficulty.GameDifficulty;
+import net.smileycorp.ldoh.common.GameDifficulty;
 import net.smileycorp.ldoh.common.entity.zombie.EntityProfessionZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -35,7 +33,7 @@ public abstract class MixinEntityZombie extends EntityMob {
 				|| ((EntityMob)this).getClass() == EntityProfessionZombie.class;
 		if (hasESMAI) {
 			ModUtils.addGriefTask(this);
-			if (world instanceof WorldServer && DifficultyOptions.getDifficulty(world) == GameDifficulty.SURVIVOR) {
+			if (world instanceof WorldServer && GameDifficulty.getGameDifficulty(world) == GameDifficulty.Level.SURVIVOR) {
 				ModUtils.addDigTask(this);
 				ModUtils.addBuildTask(this);
 				phase = 2;

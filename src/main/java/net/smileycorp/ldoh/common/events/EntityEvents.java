@@ -58,7 +58,7 @@ import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.InfectionRegister;
-import net.smileycorp.ldoh.common.ConfigHandler;
+import net.smileycorp.ldoh.common.GameDifficulty;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.TimedEvents;
@@ -124,7 +124,7 @@ public class EntityEvents {
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         World world = event.getWorld();
         Entity entity = event.getEntity();
-        if (!world.isRemote) {
+        if (world.isRemote) {
             //replacing zombies with rare spawns
             if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
                 ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
@@ -132,23 +132,21 @@ public class EntityEvents {
                     if (entity.getClass() == EntityZombie.class) {
                         EntityZombie zombie = (EntityZombie) entity;
                         EntityMob newentity = null;
-                        if (!ConfigHandler.legacySpawns) {
-                            Random rand = world.rand;
-                            //select random number first to allow for proper weighting
-                            int randInt = rand.nextInt(100);
-                            if (randInt < 3) {
-                                newentity = new EntityTF2Zombie(world);
-                            } else if (randInt == 3) {
-                                newentity = new EntityZombieNurse(world);
-                            } else if (randInt < 15) {
-                                newentity = EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition())) ?
-                                        new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
-                            } else if (randInt < 17) {
-                                newentity = new EntityZombieFireman(world);
-                                //turns zombies into husks in a desert
-                            } else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                                newentity = new EntityHusk(world);
-                            }
+                        Random rand = world.rand;
+                        //select random number first to allow for proper weighting
+                        int randInt = rand.nextInt(100);
+                        if (randInt < 3) {
+                            newentity = new EntityTF2Zombie(world);
+                        } else if (randInt == 3) {
+                            newentity = new EntityZombieNurse(world);
+                        } else if (randInt < 15) {
+                            newentity = EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition())) ?
+                                    new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
+                        } else if (randInt < 17) {
+                            newentity = new EntityZombieFireman(world);
+                            //turns zombies into husks in a desert
+                        } else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
+                            newentity = new EntityHusk(world);
                         }
                         //turns zombies into husks in a desert
                         else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
@@ -289,21 +287,20 @@ public class EntityEvents {
 
     @SubscribeEvent
     public void calculateDamage(LivingHurtEvent event) {
-        if (ConfigHandler.legacyDamage) return;
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         World world = entity.world;
-        if (!world.isRemote) {
-            if (InfectionRegister.canCauseInfection(attacker)) {
-                ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-                Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND)
-                        .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
-                float amount = 1;
-                EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
-                for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
-                amount = 3f;
-                event.setAmount(Math.max(amount, event.getAmount()));
-            }
+        if (world.isRemote) return;
+        if (GameDifficulty.getGameDifficulty(world) == GameDifficulty.Level.SURVIVOR) return;
+        if (InfectionRegister.canCauseInfection(attacker)) {
+            ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+            Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND)
+                    .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+            float amount = 1;
+            EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
+            for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
+            amount = 3f;
+            event.setAmount(Math.max(amount, event.getAmount()));
         }
     }
 
@@ -325,7 +322,7 @@ public class EntityEvents {
                 entity.setDead();
                 event.setCanceled(true);
             }
-            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage) {
+            if (InfectionRegister.canCauseInfection(attacker) && GameDifficulty.getGameDifficulty(world) == GameDifficulty.Level.SURVIVOR) {
                 event.setAmount(3f);
             }
             //adds 1/10 chance for bleed effect from husks

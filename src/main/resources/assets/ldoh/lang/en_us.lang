@@ -163,3 +163,16 @@ ldoh.subtitle.landmine.beep=Landmine Beeps
 
 tooltip.ldoh.Crowbar=Right click to open sealed crates
 tooltip.ldoh.UnlitTorch=Craft with a matchbox to light
+
+gamedifficulty.tutorial.title=Tutorial
+gamedifficulty.novice.title=Adventurer
+gamedifficulty.novice.title=Novice
+gamedifficulty.hardcore.title=Hardcore
+gamedifficulty.survivor.title=Survivor
+gamedifficulty.sandbox.title=Sandbox
+gamedifficulty.tutorial.description=Learn the basic mechanics and how to play the game.\nRecommended before playing for the first time.
+gamedifficulty.adventurer.description=Infinite respawns, mobs don't speed up over time.\nOverhauled evolution system.\nRecommended for long running servers.
+gamedifficulty.novice.description=Three lives, normal day progression.\nRecommended for new players. 
+gamedifficulty.hardcore.description=Permadeath, normal day progression and mechanics.\nRecommended for players looking for a challenge. 
+gamedifficulty.survivor.description=Permadeath, zombies start being able to place and break blocks, aren't slowed down during the day and ignore armour and weapons.\nNot recommended for anyone. 
+gamedifficulty.sandbox.description=Creative mode

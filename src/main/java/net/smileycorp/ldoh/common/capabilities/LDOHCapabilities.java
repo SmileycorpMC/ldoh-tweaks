@@ -35,4 +35,7 @@ public class LDOHCapabilities {
     @CapabilityInject(IVillageData.class)
     public final static Capability<IVillageData> VILLAGE_DATA = null;
 
+    @CapabilityInject(ILives.class)
+    public final static Capability<ILives> LIVES = null;
+
 }

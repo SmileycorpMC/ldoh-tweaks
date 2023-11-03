@@ -96,7 +96,8 @@ public class CommonProxy {
         CapabilityManager.INSTANCE.register(IFollowers.class, new IFollowers.Storage(), Followers::new);
         CapabilityManager.INSTANCE.register(ICuring.class, new ICuring.Storage(), Curing::new);
         CapabilityManager.INSTANCE.register(IVillageData.class, new IVillageData.Storage(), VillageData::new);
-        CapabilityManager.INSTANCE.register(IApocalypseBoss.class, new IApocalypseBoss.Storage(), () -> new ApocalypseBoss());
+        CapabilityManager.INSTANCE.register(IApocalypseBoss.class, new IApocalypseBoss.Storage(), ApocalypseBoss::new);
+        CapabilityManager.INSTANCE.register(ILives.class, new ILives.Storage(), ILives.Lives::new);
 
         //register turret gui
         NetworkRegistry.INSTANCE.registerGuiHandler(LDOHTweaks.INSTANCE, new IGuiHandler() {

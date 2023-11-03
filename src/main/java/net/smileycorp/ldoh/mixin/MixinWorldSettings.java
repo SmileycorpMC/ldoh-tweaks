@@ -1,22 +1,21 @@
 package net.smileycorp.ldoh.mixin;
 
 import net.minecraft.world.WorldSettings;
-import net.smileycorp.ldoh.common.difficulty.DifficultyOptions;
-import net.smileycorp.ldoh.common.difficulty.GameDifficulty;
+import net.smileycorp.ldoh.common.GameDifficulty;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(WorldSettings.class)
-public class MixinWorldSettings implements DifficultyOptions {
+public class MixinWorldSettings implements GameDifficulty {
 
-    private GameDifficulty difficulty = GameDifficulty.HARDCORE;
+    private Level difficulty = Level.HARDCORE;
 
     @Override
-    public GameDifficulty getDifficulty() {
+    public Level getGameDifficulty() {
         return difficulty;
     }
 
     @Override
-    public void setGameDifficulty(GameDifficulty difficulty) {
+    public void setGameDifficulty(Level difficulty) {
         this.difficulty = difficulty;
     }
 

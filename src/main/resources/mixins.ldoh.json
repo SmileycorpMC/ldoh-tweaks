@@ -11,7 +11,10 @@
     "MixinEntityLivingBase",
     "MixinEntityZombie",
     "MixinItem",
-    "MixinResourceLocation"
+    "MixinResourceLocation",
+    "MixinWorld",
+    "MixinWorldInfo",
+    "MixinWorldSettings"
   ],
   "client": [
     "MixinBiome",

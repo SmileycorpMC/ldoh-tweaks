@@ -41,6 +41,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
+import net.smileycorp.ldoh.common.GameDifficulty;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
@@ -113,7 +115,7 @@ public class ModUtils {
         if (EnumBiomeType.BADLANDS.matches(biome)) {
             if (!speed.hasModifier(WASTELAND_MODIFIER)) speed.applyModifier(WASTELAND_MODIFIER);
         }
-        if (!ConfigHandler.noDaySlowdown)
+        if (entity.world instanceof WorldServer && GameDifficulty.getGameDifficulty(entity.world) != GameDifficulty.Level.SURVIVOR)
             if (world.getWorldTime() % 24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null)
                 speed.applyModifier(new DayTimeSpeedModifier(world));
     }
@@ -232,12 +234,12 @@ public class ModUtils {
             for (int i = 0; i < getRandomSize(rand); i++) {
                 Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
                 BlockPos pos = DirectionUtils.getClosestLoadedPos(world, new BlockPos(basepos.getX(), 0, basepos.getZ()), dir, rand.nextInt(30) / 10d);
-                spawnMob(world, rand, basepos, pos, isParasite, day);
+                spawnMob(world, rand, basepos, pos, isParasite);
             }
         }
     }
 
-    private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite, int day) {
+    private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite) {
         pos = new BlockPos(pos.getX() + rand.nextFloat(), basepos.getY(), pos.getZ() + rand.nextFloat());
         for (int i = 0; i <= 7; i++) {
             if (world.isAirBlock(pos.up(i)) && world.isAirBlock(pos.up(i + 1))) {
@@ -249,7 +251,7 @@ public class ModUtils {
             }
             if (i == 7) return;
         }
-        EntityMob entity = isParasite ? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
+        EntityMob entity = isParasite ? new EntityInfHuman(world) : getEntity(world, rand, pos);
         entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
         entity.enablePersistence();
         entity.onAddedToWorld();
@@ -262,16 +264,14 @@ public class ModUtils {
         return rand.nextInt(8) + 40;
     }
 
-    private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
-        if (!ConfigHandler.legacySpawns) {
-            if (rand.nextInt(7) == 0) {
-                return new EntityCrawlingZombie(world);
-            }
-            if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
-                int r = rand.nextInt(100);
-                if (r <= 1) return new EntityZombieNurse(world);
-                else if (r <= 3) return new EntityZombieFireman(world);
-            }
+    private static EntityMob getEntity(World world, Random rand, BlockPos pos) {
+        if (rand.nextInt(7) == 0) {
+            return new EntityCrawlingZombie(world);
+        }
+        if (world.getBiomeProvider().getBiomes(null, pos.getX(), pos.getZ(), 1, 1, true)[0] == WastelandWorld.apocalypse_city) {
+            int r = rand.nextInt(100);
+            if (r <= 1) return new EntityZombieNurse(world);
+            else if (r <= 3) return new EntityZombieFireman(world);
         }
         return new EntityZombie(world);
     }

@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,7 +20,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
@@ -34,11 +37,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
+import net.smileycorp.ldoh.common.GameDifficulty;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.capabilities.IApocalypse;
-import net.smileycorp.ldoh.common.capabilities.IFollowers;
-import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 public class PlayerEvents {
@@ -48,8 +49,14 @@ public class PlayerEvents {
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         //spawner instance for boss event
-        if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
-            event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
+        if (entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
+            if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null)) {
+                event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
+            }
+            if (!entity.hasCapability(LDOHCapabilities.LIVES, null) &&
+                    GameDifficulty.getGameDifficulty(entity.world) == GameDifficulty.Level.NOVICE) {
+                event.addCapability(ModDefinitions.getResource("Lives"), new ILives.Provider());
+            }
         }
     }
 
@@ -136,6 +143,14 @@ public class PlayerEvents {
                 IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
                 followers.readFromNBT(original.getCapability(LDOHCapabilities.FOLLOWERS, null).writeToNBT());
             }
+            if (event.isWasDeath() && player.hasCapability(LDOHCapabilities.LIVES, null) &&
+                    original.hasCapability(LDOHCapabilities.LIVES, null)) {
+                int lives = original.getCapability(LDOHCapabilities.LIVES, null).getLives();
+                if (lives > 0) lives = lives - 1;
+                if (lives <= 0 &! player.isSpectator() && player instanceof EntityPlayerMP)
+                    ((EntityPlayerMP) player).interactionManager.setGameType(GameType.SPECTATOR);
+                player.getCapability(LDOHCapabilities.LIVES, null).setLives(lives);
+            }
         }
     }
 
@@ -164,7 +179,8 @@ public class PlayerEvents {
         EntityPlayer player = event.getEntityPlayer();
         Entity target = event.getTarget();
         World world = player.world;
-        if (event.getItemStack().isEmpty() && target instanceof EntityLiving && player.hasCapability(LDOHCapabilities.FOLLOWERS, null)
+        if (event.getItemStack().isEmpty() && target instanceof EntityLiving &&
+                player.hasCapability(LDOHCapabilities.FOLLOWERS, null)
                 && event.getHand() == EnumHand.MAIN_HAND & !world.isRemote) {
             IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
             if (followers.isCrouching()) {
