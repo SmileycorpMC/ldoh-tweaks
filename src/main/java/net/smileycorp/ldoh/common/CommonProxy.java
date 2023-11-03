@@ -52,7 +52,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ConfigHandler.config = new Configuration(event.getSuggestedConfigurationFile());
         ConfigHandler.syncConfig();
-
         //Register event listeners
         MinecraftForge.EVENT_BUS.register(new ApocalypseEvents());
         MinecraftForge.EVENT_BUS.register(new EntityEvents());

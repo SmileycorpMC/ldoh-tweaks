@@ -1,13 +1,14 @@
 package net.smileycorp.ldoh.mixin;
 
-import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIPillarUp;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.smileycorp.ldoh.common.difficulty.DifficultyOptions;
+import net.smileycorp.ldoh.common.difficulty.GameDifficulty;
 import net.smileycorp.ldoh.common.entity.zombie.EntityProfessionZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -32,7 +33,14 @@ public abstract class MixinEntityZombie extends EntityMob {
 		hasESMAI = ((EntityMob)this).getClass() == EntityZombie.class || ((EntityMob)this).getClass() == EntityZombieVillager.class
 				|| ((EntityMob)this).getClass() == EntityHusk.class || ((EntityMob)this).getClass() == EntityTF2Zombie.class
 				|| ((EntityMob)this).getClass() == EntityProfessionZombie.class;
-		if (hasESMAI) ModUtils.addGriefTask(this);
+		if (hasESMAI) {
+			ModUtils.addGriefTask(this);
+			if (world instanceof WorldServer && DifficultyOptions.getDifficulty(world) == GameDifficulty.SURVIVOR) {
+				ModUtils.addDigTask(this);
+				ModUtils.addBuildTask(this);
+				phase = 2;
+			}
+		}
 	}
 
 

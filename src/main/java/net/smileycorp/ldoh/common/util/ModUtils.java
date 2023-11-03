@@ -18,7 +18,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
@@ -55,7 +54,6 @@ import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
-import net.smileycorp.ldoh.mixin.MixinEntityZombie;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
