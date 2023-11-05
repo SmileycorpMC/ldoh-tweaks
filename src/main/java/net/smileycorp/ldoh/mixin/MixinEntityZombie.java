@@ -1,8 +1,5 @@
 package net.smileycorp.ldoh.mixin;
 
-import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
-import funwayguy.epicsiegemod.ai.ESM_EntityAIPillarUp;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;

@@ -24,8 +24,8 @@ import net.smileycorp.ldoh.common.entity.zombie.EntitySwatZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieMechanic;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieTechnician;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.util.TF2Class;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class MiniRaid implements IMiniRaid {
             case ALLY:
                 for (int i = 0; i < (phase + 1) * 2.5; i++)
                     try {
-                        EntityTF2Character entity = EnumTFClass.getRandomClass((c) -> c != EnumTFClass.SPY).createEntity(world);
+                        EntityTF2Character entity = TF2Class.getRandomClass((c) -> c != TF2Class.SPY).createEntity(world);
                         world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName());
                         entity.setEntTeam(player.getTeam().getName().equals("RED") ? 0 : 1);
                         spawnlist.add(entity);
@@ -138,7 +138,7 @@ public class MiniRaid implements IMiniRaid {
             case ENEMY:
                 for (int i = 0; i < (phase + 1) * 2.5; i++)
                     try {
-                        EntityTF2Character entity = EnumTFClass.getRandomClass((c) -> c != EnumTFClass.SPY).createEntity(world);
+                        EntityTF2Character entity = TF2Class.getRandomClass((c) -> c != TF2Class.SPY).createEntity(world);
                         world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName().equals("RED") ? "BLU" : "RED");
                         entity.setEntTeam(player.getTeam().getName().equals("RED") ? 1 : 0);
                         spawnlist.add(entity);

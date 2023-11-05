@@ -37,7 +37,6 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.entity.ai.EntityAINearestChecked;
 import rafradek.TF2weapons.entity.ai.EntityAISpotTarget;
@@ -50,6 +49,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.inventory.InventoryLoadout;
 import rafradek.TF2weapons.item.ItemAmmo;
 import rafradek.TF2weapons.item.ItemFromData;
+import rafradek.TF2weapons.util.TF2Class;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +126,7 @@ public class TF2Events {
         }
         if (entity instanceof EntityTF2Character & !world.isRemote) {
             EntityTF2Character merc = (EntityTF2Character) entity;
-            EnumTFClass tfClass = EnumTFClass.getClass(merc);
+            TF2Class tfClass = merc.getTF2Class();
             //gifting ammo and food to tf2 characters
             for (EntityItem item : world.getEntitiesWithinAABB(EntityItem.class, merc.getEntityBoundingBox())) {
                 ItemStack stack = item.getItem();
@@ -154,10 +154,10 @@ public class TF2Events {
                     }
                 }
                 //gifting weapons
-                if (tfClass.canUseItem(stack)) {
+                if (ItemFromData.isItemOfClass(ItemFromData.getData(stack), tfClass)) {
                     InventoryLoadout loadout = merc.loadout;
                     for (int i = 0; i < 4; i++) {
-                        if (merc.loadout.getStackInSlot(i).isEmpty() && ItemFromData.isItemOfClassSlot(ItemFromData.getData(stack), i, tfClass.getClassName())) {
+                        if (merc.loadout.getStackInSlot(i).isEmpty() && ItemFromData.isItemOfClassSlot(ItemFromData.getData(stack), i, tfClass)) {
                             loadout.insertItem(i, stack, false);
                             item.setDead();
                         }

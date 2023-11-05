@@ -7,14 +7,14 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.TextUtils;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.util.TF2Class;
 
 import javax.annotation.Nullable;
 
 public class ModMobEntry {
 
-    protected EnumTFClass tfclass = null;
+    protected TF2Class tfclass = null;
     protected Class<? extends EntityLiving> clazz;
     protected String unlocalisedName = "";
     protected final int foreground;
@@ -22,7 +22,7 @@ public class ModMobEntry {
     protected String team = "";
     protected NBTTagCompound nbt;
 
-    public ModMobEntry(EnumTFClass tfclass, int foreground, int background, String team) {
+    public ModMobEntry(TF2Class tfclass, int foreground, int background, String team) {
         this.tfclass = tfclass;
         this.foreground = foreground;
         this.background = background;
@@ -52,7 +52,7 @@ public class ModMobEntry {
     //get the entities name
     public String getLocalisedName() {
         if (tfclass != null) {
-            return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + tfclass.getClassName() + ".name");
+            return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + tfclass.getLocalizedName();
         } else {
             return I18n.translateToLocal(unlocalisedName);
         }

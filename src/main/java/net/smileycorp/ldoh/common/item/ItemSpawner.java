@@ -22,7 +22,7 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
+import rafradek.TF2weapons.util.TF2Class;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +106,7 @@ public class ItemSpawner extends Item implements IMetaItem {
     }
 
     static {
-        for (EnumTFClass tfclass : EnumTFClass.values()) {
+        for (TF2Class tfclass : TF2Class.getClasses()) {
             entries.add(new ModMobEntry(tfclass, 0x436C34, 0xEF0000, "RED"));
             entries.add(new ModMobEntry(tfclass, 0x436C34, 0x0000E2, "BLU"));
         }

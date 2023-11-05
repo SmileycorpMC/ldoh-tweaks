@@ -35,7 +35,7 @@ import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
+import rafradek.TF2weapons.util.TF2Class;
 
 import java.util.Map.Entry;
 import java.util.Random;
@@ -160,8 +160,8 @@ public class SpawnerEvents {
             if (event.getEntityPlayer().getTeam() != null) {
                 if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
                     event.spawntable.clear();
-                    for (EnumTFClass tfclass : EnumTFClass.values())
-                        if (tfclass != EnumTFClass.SPY)
+                    for (TF2Class tfclass : TF2Class.getClasses())
+                        if (tfclass != TF2Class.SPY)
                             event.spawntable.addEntry(new HordeSpawnEntry(tfclass.getEntityClass()), 1);
                 }
             }

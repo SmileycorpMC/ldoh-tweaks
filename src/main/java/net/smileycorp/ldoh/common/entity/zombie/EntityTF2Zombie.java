@@ -17,11 +17,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
 import rafradek.TF2weapons.common.WeaponsCapability;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.util.TF2Class;
 
 import javax.annotation.Nullable;
 
@@ -31,7 +31,7 @@ public class EntityTF2Zombie extends EntityZombie {
     protected static final DataParameter<String> TF_CLASS = EntityDataManager.createKey(EntityTF2Zombie.class, DataSerializers.STRING);
 
     protected Team tfteam;
-    protected EnumTFClass tfclass;
+    protected TF2Class tfclass;
     protected EntityTF2Character baseentity;
     private WeaponsCapability weaponCap;
 
@@ -59,7 +59,7 @@ public class EntityTF2Zombie extends EntityZombie {
     }
 
     public void buildPropertiesFrom(EntityTF2Character entity) {
-        EnumTFClass tfclass = EnumTFClass.getClass(entity);
+        TF2Class tfclass = entity.getTF2Class();
         setTFClass(tfclass);
         if (entity.getTeam() != null) {
             setTFTeam(entity.getTeam());
@@ -89,13 +89,13 @@ public class EntityTF2Zombie extends EntityZombie {
         return getTeam(dataManager.get(TF_TEAM).intValue());
     }
 
-    public void setTFClass(EnumTFClass tfclass) {
+    public void setTFClass(TF2Class tfclass) {
         this.tfclass = tfclass;
         dataManager.set(TF_CLASS, tfclass.name());
     }
 
-    public EnumTFClass getTFClass() {
-        return EnumTFClass.valueOf(dataManager.get(TF_CLASS));
+    public TF2Class getTFClass() {
+        return TF2Class.valueOf(dataManager.get(TF_CLASS));
     }
 
     private void setRandomProperties() {
@@ -147,7 +147,7 @@ public class EntityTF2Zombie extends EntityZombie {
     }
 
     private void setRandomClass() {
-        setTFClass(EnumTFClass.getRandomClass());
+        setTFClass(TF2Class.getRandomClass());
     }
 
     public EntityTF2Character getCured() {
@@ -188,7 +188,7 @@ public class EntityTF2Zombie extends EntityZombie {
             setTFTeam(getTeam(compound.getInteger("tfteam")));
         }
         if (compound.hasKey("tfclass")) {
-            setTFClass(EnumTFClass.valueOf(compound.getString("tfclass")));
+            setTFClass(TF2Class.valueOf(compound.getString("tfclass")));
         }
 
     }
@@ -214,7 +214,7 @@ public class EntityTF2Zombie extends EntityZombie {
             if (hasCustomName()) {
                 return getCustomNameTag();
             }
-            return I18n.translateToLocal("entity.Zombie.name") + " " + I18n.translateToLocal("entity." + getTFClass().getClassName() + ".name");
+            return I18n.translateToLocal("entity.Zombie.name") + " " + getTFClass().getLocalizedName();
         } catch (Exception e) {
             return I18n.translateToLocal("entity." + ModDefinitions.MODID + ".TFZombie.name");
         }

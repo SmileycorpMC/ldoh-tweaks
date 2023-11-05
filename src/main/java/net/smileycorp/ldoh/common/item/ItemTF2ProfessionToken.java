@@ -11,11 +11,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.tangotek.tektopia.ModItems;
 import net.tangotek.tektopia.ProfessionType;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.util.TF2Class;
 
 public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
 
@@ -26,12 +26,12 @@ public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
 
     @Override
     public String byMeta(int meta) {
-        return EnumTFClass.values()[meta].getClassName();
+        return TF2Class.getClass(meta).getName();
     }
 
     @Override
     public int getMaxMeta() {
-        return EnumTFClass.values().length;
+        return TF2Class.getClasses().size();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
                         (ModItems.isItemVillageBound(stack, villager.getVillage()) || !ModItems.isItemVillageBound(stack))) {
                     int meta = stack.getMetadata();
                     try {
-                        EntityTF2Character entity = EnumTFClass.values()[meta].createEntity(world);
+                        EntityTF2Character entity = TF2Class.getClass(meta).createEntity(world);
                         if (player.getTeam() != null && (player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU"))) {
                             world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName());
                             entity.setEntTeam(player.getTeam().getName().equals("RED") ? 0 : 1);
@@ -83,7 +83,7 @@ public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getMetadata();
         if (meta >= getMaxMeta()) return super.getUnlocalizedName(stack);
-        return this.getUnlocalizedName() + "." + EnumTFClass.values()[meta].getClassName();
+        return this.getUnlocalizedName() + "." + TF2Class.getClass(meta).getName();
     }
 
 }

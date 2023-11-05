@@ -3,14 +3,16 @@ package net.smileycorp.ldoh.integration.tektopia.entities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.util.EnumTFClass;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import net.tangotek.tektopia.ItemTagType;
 import net.tangotek.tektopia.ModItems;
 import net.tangotek.tektopia.entities.EntityTradesman;
 import net.tangotek.tektopia.items.ItemProfessionToken;
+import rafradek.TF2weapons.util.TF2Class;
 
 public class EntityLDOHTradesman extends EntityTradesman {
+
+    private static final int[] TOKEN_COSTS = {3, 5, 8, 6, 7, 13, 11, 9};
 
     public EntityLDOHTradesman(World world) {
         super(world);
@@ -35,10 +37,10 @@ public class EntityLDOHTradesman extends EntityTradesman {
                     buyingList.add(createMerchantRecipe(stack, token.getCost(village)));
                 }
             }
-            for (int i = 0; i < EnumTFClass.values().length - 1; i++) {
+            for (int i = 0; i < TF2Class.getClasses().size() - 1; i++) {
                 ItemStack stack = ModItems.makeTaggedItem(new ItemStack(TektopiaUtils.TF2_PROF_TOKEN, 1, i), ItemTagType.VILLAGER);
                 ModItems.bindItemToVillage(stack, village);
-                buyingList.add(createMerchantRecipe(stack, TektopiaUtils.getCost(village, EnumTFClass.values()[i].getCost())));
+                buyingList.add(createMerchantRecipe(stack, TektopiaUtils.getCost(village, TOKEN_COSTS[i])));
             }
         }
     }
