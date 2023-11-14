@@ -352,4 +352,12 @@ public class ModUtils {
         entity.tasks.addTask(2, new ESM_EntityAIPillarUp(entity));
     }
 
+    public static boolean canUnburiedSpawn(World world, BlockPos pos) {
+        if (world.canBlockSeeSky(pos)) return false;
+        if (!DirectionUtils.isBrightnessAllowed(world, pos, 5, 0)) return false;
+        if (!world.isAirBlock(pos)) return false;
+        if (!world.isAirBlock(pos.up())) return false;
+        Block block = world.getBlockState(pos.down()).getBlock();
+        return block == Blocks.STONE || block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
+    }
 }
