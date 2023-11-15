@@ -120,6 +120,10 @@ public class PlayerEvents {
 
     @SubscribeEvent(receiveCanceled = true)
     public void playerClone(PlayerEvent.Clone event) {
+        if (event.isWasDeath()) {
+            WorldDataSafehouse data = WorldDataSafehouse.getData(event.getOriginal().world);
+            if (data != null) data.hideBasement(event.getOriginal().world);
+        }
         EntityPlayer player = event.getEntityPlayer();
         EntityPlayer original = event.getOriginal();
         if (player != null && original != null & !(player instanceof FakePlayer || original instanceof FakePlayer)) {

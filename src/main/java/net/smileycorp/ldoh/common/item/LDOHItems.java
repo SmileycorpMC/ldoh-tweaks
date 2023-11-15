@@ -25,4 +25,6 @@ public class LDOHItems {
 
     public static final Item CANDY_CORN = new ItemFoodLDOH("Candy_Corn", 5, 0.6F, false);
 
+    public static final Item TORN_NOTE = new ItemTornNote();
+
 }

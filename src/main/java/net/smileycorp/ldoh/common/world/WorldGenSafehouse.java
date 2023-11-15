@@ -68,7 +68,6 @@ public class WorldGenSafehouse extends WorldGenerator {
     private List<BlockPos> heightmap = new ArrayList<BlockPos>();
 
     private boolean marked = false;
-    private boolean generated = false;
 
     public WorldGenSafehouse() {
         if ((time.getMonth() == Month.APRIL && time.getDayOfMonth() == 1) || new Random().nextInt(256) == 0)
@@ -125,17 +124,12 @@ public class WorldGenSafehouse extends WorldGenerator {
         return marked;
     }
 
-    public boolean isGenerated() {
-        return generated;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean generate(World world, Random rand, BlockPos backup) {
         if (!marked) {
             markPositions(world, world.getSpawnPoint().down(), true);
         }
-        int wh = basepos.getY() + 6;
         //clear area of structures
         for (BlockPos pos : heightmap) {
             for (int j = 0; j <= (100 - pos.getY()); j++) {
@@ -159,6 +153,15 @@ public class WorldGenSafehouse extends WorldGenerator {
                 }
             }
         }
+        generateHouse(world, rand);
+        generateYard(world, rand);
+        generateRoof(world, rand);
+        decorateHouse(world, rand);
+        generateBasement(world, rand);
+        return true;
+    }
+
+    private void generateHouse(World world, Random rand) {
         //floor
         for (int i = -5; i <= 5; i++) {
             for (int k = -1; k <= 5; k++) {
@@ -193,7 +196,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                         .withProperty(((BlockBOPLog) BOPBlocks.log_0).variantProperty, BOPWoods.FIR));
                 else if (j > 1 && j < 4 && mi < 4)
                     setBlockAndNotifyAdequately(world, pos, Blocks.GLASS_PANE.getDefaultState());
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
         //south east wall
@@ -204,7 +207,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                         .withProperty(((BlockBOPLog) BOPBlocks.log_0).variantProperty, BOPWoods.FIR));
                 else if (j > 1 && j < 4 && k > 0 && k < 4)
                     setBlockAndNotifyAdequately(world, pos, Blocks.GLASS_PANE.getDefaultState());
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
         //east north wall
@@ -213,7 +216,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 BlockPos pos = basepos.east(i).south(-1).up(j);
                 if (i == -1) setBlockAndNotifyAdequately(world, pos, BOPBlocks.log_0.getDefaultState()
                         .withProperty(((BlockBOPLog) BOPBlocks.log_0).variantProperty, BOPWoods.FIR));
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
         //north east wall
@@ -224,7 +227,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                         .withProperty(((BlockBOPLog) BOPBlocks.log_0).variantProperty, BOPWoods.FIR));
                 else if (k == -3 && j <= 3 && j >= 2)
                     setBlockAndNotifyAdequately(world, pos, Blocks.GLASS_PANE.getDefaultState());
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
         //west north wall
@@ -235,7 +238,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                         .withProperty(((BlockBOPLog) BOPBlocks.log_0).variantProperty, BOPWoods.FIR));
                 else if (i == -3 && j <= 3 && j >= 2)
                     setBlockAndNotifyAdequately(world, pos, Blocks.GLASS_PANE.getDefaultState());
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
         //west wall
@@ -244,36 +247,12 @@ public class WorldGenSafehouse extends WorldGenerator {
                 BlockPos pos = basepos.east(-5).south(k).up(j);
                 if (j > 1 && j < 4 && Math.abs(k) < 4)
                     setBlockAndNotifyAdequately(world, pos, Blocks.GLASS_PANE.getDefaultState());
-                else setRandomBrick(rand, world, pos);
+                else placeBrick(rand, world, pos);
             }
         }
-        //outer wall
-        for (BlockPos pos : wallpos) {
-            while (!world.getBlockState(pos.down()).isFullBlock()) pos = pos.down();
-            int h = wh - pos.getY();
-            for (int j = 0; j <= h; j++) {
-                int mi = Math.abs(basepos.getX() - pos.getX());
-                int mk = Math.abs(basepos.getZ() - pos.getZ());
-                if (j == 0 || (mi == mk)) {
-                    setRandomBrick(rand, world, pos.up(j));
-                    if (mi == 0 && basepos.getZ() - pos.getZ() == 13 && exitpos == null) {
-                        exitpos = pos;
-                    }
-                } else if (j == h) {
-                    IBlockState state = LDOHBlocks.BARBED_WIRE.getDefaultState();
-                    if (mi == 13) state = state.withProperty(BlockBarbedWire.AXIS, EnumAxis.Z);
-                    setBlockAndNotifyAdequately(world, pos.up(j), state);
-                    TileBarbedWire te = new TileBarbedWire();
-                    world.setTileEntity(pos.up(j), te);
-                    te.damage(rand.nextInt(150));
-                } else {
-                    setBlockAndNotifyAdequately(world, pos.up(j), Blocks.IRON_BARS.getDefaultState());
-                }
-            }
-        }
-        //decorations
-        decorateBase(world, rand);
+    }
 
+    private void generateRoof(World world, Random rand) {
         IBlockState stairs = Blocks.SPRUCE_STAIRS.getDefaultState();
         //north roof
         for (int i = -1; i <= 6; i++) {
@@ -288,7 +267,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 if ((state.getBlock() == Blocks.AIR || state.getBlock() == Blocks.SPRUCE_STAIRS) && k != -2) {
                     if (i == 5) {
                         while (state.getBlock() == Blocks.AIR) {
-                            setRandomBrick(rand, world, pos);
+                            placeBrick(rand, world, pos);
                             pos = pos.down();
                             state = world.getBlockState(pos);
                         }
@@ -316,7 +295,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 if (state.getBlock() == Blocks.AIR && i != 0) {
                     if (k == -5) {
                         while (state.getBlock() == Blocks.AIR) {
-                            setRandomBrick(rand, world, pos);
+                            placeBrick(rand, world, pos);
                             pos = pos.down();
                             state = world.getBlockState(pos);
                         }
@@ -340,7 +319,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 if (state.getBlock() == Blocks.AIR && i != -6) {
                     if (Math.abs(k) == 5) {
                         while (state.getBlock() == Blocks.AIR) {
-                            setRandomBrick(rand, world, pos);
+                            placeBrick(rand, world, pos);
                             pos = pos.down();
                             state = world.getBlockState(pos);
                         }
@@ -370,7 +349,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 if ((state.getBlock() == Blocks.AIR) && k != 6) {
                     if (Math.abs(i) == 5) {
                         while (state.getBlock() == Blocks.AIR) {
-                            setRandomBrick(rand, world, pos);
+                            placeBrick(rand, world, pos);
                             pos = pos.down();
                             state = world.getBlockState(pos);
                         }
@@ -391,7 +370,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 BlockPos pos = basepos.up(6).west(3).south(k);
                 IBlockState state = world.getBlockState(pos);
                 while (state.getBlock() == Blocks.AIR) {
-                    setRandomBrick(rand, world, pos);
+                    placeBrick(rand, world, pos);
                     pos = pos.down();
                     state = world.getBlockState(pos);
                 }
@@ -405,7 +384,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 BlockPos pos = basepos.up(7).east(i).south(2);
                 IBlockState state = world.getBlockState(pos);
                 while (state.getBlock() == Blocks.AIR) {
-                    setRandomBrick(rand, world, pos);
+                    placeBrick(rand, world, pos);
                     pos = pos.down();
                     state = world.getBlockState(pos);
                 }
@@ -413,12 +392,10 @@ public class WorldGenSafehouse extends WorldGenerator {
                 setBlockAndNotifyAdequately(world, basepos.up(7).east(i).south(2), Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, EnumType.SPRUCE));
             }
         }
-        generated = true;
-        return true;
     }
 
     @SuppressWarnings("unchecked")
-    private void decorateBase(World world, Random rand) {
+    private void decorateHouse(World world, Random rand) {
         final boolean isHalloween = TimedEvents.isHalloween();
         BlockPos pos = basepos.up();
         if (exitpos == null) {
@@ -528,7 +505,39 @@ public class WorldGenSafehouse extends WorldGenerator {
         setBlockAndNotifyAdequately(world, pos.north(3).east(2).up(2), stairs);
         setBlockAndNotifyAdequately(world, pos.north(3).east(3).up(2), stairs.withProperty(BlockStairs.SHAPE, EnumShape.OUTER_RIGHT));
 
+        if (isHalloween) placeHalloweenDecorations(world, rand, pos);
+        if (TimedEvents.isChristmas()) placeChristmasDecorations(world, rand, pos);
+        if (isAnniversary) placeAnniversaryDecorations(world, rand, pos);
+    }
+
+    private void generateYard(World world, Random rand) {
+        int wh = basepos.getY() + 6;
+        //outer wall
+        for (BlockPos pos : wallpos) {
+            while (!world.getBlockState(pos.down()).isFullBlock()) pos = pos.down();
+            int h = wh - pos.getY();
+            for (int j = 0; j <= h; j++) {
+                int mi = Math.abs(basepos.getX() - pos.getX());
+                int mk = Math.abs(basepos.getZ() - pos.getZ());
+                if (j == 0 || (mi == mk)) {
+                    placeBrick(rand, world, pos.up(j));
+                    if (mi == 0 && basepos.getZ() - pos.getZ() == 13 && exitpos == null) {
+                        exitpos = pos;
+                    }
+                } else if (j == h) {
+                    IBlockState state = LDOHBlocks.BARBED_WIRE.getDefaultState();
+                    if (mi == 13) state = state.withProperty(BlockBarbedWire.AXIS, EnumAxis.Z);
+                    setBlockAndNotifyAdequately(world, pos.up(j), state);
+                    TileBarbedWire te = new TileBarbedWire();
+                    world.setTileEntity(pos.up(j), te);
+                    te.damage(rand.nextInt(150));
+                } else {
+                    setBlockAndNotifyAdequately(world, pos.up(j), Blocks.IRON_BARS.getDefaultState());
+                }
+            }
+        }
         //crates
+        BlockPos pos = basepos.up();
         placeCrate(world.getHeight(pos.north(2)), world);
         placeCrate(world.getHeight(pos.north(2)), world);
         placeCrate(world.getHeight(pos.north(3)).east(5), world);
@@ -538,19 +547,46 @@ public class WorldGenSafehouse extends WorldGenerator {
         if (exitpos.getY() != 0) {
             for (int i = -1; i < 2; i++) {
                 for (int j = 0; j <= 2; j++) {
-                    setRandomBrick(rand, world, exitpos.east(i).up(j));
+                    placeBrick(rand, world, exitpos.east(i).up(j));
                 }
             }
-            door = Blocks.IRON_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
+            IBlockState door = Blocks.IRON_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.SOUTH);
             setBlockAndNotifyAdequately(world, exitpos, door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER));
             setBlockAndNotifyAdequately(world, exitpos.up(), door.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
             IBlockState button = Blocks.STONE_BUTTON.getDefaultState();
             setBlockAndNotifyAdequately(world, exitpos.up().east().north(), button.withProperty(BlockButton.FACING, EnumFacing.NORTH));
             setBlockAndNotifyAdequately(world, exitpos.up().east().south(), button.withProperty(BlockButton.FACING, EnumFacing.SOUTH));
         }
-        if (isHalloween) placeHalloweenDecorations(world, rand, pos);
-        if (TimedEvents.isChristmas()) placeChristmasDecorations(world, rand, pos);
-        if (isAnniversary) placeAnniversaryDecorations(world, rand, pos);
+    }
+
+    private void generateBasement(World world, Random rand) {
+        BlockPos entrance = basepos.west(4);
+        int dy = basepos.getY() - 30;
+        for (int j = 0; j < dy; j ++) {
+            if (j > 0) for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+                if (j < dy - 5) placeBrick(rand, world, entrance.down(j).offset(facing));
+                else setBlockAndNotifyAdequately(world, entrance.down(j).offset(facing), Blocks.CONCRETE.getDefaultState()
+                        .withProperty(BlockColored.COLOR, EnumDyeColor.BLACK));
+            }
+            setBlockAndNotifyAdequately(world, entrance.down(j), Blocks.LADDER.getDefaultState()
+                    .withProperty(BlockHorizontal.FACING, EnumFacing.EAST));
+        }
+        BlockPos basement = entrance.down(dy);
+        setBlockAndNotifyAdequately(world, basement, Blocks.CONCRETE.getDefaultState()
+                .withProperty(BlockColored.COLOR, EnumDyeColor.BLACK));
+        for (int i = 1; i < 9; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = -1; k < 2; k++) {
+                    if ((j == 1 || j == 2) && i < 7 && k == 0) setBlockAndNotifyAdequately(world, basement.east(i).up(j).north(k), Blocks.AIR.getDefaultState());
+                    else setBlockAndNotifyAdequately(world, basement.east(i).up(j).north(k), Blocks.CONCRETE.getDefaultState()
+                            .withProperty(BlockColored.COLOR, EnumDyeColor.BLACK));
+                }
+            }
+        }
+        setBlockAndNotifyAdequately(world, basement.east(7).up(), FurnitureBlocks.DESK_CABINET_ANDESITE.getDefaultState()
+                .withProperty(BlockHorizontal.FACING, EnumFacing.EAST));
+        ((TileEntityLockableLoot) world.getTileEntity(basement.east(7).up())).setInventorySlotContents(4, new ItemStack(LDOHItems.TORN_NOTE));
+        setBlockAndNotifyAdequately(world, basement.east(7).up(2), Blocks.REDSTONE_TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST));
     }
 
     private void placeHalloweenDecorations(World world, Random rand, BlockPos pos) {
@@ -605,7 +641,12 @@ public class WorldGenSafehouse extends WorldGenerator {
         }
     }
 
-    private void setRandomBrick(Random rand, World world, BlockPos pos) {
+    private void placeCrate(BlockPos pos, World world) {
+        setBlockAndNotifyAdequately(world, pos, FurnitureBlocks.CRATE_SPRUCE.getDefaultState());
+        ((TileEntityLockableLoot) world.getTileEntity(pos)).setLootTable(ModDefinitions.SAFEHOUSE_CRATE, world.rand.nextLong());
+    }
+
+    private void placeBrick(Random rand, World world, BlockPos pos) {
         IBlockState state = Blocks.STONEBRICK.getDefaultState();
         int r = rand.nextInt(TimedEvents.isHalloween() ? 3 : 10);
         if (r == 0) {
@@ -616,9 +657,29 @@ public class WorldGenSafehouse extends WorldGenerator {
         setBlockAndNotifyAdequately(world, pos, state);
     }
 
-    private void placeCrate(BlockPos pos, World world) {
-        setBlockAndNotifyAdequately(world, pos, FurnitureBlocks.CRATE_SPRUCE.getDefaultState());
-        ((TileEntityLockableLoot) world.getTileEntity(pos)).setLootTable(ModDefinitions.SAFEHOUSE_CRATE, world.rand.nextLong());
+    public void hideBasement(World world) {
+        if (basepos == null) basepos = world.getSpawnPoint().down();
+        BlockPos entrance = basepos.west(4);
+        int dy = basepos.getY() - 30;
+        BlockPos basement = entrance.down(dy);
+        ((TileEntityLockableLoot) world.getTileEntity(basement.east(7).up())).setInventorySlotContents(4, ItemStack.EMPTY);
+        setBlockAndNotifyAdequately(world, entrance, BOPBlocks.planks_0.getDefaultState()
+                .withProperty(((BlockBOPPlanks) BOPBlocks.planks_0).variantProperty, BOPWoods.FIR));
+        for (int j = 0; j < dy; j ++) {
+            if (j > 0) {
+                for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+                    setBlockAndNotifyAdequately(world, entrance.down(j).offset(facing), Blocks.STONE.getDefaultState());
+                }
+                setBlockAndNotifyAdequately(world, entrance.down(j), Blocks.STONE.getDefaultState());
+            }
+        }
+        setBlockAndNotifyAdequately(world, basement, Blocks.STONE.getDefaultState());
+        for (int i = 1; i < 9; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = -1; k < 2; k++) {
+                    setBlockAndNotifyAdequately(world, basement.east(i).up(j).north(k), Blocks.STONE.getDefaultState());
+                }
+            }
+        }
     }
-
 }

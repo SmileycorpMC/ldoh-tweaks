@@ -13,10 +13,10 @@ import java.util.Random;
 
 public class WorldDataSafehouse extends WorldSavedData {
 
-
     public static final String DATA = Constants.modid + "_Safehouse";
 
     private boolean generated = true;
+    private boolean basementHidden;
     private WorldGenSafehouse safehouse = new WorldGenSafehouse();
 
     public WorldDataSafehouse() {
@@ -46,6 +46,12 @@ public class WorldDataSafehouse extends WorldSavedData {
         markDirty();
     }
 
+    public void hideBasement(World world) {
+        if (basementHidden) return;
+        safehouse.hideBasement(world);
+        basementHidden = true;
+    }
+
     public boolean isMarked() {
         return safehouse.isMarked();
     }
@@ -59,11 +65,13 @@ public class WorldDataSafehouse extends WorldSavedData {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("generated")) generated = nbt.getBoolean("generated");
+        if (nbt.hasKey("basementHidden")) basementHidden = nbt.getBoolean("basementHidden");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setBoolean("generated", generated);
+        nbt.setBoolean("basementHidden", basementHidden);
         return nbt;
     }
 

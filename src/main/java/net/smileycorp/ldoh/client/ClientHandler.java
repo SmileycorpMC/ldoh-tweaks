@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.smileycorp.hordes.infection.CureEntityMessage;
 import net.smileycorp.hordes.infection.HordesInfection;
+import net.smileycorp.ldoh.client.gui.GUITornNote;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
@@ -74,6 +75,10 @@ public class ClientHandler {
             ((EntityLiving) entity).removePotionEffect(HordesInfection.INFECTED);
             net.smileycorp.hordes.client.ClientHandler.processCureEntityMessage(new CureEntityMessage(entity));
         }
+    }
+
+    public static void openNoteGUI(long seed) {
+        Minecraft.getMinecraft().displayGuiScreen(new GUITornNote(seed));
     }
 
 }

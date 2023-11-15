@@ -21,8 +21,8 @@ public class PacketHandler {
         NETWORK_INSTANCE.registerMessage(ClientSyncHunger.class, SyncHungerMessage.class, 2, Side.CLIENT);
         NETWORK_INSTANCE.registerMessage(ClientStartEat.class, StartEatingMessage.class, 3, Side.CLIENT);
         NETWORK_INSTANCE.registerMessage(ClientSyncSyringes.class, SyncSyringesMessage.class, 4, Side.CLIENT);
-        //discriminator 5 open from exhaustion code removal
-        NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 6, Side.CLIENT);
+        NETWORK_INSTANCE.registerMessage(ClientSyncMedicCure.class, SyncMedicCureMessage.class, 5, Side.CLIENT);
+        NETWORK_INSTANCE.registerMessage(ClientOpenNoteMessage.class, TornNoteMessage.class, 6, Side.CLIENT);
     }
 
     public static class ClientSyncHandlerAction implements IMessageHandler<SimpleStringMessage, IMessage> {
@@ -115,6 +115,18 @@ public class PacketHandler {
             if (ctx.side == Side.CLIENT) {
                 Minecraft.getMinecraft().addScheduledTask(() -> {
                     ClientHandler.syncMedicCure(message);
+                });
+            }
+            return null;
+        }
+    }
+
+    public static class ClientOpenNoteMessage implements IMessageHandler<TornNoteMessage, IMessage> {
+        @Override
+        public IMessage onMessage(TornNoteMessage message, MessageContext ctx) {
+            if (ctx.side == Side.CLIENT) {
+                Minecraft.getMinecraft().addScheduledTask(() -> {
+                    ClientHandler.openNoteGUI(message.getSeed());
                 });
             }
             return null;
