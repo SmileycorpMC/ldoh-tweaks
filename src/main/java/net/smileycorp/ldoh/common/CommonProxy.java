@@ -5,10 +5,13 @@ import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
 import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.item.ItemAmmo;
+import ichttt.mods.firstaid.api.distribution.DamageDistributionBuilderFactory;
+import ichttt.mods.firstaid.api.enums.EnumPlayerPart;
 import ivorius.reccomplex.events.RCEventBus;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -47,6 +50,8 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaEvents;
 import rafradek.TF2weapons.item.crafting.TF2CraftingManager;
 
+import java.util.Objects;
+
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -83,6 +88,21 @@ public class CommonProxy {
 
         //register cfm recipe handler
         FMLInterModComms.sendMessage("cfm", "register", "net.smileycorp.ldoh.common.events.RegistryEvents.registerCFMRecipes");
+
+        //first aid damage
+
+        DamageDistributionBuilderFactory factory = DamageDistributionBuilderFactory.getInstance();
+        
+        factory.newStandardBuilder()
+                .addDistributionLayer(EntityEquipmentSlot.CHEST, EnumPlayerPart.BODY)
+                .disableNeighbourRestDistribution()
+                .registerStatic(LDOHTweaks.TOXIC_GAS_DAMAGE);
+
+        factory.newStandardBuilder()
+                .addDistributionLayer(EntityEquipmentSlot.FEET, EnumPlayerPart.LEFT_FOOT, EnumPlayerPart.RIGHT_FOOT)
+                .addDistributionLayer(EntityEquipmentSlot.LEGS, EnumPlayerPart.LEFT_LEG, EnumPlayerPart.RIGHT_LEG)
+                .addDistributionLayer(EntityEquipmentSlot.CHEST, EnumPlayerPart.BODY)
+                .registerStatic(LDOHTweaks.SHRAPNEL_DAMAGE);
     }
 
     public void init(FMLInitializationEvent event) {
