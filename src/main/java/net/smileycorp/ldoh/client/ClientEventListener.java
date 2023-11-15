@@ -51,7 +51,7 @@ import java.util.Map.Entry;
 @EventBusSubscriber(modid = ModDefinitions.MODID, value = Side.CLIENT)
 public class ClientEventListener {
 
-    public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.2f);
+    public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.1f);
     public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
     public static ResourceLocation TF_HUNGER_TEXTURE = ModDefinitions.getResource("textures/gui/tf_hunger.png");
     public static ResourceLocation MEDIC_SYRINGES_TEXTURE = ModDefinitions.getResource("textures/gui/medic_syringes.png");
@@ -83,9 +83,9 @@ public class ClientEventListener {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder bufferbuilder = tessellator.getBuffer();
                 bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-                bufferbuilder.pos(0, height, 0).tex(0, height * f).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
-                bufferbuilder.pos(width, height, 0).tex(width * f, height * f).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
-                bufferbuilder.pos(width, 0, 0).tex(width * f, 0).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
+                bufferbuilder.pos(0, height, 0).tex(0, 1).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
+                bufferbuilder.pos(width, height, 0).tex(1, 1).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
+                bufferbuilder.pos(width, 0, 0).tex(1, 0).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
                 bufferbuilder.pos(0, 0, 0).tex(0, 0).color(r, g, b, a).normal((float) x, (float) y, (float) z).endVertex();
                 tessellator.draw();
                 GlStateManager.disableBlend();
@@ -110,7 +110,7 @@ public class ClientEventListener {
                 int r = GAS_COLOUR.getRed();
                 int g = GAS_COLOUR.getGreen();
                 int b = GAS_COLOUR.getBlue();
-                int a = GAS_COLOUR.getAlpha() + 40;
+                int a = GAS_COLOUR.getAlpha();
                 //coords for the centre of the current chunk
                 int cx = ((int) Math.floor(entity.posX / 16)) * 16 + 8;
                 int cz = ((int) Math.floor(entity.posZ / 16)) * 16 + 8;
