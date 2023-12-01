@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.client;
 
 import com.chaosthedude.realistictorches.blocks.RealisticTorchesBlocks;
 import com.mrcrayfish.furniture.init.FurnitureItems;
+import com.mrcrayfish.guns.item.ItemGun;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -16,11 +17,13 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemExpBottle;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -33,16 +36,18 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smileycorp.atlas.api.client.RenderingUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-import org.lwjgl.util.vector.Vector3f;
 import rafradek.TF2weapons.client.gui.inventory.GuiMercenary;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
+import rafradek.TF2weapons.item.ItemAmmoPackage;
+import rafradek.TF2weapons.item.ItemFromData;
+import rafradek.TF2weapons.item.ItemHuntsman;
 
 import java.awt.*;
 import java.util.Map.Entry;
@@ -260,6 +265,24 @@ public class ClientEventListener {
             }
         } else if (item instanceof ItemExpBottle) {
             event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.ExpBottle").getFormattedText());
+        } else if (item instanceof ItemFromData) {
+            if (item instanceof ItemHuntsman) {
+                event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.Ammo",
+                        new ItemStack(Items.ARROW).getDisplayName()).getFormattedText());;
+            }
+            int type = ((ItemFromData) item).getAmmoType(stack);
+            if (type <= 0 || type >= 16) return;
+            ItemStack ammo = ItemAmmoPackage.getAmmoForType(type, 1);
+            if (ammo.getMetadata() >= 16) return;
+            event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.Ammo",
+                    ammo.getDisplayName()).getFormattedText());;
+        } else if (item instanceof ItemGun) {
+            ResourceLocation name = ((ItemGun) stack.getItem()).getModifiedGun(stack).projectile.item;
+            if (name == null) return;
+            Item ammo = ForgeRegistries.ITEMS.getValue(name);
+            if (ammo == null) return;
+            event.getToolTip().add(1, new TextComponentTranslation("tooltip.ldoh.Ammo",
+                    new ItemStack(ammo).getDisplayName()).getFormattedText());;
         }
     }
 

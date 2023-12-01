@@ -92,6 +92,7 @@ tooltip.ldoh.incendiary_ammo0=Optional ammo for turrets.
 tooltip.ldoh.incendiary_ammo1=Deals extra damage to parasites.
 tooltip.ldoh.FilingCabinet=Can store up to 64 stacks of a single item.
 tooltip.ldoh.ExpBottle=Can be drunk to gain experience.
+tooltip.ldoh.Ammo=Uses ammo: %1$s
 
 tooltip.ldoh.TurretUpgrade.hopping.name=Hopping
 tooltip.ldoh.TurretUpgrade.hopping.description=Non-upgrade items can be inserted/extracted from turrets with hoppers and pipes.
