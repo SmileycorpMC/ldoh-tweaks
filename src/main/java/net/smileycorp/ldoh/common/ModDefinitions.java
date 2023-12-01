@@ -59,4 +59,7 @@ public class ModDefinitions {
         return new ResourceLocation(MODID, name.toLowerCase());
     }
 
+    public static String getResourceName(String name) {
+        return getResource(name).toString();
+    }
 }

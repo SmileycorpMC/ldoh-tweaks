@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.item;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 
 public class LDOHItems {
@@ -24,6 +25,11 @@ public class LDOHItems {
     //public static final Item TURRET_TARGETING_UPDRADE = new ItemTurretTargetingUpgrade();
 
     public static final Item CANDY_CORN = new ItemFoodLDOH("Candy_Corn", 5, 0.6F, false);
+
+    public static final Item EXO_BOOTS = new ItemExosuit("Exo_Boots", EntityEquipmentSlot.FEET);
+    public static final Item EXO_LEGS = new ItemExosuit("Exo_Legs", EntityEquipmentSlot.LEGS);
+    public static final Item JUMP_KIT = new ItemExosuit("Jump_Kit", EntityEquipmentSlot.CHEST);
+    public static final Item NANO_HELM = new ItemExosuit("Nano_Helm", EntityEquipmentSlot.HEAD);
 
     public static final Item TORN_NOTE = new ItemTornNote();
 

@@ -157,7 +157,7 @@ public class WorldGenSafehouse extends WorldGenerator {
         generateYard(world, rand);
         generateRoof(world, rand);
         decorateHouse(world, rand);
-        generateBasement(world, rand);
+        //generateBasement(world, rand);
         return true;
     }
 

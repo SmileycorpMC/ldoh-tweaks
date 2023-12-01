@@ -15,10 +15,12 @@
   ],
   "client": [
     "MixinBiome",
+    "MixinEntityPlayerSP",
     "MixinFMLCommonHandler",
     "MixinRender"
   ],
   "server": [
+    "MixinEntityPlayerMP",
     "MixinWorldProviderEnd"
   ],
    "injectors": {

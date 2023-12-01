@@ -16,7 +16,7 @@ public class WorldDataSafehouse extends WorldSavedData {
     public static final String DATA = Constants.modid + "_Safehouse";
 
     private boolean generated = true;
-    private boolean basementHidden;
+    private boolean basementHidden = true;
     private WorldGenSafehouse safehouse = new WorldGenSafehouse();
 
     public WorldDataSafehouse() {

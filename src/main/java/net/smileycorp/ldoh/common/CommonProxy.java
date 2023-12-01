@@ -50,8 +50,6 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaEvents;
 import rafradek.TF2weapons.item.crafting.TF2CraftingManager;
 
-import java.util.Objects;
-
 public class CommonProxy {
 
     public void preInit(FMLPreInitializationEvent event) {
