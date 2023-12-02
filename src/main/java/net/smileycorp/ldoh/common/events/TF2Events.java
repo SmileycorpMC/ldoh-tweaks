@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -211,7 +212,7 @@ public class TF2Events {
     }
 
     @SuppressWarnings({})
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         World world = event.getWorld();
         Entity entity = event.getEntity();
@@ -240,15 +241,17 @@ public class TF2Events {
                     };
                     merc.targetTasks.addTask(1, ai);
                     merc.targetTasks.addTask(2, new EntityAIHurtByTarget(merc, true));
-                    merc.targetTasks.addTask(3, new EntityAINearestChecked<EntityLivingBase>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
+                    merc.targetTasks.addTask(3, new EntityAINearestChecked<>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
                 } else {
                     merc.targetTasks.addTask(1, new EntityAIHurtByTarget(merc, true));
-                    merc.targetTasks.addTask(2, new EntityAINearestChecked<EntityLivingBase>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
+                    merc.targetTasks.addTask(2, new EntityAINearestChecked<>(merc, EntityLivingBase.class, true, false, e -> ModUtils.canTarget(merc, e), true, false));
                 }
-                if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
+                if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
                     ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
                     if (!tracker.isSpawned()) {
-                        if (entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
+                        ((EntityTF2Character)entity).onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), null);
+                        ((EntityTF2Character)entity).makeOffers();
+                        if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.HUNGER, null)) {
                             entity.getCapability(LDOHCapabilities.HUNGER, null).setFoodStack(new ItemStack(ItemListxlfoodmod.baguette, 8));
                         }
                         tracker.setSpawned(true);
@@ -269,16 +272,12 @@ public class TF2Events {
                     merc.getCapability(LDOHCapabilities.HUNGER, null).syncClients(merc);
                 if (merc.hasCapability(LDOHCapabilities.CURING, null))
                     merc.getCapability(LDOHCapabilities.CURING, null).syncClients(merc);
-                //if (entity.hasCapability(LDOHCapabilities.EXHAUSTION, null)) entity.getCapability(LDOHCapabilities.EXHAUSTION, null).syncClients(merc);
-
-                //give persistence to tf2 buildings
-            } else if (entity instanceof EntityBuilding) {
-                if (entity instanceof EntitySpy && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
-                    ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
-                    if (!tracker.isSpawned()) {
-                        ((EntityBuilding) entity).enablePersistence();
-                        tracker.setSpawned(true);
-                    }
+            //give persistence to tf2 buildings
+            } else if (entity instanceof EntityBuilding && entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
+                ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
+                if (!tracker.isSpawned()) {
+                    ((EntityBuilding) entity).enablePersistence();
+                    tracker.setSpawned(true);
                 }
             }
         }
