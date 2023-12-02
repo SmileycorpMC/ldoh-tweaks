@@ -1,9 +1,10 @@
 package net.smileycorp.ldoh.common.util;
 
 import com.Fishmod.mod_LavaCow.entities.IAggressive;
-import com.Fishmod.mod_LavaCow.entities.tameable.EntityFishTameable;
+import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.legacy.wasteland.world.WastelandWorld;
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.entity.DamageSourceProjectile;
@@ -16,14 +17,17 @@ import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -50,6 +54,7 @@ import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
+import net.smileycorp.ldoh.common.entity.ai.AINearestTargetLDOH;
 import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
@@ -57,10 +62,7 @@ import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -312,8 +314,19 @@ public class ModUtils {
         return new BlockPos(array[0], array[1], array[2]);
     }
 
-    public static boolean isTargetableAnimal(EntityAnimal entity) {
-        return !(entity instanceof IAggressive || entity instanceof EntityFishTameable || entity instanceof IMob);
+    public static boolean hasSelectors(Entity entity) {
+        if (!(entity instanceof EntityCreature)) return false;
+        if (entity instanceof EntityTF2Character || entity instanceof IEnemyMachine) return false;
+        if (entity instanceof EntityParasiteBase) return false;
+        return entity instanceof IMob || entity instanceof IAggressive;
+    }
+
+    public static void setTargetSelectors(EntityCreature entity) {
+        Set<EntityAITasks.EntityAITaskEntry> tasks = Sets.newHashSet(entity.targetTasks.taskEntries);
+        for (EntityAITasks.EntityAITaskEntry entry : tasks) entity.targetTasks.removeTask(entry.action);
+        entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, entity.getClass()));
+        entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, true));
+        entity.targetTasks.addTask(3, new AINearestTargetLDOH(entity));
     }
 
     public static String getPropertyString(Map<IProperty<?>, Comparable<?>> values) {
