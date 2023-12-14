@@ -1,17 +1,26 @@
 package net.smileycorp.ldoh.common.tile;
 
+import com.Fishmod.mod_LavaCow.enchantment.EnchantmentCorrosive;
+import com.Fishmod.mod_LavaCow.enchantment.EnchantmentPoisonous;
+import com.Fishmod.mod_LavaCow.init.ModEnchantments;
+import com.Fishmod.mod_LavaCow.init.ModMobEffects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentKnockback;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.damage.DamageSourceBarbedWire;
@@ -71,6 +80,12 @@ public class TileBarbedWire extends TileEntity {
                 }
                 if (enchant_map.containsKey(Enchantments.FIRE_ASPECT)) {
                     entity.setFire(enchant_map.get(Enchantments.FIRE_ASPECT) * 4);
+                }
+                if (enchant_map.containsKey(ModEnchantments.POISONOUS)) {
+                    entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 160, enchant_map.get(ModEnchantments.POISONOUS) - 1));
+                }
+                if (enchant_map.containsKey(ModEnchantments.CORROSIVE)) {
+                    entity.addPotionEffect(new PotionEffect(ModMobEffects.CORRODED, 80, enchant_map.get(ModEnchantments.CORROSIVE) - 1));
                 }
             }
         }
