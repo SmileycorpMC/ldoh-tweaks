@@ -360,11 +360,10 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
     }
 
     public boolean canTarget(EntityLivingBase entity) {
-        if (entity == null) return false;
+        if (entity == null || entity == this) return false;
         if (getDistance(entity) > getRange()) return false;
         if (isEnemy()) {
-            if (entity instanceof EntityPlayer)
-                return ((EntityPlayer) entity).isSpectator() || ((EntityPlayer) entity).isCreative() ? false : true;
+            if (entity instanceof EntityPlayer) return !(((EntityPlayer) entity).isCreative() || ((EntityPlayer) entity).isSpectator());
             if (entity instanceof EntityTF2Character && entity.getTeam() != null) {
                 if (!entity.getTeam().getName().equals("GREEN")) return true;
             }
