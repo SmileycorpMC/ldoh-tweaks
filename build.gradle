@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = '1.12.2-1.1.13'
+version = '1.12.2-1.1.13a'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 

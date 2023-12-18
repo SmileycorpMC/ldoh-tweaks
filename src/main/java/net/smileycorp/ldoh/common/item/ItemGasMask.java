@@ -14,7 +14,8 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 
 public class ItemGasMask extends ItemHat {
     
-    private static final ResourceLocation OVERLAY_TEXTURE = ModDefinitions.getResource("textures/misc/gas_mask.png");
+    private static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/misc/gas_mask.png");
+    private static final ResourceLocation CRACKED_TEXTURE = ModDefinitions.getResource("textures/misc/gas_mask_cracked.png");
 
     public ItemGasMask() {
         super("Gas_Mask");
@@ -29,7 +30,7 @@ public class ItemGasMask extends ItemHat {
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableAlpha();
-        mc.getTextureManager().bindTexture(OVERLAY_TEXTURE);
+        mc.getTextureManager().bindTexture(stack.getItemDamage() > stack.getMaxDamage() - 10 ? CRACKED_TEXTURE : TEXTURE);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);

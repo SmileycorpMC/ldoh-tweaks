@@ -15,7 +15,9 @@ import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
 import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -366,11 +368,10 @@ public class ModUtils {
     }
 
     public static boolean canUnburiedSpawn(World world, BlockPos pos) {
-        if (world.canBlockSeeSky(pos)) return false;
-        if (!DirectionUtils.isBrightnessAllowed(world, pos, 5, 0)) return false;
-        if (!world.isAirBlock(pos)) return false;
-        if (!world.isAirBlock(pos.up())) return false;
-        Block block = world.getBlockState(pos.down()).getBlock();
-        return block == Blocks.STONE || block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
+        if (world.canBlockSeeSky(pos) || world.getLightBrightness(pos) >= 0.4) return false;
+        IBlockState state = world.getBlockState(pos.down());
+        if (state == Blocks.STONE.getDefaultState()) return true;
+        Block block = state.getBlock();
+        return block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
     }
 }

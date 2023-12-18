@@ -66,7 +66,8 @@ public class SpawnerEvents {
             Random rand = world.rand;
             if (!world.isRemote) {
                 //spawn unburied when player is underground
-                if (player.hasCapability(LDOHCapabilities.UNBURIED_SPAWNER, null) && player.ticksExisted % 60 == 0) {
+                if (player.hasCapability(LDOHCapabilities.UNBURIED_SPAWNER, null) && player.isEntityAlive()
+                        &! player.isCreative() && player.ticksExisted % 60 == 0) {
                     IUnburiedSpawner spawner = player.getCapability(LDOHCapabilities.UNBURIED_SPAWNER, null);
                     int y = (int) Math.floor(player.getPosition().getY());
                     Chunk chunk = world.getChunkFromBlockCoords(player.getPosition());
@@ -76,8 +77,7 @@ public class SpawnerEvents {
                             Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
                             BlockPos pos = new BlockPos(player.posX + dir.x * (rand.nextInt(5) + 2), player.posY, player.posZ + dir.z * (rand.nextInt(5) + 2));
                             //check spawn location is valid
-                            if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down())
-                                    && DirectionUtils.isBrightnessAllowed(world, pos, 7, 0))) {
+                            if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()) && world.isBlockFullCube(pos.down()))) {
                                 for (int j = -5; j < 6; j++) {
                                     if (world.isAirBlock(pos.up(j)) && world.isAirBlock(pos.up(j + 1)) && world.isBlockFullCube(pos.up(j - 1))) {
                                         pos = pos.up(j);

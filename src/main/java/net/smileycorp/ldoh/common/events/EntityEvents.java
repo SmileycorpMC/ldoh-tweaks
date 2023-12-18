@@ -313,9 +313,9 @@ public class EntityEvents {
                 ItemStack helm = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
                 if (entity.ticksExisted % 35 == 0) {
                     //check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
-                    if (helm.getItem() == LDOHItems.GAS_MASK || helm.getItem() == LDOHItems.NANO_HELM && helm.getMetadata() < helm.getMaxDamage()) {
+                    if (helm.getItem() == LDOHItems.GAS_MASK || helm.getItem() == LDOHItems.NANO_HELM && helm.getItemDamage() < helm.getMaxDamage() - 1) {
                         helm.damageItem(1, entity);
-                        if (helm.getMetadata() == helm.getMaxDamage() && entity instanceof EntityPlayerMP) {
+                        if (helm.getItemDamage() == helm.getMaxDamage() - 10 && entity instanceof EntityPlayerMP) {
                             ((EntityPlayerMP) entity).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, entity.posX, entity.posY, entity.posZ, 1.0F, 1.0F));
                         }
                     } else {
