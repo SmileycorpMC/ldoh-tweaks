@@ -27,10 +27,14 @@ public class EntityInfPhoenixFire extends EntityInfPhoenix {
         return source.isFireDamage();
     }
 
+    @Override
+    protected int getIndex() {
+        return 3;
+    }
+
     public boolean attackEntityAsMob(Entity target) {
         target.setFire(5);
         return super.attackEntityAsMob(target);
     }
-
 
 }

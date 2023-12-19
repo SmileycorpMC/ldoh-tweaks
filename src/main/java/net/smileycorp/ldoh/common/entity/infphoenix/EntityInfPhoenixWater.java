@@ -19,5 +19,9 @@ public class EntityInfPhoenixWater extends EntityInfPhoenix {
         return source == DamageSource.DROWN;
     }
 
+    @Override
+    protected int getIndex() {
+        return 7;
+    }
 
 }

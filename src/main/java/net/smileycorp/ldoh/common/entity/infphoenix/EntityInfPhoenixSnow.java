@@ -38,5 +38,9 @@ public class EntityInfPhoenixSnow extends EntityInfPhoenix {
         return source == DamageSource.DROWN;
     }
 
+    @Override
+    protected int getIndex() {
+        return 5;
+    }
 
 }

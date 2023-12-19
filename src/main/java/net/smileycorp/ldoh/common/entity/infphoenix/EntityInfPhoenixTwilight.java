@@ -19,5 +19,9 @@ public class EntityInfPhoenixTwilight extends EntityInfPhoenix {
         return source == DamageSource.DROWN;
     }
 
+    @Override
+    protected int getIndex() {
+        return 6;
+    }
 
 }

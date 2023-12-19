@@ -25,4 +25,9 @@ public class EntityInfPhoenixDesert extends EntityInfPhoenix {
         return false;
     }
 
+    @Override
+    protected int getIndex() {
+        return 1;
+    }
+
 }

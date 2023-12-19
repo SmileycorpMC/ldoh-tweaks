@@ -170,8 +170,8 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     }
 
     @Override
-    public int getParasiteIDRegister() {
-        return 0;
+    public final int getParasiteIDRegister() {
+        return 100 + getIndex();
     }
 
     @Override
@@ -192,5 +192,7 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     public abstract String getName();
 
     protected abstract boolean isImmune(DamageSource source);
+
+    protected abstract int getIndex();
 
 }

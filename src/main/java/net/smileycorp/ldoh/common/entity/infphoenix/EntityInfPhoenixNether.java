@@ -26,5 +26,9 @@ public class EntityInfPhoenixNether extends EntityInfPhoenix {
         return source.isFireDamage();
     }
 
+    @Override
+    protected int getIndex() {
+        return 4;
+    }
 
 }

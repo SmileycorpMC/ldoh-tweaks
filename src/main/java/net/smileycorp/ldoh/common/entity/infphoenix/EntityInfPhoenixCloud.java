@@ -19,5 +19,10 @@ public class EntityInfPhoenixCloud extends EntityInfPhoenix {
         return source == DamageSource.DROWN;
     }
 
+    @Override
+    protected int getIndex() {
+        return 0;
+    }
+
 
 }

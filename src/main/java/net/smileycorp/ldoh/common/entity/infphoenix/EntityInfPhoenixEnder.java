@@ -252,4 +252,9 @@ public class EntityInfPhoenixEnder extends EntityInfPhoenix {
         return false;
     }
 
+    @Override
+    protected int getIndex() {
+        return 2;
+    }
+
 }
