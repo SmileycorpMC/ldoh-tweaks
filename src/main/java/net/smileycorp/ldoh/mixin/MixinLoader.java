@@ -7,8 +7,6 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModClassLoader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.smileycorp.ldoh.integration.iguanatweaks.mixin.MixinItemGun;
-import net.smileycorp.ldoh.integration.iguanatweaks.mixin.MixinModuleMovementRestriction;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,8 +40,6 @@ public class MixinLoader {
 			Field transformerField = Proxy.class.getDeclaredField("transformer");
 			transformerField.setAccessible(true);
 			IMixinTransformer transformer = (IMixinTransformer) transformerField.get(mixinProxy);
-			transformer.reload(MixinModuleMovementRestriction.class.getName(), new ClassNode(ASM.API_VERSION));
-			transformer.reload(MixinItemGun.class.getName(), new ClassNode(ASM.API_VERSION));
 			System.out.println("reloaded mixins");
 		} catch (ReflectiveOperationException e) {
 			throw new RuntimeException(e);

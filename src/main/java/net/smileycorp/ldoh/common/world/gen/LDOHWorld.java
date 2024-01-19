@@ -25,7 +25,7 @@ public class LDOHWorld {
 	public static final Biome SANDY_WASTELAND = new BiomeLDOHWasteland("Sandy_Wasteland", 0xBFB755,
 			BOPBlocks.dirt.getDefaultState().withProperty(BlockBOPDirt.VARIANT, BlockBOPDirt.BOPDirtType.SANDY));
 
-	//public static final Biome MUDDY_WASTELAND = new BiomeLDOHWasteland("Muddy_Wasteland", 0x6A7039, BOPBlocks.mud.getDefaultState());
+	public static final Biome MUDDY_WASTELAND = new BiomeLDOHWasteland("Muddy_Wasteland", 0x6A7039, BOPBlocks.mud.getDefaultState());
 
 	//badlands
 

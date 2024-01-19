@@ -43,7 +43,7 @@ public class GenLayerLDOHRareBiome extends GenLayer {
 
 			int size = type.getBiomes().size();
 			int i = seed;
-			return Biome.getIdForBiome(type.getBiomes().get((i % (size*chance)/size)));
+			return Biome.getIdForBiome(type.getBiomes().get(size % (i % (size*chance)/size)));
 	}
 
 }
