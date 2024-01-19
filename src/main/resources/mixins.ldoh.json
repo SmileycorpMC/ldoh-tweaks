@@ -7,9 +7,22 @@
   "mixins": [
     "MixinBlockPortal",
     "MixinBlockPumpkin",
+    "MixinEntity",
+    "MixinEntityFlying",
+    "MixinEntityHanging",
     "MixinEntityLiving",
     "MixinEntityLivingBase",
-    "MixinItem"
+    "MixinEntityZombie",
+    "MixinFlyingNodeProcessor",
+    "MixinItem",
+    "MixinPathNavigate",
+    "MixinPathNavigateFlying",
+    "MixinPathNavigateGround",
+    "MixinPathNavigateSwimmer",
+    "MixinRandomPositionGenerator",
+    "MixinSwimNodeProcessor",
+    "MixinWalkNodeProcessor",
+    "MixinWorld"
   ],
   "client": [
     "MixinBiome",

@@ -7,7 +7,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.smileycorp.atlas.api.entity.ai.EntityAIGoToPos;
+import pavocado.exoticbirds.entity.Birds.Phoenix.EntityPhoenix;
 import pavocado.exoticbirds.init.ExoticbirdsBlocks;
+import pavocado.exoticbirds.init.ExoticbirdsMod;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class AIBreakEgg extends EntityAIGoToPos {
 		if (ticksForCheck-- <= 0) {
 			ticksForCheck = 30;
 			return isValidTarget(pos) ? true : findTarget();
+			EntityPhoenix
 		}
 		return false;
 	}

@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.mixin;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityTameable;
@@ -8,14 +9,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import net.smileycorp.ldoh.common.world.BlockStateCache;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = EntityLivingBase.class)
@@ -48,6 +52,45 @@ public abstract class MixinEntityLivingBase extends Entity {
 
 	@Shadow
 	private long lastDamageStamp;
+
+	@Shadow
+	public abstract float getHealth();
+
+	@Shadow
+	protected abstract boolean canBlockDamageSource(DamageSource p_184583_1_);
+
+	@Shadow
+	protected abstract void damageShield(float p_184590_1_);
+
+	@Shadow
+	protected abstract void blockUsingShield(EntityLivingBase p_190629_1_);
+
+	@Shadow
+	public abstract void setRevengeTarget(EntityLivingBase p_70604_1_);
+
+	@Shadow
+	public abstract void knockBack(Entity p_70653_1_, float p_70653_2_, double p_70653_3_, double p_70653_5_);
+
+	@Shadow
+	protected abstract boolean checkTotemDeathProtection(DamageSource p_190628_1_);
+
+	@Shadow
+	public abstract void damageEntity(DamageSource p_70665_1_, float p_70665_2_);
+
+	@Shadow
+	protected abstract SoundEvent getDeathSound();
+
+	@Shadow
+	protected abstract float getSoundVolume();
+
+	@Shadow
+	protected abstract float getSoundPitch();
+
+	@Shadow
+	public abstract void onDeath(DamageSource p_70645_1_);
+
+	@Shadow
+	protected abstract void playHurtSound(DamageSource p_184581_1_);
 
 	@Inject(at=@At("HEAD"), method = "attackEntityFrom(Lnet/minecraft/util/DamageSource;F)Z", cancellable = true)
 	public void attackEntityFrom(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callback) {
@@ -161,43 +204,24 @@ public abstract class MixinEntityLivingBase extends Entity {
 		}
 	}
 
-	@Shadow
-	public abstract float getHealth();
+	@Redirect(method = "isOnLadder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/state/IBlockState;"))
+	public IBlockState isOnLadder$getBlockState(World world, BlockPos pos) {
+		return BlockStateCache.getBlockState(world, pos);
+	}
 
-	@Shadow
-	protected abstract boolean canBlockDamageSource(DamageSource p_184583_1_);
+	@Redirect(method = "canGoThroughtTrapDoorOnLadder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/state/IBlockState;"))
+	public IBlockState canGoThroughtTrapDoorOnLadder$getBlockState(World world, BlockPos pos) {
+		return BlockStateCache.getBlockState(world, pos);
+	}
 
-	@Shadow
-	protected abstract void damageShield(float p_184590_1_);
+	@Redirect(method = "fall", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/state/IBlockState;"))
+	public IBlockState fall$getBlockState(World world, BlockPos pos) {
+		return BlockStateCache.getBlockState(world, pos);
+	}
 
-	@Shadow
-	protected abstract void blockUsingShield(EntityLivingBase p_190629_1_);
-
-	@Shadow
-	public abstract void setRevengeTarget(EntityLivingBase p_70604_1_);
-
-	@Shadow
-	public abstract void knockBack(Entity p_70653_1_, float p_70653_2_, double p_70653_3_, double p_70653_5_);
-
-	@Shadow
-	protected abstract boolean checkTotemDeathProtection(DamageSource p_190628_1_);
-
-	@Shadow
-	public abstract void damageEntity(DamageSource p_70665_1_, float p_70665_2_);
-
-	@Shadow
-	protected abstract SoundEvent getDeathSound();
-
-	@Shadow
-	protected abstract float getSoundVolume();
-
-	@Shadow
-	protected abstract float getSoundPitch();
-
-	@Shadow
-	public abstract void onDeath(DamageSource p_70645_1_);
-
-	@Shadow
-	protected abstract void playHurtSound(DamageSource p_184581_1_);
+	@Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/state/IBlockState;"))
+	public IBlockState travel$getBlockState(World world, BlockPos pos) {
+		return BlockStateCache.getBlockState(world, pos);
+	}
 
 }

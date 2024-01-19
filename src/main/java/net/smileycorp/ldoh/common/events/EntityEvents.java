@@ -333,6 +333,7 @@ public class EntityEvents {
 					event.entity = new EntityCrawlingZombie(world);
 				}
 			}
+			event.entity.setAttackTarget(player);
 		}
 	}
 
