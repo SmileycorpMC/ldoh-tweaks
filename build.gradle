@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = '1.12.2-1.1.13b'
+version = '1.12.2-1.1.14'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 
@@ -101,8 +101,9 @@ dependencies {
 	implementation "curse.maven:tf2stuffreloaded-859794:4842921"
 	implementation "curse.maven:wasteland-284582:3573228"
 	implementation "curse.maven:xlfood-247217:2740774"
+	implementation "curse.maven:mutantbeasts-336272:3225395"
 	//needed to load scape and run parasites, as it blocks cursemaven
-	implementation files('libs/SRParasites-1.12.2v1.9.12.jar')
+	implementation files('libs/SRParasites-1.12.2v1.9.16.jar')
 	implementation files('libs/animania-1.12.2-base-2.0.3.28.jar')
 	implementation files('libs/animania-1.12.2-farm-1.0.2.28.jar')
 	implementation files('libs/animania-1.12.2-extra-1.0.2.28.jar')

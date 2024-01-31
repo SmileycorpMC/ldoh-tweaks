@@ -1,5 +1,11 @@
 package net.smileycorp.ldoh.common.capabilities;
 
+import chumbanotz.mutantbeasts.entity.mutant.MutantZombieEntity;
+import com.Fishmod.mod_LavaCow.entities.EntityFoglet;
+import com.Fishmod.mod_LavaCow.entities.EntityUndeadSwine;
+import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
+import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
+import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.*;
 import net.minecraft.entity.EntityLiving;
@@ -20,10 +26,7 @@ import net.smileycorp.hordes.hordeevent.HordeEventPacketHandler;
 import net.smileycorp.hordes.hordeevent.HordeSoundMessage;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.entity.ai.AIMiniRaid;
-import net.smileycorp.ldoh.common.entity.zombie.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.zombie.EntityZombieMechanic;
-import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
-import net.smileycorp.ldoh.common.entity.zombie.EntityZombieTechnician;
+import net.smileycorp.ldoh.common.entity.zombie.*;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.util.TF2Class;
 
@@ -33,16 +36,19 @@ import java.util.Random;
 
 public class MiniRaid implements IMiniRaid {
 
-    protected static final int[] times = {315000, 434000, 606000, 660000, 828000, 1094000, 1172000, 1373000, 1646000, 1756000, 1832000, 2130000};
-    protected static final RaidType[] types = {RaidType.ALLY, RaidType.ALLY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ALLY, RaidType.PARASITE, RaidType.ENEMY, RaidType.ALLY, RaidType.PARASITE};
+    protected static final int[] times = {315000, 434000, 606000, 660000, 828000, 1094000, 1172000, 1373000, 1646000, 1756000, 1832000, 2130000, 2226000, 2310000, 2350000, 2400000, 2406000, 2412000};
+    protected static final RaidType[] types = {RaidType.ALLY, RaidType.ALLY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ALLY, RaidType.PARASITE, RaidType.ZOMBIE, RaidType.ENEMY, RaidType.ALLY, RaidType.PARASITE, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.PARASITE, RaidType.PARASITE, RaidType.PARASITE};
 
     protected int phase = 0;
     protected int cooldown = 0;
+
+    protected boolean postGame;
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("phase", phase);
         nbt.setInteger("cooldown", cooldown);
+        nbt.setBoolean("postGame", postGame);
         return nbt;
     }
 
@@ -54,12 +60,22 @@ public class MiniRaid implements IMiniRaid {
         if (nbt.hasKey("cooldown")) {
             cooldown = nbt.getInteger("cooldown");
         }
+        if (nbt.hasKey("postGame")) {
+            cooldown = nbt.getInteger("postGame");
+        }
+    }
+
+    @Override
+    public void enablePostgame() {
+        postGame = true;
+        cooldown = new Random().nextInt(48000) + 6000;
     }
 
     @Override
     public boolean shouldSpawnRaid(EntityPlayer player) {
         if (cooldown > 0) cooldown--;
-        if (player == null || phase >= types.length) return false;
+        if (player == null || (phase >= types.length &! postGame)) return false;
+        if (postGame) return cooldown <= 0;
         if (player.world.getWorldTime() >= times[phase] && cooldown <= 0) return true;
         return false;
     }
@@ -76,7 +92,7 @@ public class MiniRaid implements IMiniRaid {
                     System.out.println("Raid type is none, " + player.getName() + " doesn't have a team, aborting raid.");
                 }
                 phase++;
-                cooldown = 6000;
+                cooldown = postGame ? world.rand.nextInt(48000) + 6000 : 6000;
             }
         }
     }
@@ -108,6 +124,7 @@ public class MiniRaid implements IMiniRaid {
 
 
     private RaidType getRaidType(EntityPlayer player) {
+        if (postGame) return RaidType.randomType(player, player.world.rand);
         RaidType type = types[phase];
         if (type == RaidType.ALLY || type == RaidType.ENEMY) {
             if (player.getTeam() == null) {
@@ -120,8 +137,8 @@ public class MiniRaid implements IMiniRaid {
     }
 
     private List<EntityLiving> buildList(World world, EntityPlayer player, RaidType type, int phase) {
-
         Random rand = world.rand;
+        boolean hardMode = phase > 8;
         List<EntityLiving> spawnlist = new ArrayList<EntityLiving>();
         switch (type) {
             case ALLY:
@@ -149,25 +166,42 @@ public class MiniRaid implements IMiniRaid {
             case PARASITE:
                 for (int i = 0; i < (phase + 1) * 0.5; i++) {
                     int r = rand.nextInt(7);
-                    if (r == 0) spawnlist.add(new EntityShyco(world));
-                    else if (r == 1) spawnlist.add(new EntityCanra(world));
-                    else if (r == 2) spawnlist.add(new EntityNogla(world));
-                    else if (r == 3) spawnlist.add(new EntityHull(world));
-                    else if (r == 4) spawnlist.add(new EntityEmana(world));
-                    else if (r == 5) spawnlist.add(new EntityBano(world));
-                    else if (r == 6) spawnlist.add(new EntityRanrac(world));
+                    if (r == 0) spawnlist.add(hardMode ? new EntityShycoAdapted(world) : new EntityShyco(world));
+                    else if (r == 1) spawnlist.add(hardMode ? new EntityCanraAdapted(world) : new EntityCanra(world));
+                    else if (r == 2) spawnlist.add(hardMode ? new EntityNoglaAdapted(world) : new EntityNogla(world));
+                    else if (r == 3) spawnlist.add(hardMode ? new EntityHullAdapted(world) : new EntityHull(world));
+                    else if (r == 4) spawnlist.add(hardMode ? new EntityEmanaAdapted(world) : new EntityEmana(world));
+                    else if (r == 5) spawnlist.add(hardMode ? new EntityBanoAdapted(world) : new EntityBano(world));
+                    else if (r == 6) spawnlist.add(hardMode ? new EntityRanracAdapted(world) : new EntityRanrac(world));
                 }
-                for (int i = 0; i < phase * 1.5; i++) spawnlist.add(new EntityInfHuman(world));
+                for (int i = 0; i < phase * 1.5; i++) spawnlist.add(hardMode ? new EntityFerHuman(world) : new EntityInfHuman(world));
                 break;
             case ZOMBIE:
-                spawnlist.add(new EntityZombieNurse(world));
-                for (int i = 0; i < (phase + 1); i++) {
-                    int r = rand.nextInt(3);
-                    if (r == 0) spawnlist.add(new EntitySwatZombie(world));
-                    else if (r == 1) spawnlist.add(new EntityZombieMechanic(world));
-                    else if (r == 2) spawnlist.add(new EntityZombieTechnician(world));
+                if (postGame) {
+                    for (int i = 0; i < (phase + 1); i++) {
+                        spawnlist.add(new EntityZombieNurse(world));
+                    }
+                } else {
+                    spawnlist.add(new EntityZombieNurse(world));
+                    if (hardMode) spawnlist.add(new EntityZombieNurse(world));
+                    for (int i = 0; i < (phase + 1); i++) {
+                        int r = rand.nextInt(3);
+                        if (r == 0) spawnlist.add(new EntitySwatZombie(world));
+                        else if (r == 1) spawnlist.add(new EntityZombieMechanic(world));
+                        else if (r == 2) spawnlist.add(new EntityZombieTechnician(world));
+                    }
                 }
-                for (int i = 0; i < (phase + 1) * 2.5; i++) spawnlist.add(new EntityZombie(world));
+                for (int i = 0; i < (phase + 1) * 2.5; i++) {
+                    if (hardMode) {
+                        int r = rand.nextInt(7);
+                        if (r == 0) spawnlist.add(new MutantZombieEntity(world));
+                        else if (r == 1) spawnlist.add(new EntityZombieMushroom(world));
+                        else if (r == 2) spawnlist.add(new EntityFoglet(world));
+                        else if (r == 3) spawnlist.add(new EntityUndeadSwine(world));
+                        else if (r == 5) spawnlist.add(new EntityZombieFireman(world));
+                        else spawnlist.add(new EntityZombie(world));
+                    } else spawnlist.add(new EntityZombie(world));
+                };
                 break;
             case NONE:
                 break;

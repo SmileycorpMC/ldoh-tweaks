@@ -4,7 +4,9 @@ import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIII;
+import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
+import com.dhanantry.scapeandrunparasites.entity.monster.pure.preeminent.EntityJinjo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -154,9 +156,8 @@ public class Apocalypse implements IApocalypse {
 
     private List<Class<? extends EntityParasiteBase>> getSpawnsForWave(Random rand) {
         List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<>();
-        if (rand.nextInt(5) < 2)
-            for (int i = 0; i < rand.nextInt(3) + 1; i++) spawnlist.addAll(adaptedtable.getResults(rand));
-        else for (int i = 0; i < rand.nextInt(7) + 3; i++) spawnlist.add(EntityButhol.class);
+        for (int i = 0; i < rand.nextInt(3) + 1; i++) spawnlist.addAll(adaptedtable.getResults(rand));
+        for (int i = 0; i < rand.nextInt(7) + 3; i++) spawnlist.add(rand.nextInt(3) == 0 ? EntityJinjo.class : EntityButhol.class);
         return spawnlist;
     }
 

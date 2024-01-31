@@ -168,7 +168,7 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return this.getParasiteStatus() != 0 ? SRPSounds.MOBSILENCE : SRPSounds.INFECTEDANIMAL_GROWL;
+        return this.getParasiteStatus() != 0 ? SRPSounds.MOBSILENCE : SRPSounds.INFECTEDWOLF_GROWL;
     }
 
     @Override
@@ -196,5 +196,10 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     protected abstract boolean isImmune(DamageSource source);
 
     protected abstract int getIndex();
+
+    @Override
+    public int canSpawnByIDData() {
+        return 100;
+    }
 
 }

@@ -367,6 +367,7 @@ public class ModUtils {
     }
 
     public static boolean canUnburiedSpawn(World world, BlockPos pos) {
+        if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()))) return false;
         if (world.canBlockSeeSky(pos) || world.getLightBrightness(pos) >= 0.4) return false;
         IBlockState state = world.getBlockState(pos.down());
         if (state == Blocks.STONE.getDefaultState()) return true;

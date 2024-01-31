@@ -6,6 +6,7 @@ import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
 import com.dhanantry.scapeandrunparasites.init.SRPPotions;
+import com.dhanantry.scapeandrunparasites.world.SRPSaveData;
 import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -335,8 +336,8 @@ public class EntityEvents {
     public void worldTick(TickEvent.WorldTickEvent event) {
         World world = event.world;
         if (world.isRemote || world.getWorldTime() < 1200000) return;
-        SRPWorldData parasite_data = SRPWorldData.get(world);
-        if (parasite_data == null || parasite_data.getEvolutionPhase() > -2) return;
+        SRPSaveData parasite_data = SRPSaveData.get(world);
+        if (parasite_data == null || parasite_data.getEvolutionPhase(0) > -2) return;
         parasite_data.setEvolutionPhase((byte) 0, true, world, true);
         parasite_data.markDirty();
     }

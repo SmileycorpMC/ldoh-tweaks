@@ -8,19 +8,23 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
+import java.util.Random;
+
 public interface IMiniRaid {
 
-    public boolean shouldSpawnRaid(EntityPlayer player);
+    void enablePostgame();
 
-    public void spawnRaid(EntityPlayer player);
+    boolean shouldSpawnRaid(EntityPlayer player);
 
-    public void spawnRaid(EntityPlayer player, RaidType type, int phase);
+    void spawnRaid(EntityPlayer player);
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt);
+    void spawnRaid(EntityPlayer player, RaidType type, int phase);
 
-    public void readFromNBT(NBTTagCompound nbt);
+    NBTTagCompound writeToNBT(NBTTagCompound nbt);
 
-    public static class Storage implements IStorage<IMiniRaid> {
+    void readFromNBT(NBTTagCompound nbt);
+
+    class Storage implements IStorage<IMiniRaid> {
 
         @Override
         public NBTBase writeNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side) {
@@ -37,7 +41,7 @@ public interface IMiniRaid {
 
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+    class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
         protected final IMiniRaid instance = new MiniRaid();
 
@@ -66,8 +70,16 @@ public interface IMiniRaid {
 
     }
 
-    public static enum RaidType {
+    enum RaidType {
         ZOMBIE, ENEMY, ALLY, PARASITE, NONE;
+
+        public static RaidType randomType(EntityPlayer player, Random rand) {
+            if (player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU")) {
+                if (rand.nextInt(3) == 0) return ALLY;
+                if (rand.nextInt(2) == 0) return ENEMY;
+            }
+            return rand.nextInt(2) == 0 ? PARASITE : ZOMBIE;
+        }
     }
 
 }
