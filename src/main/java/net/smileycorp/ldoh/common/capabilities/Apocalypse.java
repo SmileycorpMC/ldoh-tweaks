@@ -4,7 +4,6 @@ import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.ancient.EntityOronco;
 import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.nexus.EntityVenkrolSIII;
-import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.preeminent.EntityJinjo;
 import net.minecraft.entity.Entity;

@@ -181,8 +181,7 @@ public class SpawnerEvents {
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityButhol.class), 7);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityJinjo.class), 3);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityButhol.class), 10);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFlog.class), 5);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityDorpa.class), 1);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityHeed.class), 1);

@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common.util;
 
 import com.Fishmod.mod_LavaCow.entities.IAggressive;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
+import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -228,9 +229,8 @@ public class ModUtils {
 
     public static void spawnHorde(World world, BlockPos basepos, boolean isNatural) {
         Random rand = world.rand;
-        int day = Math.round(world.getWorldTime() / 24000);
-        int c = day >= 101 ? 20 : day >= 50 ? day - 40 : -1;
-        boolean isParasite = day >= 50 && rand.nextInt(100) <= c;
+        float day = (float)((double)world.getWorldTime() / 24000d);
+        boolean isParasite = day >= 50 && rand.nextFloat() <= (day >= 101 ? 0.2f : Math.exp((day - 50f) * 0.01f) - 0.7f);
         if (!isNatural || world.getSpawnPoint().getDistance(basepos.getX(), basepos.getY(), basepos.getZ()) >= 200) {
             for (int i = 0; i < getRandomSize(rand); i++) {
                 Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
@@ -240,7 +240,7 @@ public class ModUtils {
         }
     }
 
-    private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite, int day) {
+    private static void spawnMob(World world, Random rand, BlockPos basepos, BlockPos pos, boolean isParasite, float day) {
         pos = new BlockPos(pos.getX() + rand.nextFloat(), basepos.getY(), pos.getZ() + rand.nextFloat());
         for (int i = 0; i <= 7; i++) {
             if (world.isAirBlock(pos.up(i)) && world.isAirBlock(pos.up(i + 1))) {
@@ -252,7 +252,7 @@ public class ModUtils {
             }
             if (i == 7) return;
         }
-        EntityMob entity = isParasite ? new EntityInfHuman(world) : getEntity(world, rand, day, pos);
+        EntityMob entity = isParasite ? getParasite(world, rand, day) : getEntity(world, rand, pos);
         entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
         entity.enablePersistence();
         entity.onAddedToWorld();
@@ -260,12 +260,17 @@ public class ModUtils {
         world.spawnEntity(entity);
     }
 
+    private static EntityMob getParasite(World world, Random rand, float day) {
+        return day > 91 || rand.nextFloat() < Math.exp((day - 50f) * 0.02f) - 1.3f
+                ? new EntityFerHuman(world) : new EntityInfHuman(world);
+    }
+
     private static int getRandomSize(Random rand) {
         if (rand.nextInt(2) == 0) return rand.nextInt(5) + 15;
         return rand.nextInt(8) + 40;
     }
 
-    private static EntityMob getEntity(World world, Random rand, int day, BlockPos pos) {
+    private static EntityMob getEntity(World world, Random rand, BlockPos pos) {
         if (!ConfigHandler.legacySpawns) {
             if (rand.nextInt(7) == 0) {
                 return new EntityCrawlingZombie(world);

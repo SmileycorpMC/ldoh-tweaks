@@ -7,7 +7,6 @@ import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdap
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.EntityEmana;
 import com.dhanantry.scapeandrunparasites.init.SRPPotions;
 import com.dhanantry.scapeandrunparasites.world.SRPSaveData;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
