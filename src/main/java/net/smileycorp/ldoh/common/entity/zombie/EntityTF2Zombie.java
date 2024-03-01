@@ -11,6 +11,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
@@ -211,12 +213,10 @@ public class EntityTF2Zombie extends EntityZombie {
     @Override
     public String getName() {
         try {
-            if (hasCustomName()) {
-                return getCustomNameTag();
-            }
-            return I18n.translateToLocal("entity.Zombie.name") + " " + getTFClass().getLocalizedName();
+            if (hasCustomName()) return getCustomNameTag();
+            return new TextComponentTranslation("entity.Zombie.name").appendSibling(new TextComponentString(" ")).appendSibling(getTFClass().getLocalizedName()).getFormattedText();
         } catch (Exception e) {
-            return I18n.translateToLocal("entity." + ModDefinitions.MODID + ".TFZombie.name");
+            return new TextComponentTranslation("entity." + ModDefinitions.MODID + ".TFZombie.name").getFormattedText();
         }
     }
 

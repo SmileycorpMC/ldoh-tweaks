@@ -3,6 +3,7 @@ package net.smileycorp.ldoh.common;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.TextUtils;
@@ -52,9 +53,9 @@ public class ModMobEntry {
     //get the entities name
     public String getLocalisedName() {
         if (tfclass != null) {
-            return TextUtils.toProperCase(team) + " " + I18n.translateToLocal("entity.Zombie.name") + " " + tfclass.getLocalizedName();
+            return TextUtils.toProperCase(team) + " " + new TextComponentTranslation("entity.Zombie.name").getFormattedText() + " " + tfclass.getLocalizedName();
         } else {
-            return I18n.translateToLocal(unlocalisedName);
+            return new TextComponentTranslation(unlocalisedName).getFormattedText();
         }
     }
 

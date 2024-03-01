@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -147,7 +148,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 
     @Override
     public String getName() {
-        return isEnemy() ? I18n.translateToLocal("entity.ldoh.EnemyTurret.name") : super.getName();
+        return isEnemy() ? new TextComponentTranslation( "entity.ldoh.EnemyTurret.name").getFormattedText() : super.getName();
     }
 
     @Override
