@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.TextUtils;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;

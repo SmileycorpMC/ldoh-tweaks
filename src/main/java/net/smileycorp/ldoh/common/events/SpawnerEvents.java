@@ -10,7 +10,6 @@ import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityGanro;
-import com.dhanantry.scapeandrunparasites.entity.monster.pure.preeminent.EntityJinjo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

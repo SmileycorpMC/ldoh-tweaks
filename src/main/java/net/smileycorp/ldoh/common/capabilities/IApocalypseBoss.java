@@ -32,7 +32,7 @@ public interface IApocalypseBoss {
 
     }
 
-    public static class ApocalypseBoss implements IApocalypseBoss {
+    class ApocalypseBoss implements IApocalypseBoss {
 
         private EntityPlayer player;
 
@@ -59,7 +59,7 @@ public interface IApocalypseBoss {
         }
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+    class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
         protected final IApocalypseBoss instance = new ApocalypseBoss();
 

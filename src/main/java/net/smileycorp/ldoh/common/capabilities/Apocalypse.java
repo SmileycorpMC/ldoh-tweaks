@@ -172,6 +172,7 @@ public class Apocalypse implements IApocalypse {
             phase = 8;
             boss.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
             player.sendMessage(new TextComponentTranslation("message.ldoh.EventEnd"));
+            if (player.hasCapability(LDOHCapabilities.MINI_RAID, null)) player.getCapability(LDOHCapabilities.MINI_RAID, null).enablePostgame();
             boss = null;
             capability.setPlayer(null);
         }
