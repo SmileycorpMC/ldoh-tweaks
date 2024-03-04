@@ -9,9 +9,9 @@ import net.smileycorp.ldoh.client.entity.model.ModelCrawlingZombie;
 
 public class RenderCrawlingZombie extends RenderBiped<EntityZombie> {
 
-	public ResourceLocation texture;
+	private final String texture;
 
-	public RenderCrawlingZombie(RenderManager rendermanager, ResourceLocation texture)
+	public RenderCrawlingZombie(RenderManager rendermanager, String texture)
 	{
 		super(rendermanager, new ModelCrawlingZombie(), 0.5F);
 		this.texture = texture;
@@ -29,7 +29,7 @@ public class RenderCrawlingZombie extends RenderBiped<EntityZombie> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityZombie entity) {
-		return texture;
+		return new ResourceLocation("textures/entity/zombie/" + texture +".png");
 	}
 
 }

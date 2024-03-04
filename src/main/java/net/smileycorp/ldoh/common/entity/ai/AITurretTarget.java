@@ -4,27 +4,29 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.EntityAbstractTurret;
 
 public class AITurretTarget extends EntityAIBase {
 
-	protected final EntityTurret turret;
+	protected final EntityAbstractTurret turret;
 	protected float distance = 100;
 	protected EntityLivingBase target = null;
 
-	public AITurretTarget(EntityTurret turret) {
+	public AITurretTarget(EntityAbstractTurret turret) {
 		this.turret = turret;
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		return !turret.hasTarget();
+		return !turret.hasTarget() && turret.isActive();
 	}
 
 	@Override
 	public void updateTask() {
+		int range = turret.getRange();
 		for (EntityLivingBase entity : turret.world.getEntitiesWithinAABB(EntityLiving.class,
-				new AxisAlignedBB(turret.posX - 50, turret.posY - 50, turret.posZ - 50, turret.posX + 50, turret.posY + 50, turret.posZ + 50), (e) -> turret.canTarget(e))) {
+				new AxisAlignedBB(turret.posX - range, turret.posY - range, turret.posZ - range,
+						turret.posX + range, turret.posY + range, turret.posZ + range), turret::canTarget)) {
 			float distance = turret.getDistance(entity);
 			if (turret.getEntitySenses().canSee(entity) && distance < this.distance) {
 				target = entity;
@@ -34,7 +36,6 @@ public class AITurretTarget extends EntityAIBase {
 		if (target != null) {
 			turret.setTarget(target);
 			distance = 100;
-			return;
 		}
 	}
 

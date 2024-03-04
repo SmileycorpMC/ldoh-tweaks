@@ -1,21 +1,18 @@
 package net.smileycorp.ldoh.common.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -23,15 +20,11 @@ import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.ModMobEntry;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
-import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
-import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
-import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
-import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
+import net.smileycorp.ldoh.common.entity.*;
 import net.smileycorp.ldoh.common.util.EnumTFClass;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemSpawner extends Item implements IMetaItem {
 
@@ -118,14 +111,26 @@ public class ItemSpawner extends Item implements IMetaItem {
 			entries.add(new ModMobEntry(tfclass, 0x436C34, 0xEF0000, "RED"));
 			entries.add(new ModMobEntry(tfclass, 0x436C34, 0x0000E2, "BLU"));
 		}
-		entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.hundreddayz.CrawlingZombie.name" , 0x436C34, 0x720409));
-		entries.add(new ModMobEntry(EntityCrawlingHusk.class, "entity.hundreddayz.CrawlingHusk.name" , 0xA5926A, 0x720409));
-		entries.add(new ModMobEntry(EntityTF2Zombie.class, "entity.hundreddayz.TFZombie.name" , 0x436C34, 0xBA8644));
+		entries.add(new ModMobEntry(EntityCrawlingZombie.class, "entity.hundreddayz.CrawlingZombie.name" , 0x436C34, 0xBA8644));
+		entries.add(new ModMobEntry(EntityCrawlingHusk.class, "entity.hundreddayz.CrawlingHusk.name" , 0xA5926A, 0xBA8644));
+		entries.add(new ModMobEntry(EntityTF2Zombie.class, "entity.hundreddayz.TFZombie.name", 0x0000E2, 0xEF0000));
 		entries.add(new ModMobEntry(EntityZombieNurse.class, "entity.hundreddayz.NurseZombie.name", 0x436C34, 0xB5ABB4));
 		entries.add(new ModMobEntry(EntitySwatZombie.class, "entity.hundreddayz.SwatZombie.name", 0x436C34, 0x0C0C0D));
 		entries.add(new ModMobEntry(EntityZombieMechanic.class, "entity.hundreddayz.ZombieMechanic.name", 0x436C34, 0x394A6B));
 		entries.add(new ModMobEntry(EntityZombieTechnician.class, "entity.hundreddayz.ZombieTechnician.name", 0x436C34, 0xD4EB5C));
 		entries.add(new ModMobEntry(EntityZombieFireman.class, "entity.hundreddayz.ZombieFireman.name", 0x436C34, 0x20263B));
+		try {
+			NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"hordes:hordespawn\":\"\",\"hundreddayz:spawnprovider\":{isSpawned:1b}}, "
+					+ "PersistenceRequired:1b, Attributes:[{Base:1.006720000934601d, Name:\"generic.movementSpeed\"}],  "
+					+ "DeathLootTable:\""+ ModDefinitions.getResource("entities/library_zombie") +"\"}");
+			entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.LibraryZombie.name", 0x436C34, 0x00A5A5, libraryNBT));
+			NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"hordes:hordespawn\":\"\",\"hundreddayz:spawnprovider\":{isSpawned:1b}}, "
+					+ "PersistenceRequired:1b, Attributes:[{Base:1.006720000934601d, Name:\"generic.movementSpeed\"}],  "
+					+ "DeathLootTable:\""+ ModDefinitions.getResource("entities/hospital_zombie") +"\"}");
+			entries.add(new ModMobEntry(EntityZombie.class, "entity.hundreddayz.HospitalZombie.name", 0x436C34, 0x00A5A5, hospitalNBT));
+		} catch (NBTException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static ItemStack getEggFor(EntityLiving entity) {

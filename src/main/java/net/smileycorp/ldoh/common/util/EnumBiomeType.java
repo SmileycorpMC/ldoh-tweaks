@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.legacy.wasteland.world.WastelandWorld;
 
 import biomesoplenty.api.biome.BOPBiomes;
+
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
 import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
@@ -22,7 +23,7 @@ public enum EnumBiomeType {
 
 	private final Optional<Biome>[] biomes;
 
-	private EnumBiomeType(Optional<Biome>... biomes) {
+	EnumBiomeType(Optional<Biome>... biomes) {
 		this.biomes = biomes;
 	}
 

@@ -1,9 +1,6 @@
 package net.smileycorp.ldoh.common.world;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
+import biomesoplenty.api.block.BOPBlocks;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -11,7 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import biomesoplenty.api.block.BOPBlocks;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class WorldGenSurface extends WorldGenerator {
 

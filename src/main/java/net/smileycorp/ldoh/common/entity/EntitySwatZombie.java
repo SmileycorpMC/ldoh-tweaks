@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common.entity;
 
+import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -9,8 +10,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.item.LDOHItems;
-
-import com.mrcrayfish.guns.init.ModGuns;
 
 public class EntitySwatZombie extends EntityProfessionZombie {
 

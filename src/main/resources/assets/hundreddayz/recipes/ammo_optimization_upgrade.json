@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "hundreddayz:turret_upgrade",
+	"pattern" : [
+		" R ",
+		"BUI",
+		" R "
+	],
+    "key" : {
+		"B" : {
+    		 "item": "cgm:basic_ammo",
+			"data": 0
+        },
+		"U" : {
+            "item": "hundreddayz:turret_upgrade",
+			"data": 0
+        },
+		"I" : {
+    		 "item": "hundreddayz:incendiary_ammo",
+			"data": 0
+        },
+		"R" : {
+    		 "item": "minecraft:repeater",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "hundreddayz:turret_upgrade",
+        "count": 1,
+		"data": 2
+    }
+}

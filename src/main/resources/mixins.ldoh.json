@@ -5,10 +5,20 @@
   "refmap": "mixins.ldoh.refmap.json",
   "target": "@env(INIT)",
   "mixins": [
-    "MixinEntityLiving"
+    "MixinBlockPortal",
+    "MixinBlockPumpkin",
+    "MixinEntityLiving",
+    "MixinEntityLivingBase",
+    "MixinItem"
   ],
-  "client": [],
-  "server": [],
+  "client": [
+    "MixinBiome",
+    "MixinFMLCommonHandler",
+    "MixinRender"
+  ],
+  "server": [
+    "MixinWorldProviderEnd"
+  ],
    "injectors": {
     "maxShiftBy": 10
   }

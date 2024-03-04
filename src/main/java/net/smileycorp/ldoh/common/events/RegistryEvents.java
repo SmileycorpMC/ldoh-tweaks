@@ -1,14 +1,20 @@
 package net.smileycorp.ldoh.common.events;
 
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.Fishmod.mod_LavaCow.init.FishItems;
+import com.animania.addons.extra.common.handler.ExtraAddonItemHandler;
+import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
+import com.mrcrayfish.furniture.api.IRecipeRegistry;
+import com.mrcrayfish.furniture.api.RecipeType;
+import com.mrcrayfish.furniture.api.RecipeVariables;
+import de.maxhenkel.car.items.ModItems;
+import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
@@ -16,49 +22,28 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.smileycorp.atlas.api.block.FuelHandler;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingHusk;
-import net.smileycorp.ldoh.common.entity.EntityCrawlingZombie;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk0;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk1;
-import net.smileycorp.ldoh.common.entity.EntityDummyHusk2;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie0;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie1;
-import net.smileycorp.ldoh.common.entity.EntityDummyZombie2;
-import net.smileycorp.ldoh.common.entity.EntityIncendiaryProjectile;
-import net.smileycorp.ldoh.common.entity.EntityLDOHArchitect;
-import net.smileycorp.ldoh.common.entity.EntityLDOHTradesman;
-import net.smileycorp.ldoh.common.entity.EntitySwatZombie;
-import net.smileycorp.ldoh.common.entity.EntityTF2Zombie;
-import net.smileycorp.ldoh.common.entity.EntityTurret;
-import net.smileycorp.ldoh.common.entity.EntityZombieFireman;
-import net.smileycorp.ldoh.common.entity.EntityZombieMechanic;
-import net.smileycorp.ldoh.common.entity.EntityZombieNurse;
-import net.smileycorp.ldoh.common.entity.EntityZombieTechnician;
-import net.smileycorp.ldoh.common.item.ItemBarbedWire;
-import net.smileycorp.ldoh.common.item.ItemBlockLDOH;
-import net.smileycorp.ldoh.common.item.ItemBlockTooltip;
-import net.smileycorp.ldoh.common.item.ItemTurret;
-import net.smileycorp.ldoh.common.item.LDOHItems;
-import net.smileycorp.ldoh.common.tile.TileBarbedWire;
-import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
-import net.smileycorp.ldoh.common.tile.TileLandmine;
-import net.smileycorp.ldoh.common.tile.TileTurret;
+import net.smileycorp.ldoh.common.entity.*;
+import net.smileycorp.ldoh.common.item.*;
+import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
-
-import com.Fishmod.mod_LavaCow.init.FishItems;
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = ModDefinitions.MODID)
 public class RegistryEvents {
 
-	public static final Set<Item> ITEMS = new HashSet<Item>();
-	public static final Set<Block> BLOCKS = new HashSet<Block>();
-	public static final Set<Biome> BIOMES = new HashSet<Biome>();
+	public static final Set<Item> ITEMS = new HashSet<>();
+	public static final Set<Block> BLOCKS = new HashSet<>();
+	public static final Set<Biome> BIOMES = new HashSet<>();
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -74,10 +59,11 @@ public class RegistryEvents {
 		registerItem(registry, new ItemBarbedWire());
 		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.LANDMINE, 2));
 		registerItem(registry, new ItemTurret());
+		registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
 		registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
 	}
 
-	private static void registerItem(IForgeRegistry<Item> registry, Item item) {
+	public static void registerItem(IForgeRegistry<Item> registry, Item item) {
 		registry.register(item);
 		ITEMS.add(item);
 	}
@@ -98,6 +84,7 @@ public class RegistryEvents {
 		GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
 		GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
 		GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
+		GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("filing_cabinet"));
 	}
 
 	@SubscribeEvent
@@ -116,11 +103,39 @@ public class RegistryEvents {
 
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+		for (ItemStack egg : OreDictionary.getOres("egg")) GameRegistry.addSmelting(egg, new ItemStack(ItemListxlfoodmod.fried_egg), 0.1f);
 		GameRegistry.addSmelting(new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 0), 0.1f);
 		GameRegistry.addSmelting(new ItemStack(Blocks.SOUL_SAND), new ItemStack(Items.QUARTZ, 1, 0), 0.1f);
+		FuelHandler.getInstance().registerFuel(ModItems.RAPECAKE, 50);
 		OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
 		OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
 		OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
+	}
+
+	public static void registerCFMRecipes(IRecipeRegistry registry) {
+		//add cfm repairing compatability
+		for (Item item : ForgeRegistries.ITEMS) {
+			if (item.getRegistryName().getResourceDomain().equals("minecraft") |! item.isDamageable()) return;
+			if (item.getEquipmentSlot(new ItemStack(item)) != null)
+				registry.registerRecipe(RecipeType.WASHING_MACHINE, new RecipeVariables().setInput(new ItemStack(item)));
+			else registry.registerRecipe(RecipeType.DISHWASHER, new RecipeVariables().setInput(new ItemStack(item)));
+			if (item instanceof ItemFood && FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item)).getItem() instanceof ItemFood) {
+				registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(item))
+						.setOutput(FurnaceRecipes.instance().getSmeltingResult(new ItemStack(item))));
+			}
+		}
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(Items.PORKCHOP))
+				.setInput(new ItemStack(Items.COOKED_PORKCHOP)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(ExtraAddonItemHandler.rawFrogLegs))
+				.setInput(new ItemStack(ExtraAddonItemHandler.cookedFrogLegs)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBacon))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeBacon)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeBeef))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeBeef)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimeSteak))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimeSteak)));
+		registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(FarmAddonItemHandler.rawPrimePork))
+				.setInput(new ItemStack(FarmAddonItemHandler.cookedPrimePork)));
 	}
 
 	@SubscribeEvent
@@ -180,14 +195,6 @@ public class RegistryEvents {
 				.id(ModDefinitions.getResource("zombie_technician"), ID++)
 				.name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build();
 		registry.register(ZOMBIE_TECHNICIAN);
-		EntityEntry ARCHITECT = EntityEntryBuilder.create().entity(EntityLDOHArchitect.class)
-				.id(ModDefinitions.getResource("architect"), ID++)
-				.name("villager.architect").tracker(80, 3, true).build();
-		registry.register(ARCHITECT);
-		EntityEntry TRADESMAN = EntityEntryBuilder.create().entity(EntityLDOHTradesman.class)
-				.id(ModDefinitions.getResource("tradesman"), ID++)
-				.name("villager.tradesman").tracker(80, 3, true).build();
-		registry.register(TRADESMAN);
 		EntityEntry TURRET = EntityEntryBuilder.create().entity(EntityTurret.class)
 				.id(ModDefinitions.getResource("turret"), ID++)
 				.name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build();

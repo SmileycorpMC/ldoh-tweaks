@@ -15,8 +15,6 @@ public class ModelCrawlingZombie extends ModelBiped {
         super(modelSize, 0.0F, 64, p_i1168_2_ ? 32 : 64);
         textureWidth = 64;
         textureHeight = 64;
-        textureWidth = 64;
-        textureHeight = 64;
         bipedLeftArm = new ModelRenderer(this, 40, 16);
         bipedLeftArm.setRotationPoint(-5.0F, 20.0F, 0.0F);
         bipedLeftArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
@@ -52,6 +50,7 @@ public class ModelCrawlingZombie extends ModelBiped {
 	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
         this.bipedHead.rotateAngleY = netHeadYaw * 0.017453292F;
         this.bipedHead.rotateAngleX = headPitch * 0.017453292F;
+        //animate crawler movement animation
         float f = MathHelper.sin(limbSwing)*0.2f;
         this.bipedRightArm.rotateAngleX = f -1.2566370614359172F;
         this.bipedLeftArm.rotateAngleX = -f -1.2566370614359172F;

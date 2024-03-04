@@ -12,33 +12,39 @@ public class ContainerTurret extends Container {
 
 	protected EntityTurret turret;
 	protected World world;
-	protected InventoryTurret inv;
+	protected InventoryTurretAmmo inv;
+	protected InventoryTurretUpgrades upgradeInv;
 	protected InventoryPlayer playerInv;
 
-	public ContainerTurret(EntityTurret turret, EntityPlayer player){
+	public ContainerTurret(EntityTurret turret, EntityPlayer player) {
 		this.turret = turret;
 		world = turret.world;
 		inv = turret.getInventory();
+		upgradeInv = turret.getUpgradeInventory();
 		playerInv = player.inventory;
+		//turret upgrades
+		for (int i = 0; i< upgradeInv.getSizeInventory(); i++) {
+			addSlotToContainer(new UpgradeSlot(upgradeInv, i, 116 + i*18, 13));
+		}
 		//turret inventory
 		for (int i = 0; i< inv.getSizeInventory(); i++) {
-			addSlotToContainer(new AmmoSlot(turret.getInventory(), i, 8 + i*18, 67));
+			addSlotToContainer(new AmmoSlot(inv, i, 8 + i*18, 85));
 		}
 		//player inventory
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
-				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 97 + i * 18));
+				addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 115 + i * 18));
 			}
 		}
 		//hotbar
 		for (int k = 0; k < 9; ++k) {
-			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 155));
+			addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 173));
 		}
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return turret.isSameTeam(player);
+		return player.isCreative() || turret.isSameTeam(player);
 	}
 
 	@Override

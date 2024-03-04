@@ -1,9 +1,5 @@
 package net.smileycorp.ldoh.common.entity;
 
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.MobEffects;
@@ -21,9 +17,13 @@ import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Set;
+
 public class EntityZombieNurse extends EntityZombie {
 
-	private Set<WeakReference<EntityZombie>> healTargets = new HashSet<WeakReference<EntityZombie>>();
+	private Set<WeakReference<EntityZombie>> healTargets = new HashSet<>();
 
 	public EntityZombieNurse(World world) {
 		super(world);
@@ -55,9 +55,9 @@ public class EntityZombieNurse extends EntityZombie {
 			for (EntityZombie entity : world.getEntitiesWithinAABB(EntityZombie.class, getEntityBoundingBox().grow(7), (e) -> e!=this)) {
 				if (entity.getHealth() < entity.getMaxHealth() && getDistance(entity)<=6) {
 					if (world.isRemote) {
-						if (!healTargets.contains(entity)) healTargets.add(new WeakReference<EntityZombie>(entity));
+						if (!healTargets.contains(new WeakReference<>(entity))) healTargets.add(new WeakReference<>(entity));
 						if (entity.getHealth() >= entity.getMaxHealth()) {
-							healTargets.remove(entity);
+							healTargets.remove(new WeakReference<>(entity));
 						}
 						for (int i = 0; i < 6; ++i) {
 							world.spawnParticle(EnumParticleTypes.HEART, entity.posX + (rand.nextDouble() - 0.5D) * entity.width,
