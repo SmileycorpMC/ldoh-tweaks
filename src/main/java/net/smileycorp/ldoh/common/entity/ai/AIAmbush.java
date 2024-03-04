@@ -7,9 +7,9 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 
 import java.util.concurrent.TimeUnit;
 
-public class AIMiniRaid extends EntityAIGoToEntityPos {
+public class AIAmbush extends EntityAIGoToEntityPos {
 
-    public AIMiniRaid(EntityLiving entity, Entity target) {
+    public AIAmbush(EntityLiving entity, Entity target) {
         super(entity, target);
     }
 

@@ -1,13 +1,16 @@
 package net.smileycorp.ldoh.common.capabilities;
 
 import chumbanotz.mutantbeasts.entity.mutant.MutantZombieEntity;
-import com.Fishmod.mod_LavaCow.entities.EntityFoglet;
-import com.Fishmod.mod_LavaCow.entities.EntityUndeadSwine;
-import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
+import com.Fishmod.mod_LavaCow.entities.*;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityPtera;
+import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntitySalamander;
+import com.Fishmod.mod_LavaCow.entities.tameable.EntityWeta;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.primitive.*;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,25 +22,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.Hordes;
 import net.smileycorp.hordes.hordeevent.HordeEventPacketHandler;
 import net.smileycorp.hordes.hordeevent.HordeSoundMessage;
 import net.smileycorp.ldoh.common.ModDefinitions;
-import net.smileycorp.ldoh.common.entity.ai.AIMiniRaid;
+import net.smileycorp.ldoh.common.entity.ai.AIAmbush;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.util.TF2Class;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MiniRaid implements IMiniRaid {
+public class AmbushEvent implements IAmbushEvent {
 
     protected static final int[] times = {315000, 434000, 606000, 660000, 828000, 1094000, 1172000, 1373000, 1646000, 1756000, 1832000, 2130000, 2226000, 2310000, 2350000, 2400000, 2406000, 2412000};
-    protected static final RaidType[] types = {RaidType.ALLY, RaidType.ALLY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.ALLY, RaidType.ALLY, RaidType.PARASITE, RaidType.ZOMBIE, RaidType.ENEMY, RaidType.ALLY, RaidType.PARASITE, RaidType.ENEMY, RaidType.ZOMBIE, RaidType.PARASITE, RaidType.PARASITE, RaidType.PARASITE};
+    protected static final Type[] types = {Type.ALLY, Type.ALLY, Type.ZOMBIE, Type.ALLY, Type.ENEMY, Type.ZOMBIE, Type.ALLY, Type.ALLY, Type.PARASITE, Type.ZOMBIE, Type.ENEMY, Type.ALLY, Type.PARASITE, Type.ENEMY, Type.ZOMBIE, Type.PARASITE, Type.PARASITE, Type.PARASITE};
 
     protected int phase = 0;
     protected int cooldown = 0;
@@ -72,7 +73,7 @@ public class MiniRaid implements IMiniRaid {
     }
 
     @Override
-    public boolean shouldSpawnRaid(EntityPlayer player) {
+    public boolean shouldSpawn(EntityPlayer player) {
         if (cooldown > 0) cooldown--;
         if (player == null || (phase >= types.length &! postGame)) return false;
         if (postGame) return cooldown <= 0;
@@ -81,13 +82,13 @@ public class MiniRaid implements IMiniRaid {
     }
 
     @Override
-    public void spawnRaid(EntityPlayer player) {
+    public void spawnAmbush(EntityPlayer player) {
         if (player != null) {
             World world = player.world;
             if (!world.isRemote) {
-                RaidType type = getRaidType(player);
-                if (type != RaidType.NONE) {
-                    spawnRaid(player, type, phase);
+                Type type = getType(player);
+                if (type != Type.NONE) {
+                    spawnAmbush(player, type, phase);
                 } else {
                     System.out.println("Raid type is none, " + player.getName() + " doesn't have a team, aborting raid.");
                 }
@@ -98,7 +99,7 @@ public class MiniRaid implements IMiniRaid {
     }
 
     @Override
-    public void spawnRaid(EntityPlayer player, RaidType type, int phase) {
+    public void spawnAmbush(EntityPlayer player, Type type, int phase) {
         if (player != null) {
             World world = player.world;
             if (!world.isRemote) {
@@ -108,14 +109,14 @@ public class MiniRaid implements IMiniRaid {
                 for (EntityLiving entity : buildList(world, player, type, phase)) {
                     double x = pos.getX() + (rand.nextFloat() * 2) - 1;
                     double z = pos.getZ() + (rand.nextFloat() * 2) - 1;
-                    int y = ((WorldServer) world).getHeight(new BlockPos(x, 0, z)).getY();
+                    int y = world.getHeight((int) x, (int) z);
                     entity.setPosition(x + rand.nextFloat(), y, z + rand.nextFloat());
                     entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
                     entity.enablePersistence();
                     world.spawnEntity(entity);
-                    if (type == RaidType.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
-                    else if (type == RaidType.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
-                    entity.tasks.addTask(1, new AIMiniRaid(entity, player));
+                    if (type == Type.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
+                    else if (type == Type.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
+                    entity.tasks.addTask(1, new AIAmbush(entity, player));
                 }
                 HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
             }
@@ -123,23 +124,23 @@ public class MiniRaid implements IMiniRaid {
     }
 
 
-    private RaidType getRaidType(EntityPlayer player) {
-        if (postGame) return RaidType.randomType(player, player.world.rand);
-        RaidType type = types[phase];
-        if (type == RaidType.ALLY || type == RaidType.ENEMY) {
+    private Type getType(EntityPlayer player) {
+        if (postGame) return Type.randomType(player, player.world.rand);
+        Type type = types[phase];
+        if (type == Type.ALLY || type == Type.ENEMY) {
             if (player.getTeam() == null) {
-                return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
+                return type == Type.ALLY ? Type.NONE : phase < 8 ? Type.ZOMBIE : Type.PARASITE;
             } else if (!(player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU"))) {
-                return type == RaidType.ALLY ? RaidType.NONE : phase < 8 ? RaidType.ZOMBIE : RaidType.PARASITE;
+                return type == Type.ALLY ? Type.NONE : phase < 8 ? Type.ZOMBIE : Type.PARASITE;
             }
         }
         return type;
     }
 
-    private List<EntityLiving> buildList(World world, EntityPlayer player, RaidType type, int phase) {
+    private List<EntityLiving> buildList(World world, EntityPlayer player, Type type, int phase) {
         Random rand = world.rand;
-        boolean hardMode = phase > 8;
-        List<EntityLiving> spawnlist = new ArrayList<EntityLiving>();
+        boolean hardMode = postGame || phase > 12;
+        List<EntityLiving> spawnlist = Lists.newArrayList();
         switch (type) {
             case ALLY:
                 for (int i = 0; i < (phase + 1) * 2.5; i++)
@@ -193,7 +194,7 @@ public class MiniRaid implements IMiniRaid {
                 }
                 for (int i = 0; i < (phase + 1) * 2.5; i++) {
                     if (hardMode) {
-                        int r = rand.nextInt(7);
+                        int r = rand.nextInt(9);
                         if (r == 0) spawnlist.add(new MutantZombieEntity(world));
                         else if (r == 1) spawnlist.add(new EntityZombieMushroom(world));
                         else if (r == 2) spawnlist.add(new EntityFoglet(world));
@@ -203,15 +204,29 @@ public class MiniRaid implements IMiniRaid {
                     } else spawnlist.add(new EntityZombie(world));
                 };
                 break;
+            case MUTANT:
+                for (int i = 0; i < (phase + 1) * 2.5; i++) {
+                    int r = rand.nextInt(15);
+                    if (r < 2) spawnlist.add(new EntityVespa(world));
+                    else if (r < 6) spawnlist.add(new EntityPtera(world));
+                    else if (r == 7) spawnlist.add(new EntitySalamander(world));
+                    else if (r == 8) spawnlist.add(new EntitySludgeLord(world));
+                    else if (r == 9) spawnlist.add(new EntityBoneWorm(world));
+                    else if (r == 10) spawnlist.add(new EntityWendigo(world));
+                    else if (r == 11) spawnlist.add(new EntityBanshee(world));
+                    else if (r == 12) spawnlist.add(new EntityAvaton(world));
+                    else spawnlist.add(new EntityWeta(world));
+                };
+                break;
             case NONE:
                 break;
         }
         return spawnlist;
     }
 
-    private ResourceLocation getSound(RaidType type) {
-        if (type == RaidType.ALLY) return ModDefinitions.TF_ALLY_SOUND;
-        if (type == RaidType.ENEMY) return ModDefinitions.TF_ENEMY_SOUND;
+    private ResourceLocation getSound(Type type) {
+        if (type == Type.ALLY) return ModDefinitions.TF_ALLY_SOUND;
+        if (type == Type.ENEMY) return ModDefinitions.TF_ENEMY_SOUND;
         return Hordes.HORDE_SOUND;
     }
 

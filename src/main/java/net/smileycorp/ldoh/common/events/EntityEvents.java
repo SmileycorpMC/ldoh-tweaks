@@ -200,8 +200,8 @@ public class EntityEvents {
             //replace zombies with vespas if they are in a sky base
             if (player.getPosition().getY() - event.pos.getY() > 30) {
                 if (entity instanceof EntityParasiteBase)
-                    entity = (event.getDay() >= 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
-                else entity = new EntityVespa(world);
+                    event.entity = (event.getDay() >= 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
+                else event.entity = new EntityVespa(world);
                 //give the vespas the ability to break blocks
                 if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
                     event.entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);

@@ -14,8 +14,8 @@ public class LDOHCapabilities {
     @CapabilityInject(IUnburiedSpawner.class)
     public final static Capability<IUnburiedSpawner> UNBURIED_SPAWNER = null;
 
-    @CapabilityInject(IMiniRaid.class)
-    public final static Capability<IMiniRaid> MINI_RAID = null;
+    @CapabilityInject(IAmbushEvent.class)
+    public final static Capability<IAmbushEvent> AMBUSH = null;
 
     @CapabilityInject(IHunger.class)
     public final static Capability<IHunger> HUNGER = null;

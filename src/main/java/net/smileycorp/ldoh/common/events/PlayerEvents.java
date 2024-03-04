@@ -37,7 +37,7 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
-import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
+import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
@@ -127,9 +127,9 @@ public class PlayerEvents {
         EntityPlayer player = event.getEntityPlayer();
         EntityPlayer original = event.getOriginal();
         if (player != null && original != null & !(player instanceof FakePlayer || original instanceof FakePlayer)) {
-            if (player.hasCapability(LDOHCapabilities.MINI_RAID, null) && original.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
-                IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
-                raid.readFromNBT(original.getCapability(LDOHCapabilities.MINI_RAID, null).writeToNBT(new NBTTagCompound()));
+            if (player.hasCapability(LDOHCapabilities.AMBUSH, null) && original.hasCapability(LDOHCapabilities.AMBUSH, null)) {
+                IAmbushEvent raid = player.getCapability(LDOHCapabilities.AMBUSH, null);
+                raid.readFromNBT(original.getCapability(LDOHCapabilities.AMBUSH, null).writeToNBT(new NBTTagCompound()));
             }
             if (player.hasCapability(LDOHCapabilities.APOCALYPSE, null) && original.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
                 IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);

@@ -25,10 +25,10 @@ message.ldoh.FilingCabinet=%1$s/%2$s %3$s
 
 commands.ldoh.StartBossEvent.usage=/startBossEvent
 commands.ldoh.StartBossEvent.success=Bosses have been spawned, the event has now started
-commands.ldoh.SpawnRaid.usage=/spawnRaid <raid type> <level>
-commands.ldoh.SpawnRaid.success=Successfully spawned %1$s raid.
-commands.ldoh.SpawnRaid.invalidValue=%1$s is an invalid parameter for /spawnRaid
-commands.ldoh.SpawnRaid.teamFail=you must be on the RED or BLU team to spawn a %1$s raid.
+commands.ldoh.SpawnAmbush.usage=/spawnAmbush <raid type> <level>
+commands.ldoh.SpawnAmbush.success=Successfully spawned %1$s ambush.
+commands.ldoh.SpawnAmbush.invalidValue=%1$s is an invalid parameter for /spawnAmbush
+commands.ldoh.SpawnAmbush.teamFail=you must be on the RED or BLU team to spawn an %1$s ambush.
 
 itemGroup.ldoh.ldohTab=LDoH Tweaks
 

@@ -10,31 +10,31 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import java.util.Random;
 
-public interface IMiniRaid {
+public interface IAmbushEvent {
 
     void enablePostgame();
 
-    boolean shouldSpawnRaid(EntityPlayer player);
+    boolean shouldSpawn(EntityPlayer player);
 
-    void spawnRaid(EntityPlayer player);
+    void spawnAmbush(EntityPlayer player);
 
-    void spawnRaid(EntityPlayer player, RaidType type, int phase);
+    void spawnAmbush(EntityPlayer player, Type type, int phase);
 
     NBTTagCompound writeToNBT(NBTTagCompound nbt);
 
     void readFromNBT(NBTTagCompound nbt);
 
-    class Storage implements IStorage<IMiniRaid> {
+    class Storage implements IStorage<IAmbushEvent> {
 
         @Override
-        public NBTBase writeNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side) {
+        public NBTBase writeNBT(Capability<IAmbushEvent> capability, IAmbushEvent instance, EnumFacing side) {
             NBTTagCompound nbt = new NBTTagCompound();
             instance.writeToNBT(nbt);
             return nbt;
         }
 
         @Override
-        public void readNBT(Capability<IMiniRaid> capability, IMiniRaid instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<IAmbushEvent> capability, IAmbushEvent instance, EnumFacing side, NBTBase nbt) {
             instance.readFromNBT((NBTTagCompound) nbt);
         }
 
@@ -43,42 +43,42 @@ public interface IMiniRaid {
 
     class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-        protected final IMiniRaid instance = new MiniRaid();
+        protected final IAmbushEvent instance = new AmbushEvent();
 
         public Provider() {
         }
 
         @Override
         public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-            return capability == LDOHCapabilities.MINI_RAID;
+            return capability == LDOHCapabilities.AMBUSH;
         }
 
         @Override
         public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-            return capability == LDOHCapabilities.MINI_RAID ? LDOHCapabilities.MINI_RAID.cast(instance) : null;
+            return capability == LDOHCapabilities.AMBUSH ? LDOHCapabilities.AMBUSH.cast(instance) : null;
         }
 
         @Override
         public NBTTagCompound serializeNBT() {
-            return (NBTTagCompound) LDOHCapabilities.MINI_RAID.getStorage().writeNBT(LDOHCapabilities.MINI_RAID, instance, null);
+            return (NBTTagCompound) LDOHCapabilities.AMBUSH.getStorage().writeNBT(LDOHCapabilities.AMBUSH, instance, null);
         }
 
         @Override
         public void deserializeNBT(NBTTagCompound nbt) {
-            LDOHCapabilities.MINI_RAID.getStorage().readNBT(LDOHCapabilities.MINI_RAID, instance, null, nbt);
+            LDOHCapabilities.AMBUSH.getStorage().readNBT(LDOHCapabilities.AMBUSH, instance, null, nbt);
         }
 
     }
 
-    enum RaidType {
-        ZOMBIE, ENEMY, ALLY, PARASITE, NONE;
+    enum Type {
+        ZOMBIE, ENEMY, ALLY, PARASITE, MUTANT, NONE;
 
-        public static RaidType randomType(EntityPlayer player, Random rand) {
+        public static Type randomType(EntityPlayer player, Random rand) {
             if (player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU")) {
                 if (rand.nextInt(3) == 0) return ALLY;
-                if (rand.nextInt(2) == 0) return ENEMY;
+                if (rand.nextInt(4) == 0) return ENEMY;
             }
-            return rand.nextInt(2) == 0 ? PARASITE : ZOMBIE;
+            return rand.nextInt(3) == 0 ? PARASITE : rand.nextInt(2) == 0 ? ZOMBIE : MUTANT;
         }
     }
 

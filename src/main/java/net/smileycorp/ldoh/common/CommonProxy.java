@@ -38,7 +38,7 @@ import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner.UnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.IVillageData.VillageData;
 import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandHandDebug;
-import net.smileycorp.ldoh.common.command.CommandSpawnRaid;
+import net.smileycorp.ldoh.common.command.CommandSpawnAmbush;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.zombie.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.events.*;
@@ -108,7 +108,7 @@ public class CommonProxy {
         CapabilityManager.INSTANCE.register(ISpawnTracker.class, new ISpawnTracker.Storage(), SpawnTracker::new);
         CapabilityManager.INSTANCE.register(IBreakBlocks.class, new IBreakBlocks.Storage(), () -> new BreakBlocks(null));
         CapabilityManager.INSTANCE.register(IUnburiedSpawner.class, new IUnburiedSpawner.Storage(), () -> new UnburiedSpawner(null));
-        CapabilityManager.INSTANCE.register(IMiniRaid.class, new IMiniRaid.Storage(), MiniRaid::new);
+        CapabilityManager.INSTANCE.register(IAmbushEvent.class, new IAmbushEvent.Storage(), AmbushEvent::new);
         CapabilityManager.INSTANCE.register(IHunger.class, new IHunger.Storage(), Hunger::new);
         CapabilityManager.INSTANCE.register(IApocalypse.class, new IApocalypse.Storage(),
                 () -> ConfigHandler.legacyApocalypse ? new LegacyApocalypse(null) : new Apocalypse(null));
@@ -170,7 +170,7 @@ public class CommonProxy {
         //Register Boss Command
         event.registerServerCommand(new CommandBossEvent());
         //Register mini raids command
-        event.registerServerCommand(new CommandSpawnRaid());
+        event.registerServerCommand(new CommandSpawnAmbush());
 
         event.registerServerCommand(new CommandHandDebug());
     }

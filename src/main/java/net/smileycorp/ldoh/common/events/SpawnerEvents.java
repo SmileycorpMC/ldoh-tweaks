@@ -4,7 +4,7 @@ import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityCrux;
 import com.dhanantry.scapeandrunparasites.entity.monster.crude.EntityHeed;
-import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
+import com.dhanantry.scapeandrunparasites.entity.monster.feral.*;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.*;
@@ -33,7 +33,7 @@ import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
 import net.smileycorp.hordes.hordeevent.HordeSpawnEntry;
 import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
-import net.smileycorp.ldoh.common.capabilities.IMiniRaid;
+import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.util.ModUtils;
@@ -53,8 +53,8 @@ public class SpawnerEvents {
             event.addCapability(ModDefinitions.getResource("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
         }
         //spawner instance for mini raid events
-        if (!entity.hasCapability(LDOHCapabilities.MINI_RAID, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
-            event.addCapability(ModDefinitions.getResource("MiniRaid"), new IMiniRaid.Provider());
+        if (!entity.hasCapability(LDOHCapabilities.AMBUSH, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
+            event.addCapability(ModDefinitions.getResource("MiniRaid"), new IAmbushEvent.Provider());
         }
     }
 
@@ -98,10 +98,10 @@ public class SpawnerEvents {
                     }
                 }
                 //Mini Raids
-                if (player.hasCapability(LDOHCapabilities.MINI_RAID, null)) {
-                    IMiniRaid raid = player.getCapability(LDOHCapabilities.MINI_RAID, null);
+                if (player.hasCapability(LDOHCapabilities.AMBUSH, null)) {
+                    IAmbushEvent raid = player.getCapability(LDOHCapabilities.AMBUSH, null);
                     //spawn the raid if the time is right
-                    if (raid.shouldSpawnRaid(player)) raid.spawnRaid(player);
+                    if (raid.shouldSpawn(player)) raid.spawnAmbush(player);
                 }
             }
         }
@@ -173,13 +173,13 @@ public class SpawnerEvents {
             event.spawntable.addEntry(new HordeSpawnEntry(EntityInfHuman.class), 15);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityInfCow.class), 3);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityInfPig.class), 3);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityInfBear.class), 3);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityInfSheep.class), 3);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityInfBear.class), 3);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 10);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
-            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerHuman.class), 2);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerCow.class), 2);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerPig.class), 2);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerSheep.class), 2);
+            event.spawntable.addEntry(new HordeSpawnEntry(EntityFerBear.class), 2);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityButhol.class), 10);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityFlog.class), 5);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityDorpa.class), 1);
@@ -187,7 +187,7 @@ public class SpawnerEvents {
             event.spawntable.addEntry(new HordeSpawnEntry(EntityCrux.class), 1);
             event.spawntable.addEntry(new HordeSpawnEntry(EntityGanro.class), 1);
             for (Entry<Class<? extends EntityParasiteBase>, Integer> entry : Apocalypse.adaptedtable.getTable())
-                event.spawntable.addEntry(new HordeSpawnEntry(entry.getKey()), 2);
+                event.spawntable.addEntry(new HordeSpawnEntry(entry.getKey()), 1);
         }
     }
 
