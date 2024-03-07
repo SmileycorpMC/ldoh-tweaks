@@ -248,6 +248,9 @@ public class RegistryEvents {
         registry.register(EntityEntryBuilder.create().entity(EntityJuggernaut.class)
                 .id(ModDefinitions.getResource("juggernaut"), ID++)
                 .name(ModDefinitions.getName("Juggernaut")).tracker(80, 3, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityReaver.class)
+                .id(ModDefinitions.getResource("reaver"), ID++)
+                .name(ModDefinitions.getName("Reaver")).tracker(80, 3, true).build());
     }
 
 }

@@ -35,9 +35,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
-import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 

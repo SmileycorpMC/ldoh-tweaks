@@ -19,7 +19,7 @@ public class DayTimeSpeedModifier extends AttributeModifier {
 
     @Override
     public double getAmount() {
-        return world.getTotalWorldTime() % 24000 < 12000 ? -0.3 : 0;
+        return world.isDaytime() ? -0.3 :  (world.getCurrentMoonPhaseFactor() - 0.5) * 0.1;
     }
 
 }

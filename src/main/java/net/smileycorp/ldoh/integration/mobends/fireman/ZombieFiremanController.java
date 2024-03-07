@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.integration.mobends;
+package net.smileycorp.ldoh.integration.mobends.fireman;
 
 import goblinbob.mobends.core.animation.bit.AnimationBit;
 import goblinbob.mobends.core.animation.controller.IAnimationController;

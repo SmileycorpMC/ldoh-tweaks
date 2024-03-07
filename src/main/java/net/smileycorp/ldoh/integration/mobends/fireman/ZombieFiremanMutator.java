@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.integration.mobends;
+package net.smileycorp.ldoh.integration.mobends.fireman;
 
 import goblinbob.mobends.core.data.IEntityDataFactory;
 import goblinbob.mobends.standard.mutators.ZombieMutatorBase;

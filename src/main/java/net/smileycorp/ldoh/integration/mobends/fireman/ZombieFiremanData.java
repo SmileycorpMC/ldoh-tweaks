@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.integration.mobends;
+package net.smileycorp.ldoh.integration.mobends.fireman;
 
 import goblinbob.mobends.core.math.vector.Vec3f;
 import goblinbob.mobends.standard.data.ZombieDataBase;

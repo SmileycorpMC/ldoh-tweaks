@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.integration.mobends;
+package net.smileycorp.ldoh.integration.mobends.nurse;
 
 import goblinbob.mobends.core.client.model.BoxSide;
 import goblinbob.mobends.core.client.model.ModelPart;

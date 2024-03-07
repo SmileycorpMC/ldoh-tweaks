@@ -5,7 +5,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -118,18 +117,6 @@ public class ItemSpawner extends Item implements IMetaItem {
         entries.add(new ModMobEntry(EntityZombieMechanic.class, "entity.ldoh.ZombieMechanic.name", 0x436C34, 0x394A6B));
         entries.add(new ModMobEntry(EntityZombieTechnician.class, "entity.ldoh.ZombieTechnician.name", 0x436C34, 0xD4EB5C));
         entries.add(new ModMobEntry(EntityZombieFireman.class, "entity.ldoh.ZombieFireman.name", 0x436C34, 0x20263B));
-        try {
-            NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"ldoh:spawnprovider\":{isSpawned:1b}}, "
-                    + "PersistenceRequired:1b, Attributes:[{Base:0.6d, Name:\"generic.movementSpeed\"}],  "
-                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/library_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityZombie.class, "entity.ldoh.LibraryZombie.name", 0x436C34, 0x00A5A5, libraryNBT));
-            NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{ForgeCaps:{\"ldoh:spawnprovider\":{isSpawned:1b}}, "
-                    + "PersistenceRequired:1b, Attributes:[{Base:0.6d, Name:\"generic.movementSpeed\"}],  "
-                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/hospital_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityZombie.class, "entity.ldoh.HospitalZombie.name", 0x436C34, 0x00A5A5, hospitalNBT));
-        } catch (NBTException e) {
-            e.printStackTrace();
-        }
         entries.add(new ModMobEntry(EntityInfPhoenixCloud.class, "entity.ldoh.InfCloudPhoenix.name", 0x2A0101, 16121598));
         entries.add(new ModMobEntry(EntityInfPhoenixDesert.class, "entity.ldoh.InfDesertPhoenix.name", 0x2A0101, 16767917));
         entries.add(new ModMobEntry(EntityInfPhoenixEnder.class, "entity.ldoh.InfEnderPhoenix.name", 0x2A0101, 3154227));
@@ -138,6 +125,17 @@ public class ItemSpawner extends Item implements IMetaItem {
         entries.add(new ModMobEntry(EntityInfPhoenixSnow.class, "entity.ldoh.InfSnowPhoenix.name", 0x2A0101, 16777215));
         entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.ldoh.InfTwilightPhoenix.name", 0x2A0101, 395019));
         entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.ldoh.InfWaterPhoenix.name", 0x2A0101, 7253246));
+        entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.Reaver.name", 0x87727E, 0xC4BCBA));
+        try {
+            NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
+                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/library_zombie") + "\"}");
+            entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.LibraryZombie.name", 0x87727E, 0xC4BCBA, libraryNBT));
+            NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
+                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/hospital_zombie") + "\"}");
+            entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.HospitalZombie.name", 0x87727E, 0xC4BCBA, hospitalNBT));
+        } catch (NBTException e) {
+            e.printStackTrace();
+        }
         //entries.add(new ModMobEntry(EntityJuggernaut.class, "entity.ldoh.Juggernaut.name", 0x8A4411, 0x333736));
     }
 

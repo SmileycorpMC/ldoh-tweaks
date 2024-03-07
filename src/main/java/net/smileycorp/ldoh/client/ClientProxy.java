@@ -98,6 +98,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityInfPhoenix.class, RenderInfPhoenix::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityJuggernaut.class, RenderJuggernaut::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, RenderReaver::new);
         //handle custom mapping for landmine blockstates
         ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
         //register item models

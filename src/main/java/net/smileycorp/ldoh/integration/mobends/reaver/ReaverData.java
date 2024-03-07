@@ -1,21 +1,21 @@
-package net.smileycorp.ldoh.integration.mobends;
+package net.smileycorp.ldoh.integration.mobends.reaver;
 
 import goblinbob.mobends.core.client.model.ModelPartTransform;
 import goblinbob.mobends.core.math.SmoothOrientation;
 import goblinbob.mobends.standard.client.renderer.entity.SwordTrail;
 import goblinbob.mobends.standard.data.ZombieDataBase;
-import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
+import net.smileycorp.ldoh.common.entity.zombie.EntityReaver;
 
-public class ZombieNurseData extends ZombieDataBase<EntityZombieNurse> {
+public class ReaverData extends ZombieDataBase<EntityReaver> {
 
-    private final ZombieNurseController controller = new ZombieNurseController();
+    private final ReaverController controller = new ReaverController();
 
-    public ZombieNurseData(EntityZombieNurse entity) {
+    public ReaverData(EntityReaver entity) {
         super(entity);
     }
 
     @Override
-    public ZombieNurseController getController() {
+    public ReaverController getController() {
         return this.controller;
     }
 
