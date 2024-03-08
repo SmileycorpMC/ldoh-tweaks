@@ -19,7 +19,7 @@ import net.smileycorp.atlas.api.util.RecipeUtils;
 import javax.annotation.Nullable;
 
 public class TileFilingCabinet extends TileEntity implements IInventory {
-
+    
     protected ItemStack item = ItemStack.EMPTY;
     protected int count = 0;
     protected String customName;
@@ -48,9 +48,16 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
                 || super.hasCapability(capability, facing);
     }
+    
+    public void setContents(ItemStack item, int count) {
+        this.item = item;
+        this.count = count;
+        markDirty();
+    }
 
     public ItemStack getContainedItem() {
         if (count <= 0 & !item.isEmpty()) item = ItemStack.EMPTY;
+        markDirty();
         return item.copy();
     }
 
@@ -82,6 +89,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         if (slotCount <= 0) return ItemStack.EMPTY;
         ItemStack stack = item.copy();
         stack.setCount(slotCount);
+        markDirty();
         return stack;
     }
 
@@ -100,7 +108,10 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         ItemStack stack = item.copy();
         if (count < amount) amount = count;
         count -= amount;
-        if (count == 0) item = ItemStack.EMPTY;
+        if (count <= 0) {
+            item = ItemStack.EMPTY;
+            count = 0;
+        }
         stack.setCount(amount);
         markDirty();
         return stack;
@@ -126,7 +137,6 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     public ItemStack decrStackSize(int slot, int count) {
         if (isEmpty()) return ItemStack.EMPTY;
         ItemStack stack = item.copy();
-        int size = item.getMaxStackSize();
         int total = this.count - count;
         if (total < 0) {
             stack.setCount(count + total);
@@ -136,7 +146,11 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         }
         stack.setCount(count);
         this.count = total;
-        if (count <= 0) item = ItemStack.EMPTY;
+        if (this.count == 0) {
+            item = ItemStack.EMPTY;
+            this.count = 0;
+        }
+        markDirty();
         return stack;
     }
 
@@ -150,6 +164,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
             stack = ItemStack.EMPTY;
         }
         if (count <= 0) item = ItemStack.EMPTY;
+        markDirty();
         return stack;
     }
 
@@ -164,9 +179,14 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
             count = count + stack.getCount() - getStackInSlot(slot).getCount();
             if (count <= 0) item = ItemStack.EMPTY;
         }
+        markDirty();
     }
 
     public void markDirty() {
+        if (count <= 0) {
+            item = ItemStack.EMPTY;
+            count = 0;
+        }
         IBlockState state = world.getBlockState(pos);
         world.markBlockRangeForRenderUpdate(pos, pos);
         world.notifyBlockUpdate(pos, state, state, 3);
@@ -218,6 +238,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     public void clear() {
         item = ItemStack.EMPTY;
         count = 0;
+        markDirty();
     }
 
     @Override
@@ -231,6 +252,9 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
             count = items.getInteger("Count");
             items.setByte("Count", (byte) 1);
             item = new ItemStack(items);
+        } else {
+            item = ItemStack.EMPTY;
+            count = 0;
         }
     }
 
@@ -238,7 +262,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (this.hasCustomName()) {
-            compound.setString("CustomName", this.customName);
+            compound.setString("CustomName", customName);
         }
         if (!this.isEmpty()) {
             NBTTagCompound items = item.serializeNBT();
@@ -261,7 +285,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     @Override
     @Nullable
     public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+        return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
     }
 
     @Override
@@ -276,7 +300,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         if (stackCount > 0) for (int i = 0; i <= stackCount; i++) {
             ItemStack stack = item.copy();
             stack.setCount(i == stackCount ? count % item.getMaxStackSize() : item.getMaxStackSize());
-            EntityItem entityitem = new EntityItem(this.world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, stack);
+            EntityItem entityitem = new EntityItem(world, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, stack);
             entityitem.setDefaultPickupDelay();
             world.spawnEntity(entityitem);
         }

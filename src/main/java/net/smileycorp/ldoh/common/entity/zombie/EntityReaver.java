@@ -8,8 +8,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateClimber;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 
 public class EntityReaver extends EntityZombie {
@@ -69,6 +71,11 @@ public class EntityReaver extends EntityZombie {
     @Override
     public ItemStack getPickedResult(RayTraceResult target) {
         return ItemSpawner.getEggFor(this);
+    }
+    
+    @Override
+    protected ResourceLocation getLootTable() {
+        return ModDefinitions.getResource("entities/reaver");
     }
     
 }

@@ -64,8 +64,8 @@ public class WorldGenSafehouse extends WorldGenerator {
 
     private BlockPos basepos = null;
     private BlockPos exitpos = null;
-    private List<BlockPos> wallpos = new ArrayList<BlockPos>();
-    private List<BlockPos> heightmap = new ArrayList<BlockPos>();
+    private List<BlockPos> wallpos = new ArrayList<>();
+    private List<BlockPos> heightmap = new ArrayList<>();
 
     private boolean marked = false;
 
@@ -417,10 +417,8 @@ public class WorldGenSafehouse extends WorldGenerator {
         setBlockAndNotifyAdequately(world, pos.west(4), LDOHBlocks.FILING_CABINET.getDefaultState()
                 .withProperty(BlockHorizontal.FACING, isSilly ? EnumFacing.WEST : EnumFacing.EAST));
         TileFilingCabinet cabinet = (TileFilingCabinet) world.getTileEntity(pos.west(4));
-        cabinet.insertItem(new ItemStack(Items.PAPER, rand.nextInt(7) + 10));
-        for (int k = 1; k <= 3; k++) {
-            setBlockAndNotifyAdequately(world, pos.west(4).north(k), FurnitureBlocks.TABLE_ANDESITE.getDefaultState());
-        }
+        cabinet.setContents(new ItemStack(Items.PAPER), rand.nextInt(7) + 10);
+        for (int k = 1; k <= 3; k++) setBlockAndNotifyAdequately(world, pos.west(4).north(k), FurnitureBlocks.TABLE_ANDESITE.getDefaultState());
         setBlockAndNotifyAdequately(world, pos.west(4).north().up(), FurnitureBlocks.DIGITAL_CLOCK.getDefaultState()
                 .withProperty(BlockFurniture.FACING, EnumFacing.WEST).withProperty(BlockColored.COLOR, EnumDyeColor.BLACK));
         if (isSilly) setBlockAndNotifyAdequately(world, pos.west(3).north(2), FurnitureBlocks.TOILET.getDefaultState()
@@ -447,11 +445,8 @@ public class WorldGenSafehouse extends WorldGenerator {
         }
 
         //table
-        for (int i = 3; i <= 4; i++) {
-            for (int j = 3; j <= 4; j++) {
-                setBlockAndNotifyAdequately(world, pos.add(i, 0, j), FurnitureBlocks.TABLE_SPRUCE.getDefaultState());
-            }
-        }
+        for (int i = 3; i <= 4; i++) for (int j = 3; j <= 4; j++) setBlockAndNotifyAdequately(world, pos.add(i, 0, j), FurnitureBlocks.TABLE_SPRUCE.getDefaultState());
+        
         setBlockAndNotifyAdequately(world, pos.add(4, 0, 2), FurnitureBlocks.CHAIR_SPRUCE.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.NORTH));
         setBlockAndNotifyAdequately(world, pos.add(2, 0, 3), FurnitureBlocks.CHAIR_SPRUCE.getDefaultState().withProperty(BlockFurniture.FACING, EnumFacing.WEST));
         setBlockAndNotifyAdequately(world, pos.add(3, 1, 3), FurnitureBlocks.PLATE.getDefaultState());

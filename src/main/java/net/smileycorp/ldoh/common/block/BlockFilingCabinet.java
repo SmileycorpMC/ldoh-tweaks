@@ -46,6 +46,7 @@ public class BlockFilingCabinet extends Block implements ITileEntityProvider, IB
             ItemStack stack = player.getHeldItem(hand);
             if (cabinet.canInsert(stack)) {
                 cabinet.insertItem(stack);
+                return true;
             }
         }
         return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
