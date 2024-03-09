@@ -200,6 +200,7 @@ public class AmbushEvent implements IAmbushEvent {
                         else if (r == 2) spawnlist.add(new EntityFoglet(world));
                         else if (r == 3) spawnlist.add(new EntityUndeadSwine(world));
                         else if (r == 5) spawnlist.add(new EntityZombieFireman(world));
+                        else if (r == 6) spawnlist.add(new EntityReaver(world));
                         else spawnlist.add(new EntityZombie(world));
                     } else spawnlist.add(new EntityZombie(world));
                 };
