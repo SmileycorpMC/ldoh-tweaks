@@ -9,9 +9,12 @@
     "MixinBlockPumpkin",
     "MixinEntityLiving",
     "MixinEntityLivingBase",
+    "MixinEntityPlayerMP",
     "MixinEntityZombie",
     "MixinItem",
-    "MixinResourceLocation"
+    "MixinResourceLocation",
+    "MixinWorld",
+    "MixinWorldProviderEnd"
   ],
   "client": [
     "MixinBiome",
@@ -19,10 +22,7 @@
     "MixinFMLCommonHandler",
     "MixinRender"
   ],
-  "server": [
-    "MixinEntityPlayerMP",
-    "MixinWorldProviderEnd"
-  ],
+  "server": [],
    "injectors": {
     "maxShiftBy": 10
   }

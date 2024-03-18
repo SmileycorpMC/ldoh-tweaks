@@ -3,10 +3,12 @@ package net.smileycorp.ldoh.common.util;
 import com.Fishmod.mod_LavaCow.entities.IAggressive;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
+import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfDragonE;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.legacy.wasteland.world.WastelandWorld;
+import com.mrcrayfish.furniture.blocks.BlockModernBed;
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.guns.entity.DamageSourceProjectile;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
@@ -379,4 +381,16 @@ public class ModUtils {
         Block block = state.getBlock();
         return block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
     }
+    
+    public static boolean isBed(IBlockState state) {
+        return state.getBlock() instanceof BlockModernBed;
+    }
+    
+    public static boolean spawnDragon(World world) {
+        EntityInfDragonE dragon = new EntityInfDragonE(world);
+        dragon.setPosition(0.5, 200, 0.5);
+        dragon.enablePersistence();
+        return world.spawnEntity(dragon);
+    }
+    
 }

@@ -70,7 +70,7 @@ public class TileBarbedWire extends TileEntity {
                 }
                 if (entity.attackEntityFrom(new DamageSourceBarbedWire(this), mat.getDamage() * modifier)) {
                     if (!enchant_map.containsKey(Enchantments.UNBREAKING)) durability--;
-                    else if (rand.nextInt(enchant_map.get(Enchantments.UNBREAKING)) <= 0) durability--;
+                    else if (rand.nextInt(enchant_map.get(Enchantments.UNBREAKING)) < 0) durability--;
                     cooldown = 5;
                 }
                 if (enchant_map.containsKey(Enchantments.FIRE_ASPECT)) {

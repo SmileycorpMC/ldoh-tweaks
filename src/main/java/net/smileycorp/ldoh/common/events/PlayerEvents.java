@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common.events;
 
 import com.mrcrayfish.furniture.init.FurnitureItems;
 import com.mrcrayfish.furniture.tileentity.TileEntityCrate;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -25,10 +26,12 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -42,6 +45,9 @@ import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 public class PlayerEvents {
+    
+    //cache to store right-clicked block pos
+    public static BlockPos BED_POS = null;
 
     //capability manager
     @SubscribeEvent
@@ -204,6 +210,21 @@ public class PlayerEvents {
         if (event.player == null || event.player.world.isRemote) return;
         WorldDataSafehouse data = WorldDataSafehouse.getData(event.player.world);
         if (!data.isGenerated()) data.generate(event.player.world);
+    }
+    
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onPlayerSleepInBed(PlayerSleepInBedEvent event) {
+        System.out.println("slimb");
+        if (event.getEntity() == null) return;
+        System.out.println("schlamb");
+        if (event.getEntity().world.isRemote) return;
+        System.out.println("schwubwub");
+        //sleeping overhaul checks if the clicked block is an instance of BlockHorizontal, cache the blockstate
+        //so we can make it treat cfm beds as vanilla ones
+        IBlockState state = event.getEntity().world.getBlockState(event.getPos());
+        if (state.getBlock() instanceof BlockHorizontal) return;
+        System.out.println("galalkalal");
+        BED_POS = event.getPos();
     }
 
 }
