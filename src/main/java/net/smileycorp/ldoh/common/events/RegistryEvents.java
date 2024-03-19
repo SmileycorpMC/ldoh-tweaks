@@ -10,12 +10,17 @@ import com.mrcrayfish.furniture.api.RecipeVariables;
 import de.maxhenkel.car.items.ModItems;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.BlockFluidClassic;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -31,6 +36,7 @@ import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
+import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.*;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
@@ -73,6 +79,7 @@ public class RegistryEvents {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        FluidRegistry.enableUniversalBucket();
         IForgeRegistry<Block> registry = event.getRegistry();
         for (Field field : LDOHBlocks.class.getDeclaredFields()) {
             try {
@@ -84,13 +91,24 @@ public class RegistryEvents {
             } catch (Exception e) {
             }
         }
+        for (Field field : LDOHFluids.class.getDeclaredFields()) {
+            try {
+                Object fluid = field.get(null);
+                if (fluid instanceof Fluid) {
+                    BlockFluidClassic block = new BlockFluidClassic((Fluid) fluid, Material.WATER);
+                    block.setRegistryName(((Fluid) fluid).getName());
+                    registry.register(block);
+                }
+            } catch (Exception e) {
+            }
+        }
         GameRegistry.registerTileEntity(TileBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
         GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
         GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
         GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
         GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("filing_cabinet"));
     }
-
+    
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         for (ItemStack egg : OreDictionary.getOres("egg"))
