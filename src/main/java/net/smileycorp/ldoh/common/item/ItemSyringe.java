@@ -27,7 +27,7 @@ public class ItemSyringe extends Item implements IMetaItem {
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
         setUnlocalizedName(ModDefinitions.getName(name));
         setRegistryName(ModDefinitions.getResource(name));
-        setMaxStackSize(1);
+        setMaxStackSize(16);
         setHasSubtypes(true);
     }
 
@@ -43,11 +43,7 @@ public class ItemSyringe extends Item implements IMetaItem {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < getMaxMeta(); i++) {
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
+        if (isInCreativeTab(tab)) for (int i = 0; i < getMaxMeta(); i++) items.add(new ItemStack(this, 1, i));
     }
 
     @Override
@@ -88,7 +84,9 @@ public class ItemSyringe extends Item implements IMetaItem {
                 target.removePotionEffect(HordesInfection.INFECTED);
                 target.heal(5);
                 if (!player.capabilities.isCreativeMode) {
-                    stack.setItemDamage(3);
+                    stack.shrink(1);
+                    ItemStack container = new ItemStack(this, 1, 3);
+                    if (!player.addItemStackToInventory(container)) player.dropItem(container, false);
                 }
             } else {
                 for (int i = 1; i <= 8; i++) {
@@ -119,7 +117,9 @@ public class ItemSyringe extends Item implements IMetaItem {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity) {
         if (stack.getMetadata() == 0 && entity instanceof EntityPlayer) {
-            stack.setItemDamage(1);
+            stack.shrink(1);
+            ItemStack filled = new ItemStack(this, 1, 1);
+            if (!((EntityPlayer)entity).addItemStackToInventory(filled)) ((EntityPlayer)entity).dropItem(filled, false);
             entity.attackEntityFrom(DamageSource.CACTUS, 0.5f);
         }
         return stack;
