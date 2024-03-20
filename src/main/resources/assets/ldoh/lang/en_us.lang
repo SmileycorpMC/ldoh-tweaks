@@ -73,6 +73,11 @@ tile.ldoh.HordeSpawner.name=Horde Spawner
 tile.ldoh.FilingCabinet.name=Filing Cabinet
 tile.ldoh.LaboratoryBlock.name=Laboratory Block
 
+fluid.experience=Experience
+fluid.morphine=Morphine
+fluid.necrotic_blood=Necrotic Blood
+fluid.enriched_antibody_serum=Enriched Antibody Serum
+
 tooltip.ldoh.BarbedWire=Slows and deals damage to mobs.
 tooltip.ldoh.BarbedWire.Iron=Has Medium durability and low damage.
 tooltip.ldoh.BarbedWire.Gold=Has Low durability and high damage.

@@ -20,7 +20,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -79,27 +78,30 @@ public class RegistryEvents {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        FluidRegistry.enableUniversalBucket();
         IForgeRegistry<Block> registry = event.getRegistry();
         for (Field field : LDOHBlocks.class.getDeclaredFields()) {
             try {
-                Object block = field.get(null);
-                if (block instanceof Block) {
-                    registry.register((Block) block);
-                    BLOCKS.add((Block) block);
-                }
+                Block block = (Block) field.get(null);
+                registry.register(block);
+                BLOCKS.add(block);
             } catch (Exception e) {
+                System.err.println(field);
+                e.printStackTrace();
             }
         }
+        FluidRegistry.enableUniversalBucket();
         for (Field field : LDOHFluids.class.getDeclaredFields()) {
             try {
-                Object fluid = field.get(null);
-                if (fluid instanceof Fluid) {
-                    BlockFluidClassic block = new BlockFluidClassic((Fluid) fluid, Material.WATER);
-                    block.setRegistryName(((Fluid) fluid).getName());
-                    registry.register(block);
-                }
+                Fluid fluid = (Fluid) field.get(null);
+                FluidRegistry.registerFluid(fluid);
+                BlockFluidClassic block = new BlockFluidClassic(fluid, Material.WATER);
+                block.setRegistryName(fluid.getName());
+                block.setUnlocalizedName(fluid.getUnlocalizedName().substring(4));
+                registry.register(block);
+                fluid.setBlock(block);
             } catch (Exception e) {
+                System.err.println(field);
+                e.printStackTrace();
             }
         }
         GameRegistry.registerTileEntity(TileBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
