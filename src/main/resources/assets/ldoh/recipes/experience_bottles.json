@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "ldoh:experience_bucket",
+    "pattern": [
+        "EEE",
+        "EBE",
+        "EEE"
+    ],
+    "key": {
+        "B": {
+            "item": "ldoh:experience_bucket"
+        },
+        "E": {
+            "item": "minecraft:bottle"
+        }
+    },
+    "result": {
+        "item": "minecraft:experience_bottle",
+        "count": 8
+    }
+}

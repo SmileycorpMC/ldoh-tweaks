@@ -61,6 +61,7 @@ item.ldoh.BlankTurretUpgrade.name=Blank Sentry Turret Upgrade
 item.ldoh.TurretUpgrade.name=Sentry Turret Upgrade
 item.ldoh.CandyCorn.name=Candy Corn
 item.ldoh.TornNote.name=Torn Note
+item.ldoh.ExperienceBucket.name=Experience Bucket
 
 tile.ldoh.BarbedWireIron.name=Barbed Wire
 tile.ldoh.BarbedWireGold.name=Gold Barbed Wire

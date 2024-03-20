@@ -102,6 +102,7 @@ dependencies {
 	implementation "curse.maven:wasteland-284582:3573228"
 	implementation "curse.maven:xlfood-247217:2740774"
 	implementation "curse.maven:mutantbeasts-336272:3225395"
+	implementation "curse.maven:unexperienced-552526:5140238"
 	//needed to load scape and run parasites, as it blocks cursemaven
 	implementation files('libs/SRParasites-1.12.2v1.9.16.jar')
 	implementation files('libs/animania-1.12.2-base-2.0.3.28.jar')

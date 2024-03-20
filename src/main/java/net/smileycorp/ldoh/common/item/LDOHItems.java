@@ -25,6 +25,8 @@ public class LDOHItems {
     //public static final Item TURRET_TARGETING_UPDRADE = new ItemTurretTargetingUpgrade();
 
     public static final Item CANDY_CORN = new ItemFoodLDOH("Candy_Corn", 5, 0.6F, false);
+    
+    public static final Item EXPERIENCE_BUCKET = new ItemBucketOfExperience();
 
     public static final Item EXO_BOOTS = new ItemExosuit("Exo_Boots", EntityEquipmentSlot.FEET);
     public static final Item EXO_LEGS = new ItemExosuit("Exo_Legs", EntityEquipmentSlot.LEGS);

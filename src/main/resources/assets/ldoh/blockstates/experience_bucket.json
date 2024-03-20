@@ -1,0 +1,14 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "forge:forgebucket",
+      "textures": {
+        "base": "forge:items/bucket_base",
+        "fluid": "forge:items/bucket_fluid",
+        "cover": "ldoh:blocks/experience"
+      },
+      "transform": "forge:default-item"
+    }
+  }
+}

@@ -68,6 +68,7 @@ public class RegistryEvents {
         registerItem(registry, new ItemTurret());
         registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
         registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
+        registerItem(registry, new ItemBlockLDOH(LDOHBlocks.FLICKERING_LIGHT));
         //registerItem(registry, new ItemBlockMeta(LDOHBlocks.LABORATORY_BLOCK));
     }
 
@@ -99,6 +100,7 @@ public class RegistryEvents {
                 block.setUnlocalizedName(fluid.getUnlocalizedName().substring(4));
                 registry.register(block);
                 fluid.setBlock(block);
+                if (fluid != LDOHFluids.EXPERIENCE) FluidRegistry.addBucketForFluid(fluid);
             } catch (Exception e) {
                 System.err.println(field);
                 e.printStackTrace();
@@ -204,6 +206,8 @@ public class RegistryEvents {
                 .setOutput(new ItemStack(ItemListxlfoodmod.fried_rice)));
         registry.registerRecipe(RecipeType.OVEN, new RecipeVariables().setInput(new ItemStack(ExoticbirdsItems.birdmeat))
                 .setOutput(new ItemStack(ExoticbirdsItems.cooked_birdmeat)));
+        registry.registerRecipe(RecipeType.MINEBAY, new RecipeVariables().addValue("currency", new ItemStack(Items.IRON_INGOT))
+                .addValue("price", 8).setInput(new ItemStack(LDOHItems.EXPERIENCE_BUCKET)));
     }
 
     @SubscribeEvent
