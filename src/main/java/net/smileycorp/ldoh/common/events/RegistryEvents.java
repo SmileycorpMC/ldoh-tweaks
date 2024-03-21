@@ -8,6 +8,7 @@ import com.mrcrayfish.furniture.api.IRecipeRegistry;
 import com.mrcrayfish.furniture.api.RecipeType;
 import com.mrcrayfish.furniture.api.RecipeVariables;
 import de.maxhenkel.car.items.ModItems;
+import ichttt.mods.firstaid.common.items.FirstAidItems;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -37,6 +39,10 @@ import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.*;
+import net.smileycorp.ldoh.common.recipes.BottlingRecipe;
+import net.smileycorp.ldoh.common.recipes.LDOHRecipeRegistry;
+import net.smileycorp.ldoh.common.recipes.MixingRecipe;
+import net.smileycorp.ldoh.common.recipes.SiphoningRecipe;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 import pavocado.exoticbirds.init.ExoticbirdsItems;
@@ -123,6 +129,17 @@ public class RegistryEvents {
         OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
         OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
         OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
+        LDOHRecipeRegistry.registerMixingRecipe(new MixingRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 250),
+                new FluidStack(BOPBlocks.blood_fluid, 125), new FluidStack(LDOHFluids.NECROTIC_BLOOD, 125), new FluidStack(LDOHFluids.MORPHINE, 125)));
+        LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(Items.EXPERIENCE_BOTTLE), new FluidStack(LDOHFluids.EXPERIENCE, 125), new ItemStack(Items.GLASS_BOTTLE)));
+        LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(FirstAidItems.MORPHINE), new FluidStack(LDOHFluids.MORPHINE, 125), new ItemStack(Items.GLASS_BOTTLE)));
+        LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(LDOHItems.SYRINGE, 1, 1), new FluidStack(BOPBlocks.blood_fluid, 125), new ItemStack(LDOHItems.SYRINGE, 1, 0)));
+        LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(LDOHItems.SYRINGE, 1, 2), new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 125), new ItemStack(LDOHItems.SYRINGE, 1, 0)));
+        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.EXPERIENCE, 125), new ItemStack(Items.GLASS_BOTTLE), new ItemStack(Items.EXPERIENCE_BOTTLE)));
+        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.MORPHINE, 125), new ItemStack(Items.GLASS_BOTTLE), new ItemStack(FirstAidItems.MORPHINE)));
+        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(BOPBlocks.blood_fluid, 125), new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 1)));
+        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 125), new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 2)));
+        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.NECROTIC_BLOOD, 25), ItemStack.EMPTY, new ItemStack(Items.ROTTEN_FLESH)));
     }
 
     public static void registerCFMRecipes(IRecipeRegistry registry) {
