@@ -56,7 +56,8 @@ public class RegistryEvents {
 
     public static final Set<Item> ITEMS = new HashSet<>();
     public static final Set<Block> BLOCKS = new HashSet<>();
-
+    public static final Set<BlockFluidClassic> FLUID_BLOCKS = new HashSet<>();
+    
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
@@ -74,7 +75,6 @@ public class RegistryEvents {
         registerItem(registry, new ItemTurret());
         registerItem(registry, new ItemBlockTooltip(LDOHBlocks.FILING_CABINET));
         registerItem(registry, new ItemBlockLDOH(LDOHBlocks.HORDE_SPAWNER));
-        registerItem(registry, new ItemBlockLDOH(LDOHBlocks.FLICKERING_LIGHT));
         //registerItem(registry, new ItemBlockMeta(LDOHBlocks.LABORATORY_BLOCK));
     }
 
@@ -106,6 +106,7 @@ public class RegistryEvents {
                 block.setUnlocalizedName(fluid.getUnlocalizedName().substring(4));
                 registry.register(block);
                 fluid.setBlock(block);
+                FLUID_BLOCKS.add(block);
                 if (fluid != LDOHFluids.EXPERIENCE) FluidRegistry.addBucketForFluid(fluid);
             } catch (Exception e) {
                 System.err.println(field);

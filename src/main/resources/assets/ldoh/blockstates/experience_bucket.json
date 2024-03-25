@@ -6,7 +6,7 @@
       "textures": {
         "base": "forge:items/bucket_base",
         "fluid": "forge:items/bucket_fluid",
-        "cover": "ldoh:blocks/experience"
+        "cover": "ldoh:items/experience_bucket_fluid"
       },
       "transform": "forge:default-item"
     }

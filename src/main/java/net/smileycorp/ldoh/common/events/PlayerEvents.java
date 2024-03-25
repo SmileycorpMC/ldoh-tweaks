@@ -42,6 +42,8 @@ import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.common.fluid.LDOHFluids;
+import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 public class PlayerEvents {
@@ -77,6 +79,10 @@ public class PlayerEvents {
             } else if (!(state.getBlock() instanceof IFluidBlock)) return;
             Fluid fluid = ((IFluidBlock) state.getBlock()).getFluid();
             if (fluid == null) return;
+            if (fluid == LDOHFluids.EXPERIENCE) {
+                event.setResult(Event.Result.ALLOW);
+                event.setFilledBucket(new ItemStack(LDOHItems.EXPERIENCE_BUCKET));
+            }
             if (fluid.getTemperature() >= 450) {
                 event.setResult(Event.Result.DENY);
                 event.setCanceled(true);

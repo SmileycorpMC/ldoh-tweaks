@@ -17,6 +17,5 @@ public class LDOHBlocks {
 
     //decoration
     public static final Block LABORATORY_BLOCK = new BlockLaboratory();
-    public static final Block FLICKERING_LIGHT = new BlockFlickeringLight();
 
 }

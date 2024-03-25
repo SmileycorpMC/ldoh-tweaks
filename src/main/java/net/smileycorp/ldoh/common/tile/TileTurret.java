@@ -1,10 +1,9 @@
 package net.smileycorp.ldoh.common.tile;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 
-public class TileTurret extends TileAbstractTurret<EntityTurret> implements IInventory {
+public class TileTurret extends TileAbstractTurret<EntityTurret> {
 
     @Override
     public EntityTurret createNewEntity() {

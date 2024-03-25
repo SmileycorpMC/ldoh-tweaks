@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smileycorp.atlas.api.client.FluidStateMapper;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.client.colour.BlockTurretColour;
 import net.smileycorp.ldoh.client.colour.ItemEggColour;
@@ -99,8 +101,9 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityInfPhoenix.class, RenderInfPhoenix::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityJuggernaut.class, RenderJuggernaut::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, RenderReaver::new);
-        //handle custom mapping for landmine blockstates
+        //handle custom mapping for landmine and fluid blockstates
         ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
+        for (BlockFluidClassic fluid_block : RegistryEvents.FLUID_BLOCKS) ModelLoader.setCustomStateMapper(fluid_block, new FluidStateMapper(fluid_block.getFluid()));
         //register item models
         for (Item item : RegistryEvents.ITEMS) {
             if (item instanceof IMetaItem) {
