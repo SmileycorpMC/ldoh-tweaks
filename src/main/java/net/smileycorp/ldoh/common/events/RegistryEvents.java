@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.atlas.api.block.FuelHandler;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
@@ -51,7 +51,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-@EventBusSubscriber(modid = ModDefinitions.MODID)
+@EventBusSubscriber(modid = Constants.MODID)
 public class RegistryEvents {
 
     public static final Set<Item> ITEMS = new HashSet<>();
@@ -113,11 +113,11 @@ public class RegistryEvents {
                 e.printStackTrace();
             }
         }
-        GameRegistry.registerTileEntity(TileBarbedWire.class, ModDefinitions.getResource("barbed_wire"));
-        GameRegistry.registerTileEntity(TileHordeSpawner.class, ModDefinitions.getResource("horde_spawner"));
-        GameRegistry.registerTileEntity(TileLandmine.class, ModDefinitions.getResource("landmine"));
-        GameRegistry.registerTileEntity(TileTurret.class, ModDefinitions.getResource("turret"));
-        GameRegistry.registerTileEntity(TileFilingCabinet.class, ModDefinitions.getResource("filing_cabinet"));
+        GameRegistry.registerTileEntity(TileBarbedWire.class, Constants.loc("barbed_wire"));
+        GameRegistry.registerTileEntity(TileHordeSpawner.class, Constants.loc("horde_spawner"));
+        GameRegistry.registerTileEntity(TileLandmine.class, Constants.loc("landmine"));
+        GameRegistry.registerTileEntity(TileTurret.class, Constants.loc("turret"));
+        GameRegistry.registerTileEntity(TileFilingCabinet.class, Constants.loc("filing_cabinet"));
     }
     
     @SubscribeEvent
@@ -234,65 +234,65 @@ public class RegistryEvents {
         int ID = 201;
         IForgeRegistry<EntityEntry> registry = event.getRegistry();
         registry.register(EntityEntryBuilder.create().entity(EntityCrawlingZombie.class)
-                .id(ModDefinitions.getResource("crawling_zombie"), ID++)
-                .name(ModDefinitions.getName("CrawlingZombie")).tracker(80, 3, true).build());
+                .id(Constants.loc("crawling_zombie"), ID++)
+                .name(Constants.name("CrawlingZombie")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityCrawlingHusk.class)
-                .id(ModDefinitions.getResource("crawling_husk"), ID++)
-                .name(ModDefinitions.getName("CrawlingHusk")).tracker(80, 3, true).build());
+                .id(Constants.loc("crawling_husk"), ID++)
+                .name(Constants.name("CrawlingHusk")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityTF2Zombie.class)
-                .id(ModDefinitions.getResource("tf_zombie"), ID++)
-                .name(ModDefinitions.getName("TFZombie")).tracker(80, 3, true).build());
+                .id(Constants.loc("tf_zombie"), ID++)
+                .name(Constants.name("TFZombie")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityZombieNurse.class)
-                .id(ModDefinitions.getResource("nurse_zombie"), ID++)
-                .name(ModDefinitions.getName("NurseZombie")).tracker(80, 3, true).build());
+                .id(Constants.loc("nurse_zombie"), ID++)
+                .name(Constants.name("NurseZombie")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntitySwatZombie.class)
-                .id(ModDefinitions.getResource("swat_zombie"), ID++)
-                .name(ModDefinitions.getName("SwatZombie")).tracker(80, 3, true).build());
+                .id(Constants.loc("swat_zombie"), ID++)
+                .name(Constants.name("SwatZombie")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityZombieMechanic.class)
-                .id(ModDefinitions.getResource("zombie_mechanic"), ID++)
-                .name(ModDefinitions.getName("ZombieMechanic")).tracker(80, 3, true).build());
+                .id(Constants.loc("zombie_mechanic"), ID++)
+                .name(Constants.name("ZombieMechanic")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityZombieTechnician.class)
-                .id(ModDefinitions.getResource("zombie_technician"), ID++)
-                .name(ModDefinitions.getName("ZombieTechnician")).tracker(80, 3, true).build());
+                .id(Constants.loc("zombie_technician"), ID++)
+                .name(Constants.name("ZombieTechnician")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityTurret.class)
-                .id(ModDefinitions.getResource("turret"), ID++)
-                .name(ModDefinitions.getName("Turret")).tracker(80, 3, true).build());
+                .id(Constants.loc("turret"), ID++)
+                .name(Constants.name("Turret")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityIncendiaryProjectile.class)
-                .id(ModDefinitions.getResource("incendiary_projectile"), ID++)
-                .name(ModDefinitions.getName("IncendiaryProjectile")).tracker(64, 80, true).build());
+                .id(Constants.loc("incendiary_projectile"), ID++)
+                .name(Constants.name("IncendiaryProjectile")).tracker(64, 80, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityZombieFireman.class)
-                .id(ModDefinitions.getResource("zombie_fireman"), ID++)
-                .name(ModDefinitions.getName("ZombieFireman")).tracker(80, 3, true).build());
+                .id(Constants.loc("zombie_fireman"), ID++)
+                .name(Constants.name("ZombieFireman")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixCloud.class)
-                .id(ModDefinitions.getResource("inf_cloud_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfCloudPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_cloud_phoenix"), ID++)
+                .name(Constants.name("InfCloudPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixDesert.class)
-                .id(ModDefinitions.getResource("inf_desert_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfDesertPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_desert_phoenix"), ID++)
+                .name(Constants.name("InfDesertPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixEnder.class)
-                .id(ModDefinitions.getResource("inf_ender_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfEnderPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_ender_phoenix"), ID++)
+                .name(Constants.name("InfEnderPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixFire.class)
-                .id(ModDefinitions.getResource("inf_fire_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfFirePhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_fire_phoenix"), ID++)
+                .name(Constants.name("InfFirePhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixNether.class)
-                .id(ModDefinitions.getResource("inf_nether_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfNetherPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_nether_phoenix"), ID++)
+                .name(Constants.name("InfNetherPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixSnow.class)
-                .id(ModDefinitions.getResource("inf_snow_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfSnowPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_snow_phoenix"), ID++)
+                .name(Constants.name("InfSnowPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixTwilight.class)
-                .id(ModDefinitions.getResource("inf_twilight_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfTwilightPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_twilight_phoenix"), ID++)
+                .name(Constants.name("InfTwilightPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityInfPhoenixWater.class)
-                .id(ModDefinitions.getResource("inf_water_phoenix"), ID++)
-                .name(ModDefinitions.getName("InfWaterPhoenix")).tracker(80, 3, true).build());
+                .id(Constants.loc("inf_water_phoenix"), ID++)
+                .name(Constants.name("InfWaterPhoenix")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityJuggernaut.class)
-                .id(ModDefinitions.getResource("juggernaut"), ID++)
-                .name(ModDefinitions.getName("Juggernaut")).tracker(80, 3, true).build());
+                .id(Constants.loc("juggernaut"), ID++)
+                .name(Constants.name("Juggernaut")).tracker(80, 3, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityReaver.class)
-                .id(ModDefinitions.getResource("reaver"), ID++)
-                .name(ModDefinitions.getName("Reaver")).tracker(80, 3, true).build());
+                .id(Constants.loc("reaver"), ID++)
+                .name(Constants.name("Reaver")).tracker(80, 3, true).build());
     }
 
 }

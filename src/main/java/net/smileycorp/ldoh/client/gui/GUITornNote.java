@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 import java.util.List;
 import java.util.Random;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class GUITornNote extends GuiScreen {
 
-    private static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/torn_note.png");
+    private static final ResourceLocation TEXTURE = Constants.loc("textures/gui/torn_note.png");
 
     private final List<Integer> characters = Lists.newArrayList();
 

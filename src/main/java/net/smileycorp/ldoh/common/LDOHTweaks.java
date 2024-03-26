@@ -16,19 +16,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.ldoh.common.damage.DamageSourceToxicGas;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
-@Mod(modid = ModDefinitions.MODID, name = ModDefinitions.NAME, version = ModDefinitions.NAME, dependencies = ModDefinitions.DEPENDENCIES)
+@Mod(modid = Constants.MODID, name = Constants.NAME, version = Constants.NAME, dependencies = Constants.DEPENDENCIES)
 public class LDOHTweaks {
 
-    @Instance(ModDefinitions.MODID)
+    @Instance(Constants.MODID)
     public static LDOHTweaks INSTANCE;
 
-    @SidedProxy(clientSide = ModDefinitions.CLIENT, serverSide = ModDefinitions.COMMON)
+    @SidedProxy(clientSide = Constants.CLIENT, serverSide = Constants.COMMON)
     public static CommonProxy PROXY;
 
     public static final DamageSource TOXIC_GAS_DAMAGE = new DamageSourceToxicGas();
     public static final DamageSource SHRAPNEL_DAMAGE = new DamageSource("Shrapnel");
 
-    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(ModDefinitions.getName("ldohTab")) {
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.name("ldohTab")) {
         @Override
         @SideOnly(Side.CLIENT)
         public ItemStack getTabIconItem() {

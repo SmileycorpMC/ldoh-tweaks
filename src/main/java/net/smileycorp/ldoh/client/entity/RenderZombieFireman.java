@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 
 public class RenderZombieFireman extends RenderBiped<EntityZombieFireman> {
@@ -24,7 +24,7 @@ public class RenderZombieFireman extends RenderBiped<EntityZombieFireman> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityZombieFireman entity) {
-        return ModDefinitions.getResource("textures/entity/zombie_fireman.png");
+        return Constants.loc("textures/entity/zombie_fireman.png");
     }
 
 }

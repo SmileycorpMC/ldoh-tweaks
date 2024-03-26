@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.ICuring;
 import net.smileycorp.ldoh.common.capabilities.IHunger;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
@@ -52,13 +52,13 @@ import java.awt.*;
 import java.util.Map.Entry;
 
 @SuppressWarnings("deprecation")
-@EventBusSubscriber(modid = ModDefinitions.MODID, value = Side.CLIENT)
+@EventBusSubscriber(modid = Constants.MODID, value = Side.CLIENT)
 public class ClientEventListener {
 
     public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.1f);
-    public static ResourceLocation GAS_TEXTURE = ModDefinitions.getResource("textures/misc/gas.png");
-    public static ResourceLocation TF_HUNGER_TEXTURE = ModDefinitions.getResource("textures/gui/tf_hunger.png");
-    public static ResourceLocation MEDIC_SYRINGES_TEXTURE = ModDefinitions.getResource("textures/gui/medic_syringes.png");
+    public static ResourceLocation GAS_TEXTURE = Constants.loc("textures/misc/gas.png");
+    public static ResourceLocation TF_HUNGER_TEXTURE = Constants.loc("textures/gui/tf_hunger.png");
+    public static ResourceLocation MEDIC_SYRINGES_TEXTURE = Constants.loc("textures/gui/medic_syringes.png");
 
     //Render Gas Overlay when below gas level
     @SubscribeEvent
@@ -299,7 +299,7 @@ public class ClientEventListener {
             property += entry.getValue().toString();
         }
 
-        return new ModelResourceLocation(ModDefinitions.getResource(state.getBlock().getRegistryName().getResourcePath()), property);
+        return new ModelResourceLocation(Constants.loc(state.getBlock().getRegistryName().getResourcePath()), property);
     }
 
 }

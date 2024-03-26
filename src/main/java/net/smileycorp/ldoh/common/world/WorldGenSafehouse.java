@@ -37,7 +37,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTableManager;
 import net.minecraftforge.items.IItemHandler;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.TimedEvents;
 import net.smileycorp.ldoh.common.block.BlockBarbedWire;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
@@ -410,7 +410,7 @@ public class WorldGenSafehouse extends WorldGenerator {
         for (int i = 0; i <= 1; i++) {
             BlockPos chest = pos.south(4).west(i);
             setBlockAndNotifyAdequately(world, chest, Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, isSilly ? EnumFacing.SOUTH : EnumFacing.NORTH));
-            ((TileEntityLockableLoot) world.getTileEntity(chest)).setLootTable(ModDefinitions.SAFEHOUSE_CHEST, rand.nextLong());
+            ((TileEntityLockableLoot) world.getTileEntity(chest)).setLootTable(Constants.SAFEHOUSE_CHEST, rand.nextLong());
         }
 
         //desk
@@ -433,7 +433,7 @@ public class WorldGenSafehouse extends WorldGenerator {
                 .withProperty(BlockFridge.FACING, isSilly ? EnumFacing.WEST : EnumFacing.EAST));
         IItemHandler fridgeInv = ((TileFridge) world.getTileEntity(pos.west(4).north(4))).getCombinedItemHandler();
         LootTableManager manager = world.getLootTableManager();
-        for (ItemStack stack : manager.getLootTableFromLocation(ModDefinitions.SAFEHOUSE_MEDICAL_FRIDGE)
+        for (ItemStack stack : manager.getLootTableFromLocation(Constants.SAFEHOUSE_MEDICAL_FRIDGE)
                 .generateLootForPools(rand, new LootContext(0, (WorldServer) world, manager, null, null, null))) {
             while (true) {
                 int slot = rand.nextInt(fridgeInv.getSlots());
@@ -454,7 +454,7 @@ public class WorldGenSafehouse extends WorldGenerator {
         setBlockAndNotifyAdequately(world, pos.east(4), net.blay09.mods.cookingforblockheads.block.ModBlocks.fridge.getDefaultState().withProperty(BlockFridge.FACING,
                 isSilly ? EnumFacing.EAST : EnumFacing.WEST));
         fridgeInv = ((TileFridge) world.getTileEntity(pos.east(4))).getCombinedItemHandler();
-        for (ItemStack stack : manager.getLootTableFromLocation(ModDefinitions.SAFEHOUSE_FRIDGE)
+        for (ItemStack stack : manager.getLootTableFromLocation(Constants.SAFEHOUSE_FRIDGE)
                 .generateLootForPools(rand, new LootContext(0, (WorldServer) world, manager, null, null, null))) {
             while (true) {
                 int slot = rand.nextInt(fridgeInv.getSlots());
@@ -638,7 +638,7 @@ public class WorldGenSafehouse extends WorldGenerator {
 
     private void placeCrate(BlockPos pos, World world) {
         setBlockAndNotifyAdequately(world, pos, FurnitureBlocks.CRATE_SPRUCE.getDefaultState());
-        ((TileEntityLockableLoot) world.getTileEntity(pos)).setLootTable(ModDefinitions.SAFEHOUSE_CRATE, world.rand.nextLong());
+        ((TileEntityLockableLoot) world.getTileEntity(pos)).setLootTable(Constants.SAFEHOUSE_CRATE, world.rand.nextLong());
     }
 
     private void placeBrick(Random rand, World world, BlockPos pos) {

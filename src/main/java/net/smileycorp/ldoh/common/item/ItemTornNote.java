@@ -9,15 +9,15 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.network.TornNoteMessage;
 
 public class ItemTornNote extends Item {
 
     public ItemTornNote() {
-        setUnlocalizedName(ModDefinitions.getName("TornNote"));
-        setRegistryName(ModDefinitions.getResource("torn_note"));
+        setUnlocalizedName(Constants.name("TornNote"));
+        setRegistryName(Constants.loc("torn_note"));
     }
 
     @Override

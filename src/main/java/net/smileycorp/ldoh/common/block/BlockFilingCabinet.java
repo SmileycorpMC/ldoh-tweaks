@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
 
 public class BlockFilingCabinet extends Block implements ITileEntityProvider, IBlockProperties {
@@ -32,8 +32,8 @@ public class BlockFilingCabinet extends Block implements ITileEntityProvider, IB
         setSoundType(SoundType.METAL);
         setHarvestLevel("PICKAXE", 1);
         String name = "Filing_Cabinet";
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
     }
 

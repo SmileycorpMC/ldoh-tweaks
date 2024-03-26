@@ -4,7 +4,7 @@ import goblinbob.mobends.core.addon.AddonAnimationRegistry;
 import goblinbob.mobends.core.addon.AddonHelper;
 import goblinbob.mobends.core.addon.IAddon;
 import goblinbob.mobends.standard.client.renderer.entity.mutated.ZombieRenderer;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.zombie.EntityReaver;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
@@ -18,12 +18,12 @@ import net.smileycorp.ldoh.integration.mobends.reaver.ReaverMutator;
 public class LDOHMobendsAddon implements IAddon {
 
     public void register() {
-        AddonHelper.registerAddon(ModDefinitions.MODID, this);
+        AddonHelper.registerAddon(Constants.MODID, this);
     }
 
     @Override
     public String getDisplayName() {
-        return ModDefinitions.NAME;
+        return Constants.NAME;
     }
 
     @Override

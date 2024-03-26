@@ -8,19 +8,19 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.EnumHelper;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 import javax.annotation.Nonnull;
 
 public class ItemExosuit extends ItemArmor {
 
-    private static ArmorMaterial MATERIAL = EnumHelper.addArmorMaterial("exo", ModDefinitions.getResourceName("textures/armor/exo.png"),
+    private static ArmorMaterial MATERIAL = EnumHelper.addArmorMaterial("exo", Constants.locName("textures/armor/exo.png"),
             1000, new int[] {3, 5, 5, 3}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
     public ItemExosuit(String name, EntityEquipmentSlot slot) {
         super(MATERIAL, 0, slot);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, ItemArmor.DISPENSER_BEHAVIOR);
     }
 

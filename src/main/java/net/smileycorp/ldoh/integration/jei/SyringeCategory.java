@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.integration.jei.SyringeCategory.Wrapper;
 
@@ -19,12 +19,12 @@ import java.awt.*;
 @SuppressWarnings("deprecation")
 public class SyringeCategory implements IRecipeCategory<Wrapper> {
 
-    public static final String ID = ModDefinitions.getName("syringes");
+    public static final String ID = Constants.name("syringes");
 
     private final IDrawable background;
     protected final IDrawableAnimated arrow;
 
-    public static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/jei/syringes.png");
+    public static final ResourceLocation TEXTURE = Constants.loc("textures/gui/jei/syringes.png");
 
     public SyringeCategory(IGuiHelper guiHelper) {
         background = guiHelper.createDrawable(TEXTURE, 0, 0, 128, 96);
@@ -39,7 +39,7 @@ public class SyringeCategory implements IRecipeCategory<Wrapper> {
 
     @Override
     public String getModName() {
-        return ModDefinitions.MODID;
+        return Constants.MODID;
     }
 
     @Override

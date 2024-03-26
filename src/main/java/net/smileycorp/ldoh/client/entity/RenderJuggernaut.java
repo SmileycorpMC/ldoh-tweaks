@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.smileycorp.ldoh.client.entity.model.ModelJuggernaut;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 
 public class RenderJuggernaut extends RenderLiving<EntityJuggernaut> {
@@ -16,7 +16,7 @@ public class RenderJuggernaut extends RenderLiving<EntityJuggernaut> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityJuggernaut entity) {
-        return ModDefinitions.getResource("textures/entity/juggernaut_" + (entity.isAngy() ? "2" : "1") + ".png");
+        return Constants.loc("textures/entity/juggernaut_" + (entity.isAngy() ? "2" : "1") + ".png");
     }
 
 }

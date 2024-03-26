@@ -6,14 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 import java.util.List;
 
 public class ItemIncendiaryAmmo extends ItemAmmo {
 
     public ItemIncendiaryAmmo() {
-        super(ModDefinitions.getResource("incendiary_ammo"));
+        super(Constants.loc("incendiary_ammo"));
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
     }
 

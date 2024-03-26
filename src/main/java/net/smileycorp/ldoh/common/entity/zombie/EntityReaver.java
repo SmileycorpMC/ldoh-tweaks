@@ -11,7 +11,7 @@ import net.minecraft.pathfinding.PathNavigateClimber;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 
 public class EntityReaver extends EntityZombie {
@@ -75,7 +75,7 @@ public class EntityReaver extends EntityZombie {
     
     @Override
     protected ResourceLocation getLootTable() {
-        return ModDefinitions.getResource("entities/reaver");
+        return Constants.loc("entities/reaver");
     }
     
 }

@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.ExperienceBucketFluidHandler;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.unexperienced.ConfigHandler;
@@ -36,8 +36,8 @@ public class ItemBucketOfExperience extends UniversalBucket {
     public ItemBucketOfExperience() {
         String name = "Experience_Bucket";
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
     }
     
     @Override

@@ -9,13 +9,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
 public class InventoryTurretAmmo extends InventoryBasic {
 
     public InventoryTurretAmmo() {
-        super(ModDefinitions.getName("entity.turret"), false, 9);
+        super(Constants.name("entity.turret"), false, 9);
     }
 
     @Override

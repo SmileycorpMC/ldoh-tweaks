@@ -16,7 +16,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
@@ -215,7 +215,7 @@ public class EntityTF2Zombie extends EntityZombie {
             if (hasCustomName()) return getCustomNameTag();
             return new TextComponentTranslation("entity.Zombie.name").appendSibling(new TextComponentString(" ")).appendSibling(getTFClass().getLocalizedName()).getFormattedText();
         } catch (Exception e) {
-            return new TextComponentTranslation("entity." + ModDefinitions.MODID + ".TFZombie.name").getFormattedText();
+            return new TextComponentTranslation("entity." + Constants.MODID + ".TFZombie.name").getFormattedText();
         }
     }
 

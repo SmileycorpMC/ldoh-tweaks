@@ -40,7 +40,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.util.EnumAxis;
 import net.smileycorp.ldoh.common.util.EnumBarbedWireMat;
@@ -61,8 +61,8 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
         super(Material.ROCK);
         String name = "Barbed_Wire";
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         //iron mining level to stop mobs breaking them
         setDefaultState(blockState.getBaseState().withProperty(MATERIAL, EnumBarbedWireMat.IRON).withProperty(AXIS, EnumAxis.X));
         setHarvestLevel("pickaxe", 2);

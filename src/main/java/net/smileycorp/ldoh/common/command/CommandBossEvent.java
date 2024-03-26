@@ -5,7 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
@@ -18,7 +18,7 @@ public class CommandBossEvent extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "commands." + ModDefinitions.MODID + ".StartBossEvent.usage";
+        return "commands." + Constants.MODID + ".StartBossEvent.usage";
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CommandBossEvent extends CommandBase {
                 }
             }
         });
-        notifyCommandListener(sender, this, "commands." + ModDefinitions.MODID + ".StartBossEvent.success", new Object[0]);
+        notifyCommandListener(sender, this, "commands." + Constants.MODID + ".StartBossEvent.success", new Object[0]);
     }
 
 }

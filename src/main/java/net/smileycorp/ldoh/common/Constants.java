@@ -2,7 +2,7 @@ package net.smileycorp.ldoh.common;
 
 import net.minecraft.util.ResourceLocation;
 
-public class ModDefinitions {
+public class Constants {
 
     //mod constants
     public static final String MODID = "ldoh";
@@ -32,34 +32,34 @@ public class ModDefinitions {
     public static final String VILLAGER_MESSAGE = "message.ldoh.VillagerMessage";
 
     //sounds
-    public static final ResourceLocation TF_ENEMY_SOUND = getResource("tf_enemy");
-    public static final ResourceLocation TF_ALLY_SOUND = getResource("tf_ally");
-    public static final ResourceLocation LANDMINE_BEEP = getResource("landmine_beep");
-    public static final ResourceLocation JUGG_ALARM = getResource("jugg_alarm");
+    public static final ResourceLocation TF_ENEMY_SOUND = loc("tf_enemy");
+    public static final ResourceLocation TF_ALLY_SOUND = loc("tf_ally");
+    public static final ResourceLocation LANDMINE_BEEP = loc("landmine_beep");
+    public static final ResourceLocation JUGG_ALARM = loc("jugg_alarm");
 
     //loot tables
-    public static final ResourceLocation SAFEHOUSE_CHEST = getResource("chests/safehouse_chest");
-    public static final ResourceLocation SAFEHOUSE_CABINET = getResource("chests/safehouse_cabinet");
-    public static final ResourceLocation SAFEHOUSE_FRIDGE = getResource("chests/safehouse_fridge");
-    public static final ResourceLocation SAFEHOUSE_MEDICAL_FRIDGE = getResource("chests/safehouse_medical_fridge");
-    public static final ResourceLocation SAFEHOUSE_CRATE = getResource("chests/safehouse_crate");
-    public static final ResourceLocation NEST_CRATE = getResource("chests/nest_crate");
-    public static final ResourceLocation MILITARY_CRATE = getResource("chests/military_crate");
-    public static final ResourceLocation MILITARY_AMMO = getResource("chests/military_ammo");
-    public static final ResourceLocation MILITARY_TREASURE = getResource("chests/military_treasure");
-    public static final ResourceLocation TECH_CRATE = getResource("chests/tech_crate");
-    public static final ResourceLocation EIFFEL_GOOD_GOOD = getResource("chests/eiffel_good_good");
+    public static final ResourceLocation SAFEHOUSE_CHEST = loc("chests/safehouse_chest");
+    public static final ResourceLocation SAFEHOUSE_CABINET = loc("chests/safehouse_cabinet");
+    public static final ResourceLocation SAFEHOUSE_FRIDGE = loc("chests/safehouse_fridge");
+    public static final ResourceLocation SAFEHOUSE_MEDICAL_FRIDGE = loc("chests/safehouse_medical_fridge");
+    public static final ResourceLocation SAFEHOUSE_CRATE = loc("chests/safehouse_crate");
+    public static final ResourceLocation NEST_CRATE = loc("chests/nest_crate");
+    public static final ResourceLocation MILITARY_CRATE = loc("chests/military_crate");
+    public static final ResourceLocation MILITARY_AMMO = loc("chests/military_ammo");
+    public static final ResourceLocation MILITARY_TREASURE = loc("chests/military_treasure");
+    public static final ResourceLocation TECH_CRATE = loc("chests/tech_crate");
+    public static final ResourceLocation EIFFEL_GOOD_GOOD = loc("chests/eiffel_good_good");
 
     //helper methods
-    public static String getName(String name) {
+    public static String name(String name) {
         return MODID + "." + name.replace("_", "");
     }
 
-    public static ResourceLocation getResource(String name) {
+    public static ResourceLocation loc(String name) {
         return new ResourceLocation(MODID, name.toLowerCase());
     }
 
-    public static String getResourceName(String name) {
-        return getResource(name).toString();
+    public static String locName(String name) {
+        return loc(name).toString();
     }
 }

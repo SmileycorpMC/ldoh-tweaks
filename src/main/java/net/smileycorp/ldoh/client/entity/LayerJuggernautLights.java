@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 
 public class LayerJuggernautLights implements LayerRenderer<EntityJuggernaut> {
@@ -18,7 +18,7 @@ public class LayerJuggernautLights implements LayerRenderer<EntityJuggernaut> {
     @Override
     public void doRenderLayer(EntityJuggernaut entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (entity.isInvisible()) return;
-        renderer.bindTexture(ModDefinitions.getResource("textures/entity/juggernaut_lights_" + (entity.isAngy() ? "2" : "1") + ".png"));
+        renderer.bindTexture(Constants.loc("textures/entity/juggernaut_lights_" + (entity.isAngy() ? "2" : "1") + ".png"));
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);

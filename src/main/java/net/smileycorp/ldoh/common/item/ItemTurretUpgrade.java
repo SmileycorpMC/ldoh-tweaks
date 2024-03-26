@@ -12,7 +12,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
 
 import java.util.List;
@@ -23,8 +23,8 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 
     public ItemTurretUpgrade() {
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setMaxStackSize(1);
         setHasSubtypes(true);
     }

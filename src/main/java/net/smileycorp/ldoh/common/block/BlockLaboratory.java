@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties {
 
@@ -28,8 +28,8 @@ public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties
         setResistance(6000000);
         setSoundType(SoundType.METAL);
         String name = "Laboratory_Block";
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
         setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
     }

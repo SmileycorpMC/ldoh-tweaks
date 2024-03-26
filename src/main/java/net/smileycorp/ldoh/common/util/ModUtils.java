@@ -56,7 +56,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.ConfigHandler;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.smileycorp.ldoh.common.entity.ai.AINearestTargetLDOH;
 import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
@@ -87,12 +87,12 @@ public class ModUtils {
         scoreboard.addPlayerToTeam(player.getName(), team);
         ITextComponent component = new TextComponentString(team);
         component.setStyle(new Style().setColor(scoreboard.getTeam(team).getColor()));
-        player.sendMessage(new TextComponentTranslation(ModDefinitions.JOIN_TEAM_MESSAGE, new Object[]{component.getFormattedText()}));
-        player.sendMessage(new TextComponentTranslation(ModDefinitions.POST_JOIN_TEAM_MESSAGE));
+        player.sendMessage(new TextComponentTranslation(Constants.JOIN_TEAM_MESSAGE, new Object[]{component.getFormattedText()}));
+        player.sendMessage(new TextComponentTranslation(Constants.POST_JOIN_TEAM_MESSAGE));
         if (!player.world.isRemote) {
             for (EntityPlayer other : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
                 if (other != player) {
-                    player.sendMessage(new TextComponentTranslation(ModDefinitions.OTHER_JOIN_TEAM_MESSAGE, new Object[]{player.getName(), component.getFormattedText()}));
+                    player.sendMessage(new TextComponentTranslation(Constants.OTHER_JOIN_TEAM_MESSAGE, new Object[]{player.getName(), component.getFormattedText()}));
                 }
             }
         }

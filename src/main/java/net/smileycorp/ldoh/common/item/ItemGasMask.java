@@ -10,12 +10,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class ItemGasMask extends ItemHat {
     
-    private static final ResourceLocation TEXTURE = ModDefinitions.getResource("textures/misc/gas_mask.png");
-    private static final ResourceLocation CRACKED_TEXTURE = ModDefinitions.getResource("textures/misc/gas_mask_cracked.png");
+    private static final ResourceLocation TEXTURE = Constants.loc("textures/misc/gas_mask.png");
+    private static final ResourceLocation CRACKED_TEXTURE = Constants.loc("textures/misc/gas_mask_cracked.png");
 
     public ItemGasMask() {
         super("Gas_Mask");

@@ -21,14 +21,14 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.ConfigHandler;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 
 import java.util.Random;
 
-@EventBusSubscriber(modid = ModDefinitions.MODID)
+@EventBusSubscriber(modid = Constants.MODID)
 public class WorldEvents {
 
     //Spawn in World

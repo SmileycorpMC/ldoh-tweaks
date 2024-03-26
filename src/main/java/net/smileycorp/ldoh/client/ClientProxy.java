@@ -35,7 +35,7 @@ import net.smileycorp.ldoh.client.tesr.TESRBarbedWire;
 import net.smileycorp.ldoh.client.tesr.TESRFilingCabinet;
 import net.smileycorp.ldoh.client.tesr.TESRTurretItem;
 import net.smileycorp.ldoh.common.CommonProxy;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
@@ -48,7 +48,7 @@ import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 import net.smileycorp.ldoh.common.tile.TileFilingCabinet;
 import net.smileycorp.ldoh.integration.mobends.LDOHMobendsAddon;
 
-@EventBusSubscriber(value = Side.CLIENT, modid = ModDefinitions.MODID)
+@EventBusSubscriber(value = Side.CLIENT, modid = Constants.MODID)
 public class ClientProxy extends CommonProxy {
 
     @Override
@@ -108,7 +108,7 @@ public class ClientProxy extends CommonProxy {
         for (Item item : RegistryEvents.ITEMS) {
             if (item instanceof IMetaItem) {
                 for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
-                    ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(ModDefinitions.getResource((item instanceof ItemBlockMeta ? "" : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
+                    ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Constants.loc((item instanceof ItemBlockMeta ? "" : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
                 }
             } else
                 ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
@@ -126,7 +126,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event) {
         IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-        ModelResourceLocation loc = new ModelResourceLocation(ModDefinitions.getResource("turret"), "normal");
+        ModelResourceLocation loc = new ModelResourceLocation(Constants.loc("turret"), "normal");
         //register our turret item renderer
         TESRTurretItem renderer = (TESRTurretItem) Item.getItemFromBlock(LDOHBlocks.TURRET).getTileEntityItemStackRenderer();
         registry.putObject(loc, renderer.new WrappedBakedModel(registry.getObject(loc)));

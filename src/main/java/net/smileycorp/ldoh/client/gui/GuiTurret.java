@@ -13,14 +13,14 @@ import net.minecraft.util.text.*;
 import net.minecraft.util.text.translation.I18n;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
 import net.smileycorp.ldoh.client.entity.model.ModelTurret;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
 public class GuiTurret extends GuiContainer {
 
-    public static ResourceLocation TEXTURE = ModDefinitions.getResource("textures/gui/turret.png");
+    public static ResourceLocation TEXTURE = Constants.loc("textures/gui/turret.png");
     public static final String TRANSLATION_KEY = "entity.ldoh.Turret.name";
 
     protected EntityTurret turret;

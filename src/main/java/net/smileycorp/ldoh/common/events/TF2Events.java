@@ -34,7 +34,7 @@ import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
@@ -64,11 +64,11 @@ public class TF2Events {
         //gives tf2 mercs hunger
         if (!entity.hasCapability(LDOHCapabilities.HUNGER, null) && entity instanceof EntityTF2Character) {
             if (!((EntityTF2Character) entity).isRobot())
-                event.addCapability(ModDefinitions.getResource("Hunger"), new IHunger.Provider());
+                event.addCapability(Constants.loc("Hunger"), new IHunger.Provider());
         }
         //give medics ability to cure
         if (!entity.hasCapability(LDOHCapabilities.CURING, null) && entity instanceof EntityMedic) {
-            event.addCapability(ModDefinitions.getResource("Curing"), new ICuring.Provider());
+            event.addCapability(Constants.loc("Curing"), new ICuring.Provider());
         }
     }
 

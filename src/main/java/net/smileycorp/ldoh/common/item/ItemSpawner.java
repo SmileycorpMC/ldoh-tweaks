@@ -17,7 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.ModMobEntry;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
@@ -34,8 +34,8 @@ public class ItemSpawner extends Item implements IMetaItem {
 
     public ItemSpawner() {
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setHasSubtypes(true);
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new BehaviorDefaultDispenseItem() {
             @Override
@@ -128,10 +128,10 @@ public class ItemSpawner extends Item implements IMetaItem {
         entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.Reaver.name", 0x87727E, 0xC4BCBA));
         try {
             NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
-                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/library_zombie") + "\"}");
+                    + "DeathLootTable:\"" + Constants.loc("entities/library_zombie") + "\"}");
             entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.LibraryZombie.name", 0x87727E, 0xC4BCBA, libraryNBT));
             NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
-                    + "DeathLootTable:\"" + ModDefinitions.getResource("entities/hospital_zombie") + "\"}");
+                    + "DeathLootTable:\"" + Constants.loc("entities/hospital_zombie") + "\"}");
             entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.HospitalZombie.name", 0x87727E, 0xC4BCBA, hospitalNBT));
         } catch (NBTException e) {
             e.printStackTrace();

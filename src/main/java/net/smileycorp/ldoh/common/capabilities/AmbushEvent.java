@@ -26,7 +26,7 @@ import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.hordes.common.Hordes;
 import net.smileycorp.hordes.hordeevent.HordeEventPacketHandler;
 import net.smileycorp.hordes.hordeevent.HordeSoundMessage;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.ai.AIAmbush;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
@@ -226,8 +226,8 @@ public class AmbushEvent implements IAmbushEvent {
     }
 
     private ResourceLocation getSound(Type type) {
-        if (type == Type.ALLY) return ModDefinitions.TF_ALLY_SOUND;
-        if (type == Type.ENEMY) return ModDefinitions.TF_ENEMY_SOUND;
+        if (type == Type.ALLY) return Constants.TF_ALLY_SOUND;
+        if (type == Type.ENEMY) return Constants.TF_ENEMY_SOUND;
         return Hordes.HORDE_SOUND;
     }
 

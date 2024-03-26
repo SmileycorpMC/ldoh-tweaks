@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
 
 public class RenderTF2Zombie extends RenderBiped<EntityTF2Zombie> {
@@ -25,7 +25,7 @@ public class RenderTF2Zombie extends RenderBiped<EntityTF2Zombie> {
     @Override
     protected ResourceLocation getEntityTexture(EntityTF2Zombie entity) {
         //get the team and class from the entity to get the right texture
-        return ModDefinitions.getResource("textures/entity/tfzombie/" + entity.getTFTeam().getName() + "_" + entity.getTFClass() + "_zombie.png");
+        return Constants.loc("textures/entity/tfzombie/" + entity.getTFTeam().getName() + "_" + entity.getTFClass() + "_zombie.png");
     }
 
 }

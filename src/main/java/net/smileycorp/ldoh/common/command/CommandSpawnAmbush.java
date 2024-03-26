@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.IAmbushEvent.Type;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 
@@ -27,7 +27,7 @@ public class CommandSpawnAmbush extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "commands." + ModDefinitions.MODID + ".SpawnAmbush.usage";
+        return "commands." + Constants.MODID + ".SpawnAmbush.usage";
     }
 
     @Override
@@ -37,17 +37,17 @@ public class CommandSpawnAmbush extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length != 2) throw new CommandException("commands." + ModDefinitions.MODID + ".SpawnAmbush.usage");
+        if (args.length != 2) throw new CommandException("commands." + Constants.MODID + ".SpawnAmbush.usage");
         try {
             Entity entity = sender.getCommandSenderEntity();
             Type type = Type.valueOf(args[0]);
             if (type == null || type == Type.NONE)
-                throw new CommandException("commands." + ModDefinitions.MODID + ".SpawnAmbush.invalidValue", new TextComponentTranslation(args[0]));
+                throw new CommandException("commands." + Constants.MODID + ".SpawnAmbush.invalidValue", new TextComponentTranslation(args[0]));
             if (type == Type.ALLY || type == Type.ENEMY) {
                 if (entity.getTeam() == null)
-                    throw new CommandException("commands." + ModDefinitions.MODID + ".SpawnAmbush.teamFail", new TextComponentTranslation(args[0]));
+                    throw new CommandException("commands." + Constants.MODID + ".SpawnAmbush.teamFail", new TextComponentTranslation(args[0]));
                 else if (!(entity.getTeam().getName().equals("RED") || entity.getTeam().getName().equals("BLU")))
-                    throw new CommandException("commands." + ModDefinitions.MODID + ".SpawnAmbush.teamFail", new TextComponentTranslation(args[0]));
+                    throw new CommandException("commands." + Constants.MODID + ".SpawnAmbush.teamFail", new TextComponentTranslation(args[0]));
             }
             int level = parseInt(args[1]);
             server.addScheduledTask(() -> {
@@ -55,9 +55,9 @@ public class CommandSpawnAmbush extends CommandBase {
                 if (player.hasCapability(LDOHCapabilities.AMBUSH, null))
                     player.getCapability(LDOHCapabilities.AMBUSH, null).spawnAmbush(player, type, level);
             });
-            notifyCommandListener(sender, this, "commands." + ModDefinitions.MODID + ".SpawnAmbush.success", new TextComponentTranslation(args[0]));
+            notifyCommandListener(sender, this, "commands." + Constants.MODID + ".SpawnAmbush.success", new TextComponentTranslation(args[0]));
         } catch (NumberInvalidException e) {
-            throw new CommandException("commands." + ModDefinitions.MODID + ".SpawnAmbush.invalidValue", new TextComponentTranslation(args[1]));
+            throw new CommandException("commands." + Constants.MODID + ".SpawnAmbush.invalidValue", new TextComponentTranslation(args[1]));
         }
     }
 

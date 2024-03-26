@@ -69,17 +69,17 @@ public class CommonProxy {
         if (Loader.isModLoaded("tektopia")) MinecraftForge.EVENT_BUS.register(new TektopiaEvents());
 
         //Add Safehouse loot tables
-        LootTableList.register(ModDefinitions.SAFEHOUSE_CHEST);
-        LootTableList.register(ModDefinitions.SAFEHOUSE_CABINET);
-        LootTableList.register(ModDefinitions.SAFEHOUSE_MEDICAL_FRIDGE);
-        LootTableList.register(ModDefinitions.SAFEHOUSE_FRIDGE);
-        LootTableList.register(ModDefinitions.SAFEHOUSE_CRATE);
-        LootTableList.register(ModDefinitions.NEST_CRATE);
-        LootTableList.register(ModDefinitions.MILITARY_CRATE);
-        LootTableList.register(ModDefinitions.MILITARY_AMMO);
-        LootTableList.register(ModDefinitions.MILITARY_TREASURE);
-        LootTableList.register(ModDefinitions.TECH_CRATE);
-        LootTableList.register(ModDefinitions.EIFFEL_GOOD_GOOD);
+        LootTableList.register(Constants.SAFEHOUSE_CHEST);
+        LootTableList.register(Constants.SAFEHOUSE_CABINET);
+        LootTableList.register(Constants.SAFEHOUSE_MEDICAL_FRIDGE);
+        LootTableList.register(Constants.SAFEHOUSE_FRIDGE);
+        LootTableList.register(Constants.SAFEHOUSE_CRATE);
+        LootTableList.register(Constants.NEST_CRATE);
+        LootTableList.register(Constants.MILITARY_CRATE);
+        LootTableList.register(Constants.MILITARY_AMMO);
+        LootTableList.register(Constants.MILITARY_TREASURE);
+        LootTableList.register(Constants.TECH_CRATE);
+        LootTableList.register(Constants.EIFFEL_GOOD_GOOD);
 
         //Setup Packets for use
         PacketHandler.initPackets();
@@ -158,7 +158,7 @@ public class CommonProxy {
         WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
                 new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
         //add australium turret upgrade
-        TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(ModDefinitions.getResource("austrailum_turret_upgrade"), TurretUpgrade.AUSTRALIUM.getItem(),
+        TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(Constants.loc("austrailum_turret_upgrade"), TurretUpgrade.AUSTRALIUM.getItem(),
                 new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
     }
 

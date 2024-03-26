@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class ItemSyringe extends Item implements IMetaItem {
 
     public ItemSyringe() {
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setMaxStackSize(16);
         setHasSubtypes(true);
     }

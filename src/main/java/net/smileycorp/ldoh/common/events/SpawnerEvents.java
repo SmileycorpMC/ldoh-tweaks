@@ -31,7 +31,7 @@ import net.smileycorp.hordes.common.event.HordeEndEvent;
 import net.smileycorp.hordes.common.event.HordeStartEvent;
 import net.smileycorp.hordes.common.event.HordeStartWaveEvent;
 import net.smileycorp.hordes.hordeevent.HordeSpawnEntry;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
@@ -50,11 +50,11 @@ public class SpawnerEvents {
         Entity entity = event.getObject();
         //spawner instance to spawn unburied in the caves around players
         if (!entity.hasCapability(LDOHCapabilities.UNBURIED_SPAWNER, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
-            event.addCapability(ModDefinitions.getResource("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
+            event.addCapability(Constants.loc("UnburiedSpawner"), new IUnburiedSpawner.Provider((EntityPlayer) entity));
         }
         //spawner instance for mini raid events
         if (!entity.hasCapability(LDOHCapabilities.AMBUSH, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
-            event.addCapability(ModDefinitions.getResource("MiniRaid"), new IAmbushEvent.Provider());
+            event.addCapability(Constants.loc("MiniRaid"), new IAmbushEvent.Provider());
         }
     }
 
@@ -136,7 +136,7 @@ public class SpawnerEvents {
         if (day > 100 && day % 100 == 0) {
             if (event.getEntityPlayer().getTeam() != null) {
                 if (event.getEntityPlayer().getTeam().getName().equals("RED") || event.getEntityPlayer().getTeam().getName().equals("BLU")) {
-                    event.setSound(ModDefinitions.TF_ENEMY_SOUND);
+                    event.setSound(Constants.TF_ENEMY_SOUND);
                 }
             }
         }

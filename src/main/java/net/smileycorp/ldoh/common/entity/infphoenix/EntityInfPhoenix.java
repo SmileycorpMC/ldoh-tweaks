@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.ai.AIMoveRandomFlying;
 import net.smileycorp.ldoh.common.entity.ai.FlyingMoveControl;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
@@ -181,7 +181,7 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
 
     @Override
     protected ResourceLocation getLootTable() {
-        return ModDefinitions.getResource("entities/inf_phoenix");
+        return Constants.loc("entities/inf_phoenix");
     }
 
     @Override

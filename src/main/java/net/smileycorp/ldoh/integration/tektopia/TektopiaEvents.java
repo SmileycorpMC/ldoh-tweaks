@@ -30,7 +30,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.IVillageData;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
@@ -57,7 +57,7 @@ public class TektopiaEvents {
         Entity entity = event.getObject();
         //give mercs home village
         if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
-            event.addCapability(ModDefinitions.getResource("VillageData"), new IVillageData.Provider());
+            event.addCapability(Constants.loc("VillageData"), new IVillageData.Provider());
         }
     }
 
@@ -120,12 +120,12 @@ public class TektopiaEvents {
             if (!world.isRemote) {
                 if (world.getWorldTime() >= 1080000 & !GameStageHelper.hasStage(player, "town")) {
                     GameStageHelper.addStage(player, "town");
-                    ITextComponent survivor = new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + ".Survivor");
+                    ITextComponent survivor = new TextComponentTranslation(Constants.VILLAGER_MESSAGE + ".Survivor");
                     survivor.setStyle(new Style().setBold(true));
-                    player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "0", survivor));
+                    player.sendMessage(new TextComponentTranslation(Constants.VILLAGER_MESSAGE + "0", survivor));
                     ITextComponent token = new TextComponentTranslation(ModItems.structureTownHall.getUnlocalizedName());
                     token.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true));
-                    player.sendMessage(new TextComponentTranslation(ModDefinitions.VILLAGER_MESSAGE + "1", token));
+                    player.sendMessage(new TextComponentTranslation(Constants.VILLAGER_MESSAGE + "1", token));
                 }
             }
         }
@@ -136,11 +136,11 @@ public class TektopiaEvents {
         int ID = 301;
         IForgeRegistry<EntityEntry> registry = event.getRegistry();
         EntityEntry ARCHITECT = EntityEntryBuilder.create().entity(EntityLDOHArchitect.class)
-                .id(ModDefinitions.getResource("architect"), ID++)
+                .id(Constants.loc("architect"), ID++)
                 .name("villager.architect").tracker(80, 3, true).build();
         registry.register(ARCHITECT);
         EntityEntry TRADESMAN = EntityEntryBuilder.create().entity(EntityLDOHTradesman.class)
-                .id(ModDefinitions.getResource("tradesman"), ID++)
+                .id(Constants.loc("tradesman"), ID++)
                 .name("villager.tradesman").tracker(80, 3, true).build();
         registry.register(TRADESMAN);
     }

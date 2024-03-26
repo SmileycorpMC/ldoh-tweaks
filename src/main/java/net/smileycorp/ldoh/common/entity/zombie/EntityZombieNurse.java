@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
@@ -92,7 +92,7 @@ public class EntityZombieNurse extends EntityZombie {
 
     @Override
     protected ResourceLocation getLootTable() {
-        return ModDefinitions.getResource("entities/nurse_zombie");
+        return Constants.loc("entities/nurse_zombie");
     }
 
 }

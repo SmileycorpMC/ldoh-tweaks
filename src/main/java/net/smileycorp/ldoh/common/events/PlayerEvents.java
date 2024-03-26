@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IApocalypse;
 import net.smileycorp.ldoh.common.capabilities.IFollowers;
@@ -57,7 +57,7 @@ public class PlayerEvents {
         Entity entity = event.getObject();
         //spawner instance for boss event
         if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
-            event.addCapability(ModDefinitions.getResource("Followers"), new IFollowers.Provider((EntityPlayer) entity));
+            event.addCapability(Constants.loc("Followers"), new IFollowers.Provider((EntityPlayer) entity));
         }
     }
 
@@ -117,12 +117,12 @@ public class PlayerEvents {
                     else if (!player.isSneaking() && followers.isCrouching()) followers.setUncrouching();
                 }
                 if (world.getWorldTime() == 265000) {
-                    ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_0);
+                    ITextComponent text = new TextComponentTranslation(Constants.ZOMBIE_EVOLUTION_MESSAGE_0);
                     text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
                     player.sendMessage(text);
                 }
                 if (world.getWorldTime() == 505000) {
-                    ITextComponent text = new TextComponentTranslation(ModDefinitions.ZOMBIE_EVOLUTION_MESSAGE_1);
+                    ITextComponent text = new TextComponentTranslation(Constants.ZOMBIE_EVOLUTION_MESSAGE_1);
                     text.setStyle(new Style().setColor(TextFormatting.RED).setBold(true));
                     player.sendMessage(text);
                 }

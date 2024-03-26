@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class RenderSpecialZombie<T extends EntityZombie> extends RenderBiped<T> {
 
@@ -27,7 +27,7 @@ public class RenderSpecialZombie<T extends EntityZombie> extends RenderBiped<T> 
 
     @Override
     protected ResourceLocation getEntityTexture(EntityZombie entity) {
-        return ModDefinitions.getResource("textures/entity/" + texture + ".png");
+        return Constants.loc("textures/entity/" + texture + ".png");
     }
 
 }

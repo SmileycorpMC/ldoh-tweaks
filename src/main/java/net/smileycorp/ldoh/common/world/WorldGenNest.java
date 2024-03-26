@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 import java.util.Random;
 
@@ -122,7 +122,7 @@ public class WorldGenNest extends WorldGenerator {
     private void placeLoot(World world, BlockPos pos, EnumFacing facing) {
         setBlockAndNotifyAdequately(world, pos, Blocks.RED_SHULKER_BOX.getDefaultState().withProperty(BlockShulkerBox.FACING, facing));
         TileEntityShulkerBox tile = new TileEntityShulkerBox();
-        tile.setLootTable(ModDefinitions.NEST_CRATE, world.rand.nextLong());
+        tile.setLootTable(Constants.NEST_CRATE, world.rand.nextLong());
         world.setTileEntity(pos, tile);
     }
 

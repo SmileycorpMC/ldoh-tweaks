@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.smileycorp.ldoh.client.entity.model.ModelZombieNurse;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.zombie.EntityReaver;
 
 public class RenderReaver extends RenderBiped<EntityReaver> {
@@ -25,7 +25,7 @@ public class RenderReaver extends RenderBiped<EntityReaver> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityReaver entity) {
-        return ModDefinitions.getResource("textures/entity/reaver.png");
+        return Constants.loc("textures/entity/reaver.png");
     }
 
 }

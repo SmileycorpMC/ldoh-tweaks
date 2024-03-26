@@ -51,7 +51,7 @@ import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.TimedEvents;
 import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
@@ -80,11 +80,11 @@ public class EntityEvents {
         Entity entity = event.getObject();
         //track whether zombies or crawling zombies were loaded from world data or not
         if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityLiving) {
-            event.addCapability(ModDefinitions.getResource("SpawnProvider"), new ISpawnTracker.Provider());
+            event.addCapability(Constants.loc("SpawnProvider"), new ISpawnTracker.Provider());
         }
         //lets entities break blocks if the capability is set to enabled
         if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
-            event.addCapability(ModDefinitions.getResource("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
+            event.addCapability(Constants.loc("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
         }
     }
 
@@ -322,7 +322,7 @@ public class EntityEvents {
                         //deal damage if not wearing it and display message
                         entity.attackEntityFrom(LDOHTweaks.TOXIC_GAS_DAMAGE, 1);
                         if (entity instanceof EntityPlayerMP) {
-                            PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(ModDefinitions.GAS_MESSAGE), (EntityPlayerMP) entity);
+                            PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(Constants.GAS_MESSAGE), (EntityPlayerMP) entity);
                         }
                     }
                 }

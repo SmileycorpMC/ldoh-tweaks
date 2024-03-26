@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
@@ -76,7 +76,7 @@ public class EntityZombieFireman extends EntityZombie {
 
     @Override
     protected ResourceLocation getLootTable() {
-        return ModDefinitions.getResource("entities/zombie_fireman");
+        return Constants.loc("entities/zombie_fireman");
     }
 
 }

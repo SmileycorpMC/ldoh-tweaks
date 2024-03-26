@@ -1,11 +1,11 @@
 package net.smileycorp.ldoh.common.fluid;
 
 import net.minecraftforge.fluids.Fluid;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class LDOHFluids {
     
-    public static final Fluid EXPERIENCE = new Fluid("experience", ModDefinitions.getResource("blocks/experience"), ModDefinitions.getResource("blocks/experience_flowing"));
+    public static final Fluid EXPERIENCE = new Fluid("experience", Constants.loc("blocks/experience"), Constants.loc("blocks/experience_flowing"));
     
     public static final Fluid MORPHINE = new FluidLDOH("morphine", 0xFFFFFF);
     

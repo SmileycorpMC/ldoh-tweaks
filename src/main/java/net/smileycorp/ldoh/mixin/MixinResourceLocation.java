@@ -1,7 +1,7 @@
 package net.smileycorp.ldoh.mixin;
 
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +23,7 @@ public class MixinResourceLocation {
             if (resourcePath.contains("_no_break") || resourcePath.contains("_no_place")) {
                 resourceDomain = "minecraft";
                 resourcePath = resourcePath.contains("husk") ? "husk" : "zombie";
-            } else resourceDomain = ModDefinitions.MODID;
+            } else resourceDomain = Constants.MODID;
         }
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class CommandHandDebug extends CommandBase {
 
@@ -17,7 +17,7 @@ public class CommandHandDebug extends CommandBase {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "commands." + ModDefinitions.MODID + ".handDebug.usage";
+        return "commands." + Constants.MODID + ".handDebug.usage";
     }
 
     @Override

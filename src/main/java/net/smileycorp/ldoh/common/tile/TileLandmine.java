@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.block.BlockLandmine;
 
 public class TileLandmine extends TileEntity implements ITickable {
@@ -15,7 +15,7 @@ public class TileLandmine extends TileEntity implements ITickable {
     private int cooldown = 5;
     private int primeTimer = 2400;
 
-    public SoundEvent BEEP_SOUND = new SoundEvent(ModDefinitions.LANDMINE_BEEP);
+    public SoundEvent BEEP_SOUND = new SoundEvent(Constants.LANDMINE_BEEP);
 
     @Override
     public void update() {

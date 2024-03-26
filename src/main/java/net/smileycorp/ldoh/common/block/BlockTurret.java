@@ -21,7 +21,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.tile.TileTurret;
 
@@ -36,8 +36,8 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
         super(Material.IRON);
         String name = "Turret";
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setHarvestLevel("pickaxe", 2);
         setHardness(1F);
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
