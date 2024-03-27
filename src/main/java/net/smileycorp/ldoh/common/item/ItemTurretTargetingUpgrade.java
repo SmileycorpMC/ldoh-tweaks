@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.Constants;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 
 import java.util.List;
 

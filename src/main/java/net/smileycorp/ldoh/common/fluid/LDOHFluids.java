@@ -13,4 +13,6 @@ public class LDOHFluids {
     
     public static final Fluid ENRICHED_ANTIBODY_SERUM = new FluidLDOH("enriched_antibody_serum", 0xC39538);
     
+    //public static final Fluid POTION = new FluidPotion();
+    
 }

@@ -1,19 +1,35 @@
 {
-    "type": "minecraft:crafting_shaped",
-	"group": "ldoh:experience_bucket",
-	"pattern" : [
-		"EEE",
-		"EBE",
-		"EEE"
-	],
-    "key" : {
-		"B" : {
-    		"item": "minecraft:bucket"
+    "type": "minecraft:crafting_shapeless",
+    "group": "ldoh:experience_bucket",
+    "ingredients": [
+        {
+            "item": "minecraft:bucket"
         },
-		"E" : {
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
+            "item": "minecraft:experience_bottle"
+        },
+        {
             "item": "minecraft:experience_bottle"
         }
-	},
+    ],
     "result": {
         "item": "ldoh:experience_bucket",
         "count": 1

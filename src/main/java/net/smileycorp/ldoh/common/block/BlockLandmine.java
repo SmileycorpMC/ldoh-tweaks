@@ -22,8 +22,8 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
-import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.Constants;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 

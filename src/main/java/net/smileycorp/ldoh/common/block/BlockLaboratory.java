@@ -14,8 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
-import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.Constants;
+import net.smileycorp.ldoh.common.LDOHTweaks;
 
 public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties {
 

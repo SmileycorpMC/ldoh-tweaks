@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.common;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 
 public class Constants {
 
@@ -49,7 +50,8 @@ public class Constants {
     public static final ResourceLocation MILITARY_TREASURE = loc("chests/military_treasure");
     public static final ResourceLocation TECH_CRATE = loc("chests/tech_crate");
     public static final ResourceLocation EIFFEL_GOOD_GOOD = loc("chests/eiffel_good_good");
-
+    public static final int BOTTLE_VOLUME = Fluid.BUCKET_VOLUME / 8;
+    
     //helper methods
     public static String name(String name) {
         return MODID + "." + name.replace("_", "");

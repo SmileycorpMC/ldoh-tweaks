@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.mixin;
 
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,16 @@ public class MixinItem {
         Multimap<String, AttributeModifier> map = callback.getReturnValue();
         if (Loader.isModLoaded("cfm")) ModUtils.getAttributeModifiers(slot, stack, map);
         callback.setReturnValue(map);
+    }
+    
+    @Inject(at = @At("HEAD"), method = "getContainerItem(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", remap = false, cancellable = true)
+    public void getContainerItem(ItemStack stack, CallbackInfoReturnable<ItemStack> callback) {
+        if (stack.getItem() == Items.EXPERIENCE_BOTTLE) callback.setReturnValue(new ItemStack(Items.GLASS_BOTTLE));
+    }
+    
+    @Inject(at = @At("HEAD"), method = "hasContainerItem(Lnet/minecraft/item/ItemStack;)Z", remap = false, cancellable = true)
+    public void hasContainerItem(ItemStack stack, CallbackInfoReturnable<Boolean> callback) {
+        if (stack.getItem() == Items.EXPERIENCE_BOTTLE) callback.setReturnValue(true);
     }
 
 }

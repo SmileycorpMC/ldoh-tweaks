@@ -11,6 +11,8 @@
     "MixinEntityLivingBase",
     "MixinEntityPlayerMP",
     "MixinEntityZombie",
+    "MixinFluidBucketWrapper",
+    "MixinFluidUtil",
     "MixinItem",
     "MixinResourceLocation",
     "MixinWorld",

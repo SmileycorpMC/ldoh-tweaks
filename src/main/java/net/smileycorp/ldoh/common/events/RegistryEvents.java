@@ -132,6 +132,7 @@ public class RegistryEvents {
         OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
         LDOHRecipeRegistry.registerMixingRecipe(new MixingRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 250),
                 new FluidStack(BOPBlocks.blood_fluid, 125), new FluidStack(LDOHFluids.NECROTIC_BLOOD, 125), new FluidStack(LDOHFluids.MORPHINE, 125)));
+        LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(Items.POTIONITEM), new FluidStack(FluidRegistry.WATER, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(Items.EXPERIENCE_BOTTLE), new FluidStack(LDOHFluids.EXPERIENCE, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(FirstAidItems.MORPHINE), new FluidStack(LDOHFluids.MORPHINE, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(LDOHItems.SYRINGE, 1, 1), new FluidStack(BOPBlocks.blood_fluid, 125), new ItemStack(LDOHItems.SYRINGE, 1, 0)));
