@@ -120,8 +120,7 @@ public class ModUtils {
             if (!speed.hasModifier(WASTELAND_MODIFIER)) speed.applyModifier(WASTELAND_MODIFIER);
         }
         if (!ConfigHandler.noDaySlowdown)
-            if (world.getWorldTime() % 24000 < 12000) if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null)
-                speed.applyModifier(new DayTimeSpeedModifier(world));
+            if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayTimeSpeedModifier(world));
     }
 
     //checks if a 64/64 area around the position consists of only regular wasteland

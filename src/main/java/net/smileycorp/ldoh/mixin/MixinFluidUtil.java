@@ -15,7 +15,6 @@ public class MixinFluidUtil {
     
     @Inject(at = @At("HEAD"), method = "getFilledBucket", remap = false, cancellable = true)
     private static void getFilledBucket(FluidStack fluidStack, CallbackInfoReturnable<ItemStack> callback) {
-        System.out.println("poopa stinka");
         if (fluidStack.getFluid() == LDOHFluids.EXPERIENCE) callback.setReturnValue(new ItemStack(LDOHItems.EXPERIENCE_BUCKET));
     }
     

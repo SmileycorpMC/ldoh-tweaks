@@ -19,7 +19,7 @@ public class DayCountSpeedModifier extends AttributeModifier {
 
     @Override
     public double getAmount() {
-        return (1 + (world.getWorldTime() / 24000)) * 0.1;
+        return Math.min((1 + (world.getWorldTime() / 24000)) * 0.1, 4);
     }
 
 }

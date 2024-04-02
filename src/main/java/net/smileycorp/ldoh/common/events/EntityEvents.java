@@ -11,6 +11,7 @@ import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,6 +62,8 @@ import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
+import net.smileycorp.ldoh.common.util.DayCountSpeedModifier;
+import net.smileycorp.ldoh.common.util.DayTimeSpeedModifier;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;
@@ -118,6 +121,10 @@ public class EntityEvents {
         else if (entity instanceof EntitySkeleton) event.setCanceled(true);
         else if (entity instanceof EntityCreeper) event.setCanceled(true);
         if (!world.isRemote) {
+            if (entity instanceof EntityZombie) {
+                IAttributeInstance speed = ((EntityZombie)entity).getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                if (speed.getModifier(DayCountSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayCountSpeedModifier(world));
+            }
             //replacing zombies with rare spawns
             if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null)) {
                 ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
