@@ -9,7 +9,7 @@
     "key" : {
 		"Q" : {
     		"type": "forge:ore_dict",
-    		"ore": "gemQuartz"
+    		"ore": "itemSilicon"
         },
 		"G" : {
             "type": "forge:ore_dict",

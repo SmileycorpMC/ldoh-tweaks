@@ -7,6 +7,7 @@ import com.animania.addons.farm.common.handler.FarmAddonItemHandler;
 import com.mrcrayfish.furniture.api.IRecipeRegistry;
 import com.mrcrayfish.furniture.api.RecipeType;
 import com.mrcrayfish.furniture.api.RecipeVariables;
+import com.mrcrayfish.furniture.init.FurnitureItems;
 import de.maxhenkel.car.items.ModItems;
 import ichttt.mods.firstaid.common.items.FirstAidItems;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
@@ -46,6 +47,7 @@ import net.smileycorp.ldoh.common.recipes.SiphoningRecipe;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 import pavocado.exoticbirds.init.ExoticbirdsItems;
+import rafradek.TF2weapons.TF2weapons;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -157,6 +159,8 @@ public class RegistryEvents {
                 .setOutput(new ItemStack(BOPBlocks.hard_ice)));
         registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(Items.FLINT))
                 .setOutput(new ItemStack(Items.PRISMARINE_SHARD)));
+        registry.registerRecipe(RecipeType.FREEZER, new RecipeVariables().setInput(new ItemStack(FurnitureItems.FLESH))
+                .setOutput(new ItemStack(FishItems.SHATTERED_ICE)));
         //register grill recipes
         registry.registerRecipe(RecipeType.GRILL, new RecipeVariables().setInput(new ItemStack(Items.PORKCHOP))
                 .setOutput(new ItemStack(Items.COOKED_PORKCHOP)));
@@ -227,6 +231,8 @@ public class RegistryEvents {
                 .setOutput(new ItemStack(ExoticbirdsItems.cooked_birdmeat)));
         registry.registerRecipe(RecipeType.MINEBAY, new RecipeVariables().addValue("currency", new ItemStack(Items.IRON_INGOT))
                 .addValue("price", 8).setInput(new ItemStack(LDOHItems.EXPERIENCE_BUCKET)));
+        registry.registerRecipe(RecipeType.MINEBAY, new RecipeVariables().addValue("currency", new ItemStack(TF2weapons.itemMoney, 1, 2))
+                .addValue("price", 64).setInput(new ItemStack(TF2weapons.itemTF2, 1, 2)));
     }
 
     @SubscribeEvent
