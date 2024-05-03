@@ -1,13 +1,19 @@
 package net.smileycorp.ldoh.common.capabilities;
 
 import com.Fishmod.mod_LavaCow.entities.tameable.EntityUnburied;
+import com.google.common.collect.Lists;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -17,18 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IUnburiedSpawner {
+    
+    boolean canSpawnEntity();
+    
+    boolean isValidLocation(World world, BlockPos pos);
 
-    public boolean canSpawnEntity();
+    void addEntity(EntityUnburied entity);
 
-    public void addEntity(EntityUnburied entity);
+    void removeEntity(EntityUnburied entity);
 
-    public void removeEntity(EntityUnburied entity);
+    NBTTagCompound writeToNBT(NBTTagList nbt);
 
-    public NBTTagCompound writeToNBT(NBTTagList nbt);
+   void readFromNBT(NBTTagList nbt);
 
-    public void readFromNBT(NBTTagList nbt);
-
-    public static class Storage implements IStorage<IUnburiedSpawner> {
+    class Storage implements IStorage<IUnburiedSpawner> {
 
         @Override
         public NBTBase writeNBT(Capability<IUnburiedSpawner> capability, IUnburiedSpawner instance, EnumFacing side) {
@@ -45,7 +53,7 @@ public interface IUnburiedSpawner {
 
     }
 
-    public static class UnburiedSpawner implements IUnburiedSpawner {
+    class UnburiedSpawner implements IUnburiedSpawner {
 
         private final List<WeakReference<EntityUnburied>> entities = new ArrayList<WeakReference<EntityUnburied>>();
 
@@ -70,18 +78,26 @@ public interface IUnburiedSpawner {
             entities.removeAll(toRemove);
             return entities.size() <= 15;
         }
+    
+        @Override
+        public boolean isValidLocation(World world, BlockPos pos) {
+            if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()))) return false;
+            if (world.canBlockSeeSky(pos) || world.getLightBrightness(pos) >= 0.4) return false;
+            IBlockState state = world.getBlockState(pos.down());
+            if (state == Blocks.STONE.getDefaultState()) return true;
+            Block block = state.getBlock();
+            return block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
+        }
 
         @Override
         public void addEntity(EntityUnburied entity) {
-            entities.add(new WeakReference<EntityUnburied>(entity));
+            entities.add(new WeakReference(entity));
         }
 
         @Override
         public void removeEntity(EntityUnburied entity) {
-            List<WeakReference<EntityUnburied>> toRemove = new ArrayList<WeakReference<EntityUnburied>>();
-            for (WeakReference<EntityUnburied> ref : entities) {
-                if (entity == ref.get()) toRemove.add(ref);
-            }
+            List<WeakReference<EntityUnburied>> toRemove = Lists.newArrayList();
+            for (WeakReference<EntityUnburied> ref : entities) if (entity == ref.get()) toRemove.add(ref);
             entities.removeAll(toRemove);
         }
 

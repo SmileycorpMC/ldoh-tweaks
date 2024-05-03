@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.common.util;
 
 import com.Fishmod.mod_LavaCow.entities.IAggressive;
+import com.Fishmod.mod_LavaCow.init.FishItems;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.feral.EntityFerHuman;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfDragonE;
@@ -63,6 +64,7 @@ import net.smileycorp.ldoh.common.entity.zombie.EntityCrawlingZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
+import pavocado.exoticbirds.entity.Birds.Phoenix.EntityPhoenix;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
@@ -371,15 +373,6 @@ public class ModUtils {
     public static void addBuildTask(EntityMob entity) {
         entity.tasks.addTask(2, new ESM_EntityAIPillarUp(entity));
     }
-
-    public static boolean canUnburiedSpawn(World world, BlockPos pos) {
-        if (!(world.isAirBlock(pos) && world.isAirBlock(pos.up()))) return false;
-        if (world.canBlockSeeSky(pos) || world.getLightBrightness(pos) >= 0.4) return false;
-        IBlockState state = world.getBlockState(pos.down());
-        if (state == Blocks.STONE.getDefaultState()) return true;
-        Block block = state.getBlock();
-        return block == Blocks.HARDENED_CLAY || block == Blocks.STONEBRICK;
-    }
     
     public static boolean isBed(IBlockState state) {
         return state.getBlock() instanceof BlockModernBed;
@@ -390,6 +383,14 @@ public class ModUtils {
         dragon.setPosition(0.5, 200, 0.5);
         dragon.enablePersistence();
         return world.spawnEntity(dragon);
+    }
+    
+    public static boolean isPhoenix(EntityLivingBase entity) {
+        return entity instanceof EntityPhoenix;
+    }
+    
+    public static boolean isPetBandage(ItemStack stack) {
+        return stack.getItem() == FishItems.CURSED_BANDAGE;
     }
     
 }

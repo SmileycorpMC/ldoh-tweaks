@@ -36,7 +36,6 @@ import net.smileycorp.ldoh.common.capabilities.Apocalypse;
 import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
 import net.smileycorp.ldoh.common.capabilities.IUnburiedSpawner;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.util.TF2Class;
 
 import java.util.Map.Entry;
@@ -87,7 +86,7 @@ public class SpawnerEvents {
                                 }
                             }
                             //make sure area is dark, then spawn entity
-                            if (ModUtils.canUnburiedSpawn(world, pos)) {
+                            if (spawner.isValidLocation(world, pos)) {
                                 EntityUnburied entity = new EntityUnburied(world);
                                 entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
                                 entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);

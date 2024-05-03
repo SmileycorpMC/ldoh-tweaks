@@ -21,6 +21,7 @@
   "client": [
     "MixinBiome",
     "MixinEntityPlayerSP",
+    "MixinEntityRenderer",
     "MixinFMLCommonHandler",
     "MixinRender"
   ],
