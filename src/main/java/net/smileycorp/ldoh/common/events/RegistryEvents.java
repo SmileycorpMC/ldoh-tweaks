@@ -127,7 +127,9 @@ public class RegistryEvents {
         for (ItemStack egg : OreDictionary.getOres("egg"))
             GameRegistry.addSmelting(egg, new ItemStack(ItemListxlfoodmod.fried_egg), 0.1f);
         GameRegistry.addSmelting(new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 0), 0.1f);
-        GameRegistry.addSmelting(new ItemStack(Blocks.SOUL_SAND), new ItemStack(Items.QUARTZ, 1, 0), 0.1f);
+        GameRegistry.addSmelting(new ItemStack(Blocks.SOUL_SAND), new ItemStack(Items.QUARTZ), 0.1f);
+        for (int i = 0; i < 3; i++) GameRegistry.addSmelting(new ItemStack(Blocks.QUARTZ_BLOCK, 1, i), new ItemStack(Items.QUARTZ), 0.1f);
+        for (int i = 0; i < 3; i++) GameRegistry.addSmelting(new ItemStack(Blocks.PRISMARINE, 1, i), new ItemStack(Items.PRISMARINE_SHARD), 0.1f);
         FuelHandler.getInstance().registerFuel(ModItems.RAPECAKE, 50);
         OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
         OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);

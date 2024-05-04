@@ -7,8 +7,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,10 +26,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.UniversalBucket;
@@ -207,6 +212,22 @@ public class PlayerEvents {
                     if (event.getItemStack().getItem() != FurnitureItems.CROWBAR)
                         player.sendMessage(new TextComponentTranslation("message.ldoh.SealedCrate"));
                 }
+            }
+        }
+    }
+    
+    //activate when a player breaks a block
+    @SubscribeEvent
+    public void breakBlock(BlockEvent.BreakEvent event) {
+        World world = event.getWorld();
+        if (world.isRemote) return;
+        BlockPos pos = event.getPos();
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileEntityCrate &! ((TileEntityCrate) tile).sealed) {
+            IInventory crate = (IInventory) tile;
+            for (int i = 0; i < crate.getSizeInventory(); i++) {
+                EntityItem item = new EntityItem(world, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), crate.getStackInSlot(i));
+                world.spawnEntity(item);
             }
         }
     }
