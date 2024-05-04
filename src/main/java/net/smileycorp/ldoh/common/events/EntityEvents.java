@@ -63,7 +63,6 @@ import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
 import net.smileycorp.ldoh.common.util.DayCountSpeedModifier;
-import net.smileycorp.ldoh.common.util.DayTimeSpeedModifier;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import rafradek.TF2weapons.TF2weapons;

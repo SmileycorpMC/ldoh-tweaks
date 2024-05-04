@@ -50,6 +50,7 @@ public class Constants {
     public static final ResourceLocation MILITARY_TREASURE = loc("chests/military_treasure");
     public static final ResourceLocation TECH_CRATE = loc("chests/tech_crate");
     public static final ResourceLocation EIFFEL_GOOD_GOOD = loc("chests/eiffel_good_good");
+    public static final ResourceLocation VET_CHEST = loc("chests/vet_chest");
     public static final int BOTTLE_VOLUME = Fluid.BUCKET_VOLUME / 8;
     
     //helper methods

@@ -80,7 +80,8 @@ public class CommonProxy {
         LootTableList.register(Constants.MILITARY_TREASURE);
         LootTableList.register(Constants.TECH_CRATE);
         LootTableList.register(Constants.EIFFEL_GOOD_GOOD);
-
+        LootTableList.register(Constants.VET_CHEST);
+        
         //Setup Packets for use
         PacketHandler.initPackets();
 

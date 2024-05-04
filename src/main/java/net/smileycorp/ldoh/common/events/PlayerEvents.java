@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -26,7 +25,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -220,15 +218,16 @@ public class PlayerEvents {
     @SubscribeEvent
     public void breakBlock(BlockEvent.BreakEvent event) {
         World world = event.getWorld();
+        if (world == null) return;
         if (world.isRemote) return;
         BlockPos pos = event.getPos();
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileEntityCrate &! ((TileEntityCrate) tile).sealed) {
-            IInventory crate = (IInventory) tile;
-            for (int i = 0; i < crate.getSizeInventory(); i++) {
-                EntityItem item = new EntityItem(world, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), crate.getStackInSlot(i));
-                world.spawnEntity(item);
-            }
+        if (!(tile instanceof TileEntityCrate)) return;
+        if (!((TileEntityCrate) tile).sealed) return;
+        IInventory crate = (IInventory) tile;
+        for (int i = 0; i < crate.getSizeInventory(); i++) {
+            EntityItem item = new EntityItem(world, pos.getX() + world.rand.nextFloat(), pos.getY() + world.rand.nextFloat(), pos.getZ() + world.rand.nextFloat(), crate.getStackInSlot(i));
+            world.spawnEntity(item);
         }
     }
 
@@ -241,16 +240,12 @@ public class PlayerEvents {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerSleepInBed(PlayerSleepInBedEvent event) {
-        System.out.println("slimb");
         if (event.getEntity() == null) return;
-        System.out.println("schlamb");
         if (event.getEntity().world.isRemote) return;
-        System.out.println("schwubwub");
         //sleeping overhaul checks if the clicked block is an instance of BlockHorizontal, cache the blockstate
         //so we can make it treat cfm beds as vanilla ones
         IBlockState state = event.getEntity().world.getBlockState(event.getPos());
         if (state.getBlock() instanceof BlockHorizontal) return;
-        System.out.println("galalkalal");
         BED_POS = event.getPos();
     }
 
