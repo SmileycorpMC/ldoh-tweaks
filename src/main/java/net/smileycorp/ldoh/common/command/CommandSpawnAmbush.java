@@ -63,7 +63,7 @@ public class CommandSpawnAmbush extends CommandBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        if (args.length == 1) return Arrays.asList("ALLY", "ENEMY", "ZOMBIE", "PARASITE");
+        if (args.length == 1) return Arrays.asList("ALLY", "ENEMY", "ZOMBIE", "PARASITE", "MUTANT");
         else if (args.length == 2) {
             List<String> list = Lists.newArrayList();
             for (int i = 0; i < 12; i++) list.add(String.valueOf(i));
