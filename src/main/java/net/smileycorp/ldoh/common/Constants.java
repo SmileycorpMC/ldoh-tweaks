@@ -8,7 +8,7 @@ public class Constants {
     //mod constants
     public static final String MODID = "ldoh";
     public static final String NAME = "LDoH";
-    public static final String VERSION = "1.1.14";
+    public static final String VERSION = "1.1.15";
     public static final String DEPENDENCIES = "after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
             + "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
             + "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"

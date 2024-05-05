@@ -118,9 +118,8 @@ public class ModUtils {
         World world = entity.world;
         Biome biome = world.getBiome(entity.getPosition());
         IAttributeInstance speed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-        if (EnumBiomeType.BADLANDS.matches(biome)) {
+        if (EnumBiomeType.BADLANDS.matches(biome))
             if (!speed.hasModifier(WASTELAND_MODIFIER)) speed.applyModifier(WASTELAND_MODIFIER);
-        }
         if (!ConfigHandler.noDaySlowdown)
             if (speed.getModifier(DayTimeSpeedModifier.MODIFIER_UUID) == null) speed.applyModifier(new DayTimeSpeedModifier(world));
     }

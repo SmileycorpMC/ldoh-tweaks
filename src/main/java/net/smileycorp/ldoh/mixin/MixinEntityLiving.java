@@ -41,10 +41,8 @@ public abstract class MixinEntityLiving extends EntityLivingBase {
             }
             //pet bandages
             if (ModUtils.isPhoenix(this) && ModUtils.isPetBandage(stack) && getHealth() < getMaxHealth()) {
-                float h = 2f;
                 int meta = stack.getMetadata();
-                if (meta == 2) h = 6;
-                heal(h);
+                heal(meta == 2 ? 6 : 2);
                 if (meta == 1) addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 3600));
                 else if (meta == 3) addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 3600));
                 if(!player.isCreative()) stack.shrink(1);

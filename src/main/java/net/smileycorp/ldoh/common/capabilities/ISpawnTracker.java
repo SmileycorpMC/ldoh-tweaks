@@ -3,36 +3,41 @@ package net.smileycorp.ldoh.common.capabilities;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public interface ISpawnTracker {
 
-    public boolean isSpawned();
+    boolean isSpawned();
 
-    public void setSpawned(boolean isSpawned);
+    void setSpawned(boolean isSpawned);
+    
+    boolean isUpdated(World world);
+    
+    NBTTagCompound save();
+    
+    void load(NBTTagCompound nbt);
 
-    public static class Storage implements IStorage<ISpawnTracker> {
-
+    class Storage implements IStorage<ISpawnTracker> {
+    
         @Override
         public NBTBase writeNBT(Capability<ISpawnTracker> capability, ISpawnTracker instance, EnumFacing side) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setBoolean("isSpawned", instance.isSpawned());
-            return nbt;
+            return instance.save();
         }
 
         @Override
         public void readNBT(Capability<ISpawnTracker> capability, ISpawnTracker instance, EnumFacing side, NBTBase nbt) {
-            instance.setSpawned(((NBTTagCompound) nbt).getBoolean("isSpawned"));
+            instance.load((NBTTagCompound) nbt);
         }
-
 
     }
 
-    public static class SpawnTracker implements ISpawnTracker {
+    class SpawnTracker implements ISpawnTracker {
 
         private boolean isSpawned = false;
+        private int lastUpdate = 0;
 
         @Override
         public boolean isSpawned() {
@@ -43,10 +48,34 @@ public interface ISpawnTracker {
         public void setSpawned(boolean isSpawned) {
             this.isSpawned = isSpawned;
         }
-
+    
+        @Override
+        public boolean isUpdated(World world) {
+            int current = (int)(world.getWorldTime() / 12000);
+            if (current > lastUpdate) {
+                lastUpdate = current;
+                return false;
+            }
+            return true;
+        }
+    
+        @Override
+        public NBTTagCompound save() {
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setBoolean("isSpawned", isSpawned);
+            nbt.setInteger("lastUpdate", lastUpdate);
+            return nbt;
+        }
+    
+        @Override
+        public void load(NBTTagCompound nbt) {
+            if (nbt.hasKey("isSpawned")) isSpawned = nbt.getBoolean("isSpawned");
+            if (nbt.hasKey("lastUpdate")) lastUpdate = nbt.getInteger("lastUpdate");
+        }
+    
     }
 
-    public class Provider implements ICapabilitySerializable<NBTBase> {
+    class Provider implements ICapabilitySerializable<NBTBase> {
 
         protected ISpawnTracker instance = LDOHCapabilities.SPAWN_TRACKER.getDefaultInstance();
 

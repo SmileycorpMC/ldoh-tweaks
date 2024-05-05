@@ -8,9 +8,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -126,25 +123,12 @@ public class ItemSpawner extends Item implements IMetaItem {
         entries.add(new ModMobEntry(EntityInfPhoenixTwilight.class, "entity.ldoh.InfTwilightPhoenix.name", 0x2A0101, 395019));
         entries.add(new ModMobEntry(EntityInfPhoenixWater.class, "entity.ldoh.InfWaterPhoenix.name", 0x2A0101, 7253246));
         entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.Reaver.name", 0x87727E, 0xC4BCBA));
-        try {
-            NBTTagCompound libraryNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
-                    + "DeathLootTable:\"" + Constants.loc("entities/library_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.LibraryZombie.name", 0x87727E, 0xC4BCBA, libraryNBT));
-            NBTTagCompound hospitalNBT = JsonToNBT.getTagFromJson("{PersistenceRequired:1b, "
-                    + "DeathLootTable:\"" + Constants.loc("entities/hospital_zombie") + "\"}");
-            entries.add(new ModMobEntry(EntityReaver.class, "entity.ldoh.HospitalZombie.name", 0x87727E, 0xC4BCBA, hospitalNBT));
-        } catch (NBTException e) {
-            e.printStackTrace();
-        }
         //entries.add(new ModMobEntry(EntityJuggernaut.class, "entity.ldoh.Juggernaut.name", 0x8A4411, 0x333736));
     }
 
     public static ItemStack getEggFor(EntityLiving entity) {
-        for (ModMobEntry entry : entries) {
-            if (entry.doesMatch(entity)) {
-                return new ItemStack(LDOHItems.SPAWNER, 1, entries.indexOf(entry));
-            }
-        }
+        for (ModMobEntry entry : entries) if (entry.doesMatch(entity))
+            return new ItemStack(LDOHItems.SPAWNER, 1, entries.indexOf(entry));
         return null;
     }
 

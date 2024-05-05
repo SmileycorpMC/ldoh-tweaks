@@ -12,6 +12,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.EntitySkeletonHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,13 +82,11 @@ public class EntityEvents {
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         //track whether zombies or crawling zombies were loaded from world data or not
-        if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityLiving) {
+        if (!entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityLiving)
             event.addCapability(Constants.loc("SpawnProvider"), new ISpawnTracker.Provider());
-        }
         //lets entities break blocks if the capability is set to enabled
-        if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving) {
+        if (!entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null) && entity instanceof EntityLiving)
             event.addCapability(Constants.loc("BlockBreaker"), new IBreakBlocks.Provider((EntityLiving) entity));
-        }
     }
 
     //hooks into the hordes infection event
@@ -95,10 +94,7 @@ public class EntityEvents {
     //highest priority to fire before our other handlers
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInfect(InfectionDeathEvent event) {
-        if (event.getSource().getTrueSource() instanceof EntityPlayer) {
-            event.setCanceled(true);
-            return;
-        }
+        if (event.getSource().getTrueSource() instanceof EntityPlayer) event.setCanceled(true);
     }
 
     //prevent entities spawning within 30 blocks of world spawn, should hopefully fix invisible zombies in the safehouse
@@ -135,24 +131,15 @@ public class EntityEvents {
                             Random rand = world.rand;
                             //select random number first to allow for proper weighting
                             int randInt = rand.nextInt(100);
-                            if (randInt < 3) {
-                                newentity = new EntityTF2Zombie(world);
-                            } else if (randInt == 3) {
-                                newentity = new EntityZombieNurse(world);
-                            } else if (randInt < 15) {
-                                newentity = EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition())) ?
+                            if (randInt < 3) newentity = new EntityTF2Zombie(world);
+                            else if (randInt == 3)  newentity = new EntityZombieNurse(world);
+                            else if (randInt < 15) newentity = EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition())) ?
                                         new EntityCrawlingHusk(world) : new EntityCrawlingZombie(world);
-                            } else if (randInt < 17) {
-                                newentity = new EntityZombieFireman(world);
-                                //turns zombies into husks in a desert
-                            } else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                                newentity = new EntityHusk(world);
-                            }
+                            else if (randInt < 17) newentity = new EntityZombieFireman(world);
+                            else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) newentity = new EntityHusk(world);
                         }
                         //turns zombies into husks in a desert
-                        else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition()))) {
-                            newentity = new EntityHusk(world);
-                        }
+                        else if (EnumBiomeType.DESERT.matches(world.getBiome(entity.getPosition())))  newentity = new EntityHusk(world);
                         //sets up new entity
                         if (newentity != null) {
                             newentity.renderYawOffset = zombie.renderYawOffset;
@@ -163,9 +150,11 @@ public class EntityEvents {
                             world.spawnEntity(newentity);
                             event.setCanceled(true);
                             ModUtils.setEntitySpeed(newentity);
+                            tracker.isUpdated(world);
                         } else {
                             ModUtils.setEntitySpeed((EntityMob) entity);
                             tracker.setSpawned(true);
+                            tracker.isUpdated(world);
                         }
                         //replace crawling zombies with their husk counterpart in deserts
                     } else if (entity.getClass() == EntityCrawlingZombie.class) {
@@ -180,16 +169,22 @@ public class EntityEvents {
                             world.spawnEntity(newentity);
                             event.setCanceled(true);
                             ModUtils.setEntitySpeed((EntityMob) entity);
+                            tracker.isUpdated(world);
                         } else {
                             ModUtils.setEntitySpeed((EntityMob) entity);
                             tracker.setSpawned(true);
+                            tracker.isUpdated(world);
                         }
                     } else if (entity instanceof EntityZombieMushroom) {
                         if (EnumBiomeType.BADLANDS.matches(world.getBiome(entity.getPosition())))
                             ((EntityZombieMushroom) entity).setSkin(1);
                         tracker.setSpawned(true);
+                        tracker.isUpdated(world);
                     }
-                    if (!tracker.isSpawned()) tracker.setSpawned(true);
+                    if (!tracker.isSpawned()) {
+                        tracker.setSpawned(true);
+                        tracker.isUpdated(world);
+                    }
                 }
             }
             //add special targeting ai
@@ -265,13 +260,11 @@ public class EntityEvents {
                 entity.setDead();
                 event.setCanceled(true);
             }
-            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage) {
+            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage)
                 event.setAmount(3f);
-            }
             //adds 1/10 chance for bleed effect from husks
-            if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0) {
+            if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0)
                 entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
-            }
         }
     }
 
@@ -302,16 +295,18 @@ public class EntityEvents {
     public void livingTick(LivingUpdateEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         World world = entity.world;
+        if (world.isRemote) return;
+        if (entity.hasCapability(LDOHCapabilities.SPAWN_TRACKER, null) && entity instanceof EntityZombie) {
+            ISpawnTracker tracker = entity.getCapability(LDOHCapabilities.SPAWN_TRACKER, null);
+            if (!tracker.isUpdated(world)) ((ModifiableAttributeInstance)entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)).flagForUpdate();
+        }
         if (entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
             IBreakBlocks cap = entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null);
-            if (cap.canBreakBlocks()) {
-                if (world.getWorldTime() % 10 == 0) {
-                    if (cap.tryBreakBlocks()) entity.attackEntityFrom(DamageSource.MAGIC, 10f);
-                }
-            }
+            if (cap.canBreakBlocks() && world.getWorldTime() % 10 == 0 && cap.tryBreakBlocks())
+                entity.attackEntityFrom(DamageSource.MAGIC, 10f);
         }
         //toxic gas
-        if (!world.isRemote && world.getWorldType() != WorldType.FLAT
+        if (world.getWorldType() != WorldType.FLAT
                 & !(entity instanceof EntityParasiteBase || entity.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)) {
             if (entity.getPosition().getY() + entity.getEyeHeight() <= 31) {
                 if (entity instanceof EntityBuilding || entity instanceof EntityTurret) return;
@@ -321,15 +316,13 @@ public class EntityEvents {
                     //check if player has a gas mask and damage it instead, check damage to prevent it from fully breaking
                     if (helm.getItem() == LDOHItems.GAS_MASK || helm.getItem() == LDOHItems.NANO_HELM && helm.getItemDamage() < helm.getMaxDamage() - 1) {
                         helm.damageItem(1, entity);
-                        if (helm.getItemDamage() == helm.getMaxDamage() - 10 && entity instanceof EntityPlayerMP) {
+                        if (helm.getItemDamage() == helm.getMaxDamage() - 10 && entity instanceof EntityPlayerMP)
                             ((EntityPlayerMP) entity).connection.sendPacket(new SPacketSoundEffect(SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, entity.posX, entity.posY, entity.posZ, 1.0F, 1.0F));
-                        }
                     } else {
                         //deal damage if not wearing it and display message
                         entity.attackEntityFrom(LDOHTweaks.TOXIC_GAS_DAMAGE, 1);
-                        if (entity instanceof EntityPlayerMP) {
+                        if (entity instanceof EntityPlayerMP)
                             PacketHandler.NETWORK_INSTANCE.sendTo(new SimpleStringMessage(Constants.GAS_MESSAGE), (EntityPlayerMP) entity);
-                        }
                     }
                 }
             }
