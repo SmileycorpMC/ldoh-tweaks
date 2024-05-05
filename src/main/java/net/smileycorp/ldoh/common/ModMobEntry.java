@@ -51,11 +51,9 @@ public class ModMobEntry {
 
     //get the entities name
     public String getLocalisedName() {
-        if (tfclass != null) {
-            return TextUtils.toProperCase(team) + " " + new TextComponentTranslation("entity.Zombie.name").getFormattedText() + " " + tfclass.getLocalizedName();
-        } else {
-            return new TextComponentTranslation(unlocalisedName).getFormattedText();
-        }
+        return (tfclass == null) ? new TextComponentTranslation(unlocalisedName).getFormattedText() :
+            TextUtils.toProperCase(team) + " " + new TextComponentTranslation("entity.Zombie.name").getFormattedText()
+                    + " " + tfclass.getLocalizedName().getFormattedText();
     }
 
     public EntityLiving getEntityToSpawn(World world, BlockPos pos) {
