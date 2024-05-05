@@ -42,9 +42,7 @@ public class ItemWeapon extends ItemBase {
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
-        if (state.getBlockHardness(world, pos) != 0.0D) {
-            stack.damageItem(isTool ? 1 : 2, entity);
-        }
+        if (state.getBlockHardness(world, pos) != 0.0D)  stack.damageItem(isTool ? 1 : 2, entity);
         return true;
     }
 
@@ -66,11 +64,9 @@ public class ItemWeapon extends ItemBase {
 
     @Override
     public float getDestroySpeed(ItemStack stack, IBlockState state) {
-        if (isTool) {
-            Material material = state.getMaterial();
-            return material != Material.WOOD && material != Material.PLANTS && material != Material.VINE ? super.getDestroySpeed(stack, state) : 8.0F;
-        }
-        return super.getDestroySpeed(stack, state);
+        if (!isTool) return super.getDestroySpeed(stack, state);
+        Material material = state.getMaterial();
+        return material != Material.WOOD && material != Material.PLANTS && material != Material.VINE ? super.getDestroySpeed(stack, state) : 8.0F;
     }
 
     @Override

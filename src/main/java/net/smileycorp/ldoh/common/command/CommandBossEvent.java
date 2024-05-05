@@ -30,10 +30,9 @@ public class CommandBossEvent extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         server.addScheduledTask(() -> {
             for (EntityPlayer player : server.getPlayerList().getPlayers()) {
-                if (player.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
-                    IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
-                    apocalypse.startEvent();
-                }
+                if (!player.hasCapability(LDOHCapabilities.APOCALYPSE, null)) continue;
+                IApocalypse apocalypse = player.getCapability(LDOHCapabilities.APOCALYPSE, null);
+                apocalypse.startEvent();
             }
         });
         notifyCommandListener(sender, this, "commands." + Constants.MODID + ".StartBossEvent.success", new Object[0]);

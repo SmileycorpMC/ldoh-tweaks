@@ -19,28 +19,21 @@ public class TileLandmine extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (!world.isRemote) {
-            IBlockState state = world.getBlockState(pos);
-            if (!state.getValue(BlockLandmine.PRIMED)) {
-                if (primeTimer % 40 == 0) world.playSound(null, pos, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                if (primeTimer-- <= 0) BlockLandmine.prime(world, pos, state);
-            }
-            if (state.getValue(BlockLandmine.PRESSED)) {
-                if (world.getEntitiesWithinAABB(EntityLivingBase.class, BlockLandmine.HITBOX_AABB.offset(pos)).isEmpty()) {
-                    if (cooldown-- <= 0) BlockLandmine.explode(world, pos);
-                }
-            }
+        if (world.isRemote) return;
+        IBlockState state = world.getBlockState(pos);
+        if (!state.getValue(BlockLandmine.PRIMED)) {
+            if (primeTimer % 40 == 0) world.playSound(null, pos, BEEP_SOUND, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if (primeTimer-- <= 0) BlockLandmine.prime(world, pos, state);
         }
+        if (state.getValue(BlockLandmine.PRESSED) &&
+                world.getEntitiesWithinAABB(EntityLivingBase.class, BlockLandmine.HITBOX_AABB.offset(pos)).isEmpty() && cooldown-- <= 0)
+            BlockLandmine.explode(world, pos);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("primeTimer")) {
-            primeTimer = compound.getInteger("primeTimer");
-        }
-        if (compound.hasKey("cooldown")) {
-            cooldown = compound.getInteger("cooldown");
-        }
+        if (compound.hasKey("primeTimer")) primeTimer = compound.getInteger("primeTimer");
+        if (compound.hasKey("cooldown")) cooldown = compound.getInteger("cooldown");
         super.readFromNBT(compound);
     }
 

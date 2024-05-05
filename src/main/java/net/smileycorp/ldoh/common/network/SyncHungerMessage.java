@@ -9,8 +9,7 @@ public class SyncHungerMessage implements IMessage {
 
     private int entity, hunger;
 
-    public SyncHungerMessage() {
-    }
+    public SyncHungerMessage() {}
 
     public SyncHungerMessage(Entity entity, int hunger) {
         this.entity = entity.getEntityId();

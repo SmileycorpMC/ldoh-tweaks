@@ -65,8 +65,7 @@ public class InventoryTurretUpgrades implements IInventory {
     }
 
     @Override
-    public void markDirty() {
-    }
+    public void markDirty() {}
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer entityPlayer) {
@@ -74,12 +73,10 @@ public class InventoryTurretUpgrades implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer entityPlayer) {
-    }
+    public void openInventory(EntityPlayer entityPlayer) {}
 
     @Override
-    public void closeInventory(EntityPlayer entityPlayer) {
-    }
+    public void closeInventory(EntityPlayer entityPlayer) {}
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -93,8 +90,7 @@ public class InventoryTurretUpgrades implements IInventory {
     }
 
     @Override
-    public void setField(int i, int i1) {
-    }
+    public void setField(int i, int i1) {}
 
     @Override
     public int getFieldCount() {

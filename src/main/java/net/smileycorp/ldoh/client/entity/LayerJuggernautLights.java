@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.client.entity;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -27,9 +28,10 @@ public class LayerJuggernautLights implements LayerRenderer<EntityJuggernaut> {
         int j = i % 65536;
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-        Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+        EntityRenderer entityRenderer = Minecraft.getMinecraft().entityRenderer;
+        entityRenderer.setupFogColor(true);
         renderer.getMainModel().render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+        entityRenderer.setupFogColor(false);
         i = entity.getBrightnessForRender();
         j = i % 65536;
         k = i / 65536;

@@ -28,13 +28,12 @@ public class CommandHandDebug extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         server.addScheduledTask(() -> {
-            if (sender.getCommandSenderEntity() instanceof EntityLiving) {
-                EntityLiving entity = (EntityLiving) sender.getCommandSenderEntity();
-                ItemStack stack = entity.getHeldItemMainhand();
-                if (stack != null) {
-                    notifyCommandListener(sender, this, stack.toString());
-                    notifyCommandListener(sender, this, stack.getItem().getClass().toString());
-                }
+            if (!(sender.getCommandSenderEntity() instanceof EntityLiving)) return;
+            EntityLiving entity = (EntityLiving) sender.getCommandSenderEntity();
+            ItemStack stack = entity.getHeldItemMainhand();
+            if (stack != null) {
+                notifyCommandListener(sender, this, stack.toString());
+                notifyCommandListener(sender, this, stack.getItem().getClass().toString());
             }
         });
         //notifyCommandListener(sender, this, "commands."+ModDefinitions.MODID+".StartBossEvent.success", new Object[0]);

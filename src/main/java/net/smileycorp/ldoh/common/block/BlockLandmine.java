@@ -10,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
@@ -49,14 +48,13 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 
     @Override
     public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-        if (!world.isRemote) {
-            if (state.getValue(PRIMED) & !state.getValue(PRESSED) && entity instanceof EntityLivingBase) {
-                TileEntity te = world.getTileEntity(pos);
-                world.playSound((EntityPlayer) null, pos, SoundEvents.BLOCK_STONE_PRESSPLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.7F);
-                world.setBlockState(pos, state.withProperty(PRESSED, true), 2);
-                world.setTileEntity(pos, te);
-                world.markBlockRangeForRenderUpdate(pos, pos);
-            }
+        if (world.isRemote) return;
+        if (state.getValue(PRIMED) & !state.getValue(PRESSED) && entity instanceof EntityLivingBase) {
+            TileEntity te = world.getTileEntity(pos);
+            world.playSound(null, pos, SoundEvents.BLOCK_STONE_PRESSPLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.7F);
+            world.setBlockState(pos, state.withProperty(PRESSED, true), 2);
+            world.setTileEntity(pos, te);
+            world.markBlockRangeForRenderUpdate(pos, pos);
         }
     }
 
@@ -97,12 +95,9 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-        if (!canPlaceBlockAt(world, pos)) {
-            if (state.getValue(PRIMED)) explode(world, pos);
-            else {
-                world.destroyBlock(pos, true);
-            }
-        }
+        if (canPlaceBlockAt(world, pos)) return;
+        if (state.getValue(PRIMED)) explode(world, pos);
+        else world.destroyBlock(pos, true);
     }
 
     @Override
@@ -137,12 +132,11 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
     }
 
     public static void prime(World world, BlockPos pos, IBlockState state) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(pos);
-            world.setBlockState(pos, state.withProperty(PRIMED, true), 2);
-            world.setTileEntity(pos, te);
-            world.markBlockRangeForRenderUpdate(pos, pos);
-        }
+        if (world.isRemote) return;
+        TileEntity te = world.getTileEntity(pos);
+        world.setBlockState(pos, state.withProperty(PRIMED, true), 2);
+        world.setTileEntity(pos, te);
+        world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public static void explode(World world, BlockPos pos) {
@@ -151,20 +145,13 @@ public class BlockLandmine extends Block implements IBlockProperties, ITileEntit
         float x = pos.getX() + 0.5f;
         float y = pos.getY();
         float z = pos.getX() + 0.5f;
-        for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(x - 3, y - 3, z - 3, x + 3, y + 3, z + 3))) {
-            if (entity.attackable() & !entity.isImmuneToExplosions()) {
-                entity.attackEntityFrom(LDOHTweaks.SHRAPNEL_DAMAGE, (float) Math.exp(3.4 - entity.getDistance(x, y, z)));
-            }
-        }
+        for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(x - 3, y - 3, z - 3, x + 3, y + 3, z + 3)))
+            if (entity.attackable() & !entity.isImmuneToExplosions()) entity.attackEntityFrom(LDOHTweaks.SHRAPNEL_DAMAGE, (float) Math.exp(3.4 - entity.getDistance(x, y, z)));
         Explosion explosion = world.createExplosion(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 4, false);
-        for (int i = -1; i <= 1; i++) {
-            for (int k = -1; k <= 1; k++) {
-                if (Math.abs(i) != Math.abs(k) || i == 0) {
-                    BlockPos pos0 = pos.down().east(i).south(k);
-                    if (world.getBlockState(pos0).getBlock().getExplosionResistance(world, pos0, null, explosion) < 10f)
-                        world.setBlockToAir(pos0);
-                }
-            }
+        for (int i = -1; i <= 1; i++) for (int k = -1; k <= 1; k++) if (Math.abs(i) != Math.abs(k) || i == 0) {
+                BlockPos pos0 = pos.down().east(i).south(k);
+                if (world.getBlockState(pos0).getBlock().getExplosionResistance(world, pos0, null, explosion) < 10f)
+                    world.setBlockToAir(pos0);
         }
     }
 

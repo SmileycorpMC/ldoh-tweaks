@@ -9,8 +9,7 @@ public class SyncMedicCureMessage implements IMessage {
 
     private int entity;
 
-    public SyncMedicCureMessage() {
-    }
+    public SyncMedicCureMessage() {}
 
     public SyncMedicCureMessage(Entity entity) {
         this.entity = entity.getEntityId();

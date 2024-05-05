@@ -18,13 +18,13 @@ import net.smileycorp.ldoh.common.util.ModUtils;
 
 public interface IBreakBlocks {
 
-    public boolean canBreakBlocks();
+    boolean canBreakBlocks();
 
-    public boolean tryBreakBlocks();
+    boolean tryBreakBlocks();
 
-    public void enableBlockBreaking(boolean canBreak);
+    void enableBlockBreaking(boolean canBreak);
 
-    public static class Storage implements IStorage<IBreakBlocks> {
+    class Storage implements IStorage<IBreakBlocks> {
 
         @Override
         public NBTBase writeNBT(Capability<IBreakBlocks> capability, IBreakBlocks instance, EnumFacing side) {
@@ -41,12 +41,12 @@ public interface IBreakBlocks {
 
     }
 
-    public static class BreakBlocks implements IBreakBlocks {
+    class Impl implements IBreakBlocks {
 
         private final EntityLiving entity;
         private final World world;
 
-        public BreakBlocks(EntityLiving entity) {
+        public Impl(EntityLiving entity) {
             this.entity = entity;
             world = entity == null ? null : entity.world;
         }
@@ -100,7 +100,7 @@ public interface IBreakBlocks {
         protected final IBreakBlocks instance;
 
         public Provider(EntityLiving entity) {
-            instance = new BreakBlocks(entity);
+            instance = new Impl(entity);
         }
 
         @Override

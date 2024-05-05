@@ -5,8 +5,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.Vec3d;
 
 public enum EnumAxis implements IStringSerializable {
-    X,
-    Z;
+    X, Z;
 
     @Override
     public String getName() {

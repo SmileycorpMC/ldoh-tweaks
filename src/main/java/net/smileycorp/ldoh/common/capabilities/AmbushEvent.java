@@ -55,15 +55,9 @@ public class AmbushEvent implements IAmbushEvent {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("phase")) {
-            phase = nbt.getInteger("phase");
-        }
-        if (nbt.hasKey("cooldown")) {
-            cooldown = nbt.getInteger("cooldown");
-        }
-        if (nbt.hasKey("postGame")) {
-            cooldown = nbt.getInteger("postGame");
-        }
+        if (nbt.hasKey("phase")) phase = nbt.getInteger("phase");
+        if (nbt.hasKey("cooldown")) cooldown = nbt.getInteger("cooldown");
+        if (nbt.hasKey("postGame")) postGame = nbt.getBoolean("postGame");
     }
 
     @Override
@@ -83,44 +77,37 @@ public class AmbushEvent implements IAmbushEvent {
 
     @Override
     public void spawnAmbush(EntityPlayer player) {
-        if (player != null) {
-            World world = player.world;
-            if (!world.isRemote) {
-                Type type = getType(player);
-                if (type != Type.NONE) {
-                    spawnAmbush(player, type, phase);
-                } else {
-                    System.out.println("Raid type is none, " + player.getName() + " doesn't have a team, aborting raid.");
-                }
-                phase++;
-                cooldown = postGame ? world.rand.nextInt(48000) + 6000 : 6000;
-            }
-        }
+        if (player == null) return;
+        World world = player.world;
+        if (world.isRemote) return;
+        Type type = getType(player);
+        if (type != Type.NONE) spawnAmbush(player, type, phase);
+        else System.out.println("Raid type is none, " + player.getName() + " doesn't have a team, aborting raid.");
+        phase++;
+        cooldown = postGame ? world.rand.nextInt(48000) + 6000 : 6000;
     }
 
     @Override
     public void spawnAmbush(EntityPlayer player, Type type, int phase) {
-        if (player != null) {
-            World world = player.world;
-            if (!world.isRemote) {
-                Random rand = world.rand;
-                Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
-                BlockPos pos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), dir, 50);
-                for (EntityLiving entity : buildList(world, player, type, phase)) {
-                    double x = pos.getX() + (rand.nextFloat() * 2) - 1;
-                    double z = pos.getZ() + (rand.nextFloat() * 2) - 1;
-                    int y = world.getHeight((int) x, (int) z);
-                    entity.setPosition(x + rand.nextFloat(), y, z + rand.nextFloat());
-                    entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
-                    entity.enablePersistence();
-                    world.spawnEntity(entity);
-                    if (type == Type.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
-                    else if (type == Type.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
-                    entity.tasks.addTask(1, new AIAmbush(entity, player));
-                }
-                HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
-            }
+        if (player == null) return;
+        World world = player.world;
+        if (world.isRemote) return;
+        Random rand = world.rand;
+        Vec3d dir = DirectionUtils.getRandomDirectionVecXZ(rand);
+        BlockPos pos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), dir, 50);
+        for (EntityLiving entity : buildList(world, player, type, phase)) {
+            double x = pos.getX() + (rand.nextFloat() * 2) - 1;
+            double z = pos.getZ() + (rand.nextFloat() * 2) - 1;
+            int y = world.getHeight((int) x, (int) z);
+            entity.setPosition(x + rand.nextFloat(), y, z + rand.nextFloat());
+            entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), null);
+            entity.enablePersistence();
+            world.spawnEntity(entity);
+            if (type == Type.ALLY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 140));
+            else if (type == Type.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
+            entity.tasks.addTask(1, new AIAmbush(entity, player));
         }
+        HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
     }
 
 
@@ -128,11 +115,9 @@ public class AmbushEvent implements IAmbushEvent {
         if (postGame) return Type.randomType(player, player.world.rand);
         Type type = types[phase];
         if (type == Type.ALLY || type == Type.ENEMY) {
-            if (player.getTeam() == null) {
+            if (player.getTeam() == null) return type == Type.ALLY ? Type.NONE : phase < 8 ? Type.ZOMBIE : Type.PARASITE;
+            else if (!(player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU")))
                 return type == Type.ALLY ? Type.NONE : phase < 8 ? Type.ZOMBIE : Type.PARASITE;
-            } else if (!(player.getTeam().getName().equals("RED") || player.getTeam().getName().equals("BLU"))) {
-                return type == Type.ALLY ? Type.NONE : phase < 8 ? Type.ZOMBIE : Type.PARASITE;
-            }
         }
         return type;
     }

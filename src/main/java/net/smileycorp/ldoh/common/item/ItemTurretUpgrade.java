@@ -45,11 +45,8 @@ public class ItemTurretUpgrade extends Item implements IMetaItem {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < getMaxMeta(); i++) {
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
+        if (!isInCreativeTab(tab)) return;
+        for (int i = 0; i < getMaxMeta(); i++) items.add(new ItemStack(this, 1, i));
     }
 
     public boolean hasEffect(ItemStack stack) {

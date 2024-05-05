@@ -15,8 +15,6 @@ import com.mrcrayfish.guns.entity.DamageSourceProjectile;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIDigging;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIGrief;
 import funwayguy.epicsiegemod.ai.ESM_EntityAIPillarUp;
-import mcjty.lostcities.dimensions.world.LostCityChunkGenerator;
-import mcjty.lostcities.dimensions.world.lost.BuildingInfo;
 import net.insane96mcp.iguanatweaks.modules.ModuleMovementRestriction;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -44,14 +42,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.smileycorp.atlas.api.util.DirectionUtils;
@@ -78,7 +78,6 @@ public class ModUtils {
 
     public static final AttributeModifier WASTELAND_MODIFIER = new AttributeModifier(UUID.fromString("22f4fa64-de73-4b45-9bb2-aae297639594"), "wasteland", 0.5, 2);
     public static final AttributeModifier FOLLOW_MODIFIER = new AttributeModifier(UUID.fromString("3dc892c7-0def-42d5-8e7f-bb9f00136ad9"), "follow", -1, 2);
-    public static final AttributeModifier TIRED_MODIFIER = new AttributeModifier(UUID.fromString("d92e0875-9115-4d73-947d-905957cd4a72"), "tired", -0.5, 2);
 
     public static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
     public static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
@@ -91,13 +90,9 @@ public class ModUtils {
         component.setStyle(new Style().setColor(scoreboard.getTeam(team).getColor()));
         player.sendMessage(new TextComponentTranslation(Constants.JOIN_TEAM_MESSAGE, new Object[]{component.getFormattedText()}));
         player.sendMessage(new TextComponentTranslation(Constants.POST_JOIN_TEAM_MESSAGE));
-        if (!player.world.isRemote) {
-            for (EntityPlayer other : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                if (other != player) {
-                    player.sendMessage(new TextComponentTranslation(Constants.OTHER_JOIN_TEAM_MESSAGE, new Object[]{player.getName(), component.getFormattedText()}));
-                }
-            }
-        }
+        if (player.world.isRemote) return;
+        for (EntityPlayer other : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers())
+            if (other != player) player.sendMessage(new TextComponentTranslation(Constants.OTHER_JOIN_TEAM_MESSAGE, new Object[]{player.getName(), component.getFormattedText()}));
     }
 
     //removes unnececary nbt from tf2 weapons to prevent a crash
@@ -132,28 +127,9 @@ public class ModUtils {
         return true;
     }
 
-    public static boolean isCity(World world, int x, int z) {
-        for (Biome biome : world.getBiomeProvider().getBiomes(null, x << 4, z << 4, 16, 16, false))
-            if (EnumBiomeType.CITY.matches(biome)) return true;
-        if (world.getChunkProvider() instanceof ChunkProviderServer) {
-            if (((ChunkProviderServer) world.getChunkProvider()).chunkGenerator instanceof LostCityChunkGenerator) {
-                LostCityChunkGenerator gen = (LostCityChunkGenerator) ((ChunkProviderServer) world.getChunkProvider()).chunkGenerator;
-                ChunkPos cpos = world.getChunkFromBlockCoords(new BlockPos(x, 0, z)).getPos();
-                for (int i = -1; i <= 1; i++) {
-                    for (int k = -1; k <= 1; k++) {
-                        if (BuildingInfo.isCity(cpos.x + i, cpos.z + k, gen)) return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     public static void tryJoinTeam(EntityPlayer player, EntityLivingBase entity) {
         //adds player to npc team
-        if (entity instanceof EntityTF2Character) {
-            ModUtils.addPlayerToTeam(player, entity.getTeam().getName());
-        }
+        if (entity instanceof EntityTF2Character)  ModUtils.addPlayerToTeam(player, entity.getTeam().getName());
     }
 
     public static boolean canTarget(EntityLivingBase entity, EntityLivingBase target) {
@@ -165,25 +141,19 @@ public class ModUtils {
             if (entity instanceof IEnemyMachine)
                 if (((IEnemyMachine) entity).isEnemy() && (target instanceof EntityPlayer || target instanceof EntityMob))
                     return true;
-            if (entity.getTeam() != null) {
+            if (entity.getTeam() != null)
                 if (target.getTeam() != null || target instanceof EntityMob)
                     return !entity.getTeam().isSameTeam(target.getTeam());
-            } else return target instanceof EntityMob & !(target instanceof EntityTF2Character);
+            else return target instanceof EntityMob & !(target instanceof EntityTF2Character);
         }
         return false;
     }
 
     public static boolean shouldHeal(EntityLivingBase entity, EntityLivingBase target) {
-        if (entity == target) return false;
-        if (entity != null && target != null) {
-            if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
-            if (target instanceof EntityPlayer || target instanceof EntityTF2Character || (Loader.isModLoaded("tektopia") && TektopiaUtils.isVillager(target))) {
-                if (!canTarget(entity, target)) {
-                    if (target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED))
-                        return true;
-                }
-            }
-        }
+        if (entity == target || entity == null || target == null) return false;
+        if (target instanceof EntityPlayer) if (((EntityPlayer) target).isSpectator()) return false;
+        if ((target instanceof EntityPlayer || target instanceof EntityTF2Character || (Loader.isModLoaded("tektopia") && TektopiaUtils.isVillager(target)))
+                && (!canTarget(entity, target) && target.getHealth() < target.getMaxHealth() || target.isPotionActive(HordesInfection.INFECTED))) return true;
         return false;
     }
 

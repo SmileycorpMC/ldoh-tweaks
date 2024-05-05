@@ -27,21 +27,21 @@ import java.util.List;
 
 public interface IFollowers {
 
-    public boolean isCrouching();
+    boolean isCrouching();
 
-    public void setCrouching();
+    void setCrouching();
 
-    public void setUncrouching();
+    void setUncrouching();
 
-    public boolean stopFollowing(EntityLiving entity);
+    boolean stopFollowing(EntityLiving entity);
 
-    public boolean isFollowing(EntityLiving entity);
+    boolean isFollowing(EntityLiving entity);
 
-    public void readFromNBT(NBTTagCompound compound);
+    void readFromNBT(NBTTagCompound compound);
 
-    public NBTTagCompound writeToNBT();
+    NBTTagCompound writeToNBT();
 
-    public static class Storage implements IStorage<IFollowers> {
+    class Storage implements IStorage<IFollowers> {
 
         @Override
         public NBTBase writeNBT(Capability<IFollowers> capability, IFollowers instance, EnumFacing side) {
@@ -53,10 +53,9 @@ public interface IFollowers {
             instance.readFromNBT((NBTTagCompound) nbt);
         }
 
-
     }
 
-    public static class Followers implements IFollowers {
+    class Followers implements IFollowers {
 
         protected EntityPlayer player;
         protected boolean crouching = false;
@@ -88,9 +87,7 @@ public interface IFollowers {
             int[] ids = new int[]{};
             for (WeakReference<EntityLiving> ref : followers) {
                 EntityLiving entity = ref.get();
-                if (entity != null) {
-                    if (!entity.isDead && entity.isAddedToWorld()) ArrayUtils.add(ids, entity.getEntityId());
-                }
+                if (entity != null &! entity.isDead && entity.isAddedToWorld()) ArrayUtils.add(ids, entity.getEntityId());
             }
             nbt.setIntArray("followers", ids);
             return nbt;
@@ -103,92 +100,84 @@ public interface IFollowers {
 
         @Override
         public void setCrouching() {
-            if (player != null) {
-                World world = player.world;
-                for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, player.getEntityBoundingBox().grow(6))) {
-                    if (entity != null) {
-                        EntityAITasks tasks = entity.tasks;
-                        AIFollowPlayer followAI = null;
-                        for (EntityAITaskEntry task : tasks.taskEntries) {
-                            if (task.action instanceof AIFollowPlayer) {
-                                AIFollowPlayer ai = (AIFollowPlayer) task.action;
-                                if (ai.getUser() == player) {
-                                    followAI = ai;
-                                    break;
-                                }
-                            }
-                        }
-                        if (followAI != null) {
-                            tasks.removeTask(followAI);
-                            IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                            if (!attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
-                                attribute.applyModifier(ModUtils.FOLLOW_MODIFIER);
-                            followers.add(new WeakReference<EntityLiving>(entity));
+            crouching = true;
+            if (player == null) return;
+            World world = player.world;
+            for (EntityLiving entity : world.getEntitiesWithinAABB(EntityLiving.class, player.getEntityBoundingBox().grow(6))) {
+                if (entity == null) continue;
+                EntityAITasks tasks = entity.tasks;
+                AIFollowPlayer followAI = null;
+                for (EntityAITaskEntry task : tasks.taskEntries) {
+                    if (task.action instanceof AIFollowPlayer) {
+                        AIFollowPlayer ai = (AIFollowPlayer) task.action;
+                        if (ai.getUser() == player) {
+                            followAI = ai;
+                            break;
                         }
                     }
                 }
+                if (followAI != null) {
+                    tasks.removeTask(followAI);
+                    IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                    if (!attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
+                        attribute.applyModifier(ModUtils.FOLLOW_MODIFIER);
+                    followers.add(new WeakReference<EntityLiving>(entity));
+                }
             }
-            crouching = true;
         }
 
         @Override
         public void setUncrouching() {
-            if (player != null) {
-                for (WeakReference<EntityLiving> ref : followers) {
-                    EntityLiving entity = ref.get();
-                    if (entity != null) {
-                        if (!entity.isDead && entity.isAddedToWorld()) {
-                            IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                            if (attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
-                                attribute.removeModifier(ModUtils.FOLLOW_MODIFIER);
-                            AIFollowPlayer task = new AIFollowPlayer(entity, player);
-                            for (EntityAITaskEntry entry : entity.targetTasks.taskEntries)
-                                if (entry.using) entry.action.resetTask();
-                            entity.tasks.addTask(0, task);
-                        }
-                    }
+            crouching = false;
+            if (player == null) {
+                followers.clear();
+                return;
+            }
+            for (WeakReference<EntityLiving> ref : followers) {
+                EntityLiving entity = ref.get();
+                if (entity == null) continue;
+                if (!entity.isDead && entity.isAddedToWorld()) {
+                    IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+                    if (attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
+                        attribute.removeModifier(ModUtils.FOLLOW_MODIFIER);
+                    AIFollowPlayer task = new AIFollowPlayer(entity, player);
+                    for (EntityAITaskEntry entry : entity.targetTasks.taskEntries)
+                        if (entry.using) entry.action.resetTask();
+                    entity.tasks.addTask(0, task);
                 }
             }
             followers.clear();
-            crouching = false;
         }
 
         @Override
         public boolean stopFollowing(EntityLiving entity) {
-            if (player != null) {
-                WeakReference<EntityLiving> target = null;
-                for (WeakReference<EntityLiving> ref : followers) {
-                    if (ref.get() == entity) {
-                        target = ref;
-                        break;
-                    }
-                }
-                if (target != null) {
-                    if (player instanceof EntityPlayerMP) {
-                        PacketHandler.NETWORK_INSTANCE.sendTo(new FollowSyncMessage(entity, true), (EntityPlayerMP) player);
-                    }
-                    IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-                    if (attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
-                        attribute.removeModifier(ModUtils.FOLLOW_MODIFIER);
-                    followers.remove(target);
-                    return true;
+            if (player == null) return false;
+            WeakReference<EntityLiving> target = null;
+            for (WeakReference<EntityLiving> ref : followers) {
+                if (ref.get() == entity) {
+                    target = ref;
+                    break;
                 }
             }
-            return false;
+            if (target == null) return false;
+            if (player instanceof EntityPlayerMP)
+                PacketHandler.NETWORK_INSTANCE.sendTo(new FollowSyncMessage(entity, true), (EntityPlayerMP) player);
+            IAttributeInstance attribute = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+            if (attribute.hasModifier(ModUtils.FOLLOW_MODIFIER))
+                attribute.removeModifier(ModUtils.FOLLOW_MODIFIER);
+            followers.remove(target);
+            return true;
         }
 
         @Override
         public boolean isFollowing(EntityLiving entity) {
-            if (player != null) {
-                for (WeakReference<EntityLiving> ref : followers) {
-                    if (ref.get() == entity) return true;
-                }
-            }
+            if (player == null) return false;
+            for (WeakReference<EntityLiving> ref : followers) if (ref.get() == entity) return true;
             return false;
         }
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+    class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
         protected final IFollowers instance;
 

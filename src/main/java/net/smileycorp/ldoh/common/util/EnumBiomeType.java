@@ -23,9 +23,7 @@ public enum EnumBiomeType {
     }
 
     public boolean matches(Biome biome) {
-        for (Optional<Biome> optional : biomes) {
-            if (optional.isPresent()) if (optional.get() == biome) return true;
-        }
+        for (Optional<Biome> optional : biomes) if (optional.isPresent()) if (optional.get() == biome) return true;
         return false;
     }
 

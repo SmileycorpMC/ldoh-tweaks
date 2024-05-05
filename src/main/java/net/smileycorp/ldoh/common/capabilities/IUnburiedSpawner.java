@@ -105,31 +105,26 @@ public interface IUnburiedSpawner {
         public NBTTagCompound writeToNBT(NBTTagList nbt) {
             for (WeakReference<EntityUnburied> ref : entities) {
                 EntityUnburied entity = ref.get();
-                if (entity != null) {
-                    if (!(entity.isDead || entity.isAddedToWorld())) {
-                        nbt.appendTag(new NBTTagInt(entity.getEntityId()));
-                    }
-                }
+                if (entity != null &!entity.isDead && entity.isAddedToWorld()) nbt.appendTag(new NBTTagInt(entity.getEntityId()));
             }
             return null;
         }
 
         @Override
         public void readFromNBT(NBTTagList nbt) {
-            if (player != null) {
-                for (NBTBase tag : nbt) {
-                    if (tag instanceof NBTTagInt) {
-                        Entity entity = player.world.getEntityByID(((NBTTagInt) tag).getInt());
-                        if (entity instanceof EntityUnburied)
-                            entities.add(new WeakReference<EntityUnburied>((EntityUnburied) entity));
-                    }
+            if (player == null) return;
+            for (NBTBase tag : nbt) {
+                if (tag instanceof NBTTagInt) {
+                    Entity entity = player.world.getEntityByID(((NBTTagInt) tag).getInt());
+                    if (entity instanceof EntityUnburied)
+                        entities.add(new WeakReference<EntityUnburied>((EntityUnburied) entity));
                 }
             }
         }
 
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagList> {
+    class Provider implements ICapabilitySerializable<NBTTagList> {
 
         protected final IUnburiedSpawner instance;
 

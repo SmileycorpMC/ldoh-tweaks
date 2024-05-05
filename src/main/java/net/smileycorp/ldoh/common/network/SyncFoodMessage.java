@@ -12,8 +12,7 @@ public class SyncFoodMessage implements IMessage {
     private int entity;
     private ItemStack stack;
 
-    public SyncFoodMessage() {
-    }
+    public SyncFoodMessage() {}
 
     public SyncFoodMessage(Entity entity, ItemStack stack) {
         this.entity = entity.getEntityId();

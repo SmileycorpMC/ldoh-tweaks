@@ -10,18 +10,13 @@ public class ItemEggColour implements IItemColor {
     @Override
     //follow rough vanilla behaviour for colouring our spawn eggs
     public int colorMultiplier(ItemStack stack, int tintIndex) {
-        int colour = tintIndex == 1 ? 0x00000 : 0xFB40F9;
         int meta = stack.getMetadata();
         if (meta < ItemSpawner.entries.size()) {
             //get colours from the spawn egg entry
             ModMobEntry entry = ItemSpawner.entries.get(meta);
-            if (tintIndex == 0) {
-                colour = entry.getBackgroundColour();
-            } else if (tintIndex == 1) {
-                colour = entry.getForegroundColour();
-            }
+            return tintIndex == 0 ? entry.getBackgroundColour() : entry.getForegroundColour();
         }
-        return colour;
+        return tintIndex == 1 ? 0x00000 : 0xFB40F9;
     }
 
 }

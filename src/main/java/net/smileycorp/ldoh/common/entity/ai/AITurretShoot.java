@@ -52,10 +52,7 @@ public class AITurretShoot extends EntityAIBase {
                 idleTimer = 0;
             }
             idleTimer++;
-        } else {
-            turret.setTarget(null);
-            return;
-        }
+        } else turret.setTarget(null);
     }
 
 }

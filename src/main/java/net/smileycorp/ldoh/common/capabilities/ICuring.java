@@ -15,21 +15,21 @@ import net.smileycorp.ldoh.common.network.SyncSyringesMessage;
 
 public interface ICuring {
 
-    public ItemStack tryPickupSyringe(ItemStack stack, EntityLiving entity);
+    ItemStack tryPickupSyringe(ItemStack stack, EntityLiving entity);
 
-    public int getSyringeCount();
+    int getSyringeCount();
 
-    public void setSyringeCount(int count);
+    void setSyringeCount(int count);
 
-    public void syncClients(EntityLiving entity);
+    void syncClients(EntityLiving entity);
 
-    public void syncClient(EntityLiving entity, EntityPlayerMP player);
+    void syncClient(EntityLiving entity, EntityPlayerMP player);
 
-    public void readNBT(NBTTagCompound compound);
+    void readNBT(NBTTagCompound compound);
 
-    public void writeNBT(NBTTagCompound compound);
+    void writeNBT(NBTTagCompound compound);
 
-    public static class Storage implements IStorage<ICuring> {
+    class Storage implements IStorage<ICuring> {
 
         @Override
         public NBTBase writeNBT(Capability<ICuring> capability, ICuring instance, EnumFacing side) {
@@ -46,7 +46,7 @@ public interface ICuring {
 
     }
 
-    public static class Curing implements ICuring {
+    class Curing implements ICuring {
 
         private int syringeCount = 0;
 

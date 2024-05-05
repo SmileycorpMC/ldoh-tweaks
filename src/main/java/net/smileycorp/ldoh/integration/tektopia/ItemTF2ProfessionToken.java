@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common.item;
+package net.smileycorp.ldoh.integration.tektopia;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.item.IMetaItem;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.common.item.ItemBase;
 import net.tangotek.tektopia.ModItems;
 import net.tangotek.tektopia.ProfessionType;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
@@ -36,12 +36,11 @@ public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < getMaxMeta(); i++) {
-                ItemStack stack = new ItemStack(this, 1, i);
-                stack.setTagCompound(new NBTTagCompound());
-                items.add(stack);
-            }
+        if (!isInCreativeTab(tab)) return;
+        for (int i = 0; i < getMaxMeta(); i++) {
+            ItemStack stack = new ItemStack(this, 1, i);
+            stack.setTagCompound(new NBTTagCompound());
+            items.add(stack);
         }
     }
 
@@ -63,8 +62,8 @@ public class ItemTF2ProfessionToken extends ItemBase implements IMetaItem {
                         entity.setPosition(target.posX, target.posY, target.posZ);
                         entity.renderYawOffset = target.renderYawOffset;
                         entity.setCustomNameTag(target.getCustomNameTag());
-                        if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && villager.hasVillage()) {
-                            entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null).setVillage(villager.getVillage());
+                        if (entity.hasCapability(TektopiaUtils.VILLAGE_DATA, null) && villager.hasVillage()) {
+                            entity.getCapability(TektopiaUtils.VILLAGE_DATA, null).setVillage(villager.getVillage());
                             entity.setHomePosAndDistance(villager.getVillage().getCenter(), 75);
                         }
                         target.setDead();

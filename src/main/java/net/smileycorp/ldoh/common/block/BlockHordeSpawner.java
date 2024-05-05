@@ -14,8 +14,7 @@ import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 
 public class BlockHordeSpawner extends Block implements ITileEntityProvider, IBlockProperties {
-
-
+    
     public BlockHordeSpawner() {
         super(Material.AIR);
         String name = "Horde_Spawner";

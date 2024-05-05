@@ -13,19 +13,19 @@ import net.smileycorp.ldoh.common.ConfigHandler;
 
 public interface IApocalypse extends IOngoingEvent {
 
-    public void spawnWave(World world);
+    void spawnWave(World world);
 
-    public boolean canStart(World world);
+    boolean canStart(World world);
 
-    public void startEvent();
+    void startEvent();
 
-    public EntityPlayer getPlayer();
+    EntityPlayer getPlayer();
 
-    public void setPlayer(EntityPlayer player);
+    void setPlayer(EntityPlayer player);
 
-    public void onBossHurt(IApocalypseBoss capability, float amount);
+    void onBossHurt(IApocalypseBoss capability, float amount);
 
-    public static class Storage implements IStorage<IApocalypse> {
+    class Storage implements IStorage<IApocalypse> {
 
         @Override
         public NBTBase writeNBT(Capability<IApocalypse> capability, IApocalypse instance, EnumFacing side) {
@@ -42,7 +42,7 @@ public interface IApocalypse extends IOngoingEvent {
 
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+    class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
         protected final IApocalypse instance;
 

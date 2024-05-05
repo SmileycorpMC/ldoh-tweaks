@@ -76,11 +76,10 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     @Override
     protected void updateAITasks() {
         super.updateAITasks();
-        if (!world.isRemote) {
-            EntityLivingBase target = getAttackTarget();
-            if (target == null && getNeckPhase() > 0) dataManager.set(NECK_PHASE, getNeckPhase() - 1);
-            else if (target != null && getNeckPhase() < 10) dataManager.set(NECK_PHASE, getNeckPhase() + 1);
-        }
+        if (world.isRemote) return;
+        EntityLivingBase target = getAttackTarget();
+        if (target == null && getNeckPhase() > 0) dataManager.set(NECK_PHASE, getNeckPhase() - 1);
+        else if (target != null && getNeckPhase() < 10) dataManager.set(NECK_PHASE, getNeckPhase() + 1);
     }
 
     public int getNeckPhase() {
@@ -101,29 +100,27 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
 
     @Override
     public void melting() {
-        if (this.isMelting()) {
-            if (sound % 20 == 0) playSound(SRPSounds.INFECTED_MELT, 1.0F, 1.0F);
-            sound++;
-            if (getTHeigh() > 0.7) {
-                setaSize(-0.005F);
-                setTHeigh(-0.01F);
-                setSize(width, this.getTHeigh());
-            }
-            if (world.isRemote) {
-                spawnParticles(SRPEnumParticle.GCLOUD, 127, 106, 0);
-                spawnParticles(SRPEnumParticle.GCLOUD, 127, 0, 0);
-                return;
-            }
-            if (getTHeigh() <= 0.7 || sound >= 73) {
-                EntityLesh result = new EntityLesh(world);
-                result.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-                if (hasCustomName()) result.setCustomNameTag(getCustomNameTag());
-                setDead();
-                world.spawnEntity(result);
-                result.setLegs(SRPAttributes.INFADVENTURER_V, false);
-            }
+        if (!isMelting()) return;
+        if (sound % 20 == 0) playSound(SRPSounds.INFECTED_MELT, 1.0F, 1.0F);
+        sound++;
+        if (getTHeigh() > 0.7) {
+            setaSize(-0.005F);
+            setTHeigh(-0.01F);
+            setSize(width, this.getTHeigh());
         }
-
+        if (world.isRemote) {
+            spawnParticles(SRPEnumParticle.GCLOUD, 127, 106, 0);
+            spawnParticles(SRPEnumParticle.GCLOUD, 127, 0, 0);
+            return;
+        }
+        if (getTHeigh() <= 0.7 || sound >= 73) {
+            EntityLesh result = new EntityLesh(world);
+            result.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
+            if (hasCustomName()) result.setCustomNameTag(getCustomNameTag());
+            setDead();
+            world.spawnEntity(result);
+            result.setLegs(SRPAttributes.INFADVENTURER_V, false);
+        }
     }
 
     @Override

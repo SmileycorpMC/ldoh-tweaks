@@ -2,8 +2,6 @@ package net.smileycorp.ldoh.common.item;
 
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,17 +32,14 @@ public class ItemSpawner extends Item implements IMetaItem {
         setUnlocalizedName(Constants.name(name));
         setRegistryName(Constants.loc(name));
         setHasSubtypes(true);
-        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new BehaviorDefaultDispenseItem() {
-            @Override
-            public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-                EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
-                double x = source.getX() + enumfacing.getFrontOffsetX();
-                double y = source.getBlockPos().getY() + enumfacing.getFrontOffsetY() + 0.2F;
-                double z = source.getZ() + enumfacing.getFrontOffsetZ();
-                spawnEntity(source.getWorld(), stack.getMetadata(), new BlockPos(x, y, z));
-                stack.shrink(1);
-                return stack;
-            }
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, (source, stack) -> {
+            EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
+            double x = source.getX() + enumfacing.getFrontOffsetX();
+            double y = source.getBlockPos().getY() + enumfacing.getFrontOffsetY() + 0.2F;
+            double z = source.getZ() + enumfacing.getFrontOffsetZ();
+            spawnEntity(source.getWorld(), stack.getMetadata(), new BlockPos(x, y, z));
+            stack.shrink(1);
+            return stack;
         });
     }
 
@@ -60,11 +55,8 @@ public class ItemSpawner extends Item implements IMetaItem {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < getMaxMeta(); i++) {
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
+        if (!isInCreativeTab(tab)) return;
+        for (int i = 0; i < getMaxMeta(); i++) items.add(new ItemStack(this, 1, i));
     }
 
     @Override
@@ -82,15 +74,13 @@ public class ItemSpawner extends Item implements IMetaItem {
         int meta = stack.getMetadata();
         if (meta >= getMaxMeta()) meta = 0;
         RayTraceResult raytrace = rayTrace(world, player, true);
-        if (raytrace != null) {
-            if (raytrace.getBlockPos() != null) {
-                BlockPos pos = raytrace.getBlockPos().offset(raytrace.sideHit);
-                spawnEntity(world, meta, pos);
-                if (!player.capabilities.isCreativeMode) stack.shrink(1);
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-            }
+        if (raytrace != null && raytrace.getBlockPos() != null) {
+            BlockPos pos = raytrace.getBlockPos().offset(raytrace.sideHit);
+            spawnEntity(world, meta, pos);
+            if (!player.capabilities.isCreativeMode) stack.shrink(1);
+            return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         }
-        return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+        return new ActionResult<>(EnumActionResult.FAIL, itemstack);
     }
 
     private EntityLiving spawnEntity(World world, int meta, BlockPos pos) {

@@ -73,29 +73,21 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
-        if (world.getTileEntity(pos) instanceof TileTurret && placer instanceof EntityPlayer & !placer.world.isRemote) {
+        if (world.getTileEntity(pos) instanceof TileTurret && placer instanceof EntityPlayer & !placer.world.isRemote)
             ((TileTurret) world.getTileEntity(pos)).spawnEntity((EntityPlayer) placer, state.getValue(FACING), nbt == null ? new NBTTagCompound() : nbt);
-        }
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(pos);
-            if (te != null) {
-                if (te instanceof TileTurret) {
-                    EntityTurret turret = ((TileTurret) te).getEntity();
-                    if (turret != null)
-                        return turret.applyPlayerInteraction(player, new Vec3d(hitX, hitY, hitZ), hand) == EnumActionResult.SUCCESS;
-                }
-            }
-        }
-        return false;
+        if (world.isRemote) return false;
+        TileEntity te = world.getTileEntity(pos);
+        if (!(te instanceof TileTurret)) return false;
+        EntityTurret turret = ((TileTurret) te).getEntity();
+        return turret == null ? false : turret.applyPlayerInteraction(player, new Vec3d(hitX, hitY, hitZ), hand) == EnumActionResult.SUCCESS;
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-    }
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
 
     @Override
     public BlockStateContainer createBlockState() {

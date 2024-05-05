@@ -9,8 +9,7 @@ public class StartEatingMessage implements IMessage {
 
     private int entity;
 
-    public StartEatingMessage() {
-    }
+    public StartEatingMessage() {}
 
     public StartEatingMessage(Entity entity) {
         this.entity = entity.getEntityId();

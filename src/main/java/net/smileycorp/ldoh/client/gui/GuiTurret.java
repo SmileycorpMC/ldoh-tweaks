@@ -62,16 +62,13 @@ public class GuiTurret extends GuiContainer {
         fontRenderer.drawString(text, x + 65, y + 26, 4210752);
 
         //draw owner name
-        if (turret.isEnemy()) {
-            text = new TextComponentTranslation("gui.turret.text.Hostile").setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText();
-        } else if (owner != null) {
+        if (turret.isEnemy()) text = new TextComponentTranslation("gui.turret.text.Hostile").setStyle(new Style().setColor(TextFormatting.DARK_RED)).getFormattedText();
+        else if (owner != null) {
             Team team = turret.getTeam();
             ITextComponent username = new TextComponentString(owner);
             if (team != null) username.setStyle(new Style().setColor(team.getColor()));
             text = I18n.translateToLocal("gui.turret.text.Owner") + username.getFormattedText();
-        } else {
-            text = I18n.translateToLocal("gui.turret.text.NoOwner");
-        }
+        } else text = I18n.translateToLocal("gui.turret.text.NoOwner");
         fontRenderer.drawString(text, x + 65, y + 38, 4210752);
 
         //draw target name
@@ -89,7 +86,7 @@ public class GuiTurret extends GuiContainer {
         fontRenderer.drawString(I18n.translateToLocal("gui.turret.text.FireRate") + turret.getFireRate(), x + 11, y + 77, 4210752);
 
         //draw turret entity
-        mc.getTextureManager().bindTexture(RenderTurret.TEXTURE);
+        mc.getTextureManager().bindTexture(turret.isEnemy() ? RenderTurret.ENEMY_TEXTURE : RenderTurret.TEXTURE);
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
         RenderHelper.enableStandardItemLighting();

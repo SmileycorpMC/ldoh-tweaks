@@ -31,7 +31,7 @@ public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties
         setUnlocalizedName(Constants.name(name));
         setRegistryName(Constants.loc(name));
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
+        setDefaultState(getBlockState().getBaseState().withProperty(VARIANT, 0));
     }
 
     @Override

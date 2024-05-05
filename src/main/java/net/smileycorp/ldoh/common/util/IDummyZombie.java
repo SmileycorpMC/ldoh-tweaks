@@ -5,7 +5,7 @@ import net.minecraft.entity.monster.EntityZombie;
 
 public interface IDummyZombie {
 
-    public default Class<? extends Entity> getBase() {
+    default Class<? extends Entity> getBase() {
         return EntityZombie.class;
     }
 

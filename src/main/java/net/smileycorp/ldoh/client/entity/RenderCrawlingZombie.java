@@ -14,14 +14,13 @@ public class RenderCrawlingZombie extends RenderBiped<EntityZombie> {
     public RenderCrawlingZombie(RenderManager rendermanager, String texture) {
         super(rendermanager, new ModelCrawlingZombie(), 0.5F);
         this.texture = texture;
-        LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this) {
-            @Override
-            protected void initArmor() {
-                modelLeggings = new ModelCrawlingZombie(0.5F, true);
-                modelArmor = new ModelCrawlingZombie(1.0F, true);
-            }
-        };
-        this.addLayer(layerbipedarmor);
+       addLayer(new LayerBipedArmor(this) {
+           @Override
+           protected void initArmor() {
+               modelLeggings = new ModelCrawlingZombie(0.5F, true);
+               modelArmor = new ModelCrawlingZombie(1.0F, true);
+           }
+       });
     }
 
     @Override

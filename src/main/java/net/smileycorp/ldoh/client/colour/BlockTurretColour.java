@@ -18,7 +18,7 @@ public class BlockTurretColour implements IBlockColor {
     @Override
     public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
         Block block = state.getBlock();
-        if (block instanceof BlockTurret && world.getTileEntity(pos) instanceof TileTurret) {
+        if (!(block instanceof BlockTurret && world.getTileEntity(pos) instanceof TileTurret)) {
             EntityTurret turret = ((TileTurret) world.getTileEntity(pos)).getEntity();
             if (turret != null && turret.hasUpgrade(TurretUpgrade.AUSTRALIUM)) return 0xFCD400;
         }

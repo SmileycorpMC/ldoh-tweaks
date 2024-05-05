@@ -65,23 +65,18 @@ public class TileBarbedWire extends TileEntity {
             if (owner != null && owner.getTeam() != null && owner.getTeam().equals(entity.getTeam())) return;
             if (mat.getDamage() > 0) {
                 float modifier = 1;
-                for (Entry<Enchantment, Integer> entry : enchant_map.entrySet()) {
+                for (Entry<Enchantment, Integer> entry : enchant_map.entrySet())
                     modifier += entry.getKey().calcDamageByCreature(entry.getValue(), entity.getCreatureAttribute());
-                }
                 if (entity.attackEntityFrom(new DamageSourceBarbedWire(this), mat.getDamage() * modifier)) {
                     if (!enchant_map.containsKey(Enchantments.UNBREAKING)) durability--;
                     else if (rand.nextInt(enchant_map.get(Enchantments.UNBREAKING)) < 0) durability--;
                     cooldown = 5;
                 }
-                if (enchant_map.containsKey(Enchantments.FIRE_ASPECT)) {
-                    entity.setFire(enchant_map.get(Enchantments.FIRE_ASPECT) * 4);
-                }
-                if (enchant_map.containsKey(ModEnchantments.POISONOUS)) {
+                if (enchant_map.containsKey(Enchantments.FIRE_ASPECT)) entity.setFire(enchant_map.get(Enchantments.FIRE_ASPECT) * 4);
+                if (enchant_map.containsKey(ModEnchantments.POISONOUS))
                     entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 160, enchant_map.get(ModEnchantments.POISONOUS) - 1));
-                }
-                if (enchant_map.containsKey(ModEnchantments.CORROSIVE)) {
+                if (enchant_map.containsKey(ModEnchantments.CORROSIVE))
                     entity.addPotionEffect(new PotionEffect(ModMobEffects.CORRODED, 80, enchant_map.get(ModEnchantments.CORROSIVE) - 1));
-                }
             }
         }
         sendUpdate();
@@ -114,31 +109,19 @@ public class TileBarbedWire extends TileEntity {
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("durability")) {
-            durability = compound.getInteger("durability");
-        }
-        if (compound.hasKey("cooldown")) {
-            cooldown = compound.getInteger("cooldown");
-        }
-        if (compound.hasKey("durability")) {
-            durability = compound.getInteger("durability");
-        }
+        if (compound.hasKey("durability")) durability = compound.getInteger("durability");
+        if (compound.hasKey("cooldown")) cooldown = compound.getInteger("cooldown");
+        if (compound.hasKey("durability")) durability = compound.getInteger("durability");
         if (compound.hasKey("enchantments")) {
             NBTTagCompound enchants = compound.getCompoundTag("enchantments");
-            for (String name : enchants.getKeySet()) {
-                try {
-                    Enchantment enchant = Enchantment.getEnchantmentByLocation(name);
-                    if (enchant != null) enchant_map.put(enchant, enchants.getInteger(name));
-                } catch (Exception e) {
-                }
-            }
+            for (String name : enchants.getKeySet()) try {
+                Enchantment enchant = Enchantment.getEnchantmentByLocation(name);
+                if (enchant != null) enchant_map.put(enchant, enchants.getInteger(name));
+            } catch (Exception e) {}
         }
-        if (compound.hasKey("owner")) {
-            try {
-                id = UUID.fromString(compound.getString("owner"));
-            } catch (Exception e) {
-            }
-        }
+        if (compound.hasKey("owner")) try {
+            id = UUID.fromString(compound.getString("owner"));
+        } catch (Exception e) {}
         super.readFromNBT(compound);
     }
 
@@ -179,15 +162,9 @@ public class TileBarbedWire extends TileEntity {
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag) {
-        if (tag.hasKey("durability")) {
-            durability = tag.getInteger("durability");
-        }
-        if (tag.hasKey("isEnchanted")) {
-            isEnchanted = tag.getBoolean("isEnchanted");
-        }
-        if (tag.hasKey("material")) {
-            mat = EnumBarbedWireMat.byMeta(tag.getInteger("material"));
-        }
+        if (tag.hasKey("durability")) durability = tag.getInteger("durability");
+        if (tag.hasKey("isEnchanted")) isEnchanted = tag.getBoolean("isEnchanted");
+        if (tag.hasKey("material")) mat = EnumBarbedWireMat.byMeta(tag.getInteger("material"));
         super.handleUpdateTag(tag);
     }
 

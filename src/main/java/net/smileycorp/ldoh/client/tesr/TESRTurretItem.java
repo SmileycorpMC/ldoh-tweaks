@@ -133,7 +133,7 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
         GlStateManager.rotate(180, 1, 0, 0);
         GlStateManager.translate(0, -0.9, 0);
         //eventually we'll add australium rendering to this
-        nbt = stack.getTagCompound();
+        //nbt = stack.getTagCompound();
         //render turret entity over item
         turret.render(isEnemy ? mc.player : null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
         GlStateManager.popMatrix();

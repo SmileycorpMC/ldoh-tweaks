@@ -67,15 +67,12 @@ public class LegacyApocalypse implements IApocalypse {
 
     @Override
     public void update(World world) {
-        if (!world.isRemote) {
-            if (isActive(world)) {
-                if ((timer == 0)) {
-                    spawnWave(world);
-                    if (wave == 7) player.sendMessage(new TextComponentTranslation("message.ldoh.EventEnd"));
-                }
-                timer--;
-            }
+        if (world.isRemote |! isActive(world)) return;
+        if ((timer == 0)) {
+            spawnWave(world);
+            if (wave == 7) player.sendMessage(new TextComponentTranslation("message.ldoh.EventEnd"));
         }
+        timer--;
     }
 
     @Override
@@ -94,8 +91,7 @@ public class LegacyApocalypse implements IApocalypse {
     }
 
     @Override
-    public void onBossHurt(IApocalypseBoss capability, float amount) {
-    }
+    public void onBossHurt(IApocalypseBoss capability, float amount) {}
 
     @Override
     public boolean canStart(World world) {
@@ -104,11 +100,10 @@ public class LegacyApocalypse implements IApocalypse {
 
     @Override
     public void startEvent() {
-        if (player != null) {
-            wave = 1;
-            player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
-            started = true;
-        }
+        if (player == null) return;
+        wave = 1;
+        player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
+        started = true;
     }
 
     @Override
@@ -127,8 +122,7 @@ public class LegacyApocalypse implements IApocalypse {
                 entity.targetTasks.addTask(1, new EntityAIHurtByTarget(entity, true, EntityParasiteBase.class));
                 entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(entity, EntityPlayer.class, false));
                 entity.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(150.0D);
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
         timer = 1000;
         wave++;
@@ -138,17 +132,9 @@ public class LegacyApocalypse implements IApocalypse {
         List<Class<? extends EntityParasiteBase>> spawnlist = new ArrayList<>();
         if (wave % 2 == 0) {
             spawnlist.add(EntityOronco.class);
-            for (int i = 0; i < 3 + Math.round(wave * 0.3); i++) {
-                spawnlist.addAll(adaptedtable.getResults(rand));
-            }
-            if (wave == 6) {
-                spawnlist.add(EntityOronco.class);
-            }
-        } else if (wave % 2 == 1) {
-            for (int i = 0; i < 3 + Math.round(wave * 1.4); i++) {
-                spawnlist.add(EntityVenkrolSIV.class);
-            }
-        }
+            for (int i = 0; i < 3 + Math.round(wave * 0.3); i++) spawnlist.addAll(adaptedtable.getResults(rand));
+            if (wave == 6) spawnlist.add(EntityOronco.class);
+        } else if (wave % 2 == 1) for (int i = 0; i < 3 + Math.round(wave * 1.4); i++) spawnlist.add(EntityVenkrolSIV.class);
         return spawnlist;
     }
 

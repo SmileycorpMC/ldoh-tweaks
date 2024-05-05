@@ -20,9 +20,6 @@ public class RandomTextureCache implements ISelectiveResourceReloadListener {
     //stores alternate textures for our random mobs implementation
     private ListMultiMap<ResourceLocation, ResourceLocation> CACHE = new ListMultiMap<>();
 
-    private RandomTextureCache() {
-    }
-
     //set up the texture if it doesn't exist in our cache
     private void init(ResourceLocation loc) {
         String domain = loc.getResourceDomain();

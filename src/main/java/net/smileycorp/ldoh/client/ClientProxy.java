@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, "zombie"));
         RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, "husk"));
         RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, RenderTF2Zombie::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, RenderZombieNurse::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, ctx -> new RenderZombieNurse(ctx, Constants.loc("textures/entity/reaver.png")));
         RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
@@ -100,18 +100,19 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityInfPhoenix.class, RenderInfPhoenix::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityJuggernaut.class, RenderJuggernaut::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, RenderReaver::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, ctx -> new RenderZombieNurse(ctx, Constants.loc("textures/entity/reaver.png")));
         //handle custom mapping for landmine and fluid blockstates
         ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
         for (BlockFluidClassic fluid_block : RegistryEvents.FLUID_BLOCKS) ModelLoader.setCustomStateMapper(fluid_block, new FluidStateMapper(fluid_block.getFluid()));
         //register item models
         for (Item item : RegistryEvents.ITEMS) {
-            if (item instanceof IMetaItem) {
-                for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++) {
-                    ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Constants.loc((item instanceof ItemBlockMeta ? "" : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
-                }
-            } else
+            if (!(item instanceof IMetaItem))
                 ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
+            else for (int i = 0; i < ((IMetaItem) item).getMaxMeta(); i++)
+                    ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Constants.loc((item instanceof ItemBlockMeta ? ""
+                            : "items/") + item.getRegistryName().getResourcePath()), ((IMetaItem) item).byMeta(i)));
+            
+                
         }
         //register renderer for barbed wire healthbar
         ClientRegistry.bindTileEntitySpecialRenderer(TileBarbedWire.class, new TESRBarbedWire());

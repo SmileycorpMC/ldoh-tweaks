@@ -41,40 +41,31 @@ public class EntityInfPhoenixEnder extends EntityInfPhoenix {
         if (isWet()) attackEntityFrom(DamageSource.DROWN, 1.0F);
         super.updateAITasks();
         if (world.isRemote) {
-            for(int i = 0; i < 2; ++i) {
-                world.spawnParticle(EnumParticleTypes.PORTAL, posX + (rand.nextDouble() - 0.5) * (double)width, posY + rand.nextDouble() * (double)height - 0.25, posZ + (rand.nextDouble() - 0.5) * (double)width, (rand.nextDouble() - 0.5) * 2.0, -rand.nextDouble(), (rand.nextDouble() - 0.5) * 2.0, new int[0]);
-            }
-        } else if (getAttackTarget() != null && ticksExisted % 20 == 0 && getDistanceSq(getAttackTarget()) > 4.0 && rand.nextInt(SRPConfigMobs.infendermantelefreq) == 0 && !teleportAllies()) {
-            teleportRandomly();
+            for (int i = 0; i < 2; ++i)
+                world.spawnParticle(EnumParticleTypes.PORTAL, posX + (rand.nextDouble() - 0.5) * (double) width,
+                        posY + rand.nextDouble() * (double) height - 0.25, posZ + (rand.nextDouble() - 0.5) * (double) width,
+                        (rand.nextDouble() - 0.5) * 2.0, -rand.nextDouble(), (rand.nextDouble() - 0.5) * 2.0, new int[0]);
+            return;
         }
-
-        if (!world.isRemote) {
-            if (ally > 0) {
-                ++ally;
-                teleportAlly();
-            }
-
-            if (spotCool >= 0) {
-                --spotCool;
-            }
-
-            if (toTeleCool >= 0) {
-                --toTeleCool;
-            }
-
-            if (srpTicks == 10 && isPotionActive(SRPPotions.RAGE_E)) {
-                spotCool = 0;
-                toTeleCool = 0;
-            }
+        if (getAttackTarget() != null && ticksExisted % 20 == 0 && getDistanceSq(getAttackTarget()) > 4.0 &&
+                rand.nextInt(SRPConfigMobs.infendermantelefreq) == 0 && !teleportAllies()) teleportRandomly();
+        if (ally > 0) {
+            ++ally;
+            teleportAlly();
+        }
+        if (spotCool >= 0) --spotCool;
+        if (toTeleCool >= 0) --toTeleCool;
+        if (srpTicks == 10 && isPotionActive(SRPPotions.RAGE_E)) {
+            spotCool = 0;
+            toTeleCool = 0;
         }
     }
 
     protected boolean teleportAllies() {
         if (ally <= 0 && SRPConfigMobs.infendermanteleally && toTeleCool <= 0 && spotCool <= 0) {
             EntityLivingBase target = getAttackTarget();
-            if (target == null) {
-                return false;
-            } else {
+            if (target == null) return false;
+            else {
                 AxisAlignedBB axisalignedbb = (new AxisAlignedBB(posX, posY, posZ, posX + 1.0, posY + 1.0, posZ + 1.0)).grow(64.0);
                 List<EntityPInfected> moblist = world.getEntitiesWithinAABB(EntityPInfected.class, axisalignedbb);
                 Iterator var4 = moblist.iterator();

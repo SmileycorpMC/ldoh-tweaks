@@ -55,8 +55,6 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
     public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);
     public static Properties.PropertyAdapter<Boolean> IS_ENCHANTED = new Properties.PropertyAdapter<>(PropertyBool.create("is_enchanted"));
 
-    public static final AxisAlignedBB HITBOX_AABB = new AxisAlignedBB(0.1D, 0.0D, 0.1D, 0.9D, 0.1D, 0.9D);
-
     public BlockBarbedWire() {
         super(Material.ROCK);
         String name = "Barbed_Wire";
@@ -89,17 +87,12 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
     public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
         //slow entities
         entity.setInWeb();
-        if (world.getTileEntity(pos) instanceof TileBarbedWire & !world.isRemote) {
-            //tick damage on server
-            TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
-            if (te.getOrUpdateCooldown() == 0) {
-                te.causeDamage();
-            }
-            //break barbed wire
-            if (te.getDurability() <= 0) {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-            }
-        }
+        if (world.isRemote |! (world.getTileEntity(pos) instanceof TileBarbedWire)) return;
+        //tick damage on server
+        TileBarbedWire te = (TileBarbedWire) world.getTileEntity(pos);
+        if (te.getOrUpdateCooldown() == 0) te.causeDamage();
+        //break barbed wire
+        if (te.getDurability() <= 0) world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
     }
 
     @Override
@@ -111,10 +104,8 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
-        if (te != null && te instanceof TileBarbedWire) {
-            return ((IExtendedBlockState) state).withProperty(IS_ENCHANTED, ((TileBarbedWire) te).isEnchanted());
-        }
-        return ((IExtendedBlockState) state).withProperty(IS_ENCHANTED, false);
+        return ((IExtendedBlockState) state).withProperty(IS_ENCHANTED, (te != null && te instanceof TileBarbedWire) ?
+                ((TileBarbedWire) te).isEnchanted() : false);
     }
 
     @Override
@@ -126,12 +117,10 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
                 //sync durability with item
                 if (nbt.hasKey("durability")) tile.setDurability(nbt.getInteger("durability"));
                 //add enchantments from item
-                if (nbt.hasKey("ench")) {
-                    for (NBTBase tag : nbt.getTagList("ench", 10)) {
-                        int level = ((NBTTagCompound) tag).getShort("lvl");
-                        Enchantment enchant = Enchantment.getEnchantmentByID(((NBTTagCompound) tag).getShort("id"));
-                        tile.applyEnchantment(enchant, level);
-                    }
+                if (nbt.hasKey("ench")) for (NBTBase tag : nbt.getTagList("ench", 10)) {
+                    int level = ((NBTTagCompound) tag).getShort("lvl");
+                    Enchantment enchant = Enchantment.getEnchantmentByID(((NBTTagCompound) tag).getShort("id"));
+                    tile.applyEnchantment(enchant, level);
                 }
             }
             //set the player as the owner to remove self and team damage
@@ -158,9 +147,7 @@ public class BlockBarbedWire extends Block implements IBlockProperties, ITileEnt
 
     @Override
     public void getSubBlocks(CreativeTabs item, NonNullList<ItemStack> items) {
-        for (int i = 0; i < EnumBarbedWireMat.values().length; i++) {
-            items.add(new ItemStack(this, 1, i));
-        }
+        for (int i = 0; i < EnumBarbedWireMat.values().length; i++) items.add(new ItemStack(this, 1, i));
     }
 
     @Override

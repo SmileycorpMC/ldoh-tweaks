@@ -12,11 +12,10 @@ public class TileHordeSpawner extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (!world.isRemote & !spawned) {
-            ModUtils.spawnHorde(world, pos, isNatural);
-            spawned = true;
-            BlockHordeSpawner.breakBlock(world, pos);
-        }
+        if (world.isRemote || spawned) return;
+        ModUtils.spawnHorde(world, pos, isNatural);
+        spawned = true;
+        BlockHordeSpawner.breakBlock(world, pos);
     }
 
     public void setNatural() {

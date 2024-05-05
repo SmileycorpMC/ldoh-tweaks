@@ -32,11 +32,7 @@ public class PacketHandler {
 
         @Override
         public IMessage onMessage(SimpleStringMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.displayActionBar(message.getText());
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.displayActionBar(message.getText()));
             return null;
         }
     }
@@ -48,75 +44,51 @@ public class PacketHandler {
 
         @Override
         public IMessage onMessage(SyncFoodMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.syncFood(message);
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.syncFood(message));
             return null;
         }
     }
 
     public static class ClientSyncHunger implements IMessageHandler<SyncHungerMessage, IMessage> {
 
-        public ClientSyncHunger() {
-        }
+        public ClientSyncHunger() {}
 
         @Override
         public IMessage onMessage(SyncHungerMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.syncHunger(message);
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.syncHunger(message));
             return null;
         }
     }
 
     public static class ClientStartEat implements IMessageHandler<StartEatingMessage, IMessage> {
 
-        public ClientStartEat() {
-        }
+        public ClientStartEat() {}
 
         @Override
         public IMessage onMessage(StartEatingMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.startEating(message);
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.startEating(message));
             return null;
         }
     }
 
     public static class ClientSyncSyringes implements IMessageHandler<SyncSyringesMessage, IMessage> {
 
-        public ClientSyncSyringes() {
-        }
+        public ClientSyncSyringes() {}
 
         @Override
         public IMessage onMessage(SyncSyringesMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.syncSyringes(message);
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.syncSyringes(message));
             return null;
         }
     }
 
     public static class ClientSyncMedicCure implements IMessageHandler<SyncMedicCureMessage, IMessage> {
 
-        public ClientSyncMedicCure() {
-        }
+        public ClientSyncMedicCure() {}
 
         @Override
         public IMessage onMessage(SyncMedicCureMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.syncMedicCure(message);
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.syncMedicCure(message));
             return null;
         }
     }
@@ -124,11 +96,7 @@ public class PacketHandler {
     public static class ClientOpenNoteMessage implements IMessageHandler<TornNoteMessage, IMessage> {
         @Override
         public IMessage onMessage(TornNoteMessage message, MessageContext ctx) {
-            if (ctx.side == Side.CLIENT) {
-                Minecraft.getMinecraft().addScheduledTask(() -> {
-                    ClientHandler.openNoteGUI(message.getSeed());
-                });
-            }
+            if (ctx.side == Side.CLIENT) Minecraft.getMinecraft().addScheduledTask(() -> ClientHandler.openNoteGUI(message.getSeed()));
             return null;
         }
     }

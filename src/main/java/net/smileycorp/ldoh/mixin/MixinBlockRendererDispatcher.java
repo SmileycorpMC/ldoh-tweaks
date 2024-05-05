@@ -24,19 +24,15 @@ public class MixinBlockRendererDispatcher {
     //supposed to be used to optimise gas rendering
     @Inject(at = @At("TAIL"), method = "renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z", cancellable = true)
     public void renderBlock(IBlockState state, BlockPos pos, IBlockAccess blockAccess, BufferBuilder buffer, CallbackInfoReturnable<Boolean> callback) {
-        if (blockAccess.getWorldType() != WorldType.FLAT && pos.getY() == 30) {
-            if (!state.isOpaqueCube()) {
-                Minecraft mc = Minecraft.getMinecraft();
-                WorldClient world = mc.world;
-                Vec3d offset = state.getOffset(world, pos);
-                double x = pos.getX() + offset.x;
-                double y = pos.getY() + offset.y + 0.9d;
-                double z = pos.getZ() + offset.z;
-                RenderingUtils.renderPlanarQuad(buffer, EnumFacing.UP, x, y, z, 0, ClientEventListener.GAS_COLOUR,
-                        mc.getTextureMapBlocks().getAtlasSprite("minecraft:blocks/glass"), world, world.getCombinedLight(pos, 15), pos);
-            }
-        }
+        if (blockAccess.getWorldType() == WorldType.FLAT || pos.getY() != 30 || state.isOpaqueCube()) return;
+        Minecraft mc = Minecraft.getMinecraft();
+        WorldClient world = mc.world;
+        Vec3d offset = state.getOffset(world, pos);
+        double x = pos.getX() + offset.x;
+        double y = pos.getY() + offset.y + 0.9d;
+        double z = pos.getZ() + offset.z;
+        RenderingUtils.renderPlanarQuad(buffer, EnumFacing.UP, x, y, z, 0, ClientEventListener.GAS_COLOUR,
+                mc.getTextureMapBlocks().getAtlasSprite("minecraft:blocks/glass"), world, world.getCombinedLight(pos, 15), pos);
     }
-
 
 }

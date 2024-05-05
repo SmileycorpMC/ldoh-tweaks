@@ -31,8 +31,6 @@ import net.smileycorp.hordes.common.event.InfectionDeathEvent;
 import net.smileycorp.hordes.infection.HordesInfection;
 import net.smileycorp.hordes.infection.InfectionRegister;
 import net.smileycorp.ldoh.common.Constants;
-import net.smileycorp.ldoh.common.capabilities.IVillageData;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.integration.tektopia.entities.EntityLDOHArchitect;
 import net.smileycorp.ldoh.integration.tektopia.entities.EntityLDOHTradesman;
@@ -56,7 +54,7 @@ public class TektopiaEvents {
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         //give mercs home village
-        if (!entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
+        if (!entity.hasCapability(TektopiaUtils.VILLAGE_DATA, null) && entity instanceof EntityTF2Character) {
             event.addCapability(Constants.loc("VillageData"), new IVillageData.Provider());
         }
     }
@@ -80,8 +78,8 @@ public class TektopiaEvents {
             world.spawnEntity(tradesman);
             event.setCanceled(true);
         }
-        if (entity.hasCapability(LDOHCapabilities.VILLAGE_DATA, null)) {
-            IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
+        if (entity.hasCapability(TektopiaUtils.VILLAGE_DATA, null)) {
+            IVillageData cap = entity.getCapability(TektopiaUtils.VILLAGE_DATA, null);
             if (cap.shouldHaveVillage() & !cap.hasVillage()) {
                 VillageManager villages = VillageManager.get(world);
                 cap.setVillage(villages);

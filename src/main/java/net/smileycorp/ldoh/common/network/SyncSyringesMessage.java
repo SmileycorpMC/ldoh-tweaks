@@ -9,8 +9,7 @@ public class SyncSyringesMessage implements IMessage {
 
     private int entity, count;
 
-    public SyncSyringesMessage() {
-    }
+    public SyncSyringesMessage() {}
 
     public SyncSyringesMessage(Entity entity, int count) {
         this.entity = entity.getEntityId();

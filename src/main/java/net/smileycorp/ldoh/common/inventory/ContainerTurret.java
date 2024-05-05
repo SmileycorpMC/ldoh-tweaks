@@ -23,23 +23,13 @@ public class ContainerTurret extends Container {
         upgradeInv = turret.getUpgradeInventory();
         playerInv = player.inventory;
         //turret upgrades
-        for (int i = 0; i < upgradeInv.getSizeInventory(); i++) {
-            addSlotToContainer(new UpgradeSlot(upgradeInv, i, 116 + i * 18, 13));
-        }
+        for (int i = 0; i < upgradeInv.getSizeInventory(); i++) addSlotToContainer(new UpgradeSlot(upgradeInv, i, 116 + i * 18, 13));
         //turret inventory
-        for (int i = 0; i < inv.getSizeInventory(); i++) {
-            addSlotToContainer(new AmmoSlot(inv, i, 8 + i * 18, 85));
-        }
+        for (int i = 0; i < inv.getSizeInventory(); i++) addSlotToContainer(new AmmoSlot(inv, i, 8 + i * 18, 85));
         //player inventory
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 115 + i * 18));
-            }
-        }
+        for (int i = 0; i < 3; ++i) for (int j = 0; j < 9; ++j) addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 115 + i * 18));
         //hotbar
-        for (int k = 0; k < 9; ++k) {
-            addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 173));
-        }
+        for (int k = 0; k < 9; ++k) addSlotToContainer(new Slot(playerInv, k, 8 + k * 18, 173));
     }
 
     @Override
@@ -55,20 +45,11 @@ public class ContainerTurret extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (index < inv.getSizeInventory()) {
-                if (!mergeItemStack(itemstack1, inv.getSizeInventory(), inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!mergeItemStack(itemstack1, 0, inv.getSizeInventory(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
+            if ((index < inv.getSizeInventory()) &!mergeItemStack(itemstack1, inv.getSizeInventory(), inventorySlots.size(), true)
+                |! mergeItemStack(itemstack1, 0, inv.getSizeInventory(), false)) return ItemStack.EMPTY;
+            if (itemstack1.isEmpty()) slot.putStack(ItemStack.EMPTY);
+            else slot.onSlotChanged();
         }
-
         return itemstack;
     }
 

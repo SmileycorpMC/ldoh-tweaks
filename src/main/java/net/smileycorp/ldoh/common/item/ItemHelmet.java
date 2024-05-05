@@ -26,12 +26,10 @@ public class ItemHelmet extends ItemHat {
     @SuppressWarnings("deprecation")
     public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
         Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
-
         if (equipmentSlot == EntityEquipmentSlot.HEAD) {
             multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(HELMET_UUID, "Armor modifier", protection, 0));
             multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(HELMET_UUID, "Armor toughness", toughness, 0));
         }
-
         return multimap;
     }
 

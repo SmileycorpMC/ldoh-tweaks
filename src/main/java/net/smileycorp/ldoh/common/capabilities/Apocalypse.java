@@ -62,12 +62,8 @@ public class Apocalypse implements IApocalypse {
 
             }
         }
-        if (nbt.hasKey("phase")) {
-            phase = nbt.getInteger("phase");
-        }
-        if (nbt.hasKey("hasStarted")) {
-            hasStarted = nbt.getBoolean("hasStarted");
-        }
+        if (nbt.hasKey("phase")) phase = nbt.getInteger("phase");
+        if (nbt.hasKey("hasStarted")) hasStarted = nbt.getBoolean("hasStarted");
     }
 
     @Override
@@ -80,15 +76,13 @@ public class Apocalypse implements IApocalypse {
 
     @Override
     public void update(World world) {
-        if (!world.isRemote && isActive(world)) {
-            if (player.ticksExisted % 60 == 0) {
-                Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
-                BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
-                EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
-                world.spawnEntity(bolt);
-                spawnWave(world);
-            }
-        }
+        if (world.isRemote |! isActive(world)) return;
+        if (player.ticksExisted % 60 != 0) return;
+        Vec3d vec = DirectionUtils.getRandomDirectionVecXZ(world.rand);
+        BlockPos localpos = DirectionUtils.getClosestLoadedPos(world, player.getPosition(), vec, 75);
+        EntityLightningBolt bolt = new EntityLightningBolt(world, localpos.getX(), localpos.getY(), localpos.getZ(), true);
+        world.spawnEntity(bolt);
+        spawnWave(world);
     }
 
     @Override
@@ -113,16 +107,15 @@ public class Apocalypse implements IApocalypse {
 
     @Override
     public void startEvent() {
-        if (player != null) {
-            hasStarted = true;
-            player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
-            player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
-            for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
-            boss = spawnEntity(player.world, new EntityOronco(player.world));
-            multiplier = boss.getMaxHealth() / 8f;
-            if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
-                boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
-        }
+        if (player == null) return;
+        hasStarted = true;
+        player.world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
+        player.sendMessage(new TextComponentTranslation("message.ldoh.WorldsEnd"));
+        for (int i = 0; i < 3; i++) spawnEntity(player.world, new EntityVenkrolSIII(player.world));
+        boss = spawnEntity(player.world, new EntityOronco(player.world));
+        multiplier = boss.getMaxHealth() / 8f;
+        if (boss.hasCapability(LDOHCapabilities.APOCALYPSE_BOSS, null))
+            boss.getCapability(LDOHCapabilities.APOCALYPSE_BOSS, null).setPlayer(player);
     }
 
     @Override

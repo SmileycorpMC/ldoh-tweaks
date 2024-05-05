@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common.capabilities;
+package net.smileycorp.ldoh.integration.tektopia;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,21 +13,21 @@ import net.tangotek.tektopia.VillageManager;
 
 public interface IVillageData {
 
-    public Village getVillage();
+    Village getVillage();
 
-    public void setVillage(Village village);
+    void setVillage(Village village);
 
-    public void setVillage(VillageManager villages);
+    void setVillage(VillageManager villages);
 
-    public boolean shouldHaveVillage();
+    boolean shouldHaveVillage();
 
-    public boolean hasVillage();
+    boolean hasVillage();
 
-    public void readNBT(NBTTagCompound nbt);
+    void readNBT(NBTTagCompound nbt);
 
-    public void writeNBT(NBTTagCompound nbt);
+    void writeNBT(NBTTagCompound nbt);
 
-    public static class Storage implements IStorage<IVillageData> {
+    class Storage implements IStorage<IVillageData> {
 
         @Override
         public NBTBase writeNBT(Capability<IVillageData> capability, IVillageData instance, EnumFacing side) {
@@ -43,7 +43,7 @@ public interface IVillageData {
 
     }
 
-    public static class VillageData implements IVillageData {
+    class Impl implements IVillageData {
 
         protected BlockPos villagePos;
         protected Village village;
@@ -86,28 +86,28 @@ public interface IVillageData {
 
     }
 
-    public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
+    class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
-        protected final IVillageData instance = LDOHCapabilities.VILLAGE_DATA.getDefaultInstance();
+        protected final IVillageData instance = TektopiaUtils.VILLAGE_DATA.getDefaultInstance();
 
         @Override
         public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-            return capability == LDOHCapabilities.VILLAGE_DATA;
+            return capability == TektopiaUtils.VILLAGE_DATA;
         }
 
         @Override
         public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-            return capability == LDOHCapabilities.VILLAGE_DATA ? LDOHCapabilities.VILLAGE_DATA.cast(instance) : null;
+            return capability == TektopiaUtils.VILLAGE_DATA ? TektopiaUtils.VILLAGE_DATA.cast(instance) : null;
         }
 
         @Override
         public NBTTagCompound serializeNBT() {
-            return (NBTTagCompound) LDOHCapabilities.VILLAGE_DATA.getStorage().writeNBT(LDOHCapabilities.VILLAGE_DATA, instance, null);
+            return (NBTTagCompound) TektopiaUtils.VILLAGE_DATA.getStorage().writeNBT(TektopiaUtils.VILLAGE_DATA, instance, null);
         }
 
         @Override
         public void deserializeNBT(NBTTagCompound nbt) {
-            LDOHCapabilities.VILLAGE_DATA.getStorage().readNBT(LDOHCapabilities.VILLAGE_DATA, instance, null, nbt);
+            TektopiaUtils.VILLAGE_DATA.getStorage().readNBT(TektopiaUtils.VILLAGE_DATA, instance, null, nbt);
         }
 
     }

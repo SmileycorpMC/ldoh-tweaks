@@ -47,12 +47,10 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
         EnumBarbedWireMat mat = EnumBarbedWireMat.byMeta(stack.getMetadata());
         tooltip.add(I18n.translateToLocal(TOOLTIP));
         tooltip.add(I18n.translateToLocal(TOOLTIP + "." + mat.getUnlocalisedName()));
-        if (stack.hasTagCompound()) {
-            NBTTagCompound nbt = stack.getTagCompound();
-            if (nbt.hasKey("durability")) tooltip.add(I18n.translateToLocal(TOOLTIP + ".durability")
-                    + " " + nbt.getInteger("durability") + "/" + mat.getDurability());
-        }
-
+        if (!stack.hasTagCompound()) return;
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (nbt.hasKey("durability")) tooltip.add(I18n.translateToLocal(TOOLTIP + ".durability")
+                + " " + nbt.getInteger("durability") + "/" + mat.getDurability());
     }
 
     @Override

@@ -23,14 +23,12 @@ public class AIMoveRandomFlying extends EntityAIBase {
 
     public void updateTask() {
         BlockPos blockpos = new BlockPos(entity);
-
         for(int i = 0; i < 3; ++i) {
             BlockPos blockpos1 = blockpos.add(entity.getRNG().nextInt(15) - 7, entity.getRNG().nextInt(11) - 5, entity.getRNG().nextInt(15) - 7);
             if (entity.world.isAirBlock(blockpos1)) {
                 entity.getMoveHelper().setMoveTo((double)blockpos1.getX() + 0.5, (double)blockpos1.getY() + 0.5, (double)blockpos1.getZ() + 0.5, 0.25);
-                if (entity.getAttackTarget() == null) {
+                if (entity.getAttackTarget() == null)
                     entity.getLookHelper().setLookPosition((double)blockpos1.getX() + 0.5, (double)blockpos1.getY() + 0.5, (double)blockpos1.getZ() + 0.5, 180.0F, 20.0F);
-                }
                 break;
             }
         }

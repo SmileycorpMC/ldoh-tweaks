@@ -62,7 +62,6 @@ public class SyringeCategory implements IRecipeCategory<Wrapper> {
         IGuiItemStackGroup items = recipeLayout.getItemStacks();
         items.init(0, true, 23, 24);
         items.init(1, false, 87, 24);
-
         recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
         recipeLayout.getItemStacks().set(1, ingredients.getOutputs(ItemStack.class).get(0));
     }

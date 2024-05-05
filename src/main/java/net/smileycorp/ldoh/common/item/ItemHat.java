@@ -35,14 +35,12 @@ public class ItemHat extends ItemBase {
         ItemStack itemstack = player.getHeldItem(hand);
         EntityEquipmentSlot entityequipmentslot = EntityEquipmentSlot.HEAD;
         ItemStack itemstack1 = player.getItemStackFromSlot(entityequipmentslot);
-
         if (itemstack1.isEmpty()) {
             player.setItemStackToSlot(entityequipmentslot, itemstack.copy());
             itemstack.setCount(0);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
-        } else {
-            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
         }
+        return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
     }
 
 }

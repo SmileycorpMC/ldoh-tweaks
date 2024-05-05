@@ -8,7 +8,6 @@ public class Constants {
     //mod constants
     public static final String MODID = "ldoh";
     public static final String NAME = "LDoH";
-    public static final String VERSION = "1.1.15";
     public static final String DEPENDENCIES = "after:tektopia;required-after:atlaslib@1.1.5;required-after:rafradek_tf2_weapons;required-after:hordes@1.1.4;required-after:srparasites;"
             + "required-after:mod_lavacow;required-after:firstaid;required-after:animania;required-after:wastelands;required-after:biomesoplenty;"
             + "required-after:cgm;required-after:cfm;required-after:realistictorches;required-after:xlfoodmod;required-after:cookingforblockheads;"
@@ -22,12 +21,7 @@ public class Constants {
     public static final String JOIN_TEAM_MESSAGE = "message.ldoh.JoinTeam";
     public static final String POST_JOIN_TEAM_MESSAGE = "message.ldoh.PostJoinTeam";
     public static final String OTHER_JOIN_TEAM_MESSAGE = "message.ldoh.OtherJoinTeam";
-    public static final String DAY_COUNT_MESSAGE = "message.ldoh.DayCount";
-    public static final String DAY_100_MESSAGE = "message.ldoh.FinalDay";
-    public static final String APOCALYPSE_MESSAGE = "message.ldoh.WorldsEnd";
     public static final String GAS_MESSAGE = "message.ldoh.Gas";
-    public static final String LAVA_PICKUP_MESSAGE = "message.ldoh.Lava.Pickup";
-    public static final String LAVA_BREAK_MESSAGE = "message.ldoh.Lava.Break";
     public static final String ZOMBIE_EVOLUTION_MESSAGE_0 = "message.ldoh.Evolution_0";
     public static final String ZOMBIE_EVOLUTION_MESSAGE_1 = "message.ldoh.Evolution_1";
     public static final String VILLAGER_MESSAGE = "message.ldoh.VillagerMessage";

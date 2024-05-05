@@ -8,15 +8,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.smileycorp.ldoh.common.capabilities.IVillageData;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
-import net.smileycorp.ldoh.common.item.ItemTF2ProfessionToken;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.tangotek.tektopia.Village;
 import net.tangotek.tektopia.entities.EntityVillagerTek;
 
 public class TektopiaUtils {
     public static final Item TF2_PROF_TOKEN = new ItemTF2ProfessionToken();
-
+    @CapabilityInject(IVillageData.class)
+    public final static Capability<IVillageData> VILLAGE_DATA = null;
+    
     public static boolean isToken(ItemStack stack) {
         return stack.getItem() == TF2_PROF_TOKEN;
     }
@@ -32,7 +33,7 @@ public class TektopiaUtils {
     }
 
     public static boolean isTooFarFromVillage(EntityLiving entity, IBlockAccess world) {
-        IVillageData cap = entity.getCapability(LDOHCapabilities.VILLAGE_DATA, null);
+        IVillageData cap = entity.getCapability(VILLAGE_DATA, null);
         if (!cap.hasVillage()) return false;
         BlockPos village = cap.getVillage().getCenter();
         return entity.getDistance(village.getX(), village.getY(), village.getZ()) >= 75;

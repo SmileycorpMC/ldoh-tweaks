@@ -45,4 +45,5 @@ public class ItemGasMask extends ItemHat {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(Gui.ICONS);
     }
+    
 }

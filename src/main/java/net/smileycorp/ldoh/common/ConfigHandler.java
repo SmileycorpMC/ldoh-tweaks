@@ -1,20 +1,20 @@
 package net.smileycorp.ldoh.common;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ConfigHandler {
-    static Configuration config;
 
     public static boolean legacyDamage;
     public static boolean legacySpawns;
     public static boolean noSafehouse;
     public static boolean noDaySlowdown;
     public static boolean betaSpawnpoint;
-
     public static boolean legacyApocalypse;
 
     //load config properties
-    public static void syncConfig() {
+    public static void syncConfig(FMLPreInitializationEvent event) {
+        Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         try {
             config.load();
             legacyApocalypse = config.get("Legacy Difficulty", "legacyApocalypse", false, "Should the day 100 boss event use the pre 0.5.0 wave based system instead of the single boss and time pausing of 0.5.0?").getBoolean();

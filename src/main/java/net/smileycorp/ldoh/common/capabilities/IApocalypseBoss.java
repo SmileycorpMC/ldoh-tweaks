@@ -10,15 +10,15 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public interface IApocalypseBoss {
 
-    public void setPlayer(EntityPlayer player);
+    void setPlayer(EntityPlayer player);
 
-    public void onHurt(float amount);
+    void onHurt(float amount);
 
-    public NBTTagCompound writeToNBT();
+    NBTTagCompound writeToNBT();
 
-    public void readFromNBT(NBTTagCompound nbt);
+   void readFromNBT(NBTTagCompound nbt);
 
-    public static class Storage implements IStorage<IApocalypseBoss> {
+   class Storage implements IStorage<IApocalypseBoss> {
 
         @Override
         public NBTBase writeNBT(Capability<IApocalypseBoss> capability, IApocalypseBoss instance, EnumFacing side) {
@@ -43,9 +43,8 @@ public interface IApocalypseBoss {
 
         @Override
         public void onHurt(float amount) {
-            if (player != null && player.hasCapability(LDOHCapabilities.APOCALYPSE, null)) {
-                player.getCapability(LDOHCapabilities.APOCALYPSE, null).onBossHurt(this, amount);
-            }
+            if (player == null |! player.hasCapability(LDOHCapabilities.APOCALYPSE, null)) return;
+            player.getCapability(LDOHCapabilities.APOCALYPSE, null).onBossHurt(this, amount);
         }
 
         @Override
@@ -54,9 +53,8 @@ public interface IApocalypseBoss {
         }
 
         @Override
-        public void readFromNBT(NBTTagCompound nbt) {
-
-        }
+        public void readFromNBT(NBTTagCompound nbt) {}
+        
     }
 
     class Provider implements ICapabilitySerializable<NBTTagCompound> {

@@ -66,10 +66,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     }
 
     public int getMaxCount() {
-        if (!item.isEmpty()) {
-            return item.getMaxStackSize() * 64;
-        }
-        return 4096;
+        return item.isEmpty() ? 4096 : item.getMaxStackSize() * 64;
     }
 
     @Override
@@ -160,9 +157,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
         if (count > 64) {
             count -= 64;
             stack.setCount(64);
-        } else {
-            stack = ItemStack.EMPTY;
-        }
+        } else stack = ItemStack.EMPTY;
         if (count <= 0) item = ItemStack.EMPTY;
         markDirty();
         return stack;
@@ -205,12 +200,10 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
-    }
+    public void openInventory(EntityPlayer player) {}
 
     @Override
-    public void closeInventory(EntityPlayer player) {
-    }
+    public void closeInventory(EntityPlayer player) {}
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -226,8 +219,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     }
 
     @Override
-    public void setField(int id, int value) {
-    }
+    public void setField(int id, int value) {}
 
     @Override
     public int getFieldCount() {
@@ -244,9 +236,7 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("CustomName", 8)) {
-            this.customName = compound.getString("CustomName");
-        }
+        if (compound.hasKey("CustomName", 8)) customName = compound.getString("CustomName");
         if (compound.hasKey("items")) {
             NBTTagCompound items = compound.getCompoundTag("items");
             count = items.getInteger("Count");
@@ -261,10 +251,8 @@ public class TileFilingCabinet extends TileEntity implements IInventory {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        if (this.hasCustomName()) {
-            compound.setString("CustomName", customName);
-        }
-        if (!this.isEmpty()) {
+        if (hasCustomName()) compound.setString("CustomName", customName);
+        if (!isEmpty()) {
             NBTTagCompound items = item.serializeNBT();
             items.setInteger("Count", count);
             compound.setTag("items", items);

@@ -38,7 +38,6 @@ public interface IAmbushEvent {
             instance.readFromNBT((NBTTagCompound) nbt);
         }
 
-
     }
 
     class Provider implements ICapabilitySerializable<NBTTagCompound> {

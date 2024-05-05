@@ -112,26 +112,18 @@ public interface IHunger {
             if (!entity.world.isRemote) {
                 EnumDifficulty enumdifficulty = entity.world.getDifficulty();
                 prevFoodLevel = foodLevel;
-
                 if (entity.isPotionActive(MobEffects.HUNGER))
                     addExhaustion(0.005F * (entity.getActivePotionEffect(MobEffects.HUNGER).getAmplifier() + 1));
-                if (entity.isPotionActive(HordesInfection.INFECTED)) {
+                if (entity.isPotionActive(HordesInfection.INFECTED))
                     addExhaustion(0.007F * (entity.getActivePotionEffect(HordesInfection.INFECTED).getAmplifier() + 1));
-                }
-
                 if (foodExhaustionLevel > 4.0F) {
                     foodExhaustionLevel -= 4.0F;
-
-                    if (getSaturationLevel() > 0.0F) {
-                        setFoodSaturationLevel(Math.max(getSaturationLevel() - 1.0F, 0.0F));
-                    } else if (enumdifficulty != EnumDifficulty.PEACEFUL) {
-                        setFoodLevel(Math.max(getFoodLevel() - 1, 0));
-                    }
+                    if (getSaturationLevel() > 0.0F) setFoodSaturationLevel(Math.max(getSaturationLevel() - 1.0F, 0.0F));
+                    else if (enumdifficulty != EnumDifficulty.PEACEFUL) setFoodLevel(Math.max(getFoodLevel() - 1, 0));
                 }
-
+                
                 if (getSaturationLevel() > 0.0F && getFoodLevel() >= 20) {
                     ++foodTimer;
-
                     if (foodTimer >= 10) {
                         float f = Math.min(getSaturationLevel(), 6.0F);
                         entity.heal(f / 6.0F);
@@ -140,7 +132,6 @@ public interface IHunger {
                     }
                 } else if (getFoodLevel() >= 18) {
                     ++foodTimer;
-
                     if (foodTimer >= 80) {
                         entity.heal(1.0F);
                         addExhaustion(6.0F);
@@ -148,17 +139,12 @@ public interface IHunger {
                     }
                 } else if (foodLevel <= 0) {
                     ++foodTimer;
-
                     if (foodTimer >= 80) {
-                        if (entity.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || entity.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL) {
-                            entity.attackEntityFrom(DamageSource.STARVE, 1.0F);
-                        }
-
+                        if (entity.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || entity.getHealth() > 1.0F
+                                && enumdifficulty == EnumDifficulty.NORMAL) entity.attackEntityFrom(DamageSource.STARVE, 1.0F);
                         foodTimer = 0;
                     }
-                } else {
-                    foodTimer = 0;
-                }
+                } else foodTimer = 0;
             }
             if (eatingTicks > 0) {
                 eatingTicks--;
@@ -169,9 +155,8 @@ public interface IHunger {
                     entity.setHeldItem(EnumHand.MAIN_HAND, heldItem);
                     if (!entity.world.isRemote) {
                         ItemFood foodItem = (ItemFood) foodSlot.getItem();
-                        if (foodItem.potionId != null && entity.world.rand.nextFloat() < foodItem.potionEffectProbability) {
+                        if (foodItem.potionId != null && entity.world.rand.nextFloat() < foodItem.potionEffectProbability)
                             entity.addPotionEffect(new PotionEffect(foodItem.potionId));
-                        }
                         setFoodLevel(Math.min(foodItem.getHealAmount(foodSlot) + getFoodLevel(), 20));
                         setFoodSaturationLevel(Math.min(getSaturationLevel() + foodItem.getHealAmount(foodSlot) * foodItem.getSaturationModifier(foodSlot) * 2.0F, getFoodLevel()));
                         foodSlot.shrink(1);
@@ -180,11 +165,8 @@ public interface IHunger {
                     }
                 }
             }
-            if (!foodSlot.isEmpty() && eatingTicks == 0 & !entity.world.isRemote) {
-                if (getFoodLevel() + ((ItemFood) foodSlot.getItem()).getHealAmount(foodSlot) <= 20) {
-                    startEating(entity);
-                }
-            }
+            if (!foodSlot.isEmpty() && eatingTicks == 0 & !entity.world.isRemote)
+                if (getFoodLevel() + ((ItemFood) foodSlot.getItem()).getHealAmount(foodSlot) <= 20) startEating(entity);
             if (!entity.world.isRemote && prevFoodLevel != getFoodLevel())
                 PacketHandler.NETWORK_INSTANCE.sendToAll(new SyncHungerMessage(entity, getFoodLevel()));
         }
@@ -192,10 +174,8 @@ public interface IHunger {
         private void renderEatAnimation(EntityLivingBase entity) {
             World world = entity.world;
             Random rand = world.rand;
-            if (foodSlot.getItemUseAction() == EnumAction.DRINK) {
+            if (foodSlot.getItemUseAction() == EnumAction.DRINK)
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_DRINK, entity.getSoundCategory(), 0.5F, rand.nextFloat() * 0.1F + 0.9F, true);
-            }
-
             if (foodSlot.getItemUseAction() == EnumAction.EAT) {
                 for (int i = 0; i < 5; ++i) {
                     Vec3d vec3d = new Vec3d(((double) rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
@@ -206,12 +186,10 @@ public interface IHunger {
                     vec3d1 = vec3d1.rotatePitch(-entity.rotationPitch * 0.017453292F);
                     vec3d1 = vec3d1.rotateYaw(-entity.rotationYaw * 0.017453292F);
                     vec3d1 = vec3d1.addVector(entity.posX, entity.posY + (double) entity.getEyeHeight(), entity.posZ);
-
-                    if (foodSlot.getHasSubtypes()) {
+                    if (foodSlot.getHasSubtypes())
                         entity.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec3d1.x, vec3d1.y, vec3d1.z, vec3d.x, vec3d.y + 0.05D, vec3d.z, Item.getIdFromItem(foodSlot.getItem()), foodSlot.getMetadata());
-                    } else {
+                    else
                         entity.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec3d1.x, vec3d1.y, vec3d1.z, vec3d.x, vec3d.y + 0.05D, vec3d.z, Item.getIdFromItem(foodSlot.getItem()));
-                    }
                 }
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EAT, entity.getSoundCategory(), 0.5F + 0.5F * (float) rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F, true);
             }

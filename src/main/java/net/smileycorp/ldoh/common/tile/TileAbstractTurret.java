@@ -13,7 +13,6 @@ import net.smileycorp.ldoh.common.util.TurretUpgrade;
 public abstract class TileAbstractTurret<T extends EntityAbstractTurret> extends TileEntity implements IInventory {
 
     protected T entity = null;
-    protected NBTTagCompound entity_nbt = null;
 
     public void spawnEntity(EntityPlayer owner, EnumFacing facing, NBTTagCompound nbt) {
         entity = createNewEntity();
