@@ -23,6 +23,7 @@
     "MixinEntityPlayerSP",
     "MixinEntityRenderer",
     "MixinFMLCommonHandler",
+    "MixinMinecraft",
     "MixinRender"
   ],
   "server": [],

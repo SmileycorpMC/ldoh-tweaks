@@ -5,12 +5,10 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.scoreboard.Team;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.smileycorp.ldoh.common.util.TurretUpgrade;
-
-import java.awt.*;
 
 public class ModelTurret extends ModelBase {
     public ModelRenderer base;
@@ -139,33 +137,26 @@ public class ModelTurret extends ModelBase {
 
     @Override
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float age, float headYaw, float headPitch, float scale) {
+        boolean enemy = (entity instanceof IEnemyMachine && ((IEnemyMachine) entity).isEnemy());
+        Team team = entity == null ? null : entity.getTeam();
+        render(enemy ? 0xAEAF77 : team == null ? 0x404040 : Minecraft.getMinecraft().fontRenderer
+                .getColorCode(team.getColor().formattingCode), entity instanceof EntityTurret ? ((EntityTurret) entity).getSpin() : 0,
+                enemy, (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM)), headPitch, scale);
+    }
+    
+    public void render(int colour, float spin, boolean enemy, boolean australium, float headPitch, float scale) {
         GlStateManager.pushMatrix();
-        boolean australium = (entity instanceof EntityTurret && ((EntityTurret) entity).hasUpgrade(TurretUpgrade.AUSTRALIUM));
         //tint the turret the australium colour if it has the upgrade
         if (australium) GlStateManager.color(1, 0.831372549f, 0);
-        else if (entity == null) GlStateManager.color(0.45f, 0.45f, 0.45f);
-        else {
-            Color colour = null;
-            if (entity instanceof IEnemyMachine) {
-                //check if the turret is an enemy turret
-                if (((IEnemyMachine) entity).isEnemy()) colour = new Color(0x2C3811);
-                //if the entity is a player, the turret is an enemy turret in the inventory
-            } else if (entity instanceof EntityPlayer) colour = new Color(0x2C3811);
-            if (colour == null) colour = new Color(entity.getTeam() == null ? 0x404040 :
-                    Minecraft.getMinecraft().fontRenderer.getColorCode(entity.getTeam().getColor().formattingCode));
-            GlStateManager.color(colour.getRed() / 255f, colour.getGreen() / 255f, colour.getBlue() / 255f);
-        }
-        if (entity instanceof EntityTurret) {
-            //pivot turret gun based on facing
-            axel.rotateAngleX = headPitch * 0.0174533f;
-            //rotate turret gun while firing
-            gun_middle.rotateAngleZ = ((EntityTurret) entity).getSpin();
-            //if entity isn't a turret this is being rendered from the inventory, so apply inventory animation
-        } else gun_middle.rotateAngleZ = (0.0261799388f * age);
-        base.render(scale);
-        //remove australium tint
-        if (!australium) GlStateManager.color(1, 1, 1);
+        else GlStateManager.color(1, 1, 1);
+        //pivot turret gun based on facing
+        axel.rotateAngleX = headPitch * 0.0174533f;
+        //rotate turret gun while firing
+        gun_middle.rotateAngleZ = spin;
         axel.render(scale);
+        if (!((enemy || colour == 0x404040) && australium)) GlStateManager.color((float)((colour >> 16) & 0xFF) / 255f, (float) ((colour >> 8) & 0xFF) / 255f, (float)(colour & 0xFF) / 255f);
+        base.render(scale);
+        //remove tint
         GlStateManager.color(1, 1, 1);
         GlStateManager.popMatrix();
     }

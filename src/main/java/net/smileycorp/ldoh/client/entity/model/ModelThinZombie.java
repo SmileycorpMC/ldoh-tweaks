@@ -3,10 +3,10 @@ package net.smileycorp.ldoh.client.entity.model;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelZombie;
 
-public class ModelZombieNurse extends ModelZombie {
+public class ModelThinZombie extends ModelZombie {
 
     //need this on the off chance someone removes mobends
-    public ModelZombieNurse(float modelSize, float p_i1149_2_) {
+    public ModelThinZombie(float modelSize, float p_i1149_2_) {
         super(modelSize, false);
         bipedLeftLeg = new ModelRenderer(this, 0, 16);
         bipedLeftLeg.setRotationPoint(-0.5F, 12.0F, 0.0F);

@@ -8,17 +8,17 @@ import goblinbob.mobends.core.data.IEntityDataFactory;
 import goblinbob.mobends.standard.mutators.ZombieMutatorBase;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.smileycorp.ldoh.client.entity.model.ModelZombieNurse;
+import net.smileycorp.ldoh.client.entity.model.ModelThinZombie;
 import net.smileycorp.ldoh.common.entity.zombie.EntityReaver;
 
-public class ReaverMutator extends ZombieMutatorBase<ReaverData, EntityReaver, ModelZombieNurse> {
+public class ReaverMutator extends ZombieMutatorBase<ReaverData, EntityReaver, ModelThinZombie> {
 
     public ReaverMutator(IEntityDataFactory<EntityReaver> dataFactory) {
         super(dataFactory);
     }
 
     @Override
-    public boolean createParts(ModelZombieNurse original, float scaleFactor) {
+    public boolean createParts(ModelThinZombie original, float scaleFactor) {
         // Body
         original.bipedBody = body = (ModelPartPostOffset) new ModelPartPostOffset(original, 16, 16)
                 .setPostOffset(0.0F, -12f, 0.0F)
@@ -115,15 +115,15 @@ public class ReaverMutator extends ZombieMutatorBase<ReaverData, EntityReaver, M
     }
 
     @Override
-    public void storeVanillaModel(ModelZombieNurse model) {
-        ModelZombieNurse vanillaModel = new ModelZombieNurse(0.0F, 0.0f);
+    public void storeVanillaModel(ModelThinZombie model) {
+        ModelThinZombie vanillaModel = new ModelThinZombie(0.0F, 0.0f);
         this.vanillaModel = vanillaModel;
         super.storeVanillaModel(model);
     }
 
     @Override
     public boolean shouldModelBeSkipped(ModelBase model) {
-        return !(model instanceof ModelZombieNurse);
+        return !(model instanceof ModelThinZombie);
     }
 
 }

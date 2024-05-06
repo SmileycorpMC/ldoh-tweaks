@@ -8,6 +8,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,9 +17,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smileycorp.atlas.api.block.IBlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
@@ -170,6 +174,18 @@ public class BlockTurret extends BlockDirectional implements IBlockProperties, I
             return true;
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        if (!(world.getTileEntity(pos) instanceof TileTurret)) return super.getPickBlock(state, target, world, pos, player);
+        TileTurret tile = (TileTurret) world.getTileEntity(pos);
+        ItemStack stack = new ItemStack(this);
+        NBTTagCompound nbt = player.isCreative() && GuiScreen.isCtrlKeyDown() ? tile.getDropNBT() : new NBTTagCompound();
+        if (tile.getEntity() != null) if (tile.getEntity().isEnemy()) nbt.setBoolean("isEnemy", true);
+        if (!nbt.hasNoTags()) stack.setTagCompound(nbt);
+        return stack;
     }
 
     @Override

@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingZombie.class, m -> new RenderCrawlingZombie(m, "zombie"));
         RenderingRegistry.registerEntityRenderingHandler(EntityCrawlingHusk.class, m -> new RenderCrawlingZombie(m, "husk"));
         RenderingRegistry.registerEntityRenderingHandler(EntityTF2Zombie.class, RenderTF2Zombie::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, ctx -> new RenderZombieNurse(ctx, Constants.loc("textures/entity/reaver.png")));
+        RenderingRegistry.registerEntityRenderingHandler(EntityZombieNurse.class, ctx -> new RenderThinZombie(ctx, Constants.loc("textures/entity/nurse_zombie.png")));
         RenderingRegistry.registerEntityRenderingHandler(EntitySwatZombie.class, m -> new RenderSpecialZombie<>(m, "swat_zombie"));
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieMechanic.class, m -> new RenderSpecialZombie<>(m, "zombie_mechanic"));
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieTechnician.class, m -> new RenderSpecialZombie<>(m, "zombie_technician"));
@@ -100,7 +100,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityZombieFireman.class, RenderZombieFireman::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityInfPhoenix.class, RenderInfPhoenix::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityJuggernaut.class, RenderJuggernaut::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, ctx -> new RenderZombieNurse(ctx, Constants.loc("textures/entity/reaver.png")));
+        RenderingRegistry.registerEntityRenderingHandler(EntityReaver.class, ctx -> new RenderThinZombie(ctx, Constants.loc("textures/entity/reaver.png")));
         //handle custom mapping for landmine and fluid blockstates
         ModelLoader.setCustomStateMapper(LDOHBlocks.LANDMINE, new StateMapperLandmine());
         for (BlockFluidClassic fluid_block : RegistryEvents.FLUID_BLOCKS) ModelLoader.setCustomStateMapper(fluid_block, new FluidStateMapper(fluid_block.getFluid()));

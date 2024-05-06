@@ -20,14 +20,13 @@ public class ItemTurret extends ItemBlockTooltip {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            items.add(new ItemStack(this));
-            ItemStack enemy = new ItemStack(this);
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setBoolean("isEnemy", true);
-            enemy.setTagCompound(nbt);
-            items.add(enemy);
-        }
+        if (!isInCreativeTab(tab)) return;
+        items.add(new ItemStack(this));
+        ItemStack enemy = new ItemStack(this);
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setBoolean("isEnemy", true);
+        enemy.setTagCompound(nbt);
+        items.add(enemy);
     }
 
     @Override

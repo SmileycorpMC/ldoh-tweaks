@@ -98,7 +98,7 @@ public class ClientEventListener {
         Minecraft mc = Minecraft.getMinecraft();
         Entity entity = mc.getRenderViewEntity();
         if (entity == null) return;
-        if (entity.posY < 29.2 && entity.world.getWorldType() == WorldType.FLAT) return;
+        if (entity.posY < 29.2 || entity.world.getWorldType() == WorldType.FLAT) return;
         RenderManager rm = mc.getRenderManager();
         //scale renderer base on render distance
         int size = rm.options == null ? 0 : (rm.options.renderDistanceChunks + 1) * 16;

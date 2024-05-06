@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.smileycorp.ldoh.client.entity.RenderTurret;
@@ -82,9 +83,6 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
 
     @Override
     public void renderByItem(ItemStack stack) {
-        boolean isEnemy = false;
-        NBTTagCompound nbt = stack.getTagCompound();
-        if (nbt != null && nbt.hasKey("isEnemy") && nbt.getBoolean("isEnemy")) isEnemy = true;
         Minecraft mc = Minecraft.getMinecraft();
         GlStateManager.pushMatrix();
         //get translations based on item position
@@ -125,17 +123,33 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
             default:
                 break;
         }
+        //setup properties
+        boolean enemy = false;
+        boolean australium = false;
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (nbt != null) {
+            if (nbt.hasKey("isEnemy")) enemy = nbt.getBoolean("isEnemy");
+            if (nbt.hasKey("entity")) {
+                NBTTagCompound entity = nbt.getCompoundTag("entity");
+                if (entity.hasKey("upgrades")) for (int i : entity.getIntArray("upgrades")) {
+                    if (i == 6) australium = true;
+                    break;
+                }
+            }
+        }
         //get and bind the correct texture for type of turret
         IBakedModel base = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(BASE_LOC);
         mc.getRenderItem().renderItem(stack, ForgeHooksClient.handleCameraTransforms(base, transforms, false));
-        mc.getTextureManager().bindTexture(isEnemy ? RenderTurret.ENEMY_TEXTURE : RenderTurret.TEXTURE);
+        mc.getTextureManager().bindTexture(enemy ? RenderTurret.ENEMY_TEXTURE : RenderTurret.TEXTURE);
         GlStateManager.rotate(90, 0, 1, 0);
         GlStateManager.rotate(180, 1, 0, 0);
         GlStateManager.translate(0, -0.9, 0);
         //eventually we'll add australium rendering to this
         //nbt = stack.getTagCompound();
         //render turret entity over item
-        turret.render(isEnemy ? mc.player : null, 0, 0, mc.world.getTotalWorldTime(), 0, 0, 0.05f);
+        Team team = mc.player.getTeam();
+        turret.render(enemy ? 0xAEAF77 : team == null ? 0x404040 : mc.fontRenderer.getColorCode(team.getColor().formattingCode),
+                0.0261799388f * mc.world.getWorldTime(), enemy, australium, 0, 0.05f);
         GlStateManager.popMatrix();
     }
 

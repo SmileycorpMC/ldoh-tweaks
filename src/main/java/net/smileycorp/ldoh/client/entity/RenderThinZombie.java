@@ -4,14 +4,14 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
-import net.smileycorp.ldoh.client.entity.model.ModelZombieNurse;
+import net.smileycorp.ldoh.client.entity.model.ModelThinZombie;
 
-public class RenderZombieNurse<T extends EntityZombie> extends RenderBiped<T> {
+public class RenderThinZombie<T extends EntityZombie> extends RenderBiped<T> {
     
     private final ResourceLocation texture;
     
-    public RenderZombieNurse(RenderManager rendermanager, ResourceLocation texture) {
-        super(rendermanager, new ModelZombieNurse(0f, 0f), 0.5F);
+    public RenderThinZombie(RenderManager rendermanager, ResourceLocation texture) {
+        super(rendermanager, new ModelThinZombie(0f, 0f), 0.5F);
         this.texture = texture;
         addLayer(new LayerZombieArmour(this));
     }
