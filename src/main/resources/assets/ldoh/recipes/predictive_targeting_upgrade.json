@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "ldoh:turret_upgrade",
+	"pattern" : [
+		" R ",
+		"GUO",
+		" R "
+	],
+    "key" : {
+		"O" : {
+    		 "item": "minecraft:observer",
+			"data": 0
+        },
+		"G" : {
+    		 "item": "minecraft:golden_apple",
+			"data": 0
+        },
+		"U" : {
+            "item": "ldoh:turret_upgrade",
+			"data": 0
+        },
+		"R" : {
+    		 "item": "minecraft:repeater",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "ldoh:turret_upgrade",
+        "count": 1,
+		"data": 8
+    }
+}

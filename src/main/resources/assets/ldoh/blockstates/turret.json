@@ -1,0 +1,11 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "facing=up": { "model": "ldoh:turret_base" },
+        "facing=down": { "model": "ldoh:turret_base", "x": 180 },
+        "facing=east": { "model": "ldoh:turret_base", "y": 90, "x": 90 },
+        "facing=south": { "model": "ldoh:turret_base", "y": 180, "x": 90 },
+        "facing=west": { "model": "ldoh:turret_base", "y": 270, "x": 90 },
+        "facing=north": { "model": "ldoh:turret_base", "y": 0, "x": 90 }
+    }
+}

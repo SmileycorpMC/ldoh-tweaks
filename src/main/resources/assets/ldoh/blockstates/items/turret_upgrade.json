@@ -1,0 +1,18 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-item",
+        "model": "forge:item-layer"
+    },
+    "variants": {
+		"blank": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/blank" }}],
+		"hopping": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/hopping" }}],
+		"ammo_optimization": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/ammo_optimization" }}],
+		"barrel_spin": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/barrel_spin" }}],
+		"range": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/range" }}],
+		"redstone_control": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/redstone_control" }}],
+		"australium": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/australium" }}],
+		"rifling": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/rifling" }}],
+		"predictive_targeting": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/predictive_targeting" }}]
+	}
+}

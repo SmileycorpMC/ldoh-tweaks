@@ -20,19 +20,18 @@ public enum EnumBiomeType {
 	BADLANDS(BOPBiomes.wasteland, Optional.of(LDOHWorld.FROZEN_WASTELAND), Optional.of(LDOHWorld.INFERNAL_WASTELAND)),
 	OCEAN(Optional.of(Biomes.DEEP_OCEAN), Optional.of(Biomes.OCEAN)),
 	CITY(Optional.of(WastelandWorld.apocalypse_city));
-
+    
 	private final Optional<Biome>[] biomes;
+
 
 	EnumBiomeType(Optional<Biome>... biomes) {
 		this.biomes = biomes;
 	}
 
-	public boolean matches(Biome biome) {
-		for (Optional<Biome> optional : biomes) {
-			if (optional.isPresent()) if (optional.get() == biome) return true;
-		}
-		return false;
-	}
+    public boolean matches(Biome biome) {
+        for (Optional<Biome> optional : biomes) if (optional.isPresent()) if (optional.get() == biome) return true;
+        return false;
+    }
 
 	public List<Biome> getBiomes() {
 		List<Biome> biomes = new ArrayList<>();

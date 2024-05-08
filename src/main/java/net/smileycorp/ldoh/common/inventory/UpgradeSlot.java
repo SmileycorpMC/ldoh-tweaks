@@ -5,13 +5,13 @@ import net.minecraft.item.ItemStack;
 
 public class UpgradeSlot extends Slot {
 
-	public UpgradeSlot(InventoryTurretUpgrades inventory, int index, int xPosition, int yPosition) {
-		super(inventory, index, xPosition, yPosition);
-	}
+    public UpgradeSlot(InventoryTurretUpgrades inventory, int index, int xPosition, int yPosition) {
+        super(inventory, index, xPosition, yPosition);
+    }
 
-	@Override
-	public boolean isItemValid(ItemStack stack) {
-		return inventory.isItemValidForSlot(0, stack);
-	}
+    @Override
+    public boolean isItemValid(ItemStack stack) {
+        return inventory.isItemValidForSlot(0, stack);
+    }
 
 }

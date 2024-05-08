@@ -1,0 +1,6 @@
+{
+	"parent": "ldoh:item/cap",
+	"textures": {
+		"0": "ldoh:model/mechanic_hat"
+	}
+}

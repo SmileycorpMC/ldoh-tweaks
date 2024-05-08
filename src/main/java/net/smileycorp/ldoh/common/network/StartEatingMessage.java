@@ -7,26 +7,26 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class StartEatingMessage implements IMessage {
 
-	private int entity;
+    private int entity;
 
-	public StartEatingMessage() {}
+    public StartEatingMessage() {}
 
-	public StartEatingMessage(Entity entity) {
-		this.entity = entity.getEntityId();
-	}
+    public StartEatingMessage(Entity entity) {
+        this.entity = entity.getEntityId();
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(entity);
-	}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(entity);
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		entity = buf.readInt();
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        entity = buf.readInt();
+    }
 
-	public Entity getEntity(World world) {
-		return world.getEntityByID(entity);
-	}
+    public Entity getEntity(World world) {
+        return world.getEntityByID(entity);
+    }
 
 }

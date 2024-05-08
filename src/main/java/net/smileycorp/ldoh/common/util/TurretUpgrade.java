@@ -18,9 +18,9 @@ public enum TurretUpgrade {
     private final String name;
     private final boolean isStackable;
 
-   TurretUpgrade(String name, boolean isStackable) {
+    TurretUpgrade(String name, boolean isStackable) {
         this.isStackable = isStackable;
-       this.name = name;
+        this.name = name;
     }
 
     public String getName() {
@@ -28,11 +28,11 @@ public enum TurretUpgrade {
     }
 
     public boolean isStackable() {
-       return isStackable;
+        return isStackable;
     }
 
     public ItemStack getItem() {
-       return new ItemStack(LDOHItems.TURRET_UPGRADE, 1, ordinal());
+        return new ItemStack(LDOHItems.TURRET_UPGRADE, 1, ordinal());
     }
 
     public static boolean isBlank(int id) {
@@ -40,7 +40,7 @@ public enum TurretUpgrade {
     }
 
     public static TurretUpgrade get(int id) {
-       return (isBlank(id)) ? BLANK : values()[id];
+        return (isBlank(id)) ? BLANK : values()[id];
     }
 
 }

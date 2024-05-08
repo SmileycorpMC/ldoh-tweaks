@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ public class ItemTurretTargetingUpgrade extends Item {
 
     public ItemTurretTargetingUpgrade() {
         setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-        setUnlocalizedName(ModDefinitions.getName(name));
-        setRegistryName(ModDefinitions.getResource(name));
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
         setMaxStackSize(1);
     }
 
@@ -83,7 +83,7 @@ public class ItemTurretTargetingUpgrade extends Item {
             List<ResourceLocation> entities = Lists.newArrayList();
             if (tag.hasKey("entities")) {
                 ((NBTTagList) tag.getTag("entities")).forEach(nbt ->
-                    entities.add(new ResourceLocation(((NBTTagString)nbt).getString())));
+                        entities.add(new ResourceLocation(((NBTTagString) nbt).getString())));
             }
             return new TargetingOptions(mode, entities);
         }

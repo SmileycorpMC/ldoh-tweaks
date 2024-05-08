@@ -9,54 +9,54 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 
 public class InventoryTurretAmmo extends InventoryBasic {
 
-	public InventoryTurretAmmo() {
-		super(ModDefinitions.getName("entity.turret"), false, 9);
-	}
+    public InventoryTurretAmmo() {
+        super(Constants.name("entity.turret"), false, 9);
+    }
 
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return isAmmo(stack, null);
-	}
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return isAmmo(stack, null);
+    }
 
-	public int getAmmoSlot(Entity target) {
-		int slot = -1;
-		for(int i = inventoryContents.size()-1; i >= 0; i--) {
-			if (isAmmo(inventoryContents.get(i), target)) return i;
-			else if (slot < 0 && isAmmo(inventoryContents.get(i), null)) slot = i;
-		}
-		return slot;
-	}
+    public int getAmmoSlot(Entity target) {
+        int slot = -1;
+        for (int i = inventoryContents.size() - 1; i >= 0; i--) {
+            if (isAmmo(inventoryContents.get(i), target)) return i;
+            else if (slot < 0 && isAmmo(inventoryContents.get(i), null)) slot = i;
+        }
+        return slot;
+    }
 
-	public boolean isAmmo(ItemStack stack, Entity target) {
-		Item item = stack.getItem();
-		if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
-		return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO);
-	}
+    public boolean isAmmo(ItemStack stack, Entity target) {
+        Item item = stack.getItem();
+        if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
+        return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO);
+    }
 
-	public boolean hasAmmo() {
-		return getAmmoSlot(null) > -1;
-	}
+    public boolean hasAmmo() {
+        return getAmmoSlot(null) > -1;
+    }
 
-	public NBTTagCompound writeToNBT() {
-		return ItemStackHelper.saveAllItems(new NBTTagCompound(), inventoryContents);
-	}
+    public NBTTagCompound writeToNBT() {
+        return ItemStackHelper.saveAllItems(new NBTTagCompound(), inventoryContents);
+    }
 
-	public void readFromNBT(NBTTagCompound nbt) {
-		ItemStackHelper.loadAllItems(nbt, inventoryContents);
-	}
+    public void readFromNBT(NBTTagCompound nbt) {
+        ItemStackHelper.loadAllItems(nbt, inventoryContents);
+    }
 
-	public ItemStack getAmmo(Entity target) {
-		int slot = getAmmoSlot(target);
-		return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
-	}
+    public ItemStack getAmmo(Entity target) {
+        int slot = getAmmoSlot(target);
+        return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
+    }
 
-	public NonNullList<ItemStack> getItems() {
-		return inventoryContents;
-	}
+    public NonNullList<ItemStack> getItems() {
+        return inventoryContents;
+    }
 
 }

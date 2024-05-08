@@ -20,10 +20,11 @@ repositories {
         
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = '1.12.2-1.1.10'
+version = '1.12.2-1.1.15b'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 
@@ -85,7 +86,7 @@ dependencies {
 	implementation "curse.maven:epicsiege-229449:2874756"
 	implementation "curse.maven:exoticbirds-242830:2987034"
 	implementation "curse.maven:firstaid-276837:4414252"
-	implementation "curse.maven:fishsundead-321139:4017095"
+	implementation "curse.maven:fishsundead-321139:4753503"
 	implementation "curse.maven:followme-463841:3520547"
 	implementation "curse.maven:ftbquests-289412:3156637"
 	implementation "curse.maven:cfm-55438:3865259"
@@ -98,11 +99,13 @@ dependencies {
 	implementation "curse.maven:lostcities-269024:2861574"
 	implementation "curse.maven:tektopia-333029:2763046"
 	implementation "curse.maven:craftstudio-268704:2661859"
-	implementation "curse.maven:tf2stuffreloaded-859794:4530677"
+	implementation "curse.maven:tf2stuffreloaded-859794:4842921"
 	implementation "curse.maven:wasteland-284582:3573228"
 	implementation "curse.maven:xlfood-247217:2740774"
+	implementation "curse.maven:mutantbeasts-336272:3225395"
+	implementation "curse.maven:unexperienced-552526:5140238"
 	//needed to load scape and run parasites, as it blocks cursemaven
-	implementation files('libs/SRParasites-1.12.2v1.9.12.jar')
+	implementation files('libs/SRParasites-1.12.2v1.9.16.jar')
 	implementation files('libs/animania-1.12.2-base-2.0.3.28.jar')
 	implementation files('libs/animania-1.12.2-farm-1.0.2.28.jar')
 	implementation files('libs/animania-1.12.2-extra-1.0.2.28.jar')

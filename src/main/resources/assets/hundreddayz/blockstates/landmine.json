@@ -1,7 +1,0 @@
-{
-    "forge_marker": 1,
-    "variants": {
-		"primed=false": {"model": "hundreddayz:landmine", "textures":{"mine": "hundreddayz:blocks/landmine"}},
-		"primed=true": {"model": "hundreddayz:landmine", "textures":{"mine": "hundreddayz:blocks/landmine_primed"}}
-    }
-}

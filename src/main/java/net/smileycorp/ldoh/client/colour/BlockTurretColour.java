@@ -14,17 +14,16 @@ import java.awt.*;
 
 public class BlockTurretColour implements IBlockColor {
 
-	//tint turret base australium colour if turret has australium upgrade
-	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
-		Block block = state.getBlock();
-		if (block instanceof BlockTurret && world.getTileEntity(pos) instanceof TileTurret) {
-			EntityTurret turret = ((TileTurret) world.getTileEntity(pos)).getEntity();
-			if (turret != null && turret.hasUpgrade(TurretUpgrade.AUSTRALIUM)) return 0xFCD400;
-		}
-		return Color.WHITE.getRGB();
-	}
-
+    //tint turret base australium colour if turret has australium upgrade
+    @Override
+    public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
+        Block block = state.getBlock();
+        if (!(block instanceof BlockTurret && world.getTileEntity(pos) instanceof TileTurret)) {
+            EntityTurret turret = ((TileTurret) world.getTileEntity(pos)).getEntity();
+            if (turret != null && turret.hasUpgrade(TurretUpgrade.AUSTRALIUM)) return 0xFCD400;
+        }
+        return Color.WHITE.getRGB();
+    }
 
 
 }

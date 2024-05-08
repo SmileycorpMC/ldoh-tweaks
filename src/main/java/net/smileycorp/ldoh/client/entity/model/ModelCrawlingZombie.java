@@ -6,12 +6,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
 public class ModelCrawlingZombie extends ModelBiped {
-	
-	public ModelCrawlingZombie() {
+
+    public ModelCrawlingZombie() {
         this(0.0F, false);
     }
-	
-	public ModelCrawlingZombie(float modelSize, boolean p_i1168_2_) {
+
+    public ModelCrawlingZombie(float modelSize, boolean p_i1168_2_) {
         super(modelSize, 0.0F, 64, p_i1168_2_ ? 32 : 64);
         textureWidth = 64;
         textureHeight = 64;
@@ -35,35 +35,35 @@ public class ModelCrawlingZombie extends ModelBiped {
         bipedHead.setRotationPoint(0.0F, 21.0F, -0.2F);
         bipedHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
     }
-	
-	@Override
-	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+
+    @Override
+    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
         bipedLeftArm.render(scale);
         bipedRightArm.render(scale);
         bipedBody.render(scale);
         bipedHeadwear.render(scale);
         bipedHead.render(scale);
-	}
-	
-	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+    }
+
+    @Override
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
         this.bipedHead.rotateAngleY = netHeadYaw * 0.017453292F;
         this.bipedHead.rotateAngleX = headPitch * 0.017453292F;
         //animate crawler movement animation
-        float f = MathHelper.sin(limbSwing)*0.2f;
-        this.bipedRightArm.rotateAngleX = f -1.2566370614359172F;
-        this.bipedLeftArm.rotateAngleX = -f -1.2566370614359172F;
-        this.bipedRightArm.rotateAngleY = f -0.18203784098300857F;
+        float f = MathHelper.sin(limbSwing) * 0.2f;
+        this.bipedRightArm.rotateAngleX = f - 1.2566370614359172F;
+        this.bipedLeftArm.rotateAngleX = -f - 1.2566370614359172F;
+        this.bipedRightArm.rotateAngleY = f - 0.18203784098300857F;
         this.bipedLeftArm.rotateAngleY = f + 0.18727382873899157F;
-        this.bipedBody.rotateAngleY = (float) Math.sin(limbSwing*1.5) * 0.2f;
+        this.bipedBody.rotateAngleY = (float) Math.sin(limbSwing * 1.5) * 0.2f;
         copyModelAngles(this.bipedHead, this.bipedHeadwear);
     }
-	
-	private void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+
+    private void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
     }
-	
+
 }

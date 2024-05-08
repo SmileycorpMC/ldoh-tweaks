@@ -1,9 +1,9 @@
 [
 {
-  "modid": "hundreddayz",
+  "modid": "ldoh",
   "name": "LDoH Tweaks",
   "description": "Tweaks for the Last Days of Humanity modpack.",
-  "version": "1.1.10",
+  "version": "1.1.15a",
   "mcversion": "1.12.2",
   "url": "",
   "updateUrl": "",

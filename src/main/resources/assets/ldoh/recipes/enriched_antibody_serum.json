@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "ldoh:enriched_antibody_serum",
+    "ingredients": [
+        {
+            "item": "ldoh:syringe",
+			"count": 1,
+			"data": 1
+        },
+		{
+            "item": "minecraft:rotten_flesh",
+			"count": 1
+		},
+		{
+            "item": "firstaid:morphine",
+			"count": 1
+		}
+	],
+    "result": {
+        "item": "ldoh:syringe",
+        "count": 1,
+        "data": 2
+    }
+}
