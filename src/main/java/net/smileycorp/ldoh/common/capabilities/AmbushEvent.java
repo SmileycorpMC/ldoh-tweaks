@@ -130,7 +130,7 @@ public class AmbushEvent implements IAmbushEvent {
             case ALLY:
                 for (int i = 0; i < (phase + 1) * 2.5; i++)
                     try {
-                        EntityTF2Character entity = TF2Class.getRandomClass((c) -> c != TF2Class.SPY).createEntity(world);
+                        EntityTF2Character entity = TF2Class.getRandomClass(c -> c != TF2Class.SPY).createEntity(world);
                         world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName());
                         entity.setEntTeam(player.getTeam().getName().equals("RED") ? 0 : 1);
                         spawnlist.add(entity);
@@ -141,7 +141,7 @@ public class AmbushEvent implements IAmbushEvent {
             case ENEMY:
                 for (int i = 0; i < (phase + 1) * 2.5; i++)
                     try {
-                        EntityTF2Character entity = TF2Class.getRandomClass((c) -> c != TF2Class.SPY).createEntity(world);
+                        EntityTF2Character entity = TF2Class.getRandomClass(c -> c != TF2Class.SPY).createEntity(world);
                         world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName().equals("RED") ? "BLU" : "RED");
                         entity.setEntTeam(player.getTeam().getName().equals("RED") ? 1 : 0);
                         spawnlist.add(entity);
@@ -163,11 +163,8 @@ public class AmbushEvent implements IAmbushEvent {
                 for (int i = 0; i < phase * 1.5; i++) spawnlist.add(hardMode ? new EntityFerHuman(world) : new EntityInfHuman(world));
                 break;
             case ZOMBIE:
-                if (postGame) {
-                    for (int i = 0; i < (phase + 1); i++) {
-                        spawnlist.add(new EntityZombieNurse(world));
-                    }
-                } else {
+                if (postGame) for (int i = 0; i < (phase + 1); i++) spawnlist.add(new EntityZombieNurse(world));
+                else {
                     spawnlist.add(new EntityZombieNurse(world));
                     if (hardMode) spawnlist.add(new EntityZombieNurse(world));
                     for (int i = 0; i < (phase + 1); i++) {
@@ -202,7 +199,7 @@ public class AmbushEvent implements IAmbushEvent {
                     else if (r == 11) spawnlist.add(new EntityBanshee(world));
                     else if (r == 12) spawnlist.add(new EntityAvaton(world));
                     else spawnlist.add(new EntityWeta(world));
-                };
+                }
                 break;
             case NONE:
                 break;

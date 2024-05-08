@@ -132,8 +132,10 @@ public class TESRTurretItem extends TileEntityItemStackRenderer {
             if (nbt.hasKey("entity")) {
                 NBTTagCompound entity = nbt.getCompoundTag("entity");
                 if (entity.hasKey("upgrades")) for (int i : entity.getIntArray("upgrades")) {
-                    if (i == 6) australium = true;
-                    break;
+                    if (i == 6) {
+                        australium = true;
+                        break;
+                    }
                 }
             }
         }
