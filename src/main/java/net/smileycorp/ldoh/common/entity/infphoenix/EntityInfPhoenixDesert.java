@@ -16,7 +16,7 @@ public class EntityInfPhoenixDesert extends EntityInfPhoenix {
     }
 
     @Override
-    public String getName() {
+    public String getVariant() {
         return "desert";
     }
 

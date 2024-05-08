@@ -18,7 +18,7 @@ public class EntityInfPhoenixFire extends EntityInfPhoenix {
     }
 
     @Override
-    public String getName() {
+    public String getVariant() {
         return "fire";
     }
 

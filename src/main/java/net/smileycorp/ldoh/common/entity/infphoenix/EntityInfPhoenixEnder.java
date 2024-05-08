@@ -234,7 +234,7 @@ public class EntityInfPhoenixEnder extends EntityInfPhoenix {
     }
 
     @Override
-    public String getName() {
+    public String getVariant() {
         return "end";
     }
 

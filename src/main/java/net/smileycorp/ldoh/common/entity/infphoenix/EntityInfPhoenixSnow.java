@@ -14,7 +14,7 @@ public class EntityInfPhoenixSnow extends EntityInfPhoenix {
     }
 
     @Override
-    public String getName() {
+    public String getVariant() {
         return "snowy";
     }
 

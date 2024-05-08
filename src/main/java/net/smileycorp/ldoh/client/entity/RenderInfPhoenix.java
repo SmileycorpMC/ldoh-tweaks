@@ -15,7 +15,7 @@ public class RenderInfPhoenix extends RenderLiving<EntityInfPhoenix> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityInfPhoenix entity) {
-        return Constants.loc("textures/entity/inf_phoenix/" + entity.getName() + ".png");
+        return Constants.loc("textures/entity/inf_phoenix/" + entity.getVariant() + ".png");
     }
 
 }

@@ -186,7 +186,7 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
         return ItemSpawner.getEggFor(this);
     }
 
-    public abstract String getName();
+    public abstract String getVariant();
 
     protected abstract boolean isImmune(DamageSource source);
 

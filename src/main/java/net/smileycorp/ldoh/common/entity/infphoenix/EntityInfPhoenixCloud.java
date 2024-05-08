@@ -10,7 +10,7 @@ public class EntityInfPhoenixCloud extends EntityInfPhoenix {
     }
 
     @Override
-    public String getName() {
+    public String getVariant() {
         return "cloud";
     }
 
