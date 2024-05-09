@@ -13,6 +13,8 @@ public class LDOHFluids {
     
     public static final Fluid ENRICHED_ANTIBODY_SERUM = new FluidLDOH("enriched_antibody_serum", 0xC39538);
     
-    //public static final Fluid POTION = new FluidPotion();
+    public static final Fluid CARAMEL = new FluidLDOH("caramel", 0xCE6412);
+    
+    public static final Fluid COLA = new FluidLDOH("cola", 0x87381D);
     
 }

@@ -14,6 +14,8 @@ public class LDOHRecipeRegistry {
     private static final List<BottlingRecipe> BOTTLING_RECIPES = Lists.newArrayList();
 
     private static final List<SiphoningRecipe> SIPHONING_RECIPES = Lists.newArrayList();
+    
+    private static final List<MeltingRecipe> MELTING_RECIPES = Lists.newArrayList();
 
     public static void registerMixingRecipe(MixingRecipe recipe) {
         MIXING_RECIPES.add(recipe);
@@ -25,6 +27,10 @@ public class LDOHRecipeRegistry {
 
     public static void registerSiphoningRecipe(SiphoningRecipe recipe) {
         SIPHONING_RECIPES.add(recipe);
+    }
+    
+    public static void registerMeltingRecipe(MeltingRecipe recipe) {
+        MELTING_RECIPES.add(recipe);
     }
 
     public static MixingRecipe getMixingRecipe(FluidStack... inputs) {
@@ -41,6 +47,11 @@ public class LDOHRecipeRegistry {
         for (SiphoningRecipe recipe : SIPHONING_RECIPES) if (recipe.matches(input)) return recipe;
         return null;
     }
+    
+    public static MeltingRecipe getMeltingRecipe(ItemStack input) {
+        for (MeltingRecipe recipe : MELTING_RECIPES) if (recipe.matches(input)) return recipe;
+        return null;
+    }
 
     public static boolean canMix(FluidStack... inputs) {
         return getMixingRecipe(inputs) != null;
@@ -53,6 +64,10 @@ public class LDOHRecipeRegistry {
     public static boolean canSiphon(ItemStack input) {
         return getSiphoningRecipe(input) != null;
     }
+    
+    public static boolean canMelt(ItemStack input) {
+        return getMeltingRecipe(input) != null;
+    }
 
     public static Stream<MixingRecipe> getMixingRecipes() {
         return MIXING_RECIPES.stream();
@@ -64,6 +79,10 @@ public class LDOHRecipeRegistry {
 
     public static Stream<SiphoningRecipe> getSiphoningRecipes() {
         return SIPHONING_RECIPES.stream();
+    }
+    
+    public static Stream<MeltingRecipe> getMeltingRecipes() {
+        return MELTING_RECIPES.stream();
     }
 
 }

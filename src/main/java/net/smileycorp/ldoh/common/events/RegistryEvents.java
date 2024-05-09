@@ -40,10 +40,7 @@ import net.smileycorp.ldoh.common.entity.infphoenix.*;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.*;
-import net.smileycorp.ldoh.common.recipes.BottlingRecipe;
-import net.smileycorp.ldoh.common.recipes.LDOHRecipeRegistry;
-import net.smileycorp.ldoh.common.recipes.MixingRecipe;
-import net.smileycorp.ldoh.common.recipes.SiphoningRecipe;
+import net.smileycorp.ldoh.common.recipes.*;
 import net.smileycorp.ldoh.common.tile.*;
 import net.smileycorp.ldoh.common.world.ModWorldGen;
 import pavocado.exoticbirds.init.ExoticbirdsItems;
@@ -134,18 +131,26 @@ public class RegistryEvents {
         OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
         OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
         OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
+        
+        //mixing recipes
         LDOHRecipeRegistry.registerMixingRecipe(new MixingRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 250),
                 new FluidStack(BOPBlocks.blood_fluid, 125), new FluidStack(LDOHFluids.NECROTIC_BLOOD, 125), new FluidStack(LDOHFluids.MORPHINE, 125)));
+        
+        //bottling recipes
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(Items.POTIONITEM), new FluidStack(FluidRegistry.WATER, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(Items.EXPERIENCE_BOTTLE), new FluidStack(LDOHFluids.EXPERIENCE, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(FirstAidItems.MORPHINE), new FluidStack(LDOHFluids.MORPHINE, 125), new ItemStack(Items.GLASS_BOTTLE)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(LDOHItems.SYRINGE, 1, 1), new FluidStack(BOPBlocks.blood_fluid, 125), new ItemStack(LDOHItems.SYRINGE, 1, 0)));
         LDOHRecipeRegistry.registerBottlingRecipe(new BottlingRecipe(new ItemStack(LDOHItems.SYRINGE, 1, 2), new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 125), new ItemStack(LDOHItems.SYRINGE, 1, 0)));
+        
+        //siphoning recipes
         LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.EXPERIENCE, 125), new ItemStack(Items.GLASS_BOTTLE), new ItemStack(Items.EXPERIENCE_BOTTLE)));
         LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.MORPHINE, 125), new ItemStack(Items.GLASS_BOTTLE), new ItemStack(FirstAidItems.MORPHINE)));
         LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(BOPBlocks.blood_fluid, 125), new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 1)));
         LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 125), new ItemStack(LDOHItems.SYRINGE, 1, 3), new ItemStack(LDOHItems.SYRINGE, 1, 2)));
-        LDOHRecipeRegistry.registerSiphoningRecipe(new SiphoningRecipe(new FluidStack(LDOHFluids.NECROTIC_BLOOD, 25), ItemStack.EMPTY, new ItemStack(Items.ROTTEN_FLESH)));
+        
+        LDOHRecipeRegistry.registerMeltingRecipe(new MeltingRecipe(new FluidStack(LDOHFluids.NECROTIC_BLOOD, 25), new ItemStack(Items.ROTTEN_FLESH)));
+        LDOHRecipeRegistry.registerMeltingRecipe(new MeltingRecipe(new FluidStack(LDOHFluids.CARAMEL, 100), new ItemStack(Items.SUGAR)));
     }
 
     public static void registerCFMRecipes(IRecipeRegistry registry) {
