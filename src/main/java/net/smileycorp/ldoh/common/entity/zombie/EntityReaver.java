@@ -8,9 +8,11 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateClimber;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.item.ItemSpawner;
 
@@ -43,11 +45,33 @@ public class EntityReaver extends EntityZombie {
         getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
     }
     
+    @Override
+    public void damageEntity(DamageSource source, float amount) {
+        if (isEntityInvulnerable(source)) return;
+        float original = amount;
+        amount = ForgeHooks.onLivingHurt(this, source, amount);
+        if (amount <= 0) return;
+        if (amount <= original * 2f) amount = applyArmorCalculations(source, amount);
+        amount = applyPotionDamageCalculations(source, amount);
+        float f = amount;
+        amount = Math.max(amount - this.getAbsorptionAmount(), 0.0F);
+        this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
+        amount = ForgeHooks.onLivingDamage(this, source, amount);
+        if (amount != 0.0F) {
+            float f1 = getHealth();
+            getCombatTracker().trackDamage(source, f1, amount);
+            setHealth(f1 - amount); // Forge: moved to fix MC-121048
+            setAbsorptionAmount(this.getAbsorptionAmount() - amount);
+        }
+    }
+    
+    @Override
     public void onUpdate() {
         super.onUpdate();
         if (!world.isRemote) setBesideClimbableBlock(collidedHorizontally);
     }
     
+    @Override
     public boolean isOnLadder()
     {
         return isBesideClimbableBlock();
