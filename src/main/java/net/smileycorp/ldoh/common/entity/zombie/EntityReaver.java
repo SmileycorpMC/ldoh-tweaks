@@ -40,8 +40,8 @@ public class EntityReaver extends EntityZombie {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(14.0D);
-        getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(20.0D);
+        getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(15);
+        getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(30);
         getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
     }
     
@@ -51,17 +51,17 @@ public class EntityReaver extends EntityZombie {
         float original = amount;
         amount = ForgeHooks.onLivingHurt(this, source, amount);
         if (amount <= 0) return;
-        if (amount <= original * 2f) amount = applyArmorCalculations(source, amount);
+        if (amount <= original * 1.5f) amount = applyArmorCalculations(source, amount);
         amount = applyPotionDamageCalculations(source, amount);
         float f = amount;
-        amount = Math.max(amount - this.getAbsorptionAmount(), 0.0F);
-        this.setAbsorptionAmount(this.getAbsorptionAmount() - (f - amount));
+        amount = Math.max(amount - getAbsorptionAmount(), 0.0F);
+        setAbsorptionAmount(getAbsorptionAmount() - (f - amount));
         amount = ForgeHooks.onLivingDamage(this, source, amount);
         if (amount != 0.0F) {
             float f1 = getHealth();
             getCombatTracker().trackDamage(source, f1, amount);
-            setHealth(f1 - amount); // Forge: moved to fix MC-121048
-            setAbsorptionAmount(this.getAbsorptionAmount() - amount);
+            setHealth(f1 - amount);
+            setAbsorptionAmount(getAbsorptionAmount() - amount);
         }
     }
     
