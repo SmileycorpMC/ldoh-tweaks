@@ -20,9 +20,7 @@ public class DefenseEvents {
         DamageSource cause = event.getDamageSource();
         if (cause instanceof DamageSourceBarbedWire) {
             TileBarbedWire tile = ((DamageSourceBarbedWire) cause).getSource();
-            if (tile.hasEnchantment(Enchantments.LOOTING)) {
-                event.setLootingLevel(tile.getEnchantmentLevel(Enchantments.LOOTING));
-            }
+            if (tile.hasEnchantment(Enchantments.LOOTING)) event.setLootingLevel(tile.getEnchantmentLevel(Enchantments.LOOTING));
         }
     }
 
@@ -30,9 +28,7 @@ public class DefenseEvents {
     public void onDamage(LivingDamageEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
-        if (attacker instanceof EntityIncendiaryProjectile) {
-            entity.setFire(2);
-        }
+        if (attacker instanceof EntityIncendiaryProjectile) entity.setFire(2);
     }
 
 }

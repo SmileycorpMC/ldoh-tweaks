@@ -21,7 +21,7 @@ public class JeiPluginLDOH implements IModPlugin {
     @Override
     public void register(@Nonnull IModRegistry registry) {
         //syringes
-        registry.handleRecipes(SyringeCategory.Wrapper.class, (r) -> r, SyringeCategory.ID);
+        registry.handleRecipes(SyringeCategory.Wrapper.class, r -> r, SyringeCategory.ID);
         registry.addRecipes(Lists.newArrayList(new SyringeCategory.Wrapper()), SyringeCategory.ID);
         registry.addRecipeCatalyst(new ItemStack(LDOHItems.SYRINGE), SyringeCategory.ID);
     }

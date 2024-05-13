@@ -12,4 +12,5 @@ public class ItemFoodLDOH extends ItemFood {
         setUnlocalizedName(Constants.name(name));
         setRegistryName(Constants.loc(name));
     }
+    
 }
