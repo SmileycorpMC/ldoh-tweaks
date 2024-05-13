@@ -6,6 +6,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.world.World;
 import net.smileycorp.ldoh.common.entity.zombie.EntityProfessionZombie;
+import net.smileycorp.ldoh.common.entity.zombie.EntityReaver;
 import net.smileycorp.ldoh.common.entity.zombie.EntityTF2Zombie;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,7 @@ public abstract class MixinEntityZombie extends EntityMob {
 		//check to make sure all zombie derivative entities don't get the esm ai
 		hasESMAI = ((EntityMob)this).getClass() == EntityZombie.class || ((EntityMob)this).getClass() == EntityZombieVillager.class
 				|| ((EntityMob)this).getClass() == EntityHusk.class || ((EntityMob)this).getClass() == EntityTF2Zombie.class
-				|| ((EntityMob)this).getClass() == EntityProfessionZombie.class;
+				|| ((EntityMob)this).getClass() == EntityProfessionZombie.class || ((EntityMob)this).getClass() == EntityReaver.class;
 		if (hasESMAI) ModUtils.addGriefTask(this);
 	}
 
