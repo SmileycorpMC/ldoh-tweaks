@@ -69,7 +69,7 @@ public class ItemSpawner extends Item implements IMetaItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if (world.isRemote) return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
+        if (world.isRemote) return new ActionResult<>(EnumActionResult.PASS, itemstack);
         ItemStack stack = player.getHeldItem(hand);
         int meta = stack.getMetadata();
         if (meta >= getMaxMeta()) meta = 0;
@@ -86,7 +86,7 @@ public class ItemSpawner extends Item implements IMetaItem {
     private EntityLiving spawnEntity(World world, int meta, BlockPos pos) {
         EntityLiving entity = entries.get(meta).getEntityToSpawn(world, pos);
         entity.onInitialSpawn(world.getDifficultyForLocation(pos), null);
-        entity.setPosition(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
+        entity.setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
         world.spawnEntity(entity);
         return entity;
     }
