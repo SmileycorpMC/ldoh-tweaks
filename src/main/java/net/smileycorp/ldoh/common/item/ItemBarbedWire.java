@@ -39,7 +39,7 @@ public class ItemBarbedWire extends ItemBlock implements IMetaItem {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return this.getUnlocalizedName() + EnumBarbedWireMat.byMeta(stack.getMetadata()).getUnlocalisedName();
+        return getUnlocalizedName() + EnumBarbedWireMat.byMeta(stack.getMetadata()).getUnlocalisedName();
     }
 
     @Override
