@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.mixin;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,13 @@ public abstract class MixinContainerEnchantment extends Container {
     public Slot init$addSlotToContainer(ContainerEnchantment instance, Slot slot) {
         if (inventorySlots.isEmpty()) slot = new EnchantmentSlot(instance.tableInventory, 0, slot.xPos,  slot.yPos);
         return addSlotToContainer(slot);
+    }
+    
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/EntityPlayer;onEnchant(Lnet/minecraft/item/ItemStack;I)V"), method = "enchantItem")
+    public void enchantItem$onEnchant(EntityPlayer instance, ItemStack stack, int cost) {
+        if (stack.getItem() == Item.getItemFromBlock(LDOHBlocks.BARBED_WIRE) && stack.getCount() > 1)
+            cost = cost * Math.min((int) (1 + (0.05f) * (float) stack.getCount()), 10);
+        instance.onEnchant(stack, cost);
     }
     
 }
