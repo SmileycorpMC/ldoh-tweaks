@@ -1,7 +1,9 @@
 package net.smileycorp.ldoh.mixin;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerEnchantment;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;

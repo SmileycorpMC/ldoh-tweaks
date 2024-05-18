@@ -1,6 +1,5 @@
 package net.smileycorp.ldoh.mixin;
 
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,13 +8,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeHooks;
 import net.smileycorp.ldoh.common.block.LDOHBlocks;
-import net.smileycorp.ldoh.common.item.LDOHItems;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,7 +38,7 @@ public abstract class MixinContainerRepair extends Container {
     @Inject(at = @At("HEAD"), method = "updateRepairOutput", cancellable = true)
     public void updateRepairOutput(CallbackInfo callback) {
         ItemStack stack1 = inputSlots.getStackInSlot(0);
-        ItemStack stack2 = inputSlots.getStackInSlot(0);
+        ItemStack stack2 = inputSlots.getStackInSlot(1);
         if (stack1.getItem() != Item.getItemFromBlock(LDOHBlocks.BARBED_WIRE)) return;
         callback.cancel();
         int j = stack1.getRepairCost() + (stack2.isEmpty() ? 0 : stack2.getRepairCost());
