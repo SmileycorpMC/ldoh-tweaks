@@ -274,6 +274,9 @@ public class RegistryEvents {
         registry.register(EntityEntryBuilder.create().entity(EntityIncendiaryProjectile.class)
                 .id(Constants.loc("incendiary_projectile"), ID++)
                 .name(Constants.name("IncendiaryProjectile")).tracker(64, 80, true).build());
+        registry.register(EntityEntryBuilder.create().entity(EntityAPProjectile.class)
+                .id(Constants.loc("ap_projectile"), ID++)
+                .name(Constants.name("APProjectile")).tracker(64, 80, true).build());
         registry.register(EntityEntryBuilder.create().entity(EntityZombieFireman.class)
                 .id(Constants.loc("zombie_fireman"), ID++)
                 .name(Constants.name("ZombieFireman")).tracker(80, 3, true).build());

@@ -405,7 +405,7 @@ public abstract class EntityAbstractTurret<T extends TileAbstractTurret<P>, P ex
         return inventory.hasAmmo();
     }
 
-    public abstract ItemStack getAmmo(Entity target);
+    public abstract ItemStack getAmmo(EntityLivingBase target);
 
     @SideOnly(Side.CLIENT)
     public String getOwnerUsername() {

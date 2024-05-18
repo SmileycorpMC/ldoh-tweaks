@@ -13,6 +13,7 @@ import com.mrcrayfish.guns.network.message.MessageBullet;
 import com.mrcrayfish.guns.object.Gun;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -127,10 +128,11 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
         dataManager.set(SPIN, spin);
     }
 
-    public ItemStack getAmmo(Entity target) {
+    public ItemStack getAmmo(EntityLivingBase target) {
         boolean optimize = hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION);
         return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase && optimize) ?
-                LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
+                LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 1 ?
+                LDOHItems.AP_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
     }
 
     public int getFireRate() {

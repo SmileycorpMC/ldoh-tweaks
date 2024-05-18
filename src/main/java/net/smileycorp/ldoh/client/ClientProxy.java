@@ -122,6 +122,7 @@ public class ClientProxy extends CommonProxy {
         Item.getItemFromBlock(LDOHBlocks.TURRET).setTileEntityItemStackRenderer(new TESRTurretItem());
         //add incendiary ammo rendering properties to gun workbench
         GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.INCENDIARY_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
+        GuiWorkbench.addDisplayProperty(new ItemStack(LDOHItems.AP_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
     }
 
     @SubscribeEvent

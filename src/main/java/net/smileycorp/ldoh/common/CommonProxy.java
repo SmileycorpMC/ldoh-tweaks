@@ -154,6 +154,7 @@ public class CommonProxy {
 
         //add incendiary ammo
         AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);
+        AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.AP_AMMO, EntityIncendiaryProjectile::new);
         WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
                 new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
         //add australium turret upgrade

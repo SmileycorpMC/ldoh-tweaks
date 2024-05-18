@@ -1,0 +1,25 @@
+package net.smileycorp.ldoh.common.item;
+
+import com.mrcrayfish.guns.item.ItemAmmo;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
+import net.smileycorp.ldoh.common.Constants;
+import net.smileycorp.ldoh.common.LDOHTweaks;
+
+import java.util.List;
+
+public class ItemAPAmmo extends ItemAmmo {
+
+    public ItemAPAmmo() {
+        super(Constants.loc("ap_ammo"));
+        setCreativeTab(LDOHTweaks.CREATIVE_TAB);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+        for (int i = 0; i < 2; i++) tooltip.add(I18n.translateToLocal("tooltip.ldoh.ap_ammo" + i));
+    }
+
+}

@@ -2,7 +2,8 @@ package net.smileycorp.ldoh.common.inventory;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.mrcrayfish.guns.init.ModGuns;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -23,7 +24,7 @@ public class InventoryTurretAmmo extends InventoryBasic {
         return isAmmo(stack, null);
     }
 
-    public int getAmmoSlot(Entity target) {
+    public int getAmmoSlot(EntityLivingBase target) {
         int slot = -1;
         for (int i = inventoryContents.size() - 1; i >= 0; i--) {
             if (isAmmo(inventoryContents.get(i), target)) return i;
@@ -32,10 +33,11 @@ public class InventoryTurretAmmo extends InventoryBasic {
         return slot;
     }
 
-    public boolean isAmmo(ItemStack stack, Entity target) {
+    public boolean isAmmo(ItemStack stack, EntityLivingBase target) {
         Item item = stack.getItem();
-        if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO;
-        return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : ModGuns.BASIC_AMMO);
+        if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO || item == LDOHItems.AP_AMMO;
+        return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 1 ?
+                LDOHItems.AP_AMMO : ModGuns.BASIC_AMMO);
     }
 
     public boolean hasAmmo() {
@@ -50,7 +52,7 @@ public class InventoryTurretAmmo extends InventoryBasic {
         ItemStackHelper.loadAllItems(nbt, inventoryContents);
     }
 
-    public ItemStack getAmmo(Entity target) {
+    public ItemStack getAmmo(EntityLivingBase target) {
         int slot = getAmmoSlot(target);
         return slot < 0 ? ItemStack.EMPTY : getStackInSlot(slot);
     }
