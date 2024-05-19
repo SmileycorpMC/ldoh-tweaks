@@ -96,11 +96,13 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
     @Override
     public void dropEnemyItems() {
         entityDropItem(new ItemStack(ModGuns.BASIC_AMMO, rand.nextInt(15) + 10), 0.0f);
-        entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(6)), 0.0f);
+        int c = Math.abs(rand.nextInt(6) - rand.nextInt(6));
+        if (c > 0) entityDropItem(new ItemStack(LDOHItems.INCENDIARY_AMMO, rand.nextInt(c)), 0.0f);
+        entityDropItem(new ItemStack(LDOHItems.AP_AMMO, rand.nextInt(6 - c)), 0.0f);
         entityDropItem(new ItemStack(LDOHItems.DIAMOND_NUGGET, rand.nextInt(3) + 1), 0.0f);
         entityDropItem(new ItemStack(Items.QUARTZ, rand.nextInt(3) + 1), 0.0f);
-        if (rand.nextInt(100) < 50) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
-        if (rand.nextInt(100) < 25) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
+        if (rand.nextInt(2) < 1) entityDropItem(new ItemStack(TF2weapons.itemTF2, 1, 3), 0.0f);
+        if (rand.nextInt(4) < 1) entityDropItem(new ItemStack(ModGuns.CHAIN_GUN), 0.0f);
     }
 
     @Override
