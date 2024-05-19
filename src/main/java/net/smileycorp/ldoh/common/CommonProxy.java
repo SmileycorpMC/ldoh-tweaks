@@ -37,6 +37,7 @@ import net.smileycorp.ldoh.common.command.CommandBossEvent;
 import net.smileycorp.ldoh.common.command.CommandHandDebug;
 import net.smileycorp.ldoh.common.command.CommandSpawnAmbush;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
+import net.smileycorp.ldoh.common.entity.zombie.EntityAPProjectile;
 import net.smileycorp.ldoh.common.entity.zombie.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.events.*;
 import net.smileycorp.ldoh.common.inventory.ContainerTurret;
@@ -154,16 +155,17 @@ public class CommonProxy {
 
         //add incendiary ammo
         AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.INCENDIARY_AMMO, EntityIncendiaryProjectile::new);
-        AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.AP_AMMO, EntityIncendiaryProjectile::new);
+        AmmoRegistry.getInstance().registerProjectileFactory((ItemAmmo) LDOHItems.AP_AMMO, EntityAPProjectile::new);
         WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.INCENDIARY_AMMO, 16), new ItemStack(Items.GUNPOWDER),
-                new ItemStack(Items.IRON_NUGGET, 8), new ItemStack(Items.GLOWSTONE_DUST));
+                new ItemStack(Items.IRON_NUGGET, 4), new ItemStack(Items.GLOWSTONE_DUST));
+        WorkbenchRegistry.registerRecipe(new ItemStack(LDOHItems.AP_AMMO, 16), new ItemStack(Items.GUNPOWDER),
+                new ItemStack(Items.IRON_NUGGET, 4), new ItemStack(LDOHItems.LEAD_NUGGET, 4));
         //add australium turret upgrade
         TF2CraftingManager.INSTANCE.addRecipe(new ShapedOreRecipe(Constants.loc("austrailum_turret_upgrade"), TurretUpgrade.AUSTRALIUM.getItem(),
                 new Object[]{"III", "IUI", "III", 'I', "ingotAustralium", 'U', TurretUpgrade.BLANK.getItem()}));
     }
 
-    public void postInit(FMLPostInitializationEvent event) {
-    }
+    public void postInit(FMLPostInitializationEvent event) {}
 
     public void serverStart(FMLServerStartingEvent event) {
         //Register Boss Command

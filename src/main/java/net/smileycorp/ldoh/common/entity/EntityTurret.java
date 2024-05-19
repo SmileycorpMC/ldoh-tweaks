@@ -68,8 +68,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
     }
 
     @Override
-    protected void collideWithEntity(Entity entityIn) {
-    }
+    protected void collideWithEntity(Entity entityIn) {}
 
     @Override
     public void onLivingUpdate() {
@@ -133,7 +132,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
     public ItemStack getAmmo(EntityLivingBase target) {
         boolean optimize = hasUpgrade(TurretUpgrade.AMMO_OPTIMIZATION);
         return isEnemy() ? new ItemStack((target instanceof EntityParasiteBase && optimize) ?
-                LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 1 ?
+                LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 2 ?
                 LDOHItems.AP_AMMO : ModGuns.BASIC_AMMO) : inventory.getAmmo(optimize ? target : null);
     }
 
@@ -147,6 +146,10 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
 
     public int getProjectileSpeed() {
         return 10 * (1 + getUpgradeCount(TurretUpgrade.RIFLING));
+    }
+    
+    public float getDamage() {
+        return 5 * (1 + 0.5f * getUpgradeCount(TurretUpgrade.PUNCTURING));
     }
 
     @Override
@@ -162,6 +165,7 @@ public class EntityTurret extends EntityAbstractTurret<TileTurret, EntityTurret>
     @Override
     public void shoot(Vec3d pos, EntityLivingBase entity) {
         Gun fakegun = ((ItemGun) ModGuns.CHAIN_GUN).getGun();
+        fakegun.projectile.damage = getDamage();
         fakegun.projectile.life = 60;
         fakegun.projectile.speed = getProjectileSpeed();
         ItemStack ammo = getAmmo(getTarget());

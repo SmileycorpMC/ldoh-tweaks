@@ -13,6 +13,7 @@
 		"redstone_control": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/redstone_control" }}],
 		"australium": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/australium" }}],
 		"rifling": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/rifling" }}],
-		"predictive_targeting": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/predictive_targeting" }}]
+		"predictive_targeting": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/predictive_targeting" }}],
+		"puncturing": [{ "textures": { "layer0": "ldoh:items/turret_upgrade/punctuting" }}]
 	}
 }

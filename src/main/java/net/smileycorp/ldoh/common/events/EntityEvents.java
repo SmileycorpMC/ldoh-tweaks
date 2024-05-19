@@ -233,10 +233,9 @@ public class EntityEvents {
                 ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
                 Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND)
                         .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
-                float amount = 1;
+                float amount = 3;
                 EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
                 for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
-                amount = 3f;
                 event.setAmount(Math.max(amount, event.getAmount()));
             }
         }

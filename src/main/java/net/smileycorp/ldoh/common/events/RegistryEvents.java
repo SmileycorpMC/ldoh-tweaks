@@ -131,6 +131,7 @@ public class RegistryEvents {
         OreDictionary.registerOre("fabric", LDOHItems.CLOTH_FABRIC);
         OreDictionary.registerOre("fabric", FishItems.CURSED_FABRIC);
         OreDictionary.registerOre("nuggetDiamond", LDOHItems.DIAMOND_NUGGET);
+        OreDictionary.registerOre("nuggetLead", LDOHItems.LEAD_NUGGET);
         
         //mixing recipes
         LDOHRecipeRegistry.registerMixingRecipe(new MixingRecipe(new FluidStack(LDOHFluids.ENRICHED_ANTIBODY_SERUM, 250),

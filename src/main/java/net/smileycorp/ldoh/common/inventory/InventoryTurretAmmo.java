@@ -36,7 +36,7 @@ public class InventoryTurretAmmo extends InventoryBasic {
     public boolean isAmmo(ItemStack stack, EntityLivingBase target) {
         Item item = stack.getItem();
         if (target == null) return item == ModGuns.BASIC_AMMO || item == LDOHItems.INCENDIARY_AMMO || item == LDOHItems.AP_AMMO;
-        return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 1 ?
+        return item == (target instanceof EntityParasiteBase ? LDOHItems.INCENDIARY_AMMO : target.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 2 ?
                 LDOHItems.AP_AMMO : ModGuns.BASIC_AMMO);
     }
 

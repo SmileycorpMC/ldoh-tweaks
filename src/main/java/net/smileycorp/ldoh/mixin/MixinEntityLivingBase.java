@@ -7,10 +7,12 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.smileycorp.ldoh.common.entity.zombie.EntityAPProjectile;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = EntityLivingBase.class)
 public abstract class MixinEntityLivingBase extends Entity {
-
+    
+    @Shadow public EnumHand swingingHand;
+    
     public MixinEntityLivingBase(World world) {
         super(world);
     }
@@ -159,6 +163,11 @@ public abstract class MixinEntityLivingBase extends Entity {
                 }
             }
         }
+    }
+    
+    @Inject(at = @At("HEAD"), method = "applyArmorCalculations", cancellable = true)
+    public void applyArmorCalculations(DamageSource source, float damage, CallbackInfoReturnable<Float> callback) {
+        if (source.getImmediateSource() instanceof EntityAPProjectile) callback.cancel();
     }
 
     @Shadow

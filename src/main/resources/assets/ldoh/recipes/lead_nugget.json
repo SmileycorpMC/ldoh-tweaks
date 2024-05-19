@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "minecraft:lead_nugget",
+	"pattern" : [
+		"M"
+	],
+    "key" : {
+		"M": {
+    		"type": "forge:ore_dict",
+    		"ore": "ingotLead"
+        }
+	},
+    "result": {
+        "item": "ldoh:lead_nugget",
+        "count": 9
+    }
+}
