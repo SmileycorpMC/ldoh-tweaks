@@ -59,7 +59,6 @@ import net.smileycorp.ldoh.common.capabilities.IBreakBlocks;
 import net.smileycorp.ldoh.common.capabilities.ISpawnTracker;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
-import net.smileycorp.ldoh.common.entity.IEnemyMachine;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.network.PacketHandler;
@@ -334,8 +333,8 @@ public class EntityEvents {
         World world = event.world;
         if (world.isRemote || world.getWorldTime() < 1200000) return;
         SRPSaveData parasite_data = SRPSaveData.get(world);
-        if (parasite_data == null || parasite_data.getEvolutionPhase(0) > -2) return;
-        parasite_data.setEvolutionPhase((byte) 0, true, world, true);
+        if (parasite_data == null || parasite_data.getEvolutionPhase(0) >= 0) return;
+        parasite_data.setEvolutionPhase(0, (byte) 0, true, world, true);
         parasite_data.markDirty();
     }
 
@@ -345,9 +344,8 @@ public class EntityEvents {
         if (event.getPotionEffect() == null || event.getEntityLiving() == null) return;
         EntityLivingBase entity = event.getEntityLiving();
         World world = entity.getEntityWorld();
-        if (event.getPotionEffect().getPotion() == SRPPotions.COTH_E && (entity instanceof EntityBuilding ||
-                entity instanceof IEnemyMachine || (entity instanceof EntityTF2Character && ((EntityTF2Character) entity).isRobot())
-                || world.getWorldTime() < 1200000)) event.setResult(Event.Result.DENY);
+        if (event.getPotionEffect().getPotion() != SRPPotions.COTH_E) return;
+        if (ModUtils.isMachine(entity) || world.getWorldTime() < 1200000) event.setResult(Event.Result.DENY);
     }
 
 }

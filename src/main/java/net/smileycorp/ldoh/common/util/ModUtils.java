@@ -65,6 +65,7 @@ import net.smileycorp.ldoh.common.entity.zombie.EntityZombieFireman;
 import net.smileycorp.ldoh.common.entity.zombie.EntityZombieNurse;
 import net.smileycorp.ldoh.integration.tektopia.TektopiaUtils;
 import pavocado.exoticbirds.entity.Birds.Phoenix.EntityPhoenix;
+import rafradek.TF2weapons.entity.building.EntityBuilding;
 import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import rafradek.TF2weapons.item.ItemWeapon;
 
@@ -362,4 +363,10 @@ public class ModUtils {
         return stack.getItem() == FishItems.CURSED_BANDAGE;
     }
     
+    public static boolean isMachine(EntityLivingBase entity) {
+        if (entity instanceof IEnemyMachine) return true;
+        if (entity instanceof EntityBuilding) return true;
+        if (entity instanceof EntityTF2Character && ((EntityTF2Character) entity).isRobot()) return true;
+        return false;
+    }
 }
