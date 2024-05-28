@@ -43,7 +43,7 @@ public abstract class MixinContainerRepair extends Container {
         callback.cancel();
         int j = stack1.getRepairCost() + (stack2.isEmpty() ? 0 : stack2.getRepairCost());
         if (!ForgeHooks.onAnvilChange((ContainerRepair) (Object)this, stack1, stack2, outputSlot, repairedItemName, j)) return;
-        if (!(stack2.getItem() == Items.ENCHANTED_BOOK &! ItemEnchantedBook.getEnchantments(stack2).hasNoTags() ||
+        if (!((stack2.getItem() == Items.ENCHANTED_BOOK &! ItemEnchantedBook.getEnchantments(stack2).hasNoTags()) ||
                 (stack2.getItem() == Item.getItemFromBlock(LDOHBlocks.BARBED_WIRE) && stack2.getMetadata() == stack1.getMetadata()))) {
             outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
             return;
@@ -56,12 +56,12 @@ public abstract class MixinContainerRepair extends Container {
         boolean flag2 = false;
         boolean flag3 = false;
         boolean flag = stack2.getItem() == Items.ENCHANTED_BOOK && !ItemEnchantedBook.getEnchantments(stack2).hasNoTags();
-        for (Enchantment ench : map.keySet()) {
+        for (Enchantment ench : map2.keySet()) {
             if (ench == null) continue;
             int i2 = map.containsKey(ench) ? map.get(ench) : 0;
             int j2 = map2.get(ench);
             j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
-            boolean flag1 = ench.canApply(stack1);
+            boolean flag1 = ench.canApply(new ItemStack(Items.IRON_SWORD));
             for (Enchantment enchantment : map.keySet()) {
                 if (enchantment != ench && !ench.isCompatibleWith(enchantment)) {
                     flag1 = false;
@@ -88,7 +88,6 @@ public abstract class MixinContainerRepair extends Container {
                 }
                 if (flag) k3 = Math.max(1, k3 / 2);
                 i += k3 * j2;
-                if (stack1.getCount() > 1) i *= (int) (1 + (0.05f) * (float) stack1.getCount());
             }
             if (flag3 && !flag2) {
                 outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
@@ -111,9 +110,8 @@ public abstract class MixinContainerRepair extends Container {
         }
         if (flag && !output.getItem().isBookEnchantable(output, stack2)) output = ItemStack.EMPTY;
         maximumCost = j + i;
+        if (stack1.getCount() > 1) maximumCost *= (int) (1 + (0.05f) * (float) stack1.getCount());
         if (i <= 0) output = ItemStack.EMPTY;
-        if (k == i && k > 0 && maximumCost >= 40) maximumCost = 39;
-        if (maximumCost >= 40 && !player.capabilities.isCreativeMode) output = ItemStack.EMPTY;
         if (!output.isEmpty()) {
             int k2 = output.getRepairCost();
             if (!stack2.isEmpty() && k2 < stack2.getRepairCost()) k2 = stack2.getRepairCost();
@@ -121,6 +119,11 @@ public abstract class MixinContainerRepair extends Container {
             output.setRepairCost(k2);
             EnchantmentHelper.setEnchantments(map, output);
         }
+        System.out.println(i);
+        System.out.println(flag);
+        System.out.println(flag2);
+        System.out.println(flag3);
+        System.out.println(output);
         outputSlot.setInventorySlotContents(0, output);
         detectAndSendChanges();
     }
