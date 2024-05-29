@@ -3,7 +3,6 @@ package net.smileycorp.ldoh.common.capabilities;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.EnumFacing;
@@ -43,9 +42,10 @@ public class BottleFluidHandler implements IFluidHandlerItem, ICapabilityProvide
     @Override
     public int fill(FluidStack resource, boolean doFill) {
         if (container.getItem() == Items.GLASS_BOTTLE) {
-            //container = Items.
+            if (resource.getFluid() == FluidRegistry.WATER) container = new ItemStack(Items.POTIONITEM);
+            if (resource.getFluid() == LDOHFluids.EXPERIENCE) container = new ItemStack(Items.EXPERIENCE_BOTTLE);
         }
-        return resource.amount;
+        return Constants.BOTTLE_VOLUME;
     }
     
     @Nullable
@@ -81,12 +81,12 @@ public class BottleFluidHandler implements IFluidHandlerItem, ICapabilityProvide
         if (container.getItem() == Items.POTIONITEM) {
             PotionType potion = PotionUtils.getPotionFromItem(container);
             if (potion == PotionTypes.WATER) return new FluidStack(FluidRegistry.WATER, Constants.BOTTLE_VOLUME);
-            else {
+            /*else {
                 NBTTagCompound nbt = new NBTTagCompound();
                 NBTTagCompound containerTag = container.getTagCompound();
                 if (containerTag != null && containerTag.hasKey("Potion")) nbt.setString("Potion", containerTag.getString("Potion"));
                // return new FluidStack(LDOHFluids.POTION, Constants.BOTTLE_VOLUME, nbt);
-            }
+            }*/
         }
         return null;
     }

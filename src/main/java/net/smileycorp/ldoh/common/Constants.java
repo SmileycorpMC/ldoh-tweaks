@@ -2,6 +2,7 @@ package net.smileycorp.ldoh.common;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
+import net.smileycorp.unexperienced.ConfigHandler;
 
 public class Constants {
 
@@ -46,6 +47,14 @@ public class Constants {
     public static final ResourceLocation EIFFEL_GOOD_GOOD = loc("chests/eiffel_good_good");
     public static final ResourceLocation VET_CHEST = loc("chests/vet_chest");
     public static final int BOTTLE_VOLUME = Fluid.BUCKET_VOLUME / 8;
+    public static final int LEVEL_30 = 1395;
+    
+    private static float MB_TO_EXPERIENCE_RATIO = 0;
+    
+    public static float getMbToExperienceRatio() {
+        if (MB_TO_EXPERIENCE_RATIO <= 0) MB_TO_EXPERIENCE_RATIO = (float) ConfigHandler.bottleExperience / (float) BOTTLE_VOLUME;
+        return MB_TO_EXPERIENCE_RATIO;
+    }
     
     //helper methods
     public static String name(String name) {

@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -30,9 +31,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,10 +41,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.smileycorp.atlas.api.util.DirectionUtils;
 import net.smileycorp.ldoh.common.Constants;
-import net.smileycorp.ldoh.common.capabilities.IAmbushEvent;
-import net.smileycorp.ldoh.common.capabilities.IApocalypse;
-import net.smileycorp.ldoh.common.capabilities.IFollowers;
-import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
+import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
@@ -62,6 +59,15 @@ public class PlayerEvents {
         if (!entity.hasCapability(LDOHCapabilities.FOLLOWERS, null) && entity instanceof EntityPlayer & !(entity instanceof FakePlayer)) {
             event.addCapability(Constants.loc("Followers"), new IFollowers.Provider((EntityPlayer) entity));
         }
+    }
+    
+    @SubscribeEvent
+    public void attachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
+        ItemStack stack = event.getObject();
+        //spawner instance for boss event
+        if (!stack.hasCapability(LDOHCapabilities.FOLLOWERS, null) && (stack.getItem() == Items.GLASS_BOTTLE
+                || stack.getItem() == Items.POTIONITEM || stack.getItem() == Items.EXPERIENCE_BOTTLE))
+            event.addCapability(new ResourceLocation("forge:fluidhandler"), new BottleFluidHandler(stack));
     }
 
     //prevent picking and placing lava and other hot liquids
@@ -163,16 +169,14 @@ public class PlayerEvents {
     public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
         EntityPlayer player = event.getEntityPlayer();
         World world = player.world;
-        if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND & !world.isRemote) {
+        if (world.isRemote) return;
+        if (player.hasCapability(LDOHCapabilities.FOLLOWERS, null) && event.getHand() == EnumHand.MAIN_HAND) {
             IFollowers followers = player.getCapability(LDOHCapabilities.FOLLOWERS, null);
-            if (followers.isCrouching()) {
-                Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
-                if (target instanceof EntityLiving) {
-                    if (followers.stopFollowing((EntityLiving) target)) {
-                        event.setCancellationResult(EnumActionResult.FAIL);
-                        event.setCanceled(true);
-                    }
-                }
+            if (!followers.isCrouching()) return;
+            Entity target = DirectionUtils.getPlayerRayTrace(world, player, 4.5f).entityHit;
+            if (target instanceof EntityLiving && followers.stopFollowing((EntityLiving) target)) {
+                event.setCancellationResult(EnumActionResult.FAIL);
+                event.setCanceled(true);
             }
         }
     }
@@ -197,18 +201,38 @@ public class PlayerEvents {
         }
     }
 
-    //activate when a player right clicks a block
+    //activate when a player right-clicks a block
     @SubscribeEvent
     public void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
         EntityPlayer player = event.getEntityPlayer();
         World world = player.world;
-        if (!world.isRemote) {
-            BlockPos pos = event.getPos();
-            TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof TileEntityCrate) {
-                if (((TileEntityCrate) tile).sealed) {
-                    if (event.getItemStack().getItem() != FurnitureItems.CROWBAR)
-                        player.sendMessage(new TextComponentTranslation("message.ldoh.SealedCrate"));
+        if (world.isRemote) return;
+        BlockPos pos = event.getPos();
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileEntityCrate) {
+            if (((TileEntityCrate) tile).sealed && event.getItemStack().getItem() != FurnitureItems.CROWBAR)
+                player.sendMessage(new TextComponentTranslation("message.ldoh.SealedCrate"));
+            return;
+        }
+        if (event.getItemStack().getItem() == Items.EXPERIENCE_BOTTLE) {
+            IFluidHandler handler = FluidUtil.getFluidHandler(world, event.getPos(), event.getFace());
+            if (handler != null && handler.fill(new FluidStack(LDOHFluids.EXPERIENCE, Constants.BOTTLE_VOLUME), true) > 0) {
+                event.getItemStack().shrink(1);
+                player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                event.setCancellationResult(EnumActionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+        }
+        if (event.getItemStack().isEmpty() && event.getHand() == EnumHand.MAIN_HAND) {
+            IFluidHandler handler = FluidUtil.getFluidHandler(world, event.getPos(), event.getFace());
+            if (handler != null) {
+                int amount = Constants.LEVEL_30 - player.experienceTotal;
+                if (amount <= 0) amount = 1000;
+                FluidStack drain = handler.drain(new FluidStack(LDOHFluids.EXPERIENCE, (int)(amount * Constants.getMbToExperienceRatio())), true);
+                if (drain != null && drain.getFluid() == LDOHFluids.EXPERIENCE && drain.amount > 0) {
+                    player.addExperience(drain.amount);
+                    event.setCanceled(true);
                 }
             }
         }
