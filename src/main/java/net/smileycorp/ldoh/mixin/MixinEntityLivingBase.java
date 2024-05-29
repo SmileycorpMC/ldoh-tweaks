@@ -12,7 +12,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.smileycorp.ldoh.common.entity.zombie.EntityAPProjectile;
+import net.smileycorp.ldoh.common.entity.projectile.EntityAPProjectile;
 import net.smileycorp.ldoh.common.util.ModUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

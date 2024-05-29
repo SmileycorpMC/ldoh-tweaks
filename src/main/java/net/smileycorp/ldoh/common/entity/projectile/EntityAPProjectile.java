@@ -1,4 +1,4 @@
-package net.smileycorp.ldoh.common.entity.zombie;
+package net.smileycorp.ldoh.common.entity.projectile;
 
 import com.mrcrayfish.guns.entity.EntityProjectile;
 import com.mrcrayfish.guns.item.ItemGun;
@@ -6,13 +6,13 @@ import com.mrcrayfish.guns.object.Gun;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-public class EntityIncendiaryProjectile extends EntityProjectile {
+public class EntityAPProjectile extends EntityProjectile {
 
-    public EntityIncendiaryProjectile(World world) {
+    public EntityAPProjectile(World world) {
         super(world);
     }
 
-    public EntityIncendiaryProjectile(World world, EntityLivingBase shooter, ItemGun item, Gun modifiedGun) {
+    public EntityAPProjectile(World world, EntityLivingBase shooter, ItemGun item, Gun modifiedGun) {
         super(world, shooter, item, modifiedGun);
     }
 

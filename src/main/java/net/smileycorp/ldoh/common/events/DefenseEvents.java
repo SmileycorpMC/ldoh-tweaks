@@ -11,8 +11,8 @@ import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smileycorp.ldoh.common.damage.DamageSourceBarbedWire;
-import net.smileycorp.ldoh.common.entity.zombie.EntityAPProjectile;
-import net.smileycorp.ldoh.common.entity.zombie.EntityIncendiaryProjectile;
+import net.smileycorp.ldoh.common.entity.projectile.EntityAPProjectile;
+import net.smileycorp.ldoh.common.entity.projectile.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
 
 public class DefenseEvents {

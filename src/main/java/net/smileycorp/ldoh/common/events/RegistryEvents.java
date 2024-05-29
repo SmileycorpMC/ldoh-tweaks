@@ -37,6 +37,8 @@ import net.smileycorp.ldoh.common.block.LDOHBlocks;
 import net.smileycorp.ldoh.common.entity.EntityJuggernaut;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
 import net.smileycorp.ldoh.common.entity.infphoenix.*;
+import net.smileycorp.ldoh.common.entity.projectile.EntityAPProjectile;
+import net.smileycorp.ldoh.common.entity.projectile.EntityIncendiaryProjectile;
 import net.smileycorp.ldoh.common.entity.zombie.*;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.*;
