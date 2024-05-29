@@ -224,7 +224,7 @@ public class PlayerEvents {
                 return;
             }
         }
-        if (event.getItemStack().isEmpty() && event.getHand() == EnumHand.MAIN_HAND) {
+        if (event.getItemStack().isEmpty() && event.getHand() == EnumHand.MAIN_HAND && player.isSneaking()) {
             IFluidHandler handler = FluidUtil.getFluidHandler(world, event.getPos(), event.getFace());
             if (handler != null) {
                 int amount = Constants.LEVEL_30 - player.experienceTotal;
