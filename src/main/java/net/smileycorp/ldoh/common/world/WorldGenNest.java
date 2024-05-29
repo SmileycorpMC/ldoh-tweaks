@@ -7,7 +7,8 @@ import biomesoplenty.common.block.BlockBOPDoublePlant.DoublePlantType;
 import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush;
 import com.dhanantry.scapeandrunparasites.block.BlockInfestedBush.EnumType;
 import com.dhanantry.scapeandrunparasites.block.BlockParasiteStain;
-import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityMudo;
+import com.dhanantry.scapeandrunparasites.entity.monster.deterrent.EntityUnvo;
+import com.dhanantry.scapeandrunparasites.entity.monster.inborn.EntityButhol;
 import com.dhanantry.scapeandrunparasites.entity.monster.pure.EntityFlog;
 import com.dhanantry.scapeandrunparasites.init.SRPBlocks;
 import net.minecraft.block.BlockShulkerBox;
@@ -101,13 +102,17 @@ public class WorldGenNest extends WorldGenerator {
             grunt.enablePersistence();
             world.spawnEntity(grunt);
         }
-        //rupters
-        for (int i = 0; i < 7; i++) {
-            EntityMudo rupter = new EntityMudo(world);
-            rupter.setPosition(base.getX(), base.getY() - 1, base.getZ());
-            rupter.enablePersistence();
-            world.spawnEntity(rupter);
+        //flying carriers
+        for (int i = 0; i < 3; i++) {
+            EntityButhol carrier = new EntityButhol(world);
+            carrier.setPosition(base.getX(), base.getY() - 1, base.getZ());
+            carrier.enablePersistence();
+            world.spawnEntity(carrier);
         }
+        //sentry
+        EntityUnvo sentry = new EntityUnvo(world);
+        sentry.setPosition(base.getX(), base.getY() - 1, base.getZ());
+        sentry.enablePersistence();
         return true;
     }
 
