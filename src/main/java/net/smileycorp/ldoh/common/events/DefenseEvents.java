@@ -39,7 +39,7 @@ public class DefenseEvents {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         if (attacker instanceof EntityIncendiaryProjectile) event.setAmount(event.getAmount() * (entity instanceof EntityParasiteBase ? 1.5f : 0.75f));
-        if (attacker instanceof EntityAPProjectile) event.setAmount(0.75f);
+        if (attacker instanceof EntityAPProjectile) event.setAmount(event.getAmount() * 0.75f);
     }
 
 }
