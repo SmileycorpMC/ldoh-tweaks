@@ -258,8 +258,7 @@ public class EntityEvents {
                 entity.setDead();
                 event.setCanceled(true);
             }
-            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage)
-                event.setAmount(3f);
+            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage) event.setAmount(3f);
             //adds 1/10 chance for bleed effect from husks
             if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0)
                 entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));

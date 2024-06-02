@@ -45,6 +45,7 @@ import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.fluid.LDOHFluids;
 import net.smileycorp.ldoh.common.item.LDOHItems;
 import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
+import rafradek.TF2weapons.common.WeaponsCapability;
 
 public class PlayerEvents {
     
@@ -235,6 +236,10 @@ public class PlayerEvents {
                     event.setCanceled(true);
                 }
             }
+        }
+        if (tile instanceof IInventory) {
+            WeaponsCapability cap = WeaponsCapability.get(player);
+            if (cap.isDisguised()) cap.setDisguised(false);
         }
     }
     
