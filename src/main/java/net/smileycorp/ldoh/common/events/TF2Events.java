@@ -180,16 +180,10 @@ public class TF2Events {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         World world = entity.world;
-        if (!world.isRemote) {
-            if (InfectionRegister.canCauseInfection(attacker)) {
-                if (entity instanceof EntityTF2Character) {
-                    //gives the infection effect to non-robots
-                    if (!((EntityTF2Character) entity).isRobot() & !entity.isPotionActive(HordesInfection.INFECTED)) {
-                        entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
-                    }
-                }
-            }
-        }
+        if (world.isRemote) return;
+        if (!InfectionRegister.canCauseInfection(attacker) | !(entity instanceof EntityTF2Character)) return;
+        if (((EntityTF2Character) entity).isRobot() || entity.isPotionActive(HordesInfection.INFECTED)) return;
+        entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
     }
 
     //hooks into the hordes infection event

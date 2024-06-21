@@ -1,5 +1,6 @@
 package net.smileycorp.ldoh.common;
 
+import com.dhanantry.scapeandrunparasites.SRPMain;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.smileycorp.unexperienced.ConfigHandler;

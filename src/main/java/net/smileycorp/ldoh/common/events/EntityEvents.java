@@ -332,8 +332,9 @@ public class EntityEvents {
         World world = event.world;
         if (world.isRemote || world.getWorldTime() < 1200000) return;
         SRPSaveData parasite_data = SRPSaveData.get(world);
-        if (parasite_data == null || parasite_data.getEvolutionPhase(0) >= 0) return;
+        if (parasite_data == null || (parasite_data.getEvolutionPhase(0) >= 0 && parasite_data.getCanGain(0))) return;
         parasite_data.setEvolutionPhase(0, (byte) 0, true, world, true);
+        parasite_data.setGaining(true, 0);
         parasite_data.markDirty();
     }
 
