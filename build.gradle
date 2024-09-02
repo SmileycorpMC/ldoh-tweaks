@@ -104,6 +104,7 @@ dependencies {
 	implementation "curse.maven:xlfood-247217:2740774"
 	implementation "curse.maven:mutantbeasts-336272:3225395"
 	implementation "curse.maven:unexperienced-552526:5140238"
+	implementation "curse.maven:fermiumbooter-968474:5346592"
 	//needed to load scape and run parasites, as it blocks cursemaven
 	implementation files('libs/SRParasites-1.12.2v1.9.21.jar')
 	implementation files('libs/animania-1.12.2-base-2.0.3.28.jar')
@@ -126,9 +127,10 @@ jar {
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"smileycorp",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+			"FMLCorePlugin": "net.smileycorp.ldoh.integration.ModMixinLoader",
 			"ForceLoadAsMod": "true",
 			"FMLAT": "ldoh_at.cfg",
-			"FMLCorePluginContainsFMLMod": "false",
+			"FMLCorePluginContainsFMLMod": "truee",
 			"TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
 			"MixinConfigs": "mixins.ldoh.json"
         ])
