@@ -34,8 +34,13 @@ public enum EnumBiomeType {
     }
 
 	public List<Biome> getBiomes() {
+		int i = 0;
 		List<Biome> biomes = new ArrayList<>();
-		for (Optional<Biome> optional : this.biomes) if (optional.isPresent()) biomes.add(optional.get());
+		for (Optional<Biome> optional : this.biomes) {
+			if (optional.isPresent()) biomes.add(optional.get());
+			else System.out.println(i + " : " + optional + "is empty for " + this);
+			i++;
+		}
 		return biomes;
 	}
 

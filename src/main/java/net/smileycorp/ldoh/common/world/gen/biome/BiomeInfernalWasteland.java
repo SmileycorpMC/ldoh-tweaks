@@ -10,7 +10,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 
 public class BiomeInfernalWasteland extends Biome {
 
@@ -29,7 +29,7 @@ public class BiomeInfernalWasteland extends Biome {
 		spawnableWaterCreatureList.clear();
 		spawnableCreatureList.add(new SpawnListEntry(EntityZombie.class, 100, 4, 5));
 
-		setRegistryName(ModDefinitions.getResource("infernal_wasteland"));
+		setRegistryName(Constants.loc("infernal_wasteland"));
 
 	}
 

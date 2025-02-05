@@ -143,7 +143,7 @@ public class CommonProxy {
                 }
                 return null;
             }
-		}
+		});
 		
         Item.getItemFromBlock(FurnitureBlocks.CRATE).setMaxStackSize(1);
         Item.getItemFromBlock(FurnitureBlocks.CRATE_SPRUCE).setMaxStackSize(1);
@@ -169,7 +169,7 @@ public class CommonProxy {
 		//Register Boss Command
 		event.registerServerCommand(new CommandBossEvent());
 		//Register mini raids command
-		event.registerServerCommand(new CommandSpawnRaid());
+		event.registerServerCommand(new CommandSpawnAmbush());
 		event.registerServerCommand(new CommandHandDebug());
 	}
 

@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.smileycorp.ldoh.common.ModDefinitions;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.world.WorldGenFire;
 import biomesoplenty.common.biome.BOPBiome.PropsBuilder;
 
@@ -38,7 +38,7 @@ public class BiomeLDOHWasteland extends Biome {
 		spawnableWaterCreatureList.clear();
 		spawnableCreatureList.add(new SpawnListEntry(EntityZombie.class, 100, 4, 5));
 
-		setRegistryName(ModDefinitions.getResource(name.toLowerCase()));
+		setRegistryName(Constants.loc(name.toLowerCase()));
 		this.grassColour = grassColour;
 	}
 

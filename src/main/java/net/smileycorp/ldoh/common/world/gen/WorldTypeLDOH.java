@@ -37,9 +37,9 @@ public class WorldTypeLDOH extends WorldType {
 		GenLayer layer = new GenLayerLDOHWasteland(200L, parent);
 		layer = GenLayerZoom.magnify(1000L, layer, 7);
 		layer = new GenLayerLDOHRareBiome(1000L, parent, layer, 3, EnumBiomeType.DESERT);
-		//layer = new GenLayerLDOHRareBiome(1001L, parent, layer, 5, EnumBiomeType.OCEAN);
+		layer = new GenLayerLDOHRareBiome(1001L, parent, layer, 5, EnumBiomeType.OCEAN);
 		layer = new GenLayerLDOHRareBiome(1002L, parent, layer, 7, EnumBiomeType.BADLANDS);
-		//layer = new GenLayerLDOHRareBiome(1003L, parent, layer, 14, 1, EnumBiomeType.CITY);
+		layer = new GenLayerLDOHRareBiome(1003L, parent, layer, 14, EnumBiomeType.CITY);
 		GenLayer ret3 = new GenLayerBiomeEdge(1000L, layer);
 		ret3 = new GenLayerSmooth(1000l, ret3);
 		ret3 = GenLayerZoom.magnify(1000L, ret3, 7);

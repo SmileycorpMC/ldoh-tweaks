@@ -26,6 +26,7 @@ import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.util.EnumBiomeType;
 import net.smileycorp.ldoh.common.util.ModUtils;
+import net.smileycorp.ldoh.common.world.WorldDataSafehouse;
 import net.smileycorp.ldoh.common.world.WorldGenSafehouse;
 import net.smileycorp.ldoh.common.world.gen.LDOHWorld;
 

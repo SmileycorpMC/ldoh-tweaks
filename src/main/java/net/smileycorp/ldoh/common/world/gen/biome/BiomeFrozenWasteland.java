@@ -7,9 +7,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenIceSpike;
-import net.smileycorp.ldoh.common.ModDefinitions;
 import biomesoplenty.api.block.BOPBlocks;
 import biomesoplenty.common.biome.BOPBiome.PropsBuilder;
+import net.smileycorp.ldoh.common.Constants;
 
 public class BiomeFrozenWasteland extends Biome {
 
@@ -30,7 +30,7 @@ public class BiomeFrozenWasteland extends Biome {
 		spawnableWaterCreatureList.clear();
 		spawnableCreatureList.add(new SpawnListEntry(EntityZombie.class, 100, 4, 5));
 
-		setRegistryName(ModDefinitions.getResource("frozen_wasteland"));
+		setRegistryName(Constants.loc("frozen_wasteland"));
 	}
 
 

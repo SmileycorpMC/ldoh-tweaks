@@ -38,12 +38,13 @@ public class GenLayerLDOHRareBiome extends GenLayer {
 
 	private int getBiome(int x, int z, int seed) {
 		int rX = (x + 4) >> 3;
-			int rZ = (z + 4) >> 3;
-			initChunkSeed(rX, rZ);
-
-			int size = type.getBiomes().size();
-			int i = seed;
-			return Biome.getIdForBiome(type.getBiomes().get(size % (i % (size*chance)/size)));
+		int rZ = (z + 4) >> 3;
+		initChunkSeed(rX, rZ);
+		
+		int size = type.getBiomes().size();
+		int j = (seed + 1) % (size * chance);
+		int i = (j/size) % size;
+		return Biome.getIdForBiome(type.getBiomes().get(i));
 	}
 
 }
