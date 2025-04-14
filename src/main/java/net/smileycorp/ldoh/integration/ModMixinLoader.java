@@ -1,7 +1,5 @@
 package net.smileycorp.ldoh.integration;
 
-import com.Fishmod.mod_LavaCow.entities.EntitySkeletonKing;
-import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import fermiumbooter.FermiumRegistryAPI;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -16,7 +14,6 @@ public class ModMixinLoader implements IFMLLoadingPlugin {
     
     @Override
     public String[] getASMTransformerClass() {
-        EntitySkeletonKing
         return new String[0];
     }
     

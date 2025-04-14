@@ -1,7 +1,7 @@
 {
   "compatibilityLevel": "JAVA_8",
   "required": true,
-  "package": "net.smileycorp.ldoh.mixin",
+  "package": "net.smileycorp.ldoh.mixin.integration",
   "refmap": "mixins.ldoh.refmap.json",
   "mixins": [
 
