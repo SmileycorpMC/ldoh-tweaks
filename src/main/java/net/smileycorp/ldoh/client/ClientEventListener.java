@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemExpBottle;
@@ -51,7 +52,7 @@ import java.awt.*;
 @EventBusSubscriber(modid = Constants.MODID, value = Side.CLIENT)
 public class ClientEventListener {
 
-    public static Color GAS_COLOUR = new Color(0.917647059f, 1f, 0.0470588235f, 0.1f);
+    public static Color GAS_COLOUR = new Color(233, 255, 2, 20);
     public static ResourceLocation GAS_TEXTURE = Constants.loc("textures/misc/gas.png");
     public static ResourceLocation TF_HUNGER_TEXTURE = Constants.loc("textures/gui/tf_hunger.png");
     public static ResourceLocation MEDIC_SYRINGES_TEXTURE = Constants.loc("textures/gui/medic_syringes.png");
@@ -67,6 +68,8 @@ public class ClientEventListener {
         int g = GAS_COLOUR.getGreen();
         int b = GAS_COLOUR.getBlue();
         int a = GAS_COLOUR.getAlpha();
+        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == LDOHItems.GAS_MASK
+            || player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == LDOHItems.NANO_HELM) a =  5;
         int height = mc.displayHeight;
         int width = mc.displayWidth;
         float t = (player.ticksExisted + event.getPartialTicks()) * 0.01f;
