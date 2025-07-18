@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shapeless",
+	"group": "ldoh:gas_filter",
+	"ingredients": [
+		{
+            "item": "minecraft:coal",
+			"data": 1
+        },
+		{
+            "type": "forge:ore_dict",
+    		"ore": "fabric"
+        },
+		{
+            "type": "forge:ore_dict",
+    		"ore": "paper"
+        },
+		{
+            "type": "forge:ore_dict",
+    		"ore": "ingotIron"
+        }
+	],
+    "result": {
+        "item": "ldoh:gas_filter",
+        "count": 1,
+        "data": 0
+    }
+}

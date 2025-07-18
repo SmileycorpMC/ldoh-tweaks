@@ -1,0 +1,7 @@
+{
+    "forge_marker": 1,
+    "variants": {
+		"primed=false": {"model": "ldoh:landmine", "textures":{"mine": "ldoh:blocks/landmine"}},
+		"primed=true": {"model": "ldoh:landmine", "textures":{"mine": "ldoh:blocks/landmine_primed"}}
+    }
+}

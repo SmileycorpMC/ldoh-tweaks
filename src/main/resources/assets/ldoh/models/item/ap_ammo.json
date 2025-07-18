@@ -1,0 +1,6 @@
+{
+    "parent": "cgm:item/basic_ammo",
+    "textures": {
+        "2": "ldoh:items/ap_ammo"
+	}
+}

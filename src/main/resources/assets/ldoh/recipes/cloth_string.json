@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "ldoh:cloth_string",
+    "ingredients": [
+        {
+            "item": "ldoh:clothing_fabric",
+			"data": 0
+        }
+	],
+    "result": {
+        "item": "minecraft:string",
+		"data": 0,
+        "count": 3
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-item",
+        "model": "forge:item-layer"
+    },
+    "variants": {
+		"iron": [{ "textures": { "layer0": "ldoh:blocks/iron_barbed_wire" }}],
+		"gold": [{ "textures": { "layer0": "ldoh:blocks/gold_barbed_wire" }}],
+		"diamond": [{ "textures": { "layer0": "ldoh:blocks/diamond_barbed_wire" }}]
+    }
+}

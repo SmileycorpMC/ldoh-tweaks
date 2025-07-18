@@ -9,46 +9,45 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
-import net.smileycorp.ldoh.common.ModDefinitions;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 
 public class BlockHordeSpawner extends Block implements ITileEntityProvider, IBlockProperties {
+    
+    public BlockHordeSpawner() {
+        super(Material.AIR);
+        String name = "Horde_Spawner";
+        setUnlocalizedName(Constants.name(name));
+        setRegistryName(Constants.loc(name));
+        setCreativeTab(LDOHTweaks.CREATIVE_TAB);
+        setHardness(-1F);
+        setResistance(-1F);
+    }
 
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 
-	public BlockHordeSpawner() {
-		super(Material.AIR);
-		String name = "Horde_Spawner";
-		setUnlocalizedName(ModDefinitions.getName(name));
-		setRegistryName(ModDefinitions.getResource(name));
-		setCreativeTab(LDOHTweaks.CREATIVE_TAB);
-		setHardness(-1F);
-		setResistance(-1F);
-	}
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        world.removeTileEntity(pos);
+    }
 
-	@Override
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		world.removeTileEntity(pos);
-	}
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileHordeSpawner();
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileHordeSpawner();
-	}
-
-	public static void breakBlock(World world, BlockPos pos) {
-		world.setBlockToAir(pos);
-		world.removeTileEntity(pos);
-	}
+    public static void breakBlock(World world, BlockPos pos) {
+        world.setBlockToAir(pos);
+        world.removeTileEntity(pos);
+    }
 
 }

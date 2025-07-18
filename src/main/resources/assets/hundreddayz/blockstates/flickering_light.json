@@ -1,9 +1,0 @@
-{
-    "forge_marker": 1,
-    "variants": {
-		"axis=x,on=false": {"model": "hundreddayz:flickering_light", "uvlock": true},
-		"axis=z,on=false": {"model": "hundreddayz:flickering_light", "uvlock": true, "y": 90},
-		"axis=x,on=true": {"model": "hundreddayz:flickering_light_on", "uvlock": true},
-		"axis=z,on=true": {"model": "hundreddayz:flickering_light_on", "uvlock": true, "y": 90}
-    }
-}

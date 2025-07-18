@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "group": "ldoh:candy_corn",
+    "ingredients": [
+        {
+            "item": "minecraft:sugar",
+			"data": 0
+        },
+		{
+            "item": "xlfoodmod:raw_corn",
+			"data": 0
+        },
+		{
+            "item": "xlfoodmod:butter",
+			"data": 0
+        }
+	],
+    "result": {
+        "item": "ldoh:candy_corn",
+		"data": 0,
+        "count": 1
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "ldoh:turret_upgrade",
+	"pattern" : [
+		" R ",
+		"BUI",
+		" R "
+	],
+    "key" : {
+		"B" : {
+    		 "item": "cgm:basic_ammo",
+			"data": 0
+        },
+		"U" : {
+            "item": "ldoh:turret_upgrade",
+			"data": 0
+        },
+		"I" : {
+    		 "item": "ldoh:incendiary_ammo",
+			"data": 0
+        },
+		"R" : {
+    		 "item": "minecraft:repeater",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "ldoh:turret_upgrade",
+        "count": 1,
+		"data": 2
+    }
+}

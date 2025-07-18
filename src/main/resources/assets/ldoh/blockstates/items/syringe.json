@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "transform": "forge:default-item",
+        "model": "forge:item-layer"
+    },
+    "variants": {
+		"empty": [{ "textures": { "layer0": "ldoh:items/empty_syringe" }}],
+		"blood": [{ "textures": { "layer0": "ldoh:items/blood_syringe" }}],
+		"cure": [{ "textures": { "layer0": "ldoh:items/cure_syringe" }}],
+		"contaminated": [{ "textures": { "layer0": "ldoh:items/contaminated syringe" }}]
+    }
+}

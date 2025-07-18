@@ -1,0 +1,108 @@
+{
+	"pools": [{
+		"name": "ldoh:military_treasure",
+		"rolls": {
+			"min": 1,
+			"max": 2
+		},
+		"entries": [{
+				"type": "item",
+				"name": "ldoh:turret",
+				"weight": 1
+			}, {
+				"type": "item",
+				"name": "ldoh:landmine",
+				"weight": 2
+			},
+			{
+				"type": "item",
+				"name": "gamestagebooks:turret_stage",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "cgm:shotgun",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "cgm:machine_pistol",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "cgm:rifle",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "cgm:bazooka",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "cgm:chain_gun",
+				"weight": 1
+			},
+			{
+				"type": "item",
+				"name": "ldoh:barbed_wire",
+				"weight": 2,
+				"functions": [{
+						"function": "minecraft:set_count",
+						"count": {
+							"min": 1,
+							"max": 64
+						}
+					},
+					{
+						"function": "set_data",
+						"data": {
+							"min": 0,
+							"max": 2
+						}
+					}
+				]
+			},
+			{
+				"type": "item",
+				"name": "rafradek_tf2_weapons:itemtf2",
+				"weight": 1,
+				"functions": [{
+					"function": "set_data",
+					"data": {
+						"min": 2,
+						"max": 3
+					}
+				}]
+			},
+			{
+				"type": "item",
+				"name": "ldoh:gas_mask",
+				"weight": 2
+			},
+			{
+				"type": "item",
+				"name": "mod_lavacow:moltenpan",
+				"weight": 2
+			},
+			{
+				"type": "item",
+				"name": "car:generator",
+				"weight": 2
+			},
+			{
+					"type": "item",
+					"name": "minecraft:iron_ingot",
+					"weight": 6,
+					"functions": [{
+						"function": "minecraft:set_count",
+						"count": {
+							"min": 5,
+							"max": 11
+						}
+					}]
+				},
+		]
+	}]
+}

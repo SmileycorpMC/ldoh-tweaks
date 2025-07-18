@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+	"group": "ldoh:turret",
+	"pattern" : [
+		" M ",
+		"IOI",
+		"I I"
+	],
+    "key" : {
+		"I" : {
+    		"type": "forge:ore_dict",
+    		"ore": "ingotIron"
+        },
+		"M" : {
+            "item": "cgm:chain_gun",
+			"data": 0
+        },
+		"O" : {
+    		"item": "minecraft:observer",
+			"data": 0
+        }
+	},
+    "result": {
+        "item": "ldoh:turret",
+        "count": 1,
+		"data": 0
+    }
+}
