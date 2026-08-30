@@ -1,6 +1,7 @@
 package net.smileycorp.ldoh.common.events;
 
 import com.Fishmod.mod_LavaCow.entities.EntityZombieMushroom;
+import com.Fishmod.mod_LavaCow.entities.aquatic.EntityZombiePiranha;
 import com.Fishmod.mod_LavaCow.entities.flying.EntityVespa;
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.adapted.EntityEmanaAdapted;
@@ -256,9 +257,12 @@ public class EntityEvents {
                 entity.setDead();
                 event.setCanceled(true);
             }
-            if (attacker!= null && InfectionData.INSTANCE.canCauseInfection(attacker) && ConfigHandler.legacyDamage) event.setAmount(3f);
+            if (attacker != null && InfectionData.INSTANCE.canCauseInfection(attacker) && ConfigHandler.legacyDamage) event.setAmount(3f);
             //adds 1/10 chance for bleed effect from husks
             if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0)
+                entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
+            //swarmer bleed
+            if ((attacker instanceof EntityZombiePiranha))
                 entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
         }
     }
