@@ -14,6 +14,7 @@ import com.dhanantry.scapeandrunparasites.util.SRPAttributes;
 import com.dhanantry.scapeandrunparasites.util.config.SRPConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.item.ItemStack;
@@ -195,6 +196,16 @@ public abstract class EntityInfPhoenix extends EntityPInfected implements Entity
     @Override
     public int canSpawnByIDData() {
         return 100;
+    }
+
+    @Override
+    public World getWorld() {
+        return world;
+    }
+
+    @Override
+    public boolean attackEntityFromPart(MultiPartEntityPart dragonPart, DamageSource source, float damage) {
+        return false;
     }
 
 }

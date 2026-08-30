@@ -8,12 +8,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.tile.TileHordeSpawner;
 
-public class BlockHordeSpawner extends Block implements ITileEntityProvider, IBlockProperties {
+public class BlockHordeSpawner extends Block implements ITileEntityProvider, BlockProperties {
     
     public BlockHordeSpawner() {
         super(Material.AIR);

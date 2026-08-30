@@ -6,14 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
-import net.smileycorp.hordes.common.Constants;
 import net.smileycorp.ldoh.common.ConfigHandler;
+import net.smileycorp.ldoh.common.Constants;
 
 import java.util.Random;
 
 public class WorldDataSafehouse extends WorldSavedData {
 
-    public static final String DATA = Constants.modid + "_Safehouse";
+    public static final String DATA = Constants.MODID + "_Safehouse";
 
     private boolean generated = true;
     private boolean basementHidden = true;

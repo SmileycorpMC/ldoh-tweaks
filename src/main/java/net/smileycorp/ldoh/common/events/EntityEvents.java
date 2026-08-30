@@ -27,6 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.storage.loot.*;
@@ -50,7 +51,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.smileycorp.atlas.api.SimpleStringMessage;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
-import net.smileycorp.hordes.infection.InfectionRegister;
+import net.smileycorp.hordes.config.data.infection.InfectionData;
 import net.smileycorp.ldoh.common.ConfigHandler;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
@@ -193,30 +194,28 @@ public class EntityEvents {
 
     @SubscribeEvent
     public void hordeSpawn(HordeSpawnEntityEvent event) {
-        Entity entity = event.entity;
+        Entity entity = event.getEntity();
         World world = entity.world;
-        EntityPlayer player = event.getEntityPlayer();
-        if (!world.isRemote) {
-            //replace zombies with vespas if they are in a sky base
-            if (player.getPosition().getY() - event.pos.getY() > 30) {
-                if (entity instanceof EntityParasiteBase)
-                    event.entity = (event.getDay() >= 90) ? new EntityEmanaAdapted(world) : new EntityEmana(world);
-                else event.entity = new EntityVespa(world);
-                //give the vespas the ability to break blocks
-                if (event.entity.hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
-                    event.entity.getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);
-                }
-                event.pos = new BlockPos(event.pos.getX(), player.posY, event.pos.getZ());
-
-            } else if (entity.getClass() == EntityZombie.class) {
-                //turns zombies into a random variant based on rng and day
-                Random rand = world.rand;
-                int randInt = rand.nextInt(100);
-                if (randInt < 3) {
-                    event.entity = new EntityTF2Zombie(world);
-                } else if (event.getDay() <= 50 && randInt < 45 - (world.getWorldTime() / 24000)) {
-                    event.entity = new EntityCrawlingZombie(world);
-                }
+        EntityPlayer player = event.getPlayer();
+        if (world.isRemote) return;
+        //replace zombies with vespas if they are in a sky base
+        if (player.getPosition().getY() - event.getPos().y > 30) {
+            event.setEntity(entity instanceof EntityParasiteBase ? (event.getDay() >= 90)
+                    ? new EntityEmanaAdapted(world) : new EntityEmana(world) : new EntityVespa(world));
+            //give the vespas the ability to break blocks
+            if (event.getEntity().hasCapability(LDOHCapabilities.BLOCK_BREAKING, null)) {
+                event.getEntity().getCapability(LDOHCapabilities.BLOCK_BREAKING, null).enableBlockBreaking(true);
+            }
+            event.setPos(new Vec3d(event.getPos().x, player.posY, event.getPos().z));
+            return;
+        }
+        if (entity.getClass() == EntityZombie.class) {
+            //turns zombies into a random variant based on rng and day
+            Random rand = world.rand;
+            int randInt = rand.nextInt(100);
+            if (randInt < 3) event.setEntity(new EntityTF2Zombie(world));
+            else if (event.getDay() <= 50 && randInt < 45 - (world.getWorldTime() / 24000)) {
+                event.setEntity(new EntityCrawlingZombie(world));
             }
         }
     }
@@ -227,16 +226,15 @@ public class EntityEvents {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         World world = entity.world;
-        if (!world.isRemote) {
-            if (InfectionRegister.canCauseInfection(attacker)) {
-                ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-                Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND)
-                        .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
-                float amount = 3;
-                EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
-                for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
-                event.setAmount(Math.max(amount, event.getAmount()));
-            }
+        if (world.isRemote || attacker == null) return;
+        if (InfectionData.INSTANCE.canCauseInfection(attacker)) {
+            ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+            Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND)
+                    .get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+            float amount = 3;
+            EnchantmentHelper.getModifierForCreature(stack, entity.getCreatureAttribute());
+            for (AttributeModifier modifier : modifiers) amount += modifier.getAmount();
+            event.setAmount(Math.max(amount, event.getAmount()));
         }
     }
 
@@ -258,7 +256,7 @@ public class EntityEvents {
                 entity.setDead();
                 event.setCanceled(true);
             }
-            if (InfectionRegister.canCauseInfection(attacker) && ConfigHandler.legacyDamage) event.setAmount(3f);
+            if (attacker!= null && InfectionData.INSTANCE.canCauseInfection(attacker) && ConfigHandler.legacyDamage) event.setAmount(3f);
             //adds 1/10 chance for bleed effect from husks
             if ((attacker instanceof EntityHusk) && world.rand.nextInt(10) == 0)
                 entity.addPotionEffect(new PotionEffect(TF2weapons.bleeding, 70));
@@ -331,9 +329,9 @@ public class EntityEvents {
     public void worldTick(TickEvent.WorldTickEvent event) {
         World world = event.world;
         if (world.isRemote || world.getWorldTime() < 1200000) return;
-        SRPSaveData parasite_data = SRPSaveData.get(world);
+        SRPSaveData parasite_data = SRPSaveData.get(world, 0);
         if (parasite_data == null || (parasite_data.getEvolutionPhase(0) >= 0 && parasite_data.getCanGain(0))) return;
-        parasite_data.setEvolutionPhase(0, (byte) 0, true, world, true);
+        parasite_data.setEvolutionPhase(0, (byte) 0, true, world);
         parasite_data.setGaining(true, 0);
         parasite_data.markDirty();
     }

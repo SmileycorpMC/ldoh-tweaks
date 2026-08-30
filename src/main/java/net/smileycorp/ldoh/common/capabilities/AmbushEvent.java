@@ -23,9 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.smileycorp.atlas.api.util.DirectionUtils;
-import net.smileycorp.hordes.common.Hordes;
-import net.smileycorp.hordes.hordeevent.HordeEventPacketHandler;
-import net.smileycorp.hordes.hordeevent.HordeSoundMessage;
+import net.smileycorp.hordes.hordeevent.network.HordeEventPacketHandler;
+import net.smileycorp.hordes.hordeevent.network.HordeSoundMessage;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.entity.ai.AIAmbush;
 import net.smileycorp.ldoh.common.entity.zombie.*;
@@ -107,7 +106,7 @@ public class AmbushEvent implements IAmbushEvent {
             else if (type == Type.ENEMY) entity.addPotionEffect(new PotionEffect(MobEffects.GLOWING, 100));
             entity.tasks.addTask(1, new AIAmbush(entity, player));
         }
-        HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage(dir, getSound(type)), (EntityPlayerMP) player);
+        HordeEventPacketHandler.NETWORK_INSTANCE.sendTo(new HordeSoundMessage((float) dir.x, (float) dir.z, getSound(type)), (EntityPlayerMP) player);
     }
 
 
@@ -210,7 +209,7 @@ public class AmbushEvent implements IAmbushEvent {
     private ResourceLocation getSound(Type type) {
         if (type == Type.ALLY) return Constants.TF_ALLY_SOUND;
         if (type == Type.ENEMY) return Constants.TF_ENEMY_SOUND;
-        return Hordes.HORDE_SOUND;
+        return net.smileycorp.hordes.common.Constants.HORDE_SOUND;
     }
 
 }

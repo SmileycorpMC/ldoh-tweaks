@@ -13,6 +13,5 @@ public class TileCalendar extends TileEntity {
     private int getDay() {
         return (int) (world.getWorldTime() / 240000);
     }
-    
-    
+
 }

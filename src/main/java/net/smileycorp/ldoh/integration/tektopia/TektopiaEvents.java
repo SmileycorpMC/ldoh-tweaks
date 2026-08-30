@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.integration.tektopia;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfVillager;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,7 +9,6 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -28,8 +26,8 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
-import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.hordes.infection.InfectionRegister;
+import net.smileycorp.hordes.config.data.infection.InfectionData;
+import net.smileycorp.hordes.infection.PotionInfected;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.events.RegistryEvents;
 import net.smileycorp.ldoh.integration.tektopia.entities.EntityLDOHArchitect;
@@ -101,9 +99,6 @@ public class TektopiaEvents {
                     newentity.setPosition(entity.posX, entity.posY, entity.posZ);
                     entity.setDead();
                     world.spawnEntity(newentity);
-                    SRPWorldData data = SRPWorldData.get(world);
-                    data.setCurrentV(data.getCurrentV() + 1);
-                    data.markDirty();
                 }
             }
         }
@@ -163,14 +158,10 @@ public class TektopiaEvents {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         World world = entity.world;
-        if (!world.isRemote) {
-            if (InfectionRegister.canCauseInfection(attacker)) {
-                if (entity instanceof EntityVillagerTek) {
-                    //gives the infection effect
-                    entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
-                }
-            }
-        }
+        if (world.isRemote || attacker == null) return;
+        if (!InfectionData.INSTANCE.canCauseInfection(attacker) | !(entity instanceof EntityVillagerTek)) return;
+        //gives the infection effect
+        PotionInfected.apply(entity);
     }
 
 }

@@ -38,7 +38,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.tile.TileBarbedWire;
@@ -49,7 +49,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockBarbedWire extends Block implements IBlockProperties, ITileEntityProvider {
+public class BlockBarbedWire extends Block implements BlockProperties, ITileEntityProvider {
 
     public static PropertyEnum<EnumBarbedWireMat> MATERIAL = PropertyEnum.create("material", EnumBarbedWireMat.class);
     public static PropertyEnum<EnumAxis> AXIS = PropertyEnum.create("axis", EnumAxis.class);

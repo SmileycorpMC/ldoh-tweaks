@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = '1.12.2-1.1.16a'
+version = '1.12.2-1.1.17'
 group = "net.smileycorp.ldoh"
 archivesBaseName = "LDoH-Tweaks"
 
@@ -75,7 +75,9 @@ configurations {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
 	implementation "org.spongepowered:mixin:0.8"
-	implementation "curse.maven:atlas-463826:3816069"
+	implementation "curse.maven:atlas-463826:8206890"
+	implementation "curse.maven:followme-463841:3520547"
+	implementation "curse.maven:hordes-485779:8643193"
 	implementation "curse.maven:jei-238222:4393461"
 	implementation "curse.maven:bibliocraft-228027:3647708"
 	implementation "curse.maven:bop-220318:3558882"
@@ -87,11 +89,9 @@ dependencies {
 	implementation "curse.maven:exoticbirds-242830:2987034"
 	implementation "curse.maven:firstaid-276837:4414252"
 	implementation "curse.maven:fishsundead-321139:4753503"
-	implementation "curse.maven:followme-463841:3520547"
 	implementation "curse.maven:ftbquests-289412:3156637"
 	implementation "curse.maven:cfm-55438:3865259"
 	implementation "curse.maven:gamestages-268655:2951840"
-	implementation "curse.maven:hordes-485779:4534908"
 	implementation "curse.maven:iguanatweaks-285690:3283799"
 	implementation "curse.maven:mobends-231347:3573346"
 	implementation "curse.maven:realistictorches-235729:3152820"
@@ -106,7 +106,7 @@ dependencies {
 	implementation "curse.maven:unexperienced-552526:5140238"
 	implementation "curse.maven:fermiumbooter-968474:5346592"
 	//needed to load scape and run parasites, as it blocks cursemaven
-	implementation files('libs/SRParasites-1.12.2v1.9.21.jar')
+	implementation fg.deobf(files('libs/SRParasites-1.10.8.jar'))
 	implementation files('libs/animania-1.12.2-base-2.0.3.28.jar')
 	implementation files('libs/animania-1.12.2-farm-1.0.2.28.jar')
 	implementation files('libs/animania-1.12.2-extra-1.0.2.28.jar')

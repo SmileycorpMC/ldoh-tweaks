@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.tile.TileLandmine;
@@ -28,7 +28,7 @@ import rafradek.TF2weapons.entity.mercenary.EntityTF2Character;
 
 import javax.annotation.Nullable;
 
-public class BlockLandmine extends Block implements IBlockProperties, ITileEntityProvider {
+public class BlockLandmine extends Block implements BlockProperties, ITileEntityProvider {
 
     public static final PropertyBool PRIMED = PropertyBool.create("primed");
     public static final PropertyBool PRESSED = PropertyBool.create("pressed");

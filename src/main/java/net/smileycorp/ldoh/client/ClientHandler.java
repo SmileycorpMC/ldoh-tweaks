@@ -1,14 +1,17 @@
 package net.smileycorp.ldoh.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.smileycorp.hordes.infection.CureEntityMessage;
 import net.smileycorp.hordes.infection.HordesInfection;
+import net.smileycorp.hordes.infection.client.InfectionClientHandler;
+import net.smileycorp.hordes.infection.network.CureEntityMessage;
 import net.smileycorp.ldoh.client.gui.GUITornNote;
 import net.smileycorp.ldoh.common.capabilities.LDOHCapabilities;
 import net.smileycorp.ldoh.common.network.*;
@@ -60,11 +63,32 @@ public class ClientHandler {
         Entity entity = message.getEntity(Minecraft.getMinecraft().world);
         if (!(entity instanceof EntityLiving)) return;
         ((EntityLiving) entity).removePotionEffect(HordesInfection.INFECTED);
-        net.smileycorp.hordes.client.ClientHandler.processCureEntityMessage(new CureEntityMessage(entity));
+        InfectionClientHandler.INSTANCE.processCureEntity(new CureEntityMessage(entity));
     }
 
     public static void openNoteGUI(long seed) {
         Minecraft.getMinecraft().displayGuiScreen(new GUITornNote(seed));
+    }
+
+    public static void rotateMatrix(EnumFacing facing) {
+        switch (facing) {
+            case WEST:
+                GlStateManager.rotate(90, 0, 1, 0);
+                return;
+            case EAST:
+                GlStateManager.rotate(-90, 0, 1, 0);
+                return;
+            case NORTH:
+                return;
+            case SOUTH:
+                GlStateManager.rotate(180, 0, 1, 0);
+                return;
+            case UP:
+                GlStateManager.rotate(-90, 0, 1, 1);
+                return;
+            case DOWN:
+                GlStateManager.rotate(90, 0, 1, 1);
+        }
     }
 
 }

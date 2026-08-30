@@ -5,15 +5,15 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.atlas.api.item.IMetaItem;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.util.ModUtils;
 
-public class ItemBlockMeta<T extends Block & IBlockProperties> extends ItemBlock implements IMetaItem {
+public class ItemBlockMeta<T extends Block & BlockProperties> extends ItemBlock implements IMetaItem {
 
     protected final String name;
-    protected final IBlockProperties props;
+    protected final BlockProperties props;
 
     public ItemBlockMeta(T block) {
         super(block);

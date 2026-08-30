@@ -2,7 +2,6 @@ package net.smileycorp.ldoh.common.events;
 
 import com.dhanantry.scapeandrunparasites.entity.ai.misc.EntityParasiteBase;
 import com.dhanantry.scapeandrunparasites.entity.monster.infected.EntityInfHuman;
-import com.dhanantry.scapeandrunparasites.world.SRPWorldData;
 import mariot7.xlfoodmod.init.ItemListxlfoodmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -16,7 +15,6 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -32,8 +30,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.smileycorp.followme.common.event.FollowUserEvent;
 import net.smileycorp.hordes.common.event.HordeSpawnEntityEvent;
 import net.smileycorp.hordes.common.event.InfectionDeathEvent;
+import net.smileycorp.hordes.config.data.infection.InfectionData;
 import net.smileycorp.hordes.infection.HordesInfection;
-import net.smileycorp.hordes.infection.InfectionRegister;
+import net.smileycorp.hordes.infection.PotionInfected;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.capabilities.*;
 import net.smileycorp.ldoh.common.entity.ai.AIModifiedMedigun;
@@ -87,9 +86,6 @@ public class TF2Events {
                         newentity.setPosition(entity.posX, entity.posY, entity.posZ);
                         entity.setDead();
                         world.spawnEntity(newentity);
-                        SRPWorldData data = SRPWorldData.get(world);
-                        data.setCurrentV(data.getCurrentV() + 1);
-                        data.markDirty();
                     }
                 }
             }
@@ -180,10 +176,12 @@ public class TF2Events {
         EntityLivingBase entity = event.getEntityLiving();
         Entity attacker = event.getSource().getImmediateSource();
         World world = entity.world;
-        if (world.isRemote) return;
-        if (!InfectionRegister.canCauseInfection(attacker) | !(entity instanceof EntityTF2Character)) return;
+        if (world.isRemote || attacker == null) return;
+        if (!InfectionData.INSTANCE.canCauseInfection(attacker) | !(entity instanceof EntityTF2Character)) return;
+        //gives the infection effect
+        PotionInfected.apply(entity);
         if (((EntityTF2Character) entity).isRobot() || entity.isPotionActive(HordesInfection.INFECTED)) return;
-        entity.addPotionEffect(new PotionEffect(HordesInfection.INFECTED, 10000, 0));
+        PotionInfected.apply(entity);
     }
 
     //hooks into the hordes infection event
@@ -290,9 +288,9 @@ public class TF2Events {
 
     @SubscribeEvent
     public void hordeSpawn(HordeSpawnEntityEvent event) {
-        Entity entity = event.entity;
+        Entity entity = event.getEntity();
         World world = entity.world;
-        EntityPlayer player = event.getEntityPlayer();
+        EntityPlayer player = event.getPlayer();
         if (!world.isRemote) {
             if (entity instanceof EntityTF2Character) {
                 world.getScoreboard().addPlayerToTeam(entity.getCachedUniqueIdString(), player.getTeam().getName() == "RED" ? "BLU" : "RED");

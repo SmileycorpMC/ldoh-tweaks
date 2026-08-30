@@ -13,11 +13,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 
-public class BlockLaboratory extends BlockEmptyDrops implements IBlockProperties {
+public class BlockLaboratory extends BlockEmptyDrops implements BlockProperties {
 
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
 

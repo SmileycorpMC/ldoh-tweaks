@@ -23,7 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.smileycorp.atlas.api.block.IBlockProperties;
+import net.smileycorp.atlas.api.block.BlockProperties;
 import net.smileycorp.ldoh.common.Constants;
 import net.smileycorp.ldoh.common.LDOHTweaks;
 import net.smileycorp.ldoh.common.entity.EntityTurret;
@@ -31,7 +31,7 @@ import net.smileycorp.ldoh.common.tile.TileTurret;
 
 import javax.annotation.Nullable;
 
-public class BlockTurret extends BlockDirectional implements IBlockProperties, ITileEntityProvider {
+public class BlockTurret extends BlockDirectional implements BlockProperties, ITileEntityProvider {
 
     private static final AxisAlignedBB[] AABBs = {new AxisAlignedBB(0, 0.7, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 0.3, 1),
             new AxisAlignedBB(0, 0, 0.7, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, 0.3), new AxisAlignedBB(0.7, 0, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 0.3, 1, 1)};
